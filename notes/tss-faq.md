@@ -110,6 +110,3 @@ There will be a significant programming component to this course, and
 class and homework exercises will be in Python. You do not need to know
 Python a priori, but you should know basic programming concepts and have
 some experience programming in some programming language.
-
-Here is some tutorial material on Python: [Python+numpy
-tutorial](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-python-numpy-tutorial.ipynb)
