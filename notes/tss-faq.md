@@ -86,9 +86,9 @@ knowledge of probability and linear algebra is required. 
 If you want to brush up, you can review:
 
 -   [Review of probability
-    theory](http://cs229.stanford.edu/section/cs229-prob.pdf)
+    theory](http://cs229.stanford.edu/section/cs229-prob.pdf) (http://cs229.stanford.edu/section/cs229-prob.pdf)
 -   In [Boyd & Vandenberghe "Introduction to Applied Linear
-    Algebra"](http://vmls-book.stanford.edu/vmls.pdf), these sections:
+    Algebra"](http://vmls-book.stanford.edu/vmls.pdf) (http://vmls-book.stanford.edu/vmls.pdf), these sections:
     -   Section I, Chapter 1 (Vectors): vectors, vector addition,
         scalar-vector multiplication, inner product (dot product)
     -   Section I, Chapter 3 (Norm and distance):  Norm of a vector,
