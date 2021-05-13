@@ -3,11 +3,6 @@ title: Frequently Asked Questions
 author: Fraida Fund
 ---
 
-<div>
-[PDF version of this page](faqs-tss.pdf)
-</div>
-
-
 ### I have questions about the Jumpstart program 
 
 You may find this list of frequently asked questions about the Jumpstart
