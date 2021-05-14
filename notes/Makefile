@@ -1,4 +1,4 @@
-FILES=tss-faq.pdf prerequisite-review.pdf
+FILES=tss-faq.pdf prerequisite-review.pdf books.pdf
 
 PANDOCFLAGS= --pdf-engine=xelatex\
          -V mainfont='Fira Sans' \
