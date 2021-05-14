@@ -40,7 +40,9 @@ will be posted on the course site.
 
 We will hold live meetings on Zoom twice a week: once for a short
 "chalk talk", and once for a short programming/demo session. The days
-and times for these meetings are TBD. These meetings will be recorded,
+and times for these meetings are still TBD - once enrollment is finalized,
+I will poll the class to find times that work for as many students
+as possible. These meetings will be recorded,
 so if you can't attend live, you can watch them at your convenience.
 
 We will also hold online "study group" sessions, in which you can work
