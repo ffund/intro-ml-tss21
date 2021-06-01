@@ -6,8 +6,6 @@ author: Fraida Fund
 
 ## Machine Learning Concepts and Theory
 
-The following are some machine learning textbooks and other useful resources that you have access to via NYU Libraries:
-
 * The Elements of Statistical Learning, (Hastie, Friedman, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph006482758)
 * An Introduction to Statistical Learning, (James, Witten, Hastie, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph004655521)
 * Pattern Recognition and Machine Learning, (Bishop), 2006. [PDF](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf)
@@ -44,5 +42,6 @@ The following are some machine learning textbooks and other useful resources tha
 * Textbook: Deep Learning, (Goodfellow, Bengio, Courville). [Website](https://www.deeplearningbook.org/)
 * Stanford CS231N: Convolutional Neural Networks for Visual Recognition. [Course Notes](https://cs231n.github.io/), [YouTube](https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv)
 * Stanford CS224N: Natural Language Processing with Deep Learning. [Course Site](https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/index.html#schedule), [YouTube Playlist](https://www.youtube.com/playlist?list=PLoROMvodv4rOhcuXMZkNm7j3fVwBBY42z)
+* Harvard CS229br: Advanced Topics in Theory of Machine Learning (Boaz Barak). [Website](https://boazbk.github.io/mltheoryseminar/cs229br)
 * UCL (David Silver) Reinforcement Learning. [Course Site](https://www.davidsilver.uk/teaching/), [YouTube](https://www.youtube.com/watch?v=2pWv7GOvuf0&list=RDCMUCP7jMXSY2xbc3KCAE0MHQ-A)
 * Textbook: Reinforcement Learning (Sutton, Barto). [Website](http://incompleteideas.net/book/the-book-2nd.html), [PDF](http://incompleteideas.net/book/RLbook2020.pdf)
