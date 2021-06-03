@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Bias and variance for linear regression</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Bias and variance for linear regression</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section class="slide level3">
+
+<p>In this set of notes, we derive the bias and variance for linear regression models, including transformed linear models.</p>
+</section>
+<section id="transformed-linear-model" class="title-slide slide level2">
+<h2>Transformed linear model</h2>
+<p>Consider the linear model in general transformed feature space:</p>
+<p><span class="math display">\[\hat{y} = f(x, \beta) = \phi(x)^T \beta = \beta_1 \phi_1(x) + \ldots + \beta_p \phi_p(x)\]</span></p>
+<p>Assume the true function is</p>
+<p><span class="math display">\[y=f_0(x) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2)\]</span></p>
+<p>When there is no under-modeling,</p>
+<p><span class="math display">\[f_0(x) = f(x, \beta^0) = \phi(x)^T \beta_0\]</span></p>
+<p>where <span class="math inline">\(\beta_0 = (\beta_0^0, \cdots, \beta_k^0)\)</span> is the true parameter.</p>
+<p>For data <span class="math inline">\((x_i, y_i), i=1,\ldots,N\)</span>, the least squares fit is</p>
+<p><span class="math display">\[\hat{\beta} = (A^T A)^{-1} A^T y\]</span></p>
+<p>where</p>
+<p><span class="math display">\[ 
+A = 
+\begin{bmatrix}
+\phi_1 (\mathbf{x_1}) &amp; \cdots &amp; \phi_p (\mathbf{x_1}) \\
+\vdots  &amp; \ddots &amp; \vdots  \\
+\phi_1 (\mathbf{x_N}) &amp; \cdots &amp; \phi_p (\mathbf{x_N}) 
+\end{bmatrix} 
+\]</span></p>
+</section>
+
+<section id="unique-solution-to-ls-estimate" class="title-slide slide level2">
+<h2>Unique solution to LS estimate</h2>
+<p>There is a unique solution to the LS estimate only if <span class="math inline">\(A^T A\)</span> is invertible. Since <span class="math inline">\(A \in R^{N\times p}\)</span>, the solution is unique only if <span class="math inline">\(Rank(A) \geq p\)</span>, and since <span class="math inline">\(Rank(A) \leq min(N,p)\)</span>, we need <span class="math inline">\(N \geq p\)</span>.</p>
+<p>In other words, the unique solution exists only if the number of data samples for training (<span class="math inline">\(N\)</span>) is greater than or equal to the number of parameters <span class="math inline">\(p\)</span>.</p>
+<p>This limits the model complexity you can use (greater <span class="math inline">\(p\)</span> <span class="math inline">\(\rightarrow\)</span> greater model complexity).</p>
+</section>
+
+<section id="linear-transforms-of-random-vectors" class="title-slide slide level2">
+<h2>Linear transforms of random vectors</h2>
+<p>First, some review of terminology of random vectors:</p>
+<ul>
+<li>A <strong>random vector</strong> <span class="math inline">\(\mathbf{x} = (x_1, \ldots, x_d)^T\)</span> is a vector where each component <span class="math inline">\(x_j\)</span> is a random variable.</li>
+<li>The <strong>vector of means</strong> of the components is <span class="math inline">\(\mathbf{\mu} = (E[x_1], \ldots, E[x_d])^T = (u_1, \ldots, u_d)^T\)</span>.</li>
+<li>The covariance of <span class="math inline">\(x_i, x_j\)</span> is <span class="math inline">\(Cov(x_i, x_j) = E[(x_i - \mu_i)(x_j - \mu_j)]\)</span></li>
+<li>The variance matrix (which is a <span class="math inline">\(d \times d\)</span> matrix) is:</li>
+</ul>
+<p><span class="math display">\[Var(\mathbf{x}) := E[(\mathbf{x} - \mathbf{u})(\mathbf{x} - \mathbf{u})^T ] = 
+\begin{bmatrix}
+Cov (x_1, x_1) &amp; \cdots &amp; Cov (x_1, x_d) \\
+\vdots  &amp; \ddots &amp; \vdots  \\
+Cov (x_d, x_1) &amp; \cdots &amp; Cov (x_d, x_d) \\
+\end{bmatrix} 
+\]</span></p>
+<ul>
+<li>In a <strong>linear transform</strong> <span class="math inline">\(y=Ax+b\)</span>, the input <span class="math inline">\(x \in R^N\)</span> is mapped to <span class="math inline">\(Ax \in R^M\)</span> by <span class="math inline">\(A \in R^{M\times N}\)</span></li>
+<li>The mean and variance matrix under this linear transform are given by <span class="math inline">\(E(y) = AE(x) + b\)</span> and <span class="math inline">\(\operatorname*{Var}(y) = A \operatorname*{Var}(x) A^T\)</span>, respectively.</li>
+</ul>
+</section>
+
+<section id="bias-of-linear-model" class="title-slide slide level2">
+<h2>Bias of linear model</h2>
+<p>Suppose that there is no under-modeling, i.e. <span class="math inline">\(f_0(x) = \phi(x)^T \beta^0\)</span>. Then each training sample output is <span class="math inline">\(y_i = \phi(x_i)^T \beta_0 + \epsilon_i\)</span>. The “true” data vector is <span class="math inline">\(y=A\beta^0 + \epsilon\)</span>.</p>
+<p>Under these circumstances, the parameter estimate will be</p>
+<p><span class="math display">\[\hat{\beta} = (A^T A)^{-1} A^T y = (A^T A)^{-1} A^T (A\beta^0 + \epsilon) = \beta^0 + (A^T A)^{-1} A^T \epsilon\]</span></p>
+<p>Since <span class="math inline">\(E[\epsilon] = 0\)</span>, <span class="math inline">\(E[\hat{\beta}] = \beta^0\)</span>: the average of the parameter estimate matches the true parameter.</p>
+<p>Then <span class="math inline">\(E[f(x_{test}, \hat{\beta})] = \phi(x_{test})^T E[\hat{\beta}] = \phi(x_{test})^T \beta^0 = f_0(x_{test})\)</span>.</p>
+<p>Recall the definition of bias:</p>
+<p><span class="math display">\[ Bias(x_{test}) := 
+f_0(x_{test}) -  E[f(x_{test}, \hat{\beta})] \]</span></p>
+<p><strong>Conclusion</strong>: We can see that when the model is linear and there is no under-modeling, there is no bias:</p>
+<p><span class="math display">\[Bias(x_{test}) = 0\]</span>.</p>
+</section>
+
+<section id="variance-of-linear-model" class="title-slide slide level2">
+<h2>Variance of linear model</h2>
+<p>Recall that <span class="math inline">\(\epsilon_i\)</span> are independent for different samples, with <span class="math inline">\(E[\epsilon_i] = 0\)</span> and <span class="math inline">\(E[\epsilon_i^2] = \sigma_\epsilon^2\)</span>.</p>
+<p>Then,</p>
+<p><span class="math display">\[ Cov(\epsilon_i, \epsilon_j) = 
+    \begin{cases}
+        0, \quad i \neq j
+        \sigma_\epsilon^2
+        \end{cases}, quad i=j
+\]</span></p>
+<p>so the variance matrix is</p>
+<p><span class="math display">\[Var(\epsilon) = \sigma_\epsilon^2 I\]</span></p>
+<p>Also recall from our discussion of bias,</p>
+<p><span class="math display">\[\hat{\beta} = (A^T A)^{-1} A^T y = (A^T A)^{-1} A^T (A\beta^0 + \epsilon) = \beta^0 + (A^T A)^{-1} A^T \epsilon\]</span></p>
+<p>Then we can compute the variance of the <em>parameters</em> in the linear model:</p>
+<p><span class="math display">\[ 
+\begin{aligned}
+E[(\hat{\beta} - \beta^0)(\hat{\beta} - \beta^0)^T] &amp; = (A^TA)^{-1} A^T Var(\epsilon) A (A^T A)^{-1} \\
+&amp; = \sigma_\epsilon^2 (A^T A)^{-1} A^T A (A^T A)^{-1} \\
+&amp; = \sigma_\epsilon^2 (A^T A)^{-1}
+\end{aligned}
+\]</span></p>
+<p>We can also compute the variance of the <em>estimate</em> in the linear model. First, recall from our discussion of bias,</p>
+<p><span class="math display">\[E[f(x_{test}, \hat{\beta})] = \phi(x_{test})^T E[\hat{\beta}] = \phi(x_{test})^T \beta^0 = f_0(x_{test})\]</span></p>
+<p>Also note the following trick: if <span class="math inline">\(\mathbf{a}\)</span> is a non-random vector and <span class="math inline">\(\mathbf{z}\)</span> is a random vector, then</p>
+<p><span class="math display">\[E[\mathbf{a}^T \mathbf{z}]^2 = E[\mathbf{a}^T \mathbf{zz}^T \mathbf{a}] = \mathbf{a}^T E[\mathbf{zz}^T]\mathbf{a}\]</span></p>
+<p>Then the variance of the estimate of the linear model (when there is no under-modeling) is:</p>
+<p><span class="math display">\[ 
+\begin{aligned}
+Var(x_{test}) &amp; = E [f(x_{test}, \hat{\beta}) - E[f(x_{test}, \hat{\beta})]]^2 \\
+&amp; =  \phi(x_{test})^T  E [(\hat{\beta} - \beta^0)(\hat{\beta} - \beta^0)^T] \phi(x_{test}) \\
+&amp; = \sigma_\epsilon^2  \phi(x_{test})^T (A^T A)^{-1} \phi(x_{test})
+\end{aligned}
+\]</span></p>
+<p>Let us assume that the test point <span class="math inline">\(x_{test}\)</span> is distributed identically to the training data:</p>
+<ul>
+<li>Training data is <span class="math inline">\(\mathbf{x}_i, i=1,\ldots, N\)</span></li>
+<li><span class="math inline">\(\mathbf{x}_{test} = \mathbf{x}_i\)</span> with probability <span class="math inline">\(\frac{1}{N}\)</span></li>
+</ul>
+<p>Since the rows of <span class="math inline">\(A\)</span> are <span class="math inline">\(\phi(\mathbf{x}_i)^T\)</span>, then</p>
+<p><span class="math display">\[A^T A = \sum_{i=1}^N \phi(\mathbf{x}_i) \phi(\mathbf{x}_i)^T\]</span></p>
+<p>We will use a trick: for random vectors <span class="math inline">\(\mathbf{u}, \mathbf{v}\)</span>, <span class="math inline">\(E[\mathbf{u}^T\mathbf{v}] = Tr( E[\mathbf{v} \mathbf{u}^T])\)</span>, where <span class="math inline">\(Tr(A) = \sum_i A_{ii}\)</span> is the sum of diagonals of <span class="math inline">\(A\)</span>.</p>
+<p>Then the variance averaged over <span class="math inline">\(x_{test}\)</span> is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+E [Var(x_{test})] &amp; = \sigma_\epsilon^2 E [\phi(x_{test})^T (A^T A)^{-1} \phi(x_{test})] \\
+&amp; = \sigma_\epsilon ^2 Tr\left( E [\phi(x_{test})  \phi(x_{test})^T] (A^T A)^{-1}\right) \\
+&amp; = \frac{\sigma_\epsilon ^2}{N} Tr\left( \sum_i \phi(x_{i})  \phi(x_{i})^T] (A^T A)^{-1}\right) \\
+&amp; = \frac{\sigma_\epsilon ^2}{N} Tr\left( (A^T A)(A^T A)^{-1}\right) \\
+&amp; = \frac{\sigma_\epsilon ^2}{N} Tr\left(  I_p \right) \\
+&amp; = \frac{\sigma_\epsilon ^2 p}{N} 
+\end{aligned}
+\]</span></p>
+<p>The average variance increases with the number of parameters <span class="math inline">\(p\)</span>, and decreases with the number of samples used for training <span class="math inline">\(N\)</span>, as long as the test point is distributed like the training data.</p>
+</section>
+
+<section>
+<section id="summary-of-results-for-linear-models" class="title-slide slide level2">
+<h2>Summary of results for linear models</h2>
+<p>Suppose the model class is linear with <span class="math inline">\(N\)</span> samples and <span class="math inline">\(p\)</span> parameters.</p>
+</section>
+<section id="result-1-uniqueness-of-coefficient-estimate" class="slide level3">
+<h3>Result 1: Uniqueness of coefficient estimate</h3>
+<p>When <span class="math inline">\(N &lt; p\)</span>, the least squares estimate of the coefficients is not unique.</p>
+</section>
+<section id="result-2-bias-of-estimate-of-target-variable" class="slide level3">
+<h3>Result 2: Bias of estimate of target variable</h3>
+<p>When <span class="math inline">\(N \geq p\)</span> and the least squares estimate of the coefficients is unique, <em>and</em> there is no under-modeling, then the esimate of the target variable is unbiased:</p>
+<p><span class="math display">\[ E[f(x_{test}, \hat{\beta})] = f_0 (x_{test}) \]</span></p>
+</section>
+<section id="result-3-variance-of-estimate-of-target-variable" class="slide level3">
+<h3>Result 3: Variance of estimate of target variable</h3>
+<p>When <span class="math inline">\(N \geq p\)</span> and the least squares estimate of the coefficients is unique, <em>and</em> the test point is drawn from the same distribution of the trainng data, then variance increases linearly with the number of parameters and inversely with the number of samples used for training:</p>
+<p><span class="math display">\[ Var = \frac{p}{N} \sigma_\epsilon^2 \]</span></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

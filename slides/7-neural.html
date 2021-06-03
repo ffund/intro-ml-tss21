@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Neural networks</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Neural networks</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Neural network</li>
+<li>Structure of a neural network</li>
+<li>Training a neural network</li>
+</ul>
+</section>
+
+<section>
+<section id="from-linear-to-non-linear" class="title-slide slide level2">
+<h2>From linear to non-linear</h2>
+
+</section>
+<section id="review-learning-non-linear-decision-boundaries-from-linear-classifiers" class="slide level3">
+<h3>Review: learning non-linear decision boundaries from linear classifiers</h3>
+<ul>
+<li>Logistic regression - using basis functions</li>
+<li>SVM - using kernel</li>
+<li>Decision tree - AdaBoost uses multiple linear classifiers (decision stumps)</li>
+</ul>
+</section>
+<section id="using-multiple-logistic-regressions" class="slide level3">
+<h3>Using multiple logistic regressions?</h3>
+<ol type="1">
+<li>Classify into small number of linear regions. Each output from step 1 is a linear classifier with soft decision.</li>
+<li>Predict class label. Output is weighted average of step 1 weights</li>
+</ol>
+</section>
+<section id="example-synthetic-data" class="slide level3">
+<h3>Example: synthetic data</h3>
+<figure>
+<img data-src="images/two-class-nn-synthetic.png" style="width:40.0%" alt="Via Sundeep Rangan" /><figcaption aria-hidden="true">Via <a href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep Rangan</a></figcaption>
+</figure>
+</section>
+<section id="model-of-example-two-stage-classifier-1" class="slide level3">
+<h3>Model of example two-stage classifier (1)</h3>
+<p>First step (<em>hidden layer</em>):</p>
+<ul>
+<li>Take <span class="math inline">\(N_H=4\)</span> linear discriminants.</li>
+</ul>
+<p><span class="math display">\[\begin{bmatrix}
+z_{H,1} = {w}_{H,1}^T x + b_{H,1} \\
+\cdots \\
+z_{H,N_H} = {w}_{H,N_H}^T x + b_{H,N_H} 
+\end{bmatrix}\]</span></p>
+<ul>
+<li>Each makes a soft decision: <span class="math inline">\(u_{H,m} = g(z_{H,m}) = \frac{1}{1+e^{-z_{H,m}}}\)</span></li>
+</ul>
+</section>
+<section id="model-of-example-two-stage-classifier-2" class="slide level3">
+<h3>Model of example two-stage classifier (2)</h3>
+<p>Second step (<em>output layer</em>):</p>
+<ul>
+<li>Linear discriminant using output of previous stage as features:</li>
+</ul>
+<p><span class="math display">\[ z_O = w^T_O u_H + b_O\]</span></p>
+<ul>
+<li>Soft decision:</li>
+</ul>
+<p><span class="math display">\[u_O = g(z_O) =  \frac{1}{1+e^{-z_{O}}}\]</span></p>
+</section>
+<section id="example-multiple-logistic-regressions" class="slide level3">
+<h3>Example: multiple logistic regressions</h3>
+<figure>
+<img data-src="images/two-class-nn-neurons.png" style="width:100.0%" alt="Via Sundeep Rangan" /><figcaption aria-hidden="true">Via <a href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep Rangan</a></figcaption>
+</figure>
+</section>
+<section id="example-weighted-average-output" class="slide level3">
+<h3>Example: weighted average output</h3>
+<figure>
+<img data-src="images/two-class-nn-avgout.png" style="width:40.0%" alt="Via Sundeep Rangan" /><figcaption aria-hidden="true">Via <a href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep Rangan</a></figcaption>
+</figure>
+</section>
+<section id="matrix-form-of-two-stage-classifier" class="slide level3">
+<h3>Matrix form of two stage classifier</h3>
+<ul>
+<li>Hidden layer: <span class="math inline">\(\mathbf{z}_H = \mathbf{W}_H^T \mathbf{x} + \mathbf{b}_H, \quad \mathbf{u}_H = g(\mathbf{z}_H)\)</span></li>
+<li>Output layer: <span class="math inline">\(z_O = \mathbf{W}_O^T \mathbf{u}_H + \mathbf{b}_O, \quad \mathbf{u}_O = g(\mathbf{z}_O)\)</span></li>
+</ul>
+</section>
+<section id="illustration-of-two-stage-classifier" class="slide level3">
+<h3>Illustration of two-stage classifier</h3>
+<figure>
+<img data-src="images/two-stage-classifier.png" style="width:90.0%" alt="Two-stage classifier. Image credit: Sundeep Rangan" /><figcaption aria-hidden="true">Two-stage classifier. Image credit: Sundeep Rangan</figcaption>
+</figure>
+</section>
+<section id="training-the-two-stage-classifier" class="slide level3">
+<h3>Training the two-stage classifier</h3>
+<ul>
+<li>From final stage: <span class="math inline">\(z_o = F(\mathbf{x}, \theta)\)</span> where parameters <span class="math inline">\(\theta = (\mathbf{W}_H, \mathbf{W}_o, b_H, b_o)\)</span></li>
+<li>Given training data <span class="math inline">\((\mathbf{x}_i, y_i), i = 1, \ldots, N\)</span></li>
+<li>Loss function <span class="math inline">\(L(\theta) := -\sum_{i=1}^N \text{ln} P(y_i | \mathbf{x}_i, \theta)\)</span></li>
+<li>Choose parameters to minimize loss: <span class="math inline">\(\hat{\theta} = \operatorname*{argmin}_\theta L(\theta)\)</span></li>
+</ul>
+</section></section>
+<section>
+<section id="neural-networks" class="title-slide slide level2">
+<h2>Neural networks</h2>
+
+</section>
+<section id="biological-inspiration" class="slide level3">
+<h3>Biological inspiration</h3>
+<figure>
+<img data-src="images/biological-neuron.png" style="width:55.0%" alt="A biological neuron accepts inputs via dendrites, “adds” them together within cell body, and once some electrical potential is reached, “fires” via axons. Synaptic weight (the influence the firing of one neuron has on another) changes over time (“learning”). Image via: http://http://doi.org/10.5772/51275" /><figcaption aria-hidden="true">A biological neuron accepts inputs via dendrites, “adds” them together within cell body, and once some electrical potential is reached, “fires” via axons. Synaptic weight (the influence the firing of one neuron has on another) changes over time (“learning”). Image via: <a href="http://http://doi.org/10.5772/51275">http://http://doi.org/10.5772/51275</a></figcaption>
+</figure>
+</section>
+<section id="general-structure-illustration" class="slide level3">
+<h3>General structure (illustration)</h3>
+<figure>
+<img data-src="images/neural-block-diagram.png" alt="Block diagram. Image credit: Sundeep Rangan" /><figcaption aria-hidden="true">Block diagram. Image credit: Sundeep Rangan</figcaption>
+</figure>
+</section>
+<section id="terminology" class="slide level3">
+<h3>Terminology</h3>
+<ul>
+<li><strong>Hidden variables</strong>: the variables <span class="math inline">\(\mathbf{z}_H, \mathbf{u}_H\)</span>, which are not directly observed.</li>
+<li><strong>Hidden units</strong>: the functions that compute <span class="math inline">\(z_{H,i}\)</span> and <span class="math inline">\(u_{H,i}\)</span>.</li>
+<li><strong>Activation function</strong>: the function <span class="math inline">\(g(z)\)</span></li>
+<li><strong>Output units</strong>: the functions that compute <span class="math inline">\(z_{O,i}\)</span>.</li>
+</ul>
+</section>
+<section id="general-structure-input-and-hidden-layers" class="slide level3">
+<h3>General structure: input and hidden layers</h3>
+<p>Input: <span class="math inline">\(\mathbf{x} = (x_1, \ldots, x_d)\)</span></p>
+<p>Each hidden layer:</p>
+<ul>
+<li>Linear transform: <span class="math inline">\(\mathbf{z}_H = \mathbf{W}_H^T \mathbf{x} + \mathbf{b}_H\)</span></li>
+<li>Activation function <span class="math inline">\(\mathbf{u}_H = g_{act}(\mathbf{z}_H)\)</span></li>
+</ul>
+</section>
+<section id="general-structure-output-layer" class="slide level3">
+<h3>General structure: output layer</h3>
+<p>Output layer:</p>
+<ul>
+<li>Linear transform: <span class="math inline">\(\mathbf{z}_O = \mathbf{W}_O^T \mathbf{u}_H + \mathbf{b}_O\)</span></li>
+<li>Output function <span class="math inline">\(\mathbf{u}_O = g_{out}(\mathbf{z}_O)\)</span></li>
+</ul>
+<p>Response map depends on type of response -</p>
+</section>
+<section id="general-structure-response-map-binary-classification" class="slide level3">
+<h3>General structure: response map, binary classification</h3>
+<p>For binary classification, <span class="math inline">\(y=\pm 1\)</span>:</p>
+<ul>
+<li><span class="math inline">\(z_O\)</span> is scalar</li>
+<li>Hard decision: <span class="math inline">\(\hat{y} = \text{sign}(z_O)\)</span></li>
+<li>Soft decision: <span class="math inline">\(P(y=1| x)=\frac{1}{1+e^{-z_O}}\)</span></li>
+</ul>
+</section>
+<section id="general-structure-response-map-classification" class="slide level3">
+<h3>General structure: response map, classification</h3>
+<p>For multi-class classification, <span class="math inline">\(y=1,\ldots, K\)</span>:</p>
+<ul>
+<li><span class="math inline">\(\mathbf{z}_O = [z_{O,1}, \ldots, z_{O,K}]\)</span> is a vector</li>
+<li>Hard decision: <span class="math inline">\(\hat{y} = \operatorname*{argmax}_k z_{O,k}\)</span></li>
+<li>Soft decision: <span class="math inline">\(P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_\ell e^{-z_\ell}}\)</span> (softmax)</li>
+</ul>
+</section>
+<section id="general-structure-response-map-regression" class="slide level3">
+<h3>General structure: response map, regression</h3>
+<p>For regression, <span class="math inline">\(y \in R^{K}\)</span>:</p>
+<ul>
+<li>Linear: <span class="math inline">\(\hat{y}=z_O\)</span></li>
+</ul>
+</section>
+<section id="activation-functions-identity" class="slide level3">
+<h3>Activation functions: identity?</h3>
+<ul>
+<li>Suppose we use <span class="math inline">\(g(z) = z\)</span> (identity function) as activation function throughout the network.</li>
+<li>The network can only achieve linear decision boundary!</li>
+<li>To get non-linear decision boundary, need non-linear activation functions.</li>
+<li>Universal approximation theorem: under certain conditions, with enough (finite) hidden nodes, can approximate any continuous real-valued function, to any degree of precision. But only with non-linear decision boundary!</li>
+</ul>
+</section>
+<section id="activation-functions-binary-step" class="slide level3">
+<h3>Activation functions: binary step</h3>
+<ul>
+<li>Not differentiable at <span class="math inline">\(x=0\)</span>, has <span class="math inline">\(0\)</span> derivative everywhere else.</li>
+<li>Not useful for gradient-based optimization methods.</li>
+</ul>
+</section>
+<section id="activation-functions-some-choices" class="slide level3">
+<h3>Activation functions: some choices</h3>
+<figure>
+<img data-src="images/activation-functions.png" style="width:50.0%" alt="Most common activation functions" /><figcaption aria-hidden="true">Most common activation functions</figcaption>
+</figure>
+</section>
+<section id="dimension-1" class="slide level3">
+<h3>Dimension (1)</h3>
+<ul>
+<li><span class="math inline">\(N_I\)</span> = input dimension, number of features</li>
+<li><span class="math inline">\(N_H\)</span> = number of hidden units (tuning parameter?)</li>
+<li><span class="math inline">\(N_O\)</span> = output dimension, number of classes</li>
+</ul>
+</section>
+<section id="dimension-2" class="slide level3">
+<h3>Dimension (2)</h3>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Symbol</th>
+<th style="text-align: left;">Number of parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Hidden layer: bias</td>
+<td style="text-align: left;"><span class="math inline">\(b_H\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(N_H\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hidden layer: weights</td>
+<td style="text-align: left;"><span class="math inline">\(W_H\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(N_H N_I\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Output layer: bias</td>
+<td style="text-align: left;"><span class="math inline">\(b_O\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(N_O\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Output layer: weights</td>
+<td style="text-align: left;"><span class="math inline">\(W_O\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(N_O N_H\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class="math inline">\(N_H(N_I+1)+N_O(N_H+1)\)</span></td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="training-a-neural-network" class="title-slide slide level2">
+<h2>Training a neural network</h2>
+<ul>
+<li>Given training data <span class="math inline">\((\mathbf{x}_i, y_i), i = 1, \ldots, N\)</span></li>
+<li>Parameters to learn are <span class="math inline">\(\theta = (\mathbf{W}_H, \mathbf{W}_o, b_H, b_o)\)</span></li>
+<li>Choose parameters to minimize loss function <span class="math inline">\(L(\theta)\)</span>:</li>
+</ul>
+<p><span class="math display">\[\hat{\theta} = \operatorname*{argmin}_\theta L(\theta)\]</span></p>
+</section>
+<section id="loss-function-regression" class="slide level3">
+<h3>Loss function: regression</h3>
+<ul>
+<li><span class="math inline">\(y_i\)</span> is scalar target variable for sample <span class="math inline">\(i\)</span>, typically continuous values</li>
+<li><span class="math inline">\(z_{Oi}\)</span> is estimate of <span class="math inline">\(y_i\)</span></li>
+<li>Use L2 loss:</li>
+</ul>
+<p><span class="math display">\[L(\theta) = \sum_{i=1}^N (y_i - z_{Oi})^2\]</span></p>
+</section>
+<section id="loss-function-regression-with-vector-output" class="slide level3">
+<h3>Loss function: regression with vector output</h3>
+<ul>
+<li>For vector <span class="math inline">\(\mathbf{y}_i = (y_{i1}, \ldots, y_{iK})\)</span>, use vector L2 loss:</li>
+</ul>
+<p><span class="math display">\[L(\theta) = \sum_{i=1}^N \sum_{i=1}^K (y_{iK} - z_{OiK})^2\]</span></p>
+</section>
+<section id="loss-function-binary-classification-1" class="slide level3">
+<h3>Loss function: binary classification (1)</h3>
+<ul>
+<li><span class="math inline">\(y_i = {0, 1}\)</span> is target variable for sample <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(z_{Oi}\)</span> is scalar, called “logit score”</li>
+<li>Negative log likelihood loss:</li>
+</ul>
+<p><span class="math display">\[L(\theta) = -\sum_{i=1}^N \text{ln} P(y_i | \mathbf{x}_i, \theta), \quad P(y_i=1|\mathbf{x}_i, \theta) = \frac{1}{1+e^{-z_{Oi}}}\]</span></p>
+</section>
+<section id="loss-function-binary-classification-2" class="slide level3">
+<h3>Loss function: binary classification (2)</h3>
+<p>Loss (binary cross entropy):</p>
+<p><span class="math display">\[L(\theta) = \sum_{i=1}^N -y_i z_{Oi} + \text{ln}(1+e^{y_i z_Oi})\]</span></p>
+</section>
+<section id="loss-function-multi-class-classification-1" class="slide level3">
+<h3>Loss function: multi-class classification (1)</h3>
+<ul>
+<li><span class="math inline">\(y_i = {1, \ldots, K}\)</span> is target variable for sample <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\mathbf{z}_{Oi} = (z_{Oi1}, \ldots, z_{OiK})\)</span> is vector with one entry per class, called “logit score”</li>
+<li>Likelihood given by softmax function, class with highest logit score has highest probability:</li>
+</ul>
+<p><span class="math display">\[P(y_i  = k | \mathbf{x}_i, \theta) = g_k(\mathbf{z}_{Oi}), \quad g_k(\mathbf{z}_{Oi}) = \frac{e^{z_{OiK}}}{\sum_\ell e^{z_{Oi\ell}}}\]</span></p>
+</section>
+<section id="loss-function-multi-class-classification-2" class="slide level3">
+<h3>Loss function: multi-class classification (2)</h3>
+<p>Define “one-hot” vector - for a sample from class <span class="math inline">\(k\)</span>, all entries in the vector are <span class="math inline">\(0\)</span> except for the <span class="math inline">\(k\)</span>th entry which is <span class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[r_{ik} = 
+\begin{cases}
+1 \quad y_i = k \\
+0 \quad y_i \neq k
+\end{cases}
+\]</span></p>
+</section>
+<section id="loss-function-multi-class-classification-3" class="slide level3">
+<h3>Loss function: multi-class classification (3)</h3>
+<p>Negative log likelihood</p>
+<p><span class="math display">\[\text{ln} P(y_i = k | \mathbf{x}_i, \theta) = \sum_{k=1}^K \text{ln} P(y_i = k | \mathbf{x}_i, \theta)\]</span></p>
+</section>
+<section id="loss-function-multi-class-classification-4" class="slide level3">
+<h3>Loss function: multi-class classification (4)</h3>
+<p>Loss (categorical cross entropy):</p>
+<p><span class="math display">\[L(\theta) = \sum_{i=1}^N \left[ \ln \left(\sum_k e^{z_{Oik}}\right) - \sum_k  r_{ik} z_{Oik}\right]\]</span></p>
+</section>
+<section id="training-minimize-loss-function" class="slide level3">
+<h3>Training: minimize loss function</h3>
+<p><span class="math display">\[\hat{\theta} = \operatorname*{argmin}_\theta L(\theta), \quad L(\theta) = \frac{1}{N} \sum_{i=1}^N L_i(\theta, \mathbf{x}_i, y_i)\]</span></p>
+<p>where <span class="math inline">\(L_i(\theta, \mathbf{x}_i, y_i)\)</span> is loss on sample <span class="math inline">\(\i\)</span> for parameter <span class="math inline">\(\theta\)</span>.</p>
+</section>
+<section id="background-gradients-of-multi-variable-functions" class="slide level3">
+<h3>Background: gradients of multi-variable functions</h3>
+<p><span class="math display">\[
+\nabla L(\mathbf{\theta}) = 
+\begin{bmatrix}
+\partial  L(\mathbf{\theta}) / \partial \theta_1 \\
+\vdots \\
+\partial  L(\mathbf{\theta}) / \partial \theta_N \\
+\end{bmatrix}
+\]</span></p>
+</section>
+<section id="gradients-and-optimization" class="slide level3">
+<h3>Gradients and optimization</h3>
+<p>Gradient has important properties for optimization:</p>
+<ul>
+<li>At a local minima (or maxima, or saddle point), <span class="math inline">\(\nabla L(\theta) = 0\)</span>.</li>
+<li>At other points, <span class="math inline">\(\nabla L(\theta)\)</span> points towards direction of maximum (infinitesimal) <em>increase</em>.</li>
+</ul>
+</section>
+<section id="gradient-descent-idea" class="slide level3">
+<h3>Gradient descent idea</h3>
+<p>To move towards minimum of a function, use first order approximation:</p>
+<p>Start from some initial point, then iteratively</p>
+<ul>
+<li>compute gradient at current point, and</li>
+<li>add some fraction of the negative gradient to the current point</li>
+</ul>
+</section>
+<section id="gradient-descent-illustration" class="slide level3">
+<h3>Gradient descent illustration</h3>
+<figure>
+<img data-src="images/gradient-descent-animation.gif" style="width:70.0%" alt="Link for animation. Image credit: Peter Roelants" /><figcaption aria-hidden="true"><a href="https://miro.medium.com/max/700/1*KQVi812_aERFRolz_5G3rA.gif">Link for animation</a>. Image credit: Peter Roelants</figcaption>
+</figure>
+</section>
+<section id="standard-batch-gradient-descent" class="slide level3">
+<h3>Standard (“batch”) gradient descent</h3>
+<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
+<p><span class="math display">\[\theta^{t+1} = \theta^t - \alpha \nabla L(\theta^t) = \theta^t - \frac{\alpha}{N} \sum_{i=1}^N \nabla L_i(\theta^t, \mathbf{x}_i, y_i)\]</span></p>
+<p>Repeat until stopping criterion is met.</p>
+<p>To update <span class="math inline">\(\theta\)</span>, must compute <span class="math inline">\(N\)</span> loss functions and gradients - expensive when <span class="math inline">\(N\)</span> is large!</p>
+</section>
+<section id="stochastic-gradient-descent" class="slide level3">
+<h3>Stochastic gradient descent</h3>
+<p>Idea: at each step, compute estimate of gradient using only one randomly selected sample, and move in the direction it indicates.</p>
+<p>Many of the steps will be in the wrong direction, but progress towards minimum occurs <em>on average</em>, as long as the steps are small.</p>
+<p>Bonus: helps escape local minima.</p>
+</section>
+<section id="mini-batch-also-stochastic-gradient-descent" class="slide level3">
+<h3>Mini-batch (also “stochastic”) gradient descent</h3>
+<p>Idea: In each step, select a small subset of training data (“mini-batch”), and evaluate gradient on that mini-batch. Then move in the direction it indicates.</p>
+<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
+<ul>
+<li>Select random mini-batch <span class="math inline">\(I_t\subset{1,\ldots,N}\)</span></li>
+<li>Compute gradient approximation: <span class="math inline">\(g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, \theta)\)</span></li>
+<li>Update parameters: <span class="math inline">\(\theta^{t+1} = \theta^t - \alpha^t g^t\)</span></li>
+</ul>
+</section>
+<section id="comparison-batch-size" class="slide level3">
+<h3>Comparison: batch size</h3>
+<figure>
+<img data-src="images/grad-descent-comparison.png" style="width:60.0%" alt="Effect of batch size on gradient descent." /><figcaption aria-hidden="true">Effect of batch size on gradient descent.</figcaption>
+</figure>
+</section>
+<section id="why-does-mini-batch-gradient-help-intuition" class="slide level3">
+<h3>Why does mini-batch gradient help? (Intuition)</h3>
+<ul>
+<li>Standard error of mean over <span class="math inline">\(m\)</span> samples is <span class="math inline">\(\frac{\sigma}{\sqrt{m}}\)</span>, where <span class="math inline">\(\sigma\)</span> is standard deviation.</li>
+<li>The benefit of more examples in reducing error is less than linear!</li>
+<li>Example: gradient based on 10,000 samples requires 100x more computation than one based on 100 samples, but reduces SE only 10x.</li>
+<li>Also: memory required scales with mini-batch size.</li>
+<li>Also: there is often redundancy in training set.</li>
+</ul>
+</section>
+<section id="gradient-descent-terminology" class="slide level3">
+<h3>Gradient descent terminology</h3>
+<ul>
+<li>Mini-batch size is <span class="math inline">\(B\)</span>, training size is <span class="math inline">\(N\)</span></li>
+<li>A training <em>epoch</em> is the sequence of updates over which we see all non-overlapping mini-batches</li>
+<li>There are <span class="math inline">\(\frac{N}{B}\)</span> steps per training epoch</li>
+<li>Data shuffling: at the beginning of each epoch, randomly shuffle training samples. Then, select mini-batches in order from shuffled samples.</li>
+</ul>
+</section>
+<section id="selecting-the-learning-rate" class="slide level3">
+<h3>Selecting the learning rate</h3>
+<figure>
+<img data-src="images/learning_rate_comparison.png" style="width:85.0%" alt="Choice of learning rate \alpha is critical" /><figcaption aria-hidden="true">Choice of learning rate <span class="math inline">\(\alpha\)</span> is critical</figcaption>
+</figure>
+</section>
+<section id="annealing-the-learning-rate" class="slide level3">
+<h3>Annealing the learning rate</h3>
+<p>One approach: decay learning rate slowly over time, such as</p>
+<ul>
+<li>Exponential decay: <span class="math inline">\(\alpha_t = \alpha_0 e^{-k t}\)</span></li>
+<li>1/t decay: <span class="math inline">\(\alpha_t = \alpha_0 / (1 + k t )\)</span></li>
+</ul>
+<p>(where <span class="math inline">\(k\)</span> is tuning parameter).</p>
+</section>
+<section id="gradient-descent-in-a-ravine-1" class="slide level3">
+<h3>Gradient descent in a ravine (1)</h3>
+<figure>
+<img data-src="images/ravine-grad-descent.png" style="width:50.0%" alt="Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of w_1." /><figcaption aria-hidden="true">Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of <span class="math inline">\(w_1\)</span>.</figcaption>
+</figure>
+</section>
+<section id="gradient-descent-in-a-ravine-2" class="slide level3">
+<h3>Gradient descent in a ravine (2)</h3>
+<figure>
+<img data-src="images/ravine-grad-descent2.png" style="width:50.0%" alt="Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of w_1." /><figcaption aria-hidden="true">Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of <span class="math inline">\(w_1\)</span>.</figcaption>
+</figure>
+</section>
+<section id="momentum-1" class="slide level3">
+<h3>Momentum (1)</h3>
+<ul>
+<li>Idea: Update includes a <em>velocity</em> vector <span class="math inline">\(v\)</span>, that accumulates gradient of past steps.</li>
+<li>Each update is a linear combination of the gradient and the previous updates.</li>
+<li>(Go faster if gradient keeps pointing in the same direction!)</li>
+</ul>
+</section>
+<section id="momentum-2" class="slide level3">
+<h3>Momentum (2)</h3>
+<p>Classical momentum: for some <span class="math inline">\(0 \leq \gamma_t &lt; 1\)</span>,</p>
+<p><span class="math display">\[v_{t+1} = \gamma_t v_t - \alpha_t \nabla L\left(\theta_t\right)\]</span></p>
+<p>so</p>
+<p><span class="math display">\[\theta_{t+1} = \theta_t + v_{t+1} = \theta_t  - \alpha_t \nabla L\left(\theta_t\right) + \gamma_t v_t\]</span></p>
+<p>(<span class="math inline">\(\gamma_t\)</span> is often around 0.9, or starts at 0.5 and anneals to 0.99 over many epochs.)</p>
+<p>Note: <span class="math inline">\(v_{t+1} = \theta_{t+1} - \theta_t\)</span> is <span class="math inline">\(\Delta \theta\)</span>.</p>
+</section>
+<section id="momentum-illustrated" class="slide level3">
+<h3>Momentum: illustrated</h3>
+<figure>
+<img data-src="images/ravine-momentum.png" style="width:50.0%" alt="Momentum dampens oscillations by reinforcing the component along w_2 while canceling out the components along w_1." /><figcaption aria-hidden="true">Momentum dampens oscillations by reinforcing the component along <span class="math inline">\(w_2\)</span> while canceling out the components along <span class="math inline">\(w_1\)</span>.</figcaption>
+</figure>
+</section>
+<section id="rmsprop" class="slide level3">
+<h3>RMSProp</h3>
+<p>Idea: Track <em>per-parameter</em> EWMA of <em>square</em> of gradient, and use to normalize parameter update step.</p>
+<p>Weights with recent gradients or large magnitude have smaller learning rate, weights with small recent gradients have larger learning rates.</p>
+<p><span class="math display">\[\theta_{t+1,i} = \theta_{t,i} -\frac{\alpha}
+{\sqrt {\epsilon + E[g^2]_t }} \nabla L(\theta_{t,i})\]</span></p>
+<p>where</p>
+<p><span class="math display">\[E[g^2]_t=(1-\gamma)g^2 + \gamma E[g^2]_{t-1}, \quad g = \nabla J(\theta_{t,i})\]</span></p>
+</section>
+<section id="rmsprop-illustrated-beales-function" class="slide level3">
+<h3>RMSProp: illustrated (Beale’s function)</h3>
+<figure>
+<img data-src="images/beale-gradient.gif" style="width:40.0%" alt="Animation credit: Alec Radford. Link for animation. Due to the large initial gradient, velocity based techniques shoot off and bounce around, while those that scale gradients/step sizes like RMSProp proceed more like accelerated SGD." /><figcaption aria-hidden="true">Animation credit: Alec Radford. <a href="https://imgur.com/a/Hqolp">Link for animation</a>. Due to the large initial gradient, velocity based techniques shoot off and bounce around, while those that scale gradients/step sizes like RMSProp proceed more like accelerated SGD.</figcaption>
+</figure>
+</section>
+<section id="rmsprop-illustrated-long-valley" class="slide level3">
+<h3>RMSProp: illustrated (Long valley)</h3>
+<figure>
+<img data-src="images/long-valley-gradient.gif" style="width:40.0%" alt="Animation credit: Alec Radford. Link for animation. SGD stalls and momentum has oscillations until it builds up velocity in optimization direction. Algorithms that scale step size quickly break symmetry and descend in optimization direction." /><figcaption aria-hidden="true">Animation credit: Alec Radford. <a href="https://imgur.com/a/Hqolp">Link for animation</a>. SGD stalls and momentum has oscillations until it builds up velocity in optimization direction. Algorithms that scale step size quickly break symmetry and descend in optimization direction.</figcaption>
+</figure>
+</section>
+<section id="adam-adaptive-moments-estimation-2014" class="slide level3">
+<h3>Adam: Adaptive moments estimation (2014)</h3>
+<p>Idea: Track the EWMA of <em>both</em> first and second moments of the gradient, <span class="math inline">\(\{m_t, v_t\}\)</span> at each time <span class="math inline">\(t\)</span>.</p>
+<p>If <span class="math inline">\(L_t(\theta)\)</span> is evaluation of loss function on a mini-batch of data at time <span class="math inline">\(t\)</span>,</p>
+<p><span class="math display">\[\{m_t, v_t\}, \mathbb{E}[m_t] \, \, \approx \, \, \mathbb{E}[\,\nabla \, L_t(\theta)\,], \mathbb{E}[v_t] \, \, \approx \, \, \mathbb{E}\big[\,(\nabla \, L_t(\theta))^2\,\big]\]</span></p>
+<p>Scale <span class="math inline">\(\alpha\)</span> by <span class="math inline">\(\frac{m_t}{\sqrt{v_t}}\)</span> at each step.</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

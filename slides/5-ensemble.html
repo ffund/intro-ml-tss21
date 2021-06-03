@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Ensemble methods</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Ensemble methods</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="ensemble-methods" class="title-slide slide level2">
+<h2>Ensemble methods</h2>
+
+</section>
+<section id="recap-decision-trees" class="slide level3">
+<h3>Recap: decision trees</h3>
+<ul>
+<li>Let trees grow deep - low bias, high variance</li>
+<li>Don’t let trees get deep: low variance, high bias</li>
+</ul>
+</section>
+<section id="ensemble-methods---the-idea" class="slide level3">
+<h3>Ensemble methods - the idea</h3>
+<p>Combine multiple <strong>weak learners</strong> - having either high bias or high variance - to create an <strong>ensemble</strong> with better prediction</p>
+</section>
+<section id="ensemble-methods---types-1" class="slide level3">
+<h3>Ensemble methods - types (1)</h3>
+<ul>
+<li>Combine multiple learners with high <strong>variance</strong> in a way that reduces their variance</li>
+<li>Combine multiple learners with high <strong>bias</strong> in a way that reduces their bias</li>
+</ul>
+</section>
+<section id="ensemble-methods---types-2" class="slide level3">
+<h3>Ensemble methods - types (2)</h3>
+<ul>
+<li><strong>Averaging methods</strong>: build base estimators <em>independently</em> and then average their predictions. Combined estimator is usually better than any single base estimator because its <em>variance</em> is reduced.</li>
+<li><strong>Boosting methods</strong>: build base estimators <em>sequentially</em> and each one tries to reduce the <em>bias</em> of the combined estimator.</li>
+</ul>
+</section></section>
+<section>
+<section id="bagging" class="title-slide slide level2">
+<h2>Bagging</h2>
+
+</section>
+<section id="bagging---background" class="slide level3">
+<h3>Bagging - background</h3>
+<ul>
+<li>Designed for, and most often applied to, decision trees</li>
+<li>Name comes from <strong>bootstrap aggregation</strong> (remember bootstrap from resampling lecture?)</li>
+</ul>
+</section>
+<section id="bootstrapping" class="slide level3">
+<h3>Bootstrapping</h3>
+<ul>
+<li>Basic idea: Sampling <strong>with replacement</strong></li>
+<li>Each “bootstrap training set” is <em>same size</em> as full training set, and is created by sampling with replacement</li>
+<li>Some samples will appear more than once, some samples not at all</li>
+</ul>
+</section>
+<section id="bootstrap-aggregation" class="slide level3">
+<h3>Bootstrap aggregation</h3>
+<ul>
+<li>Create multiple versions <span class="math inline">\(1, \ldots, B\)</span> of training set with bootstrap</li>
+<li>Independently train a model on each bootstrap training set: calculate <span class="math inline">\(\hat{f}^1(x) \ldots, \hat{f}^B(x)\)</span></li>
+<li>Combine output of models by voting (classification) or averaging (regression):</li>
+</ul>
+<p><span class="math display">\[\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}_b (x)\]</span></p>
+</section>
+<section id="bagging-trees" class="slide level3">
+<h3>Bagging trees</h3>
+<ul>
+<li>Construct <span class="math inline">\(B\)</span> trees using <span class="math inline">\(B\)</span> bootstrapped training sets.</li>
+<li>Let the trees grow deep, no pruning.</li>
+<li>Each individual tree has low bias, high variance.</li>
+<li>Average the prediction of the trees to reduce variance.</li>
+</ul>
+</section>
+<section id="bagging---example" class="slide level3">
+<h3>Bagging - example</h3>
+<figure>
+<img data-src="images/tree-bagging-reduces-variance.svg" style="width:60.0%" alt="Bagging: average the output of many deep trees, reduce variance of estimate" /><figcaption aria-hidden="true">Bagging: average the output of many deep trees, reduce variance of estimate</figcaption>
+</figure>
+</section>
+<section id="out-of-bag-error-estimation" class="slide level3">
+<h3>Out-of-bag error estimation</h3>
+<ul>
+<li>One average, each bag contains about 2/3 of training samples. Remaining samples are called out-of-bag (OOB) observations.</li>
+<li>For each observation <span class="math inline">\(i\)</span>: predict response for the <span class="math inline">\(\frac{B}{3}\)</span> trees where <span class="math inline">\(i\)</span> was OOB, and average (or take majority vote).</li>
+<li>Compute OOB MSE or OOB classification error as mean of OOB errors for all samples.</li>
+<li>Use OOB error to find the number of trees needed to stablize error rate.</li>
+</ul>
+</section>
+<section id="correlated-trees" class="slide level3">
+<h3>Correlated trees</h3>
+<p>Problem: trees produced by bagging are highly correlated.</p>
+<ul>
+<li>Imagine there is one feature that is strong predictor, several moderate predictors</li>
+<li>Most/all trees will split on this feature</li>
+<li>Averaging correlated quantities does not reduce variance as much.</li>
+</ul>
+</section>
+<section id="random-forests" class="slide level3">
+<h3>Random forests</h3>
+<p>Grow many decorrelated trees:</p>
+<ul>
+<li><strong>Bootstrap</strong>: grow each tree with bootstrap resampled data set.</li>
+<li><strong>Split-variable randomization</strong>: Force each split to consider <em>only</em> a subset of <span class="math inline">\(m\)</span> of the <span class="math inline">\(p\)</span> predictors.</li>
+</ul>
+<p>Typically <span class="math inline">\(m = \frac{p}{3}\)</span> but this should be considered a tuning parameter (tune using OOB error).</p>
+</section>
+<section id="a-note-on-computation" class="slide level3">
+<h3>A note on computation</h3>
+<ul>
+<li>Bagged trees and random forests can be fitted in parallel on many cores!</li>
+<li>Each tree is built independently of the others</li>
+</ul>
+</section></section>
+<section>
+<section id="boosting" class="title-slide slide level2">
+<h2>Boosting</h2>
+
+</section>
+<section id="boosting---training" class="slide level3">
+<h3>Boosting - training</h3>
+<p><strong>Iteratively</strong> build a succession of models:</p>
+<ul>
+<li>Train a weak model. Typically a very shallow tree (1-6 splits).</li>
+<li>In training set for <span class="math inline">\(b\)</span>th model, focus on errors made by <span class="math inline">\(b-1\)</span>th model.</li>
+<li>Use (weighted) model output</li>
+<li>Reduces bias <em>and</em> variance!</li>
+</ul>
+</section>
+<section id="adaboost-adaptive-boosting" class="slide level3">
+<h3>AdaBoost (Adaptive Boosting)</h3>
+<p>Adjust <em>weights</em> so that each successive model focuses on more “difficult” samples.</p>
+<p>Consider classification problem, where sign of model output gives estimated class label and magnitude gives confidence in label.</p>
+</section>
+<section id="adaboost-algorithm" class="slide level3">
+<h3>AdaBoost algorithm</h3>
+<ol type="1">
+<li>Let <span class="math inline">\(w_i = \frac{1}{N}\)</span> for all <span class="math inline">\(i\)</span> in training set.</li>
+<li>For <span class="math inline">\(m=1,\ldots,M\)</span>, repeat:</li>
+</ol>
+</section>
+<section id="adaboost-algorithm-inner-loop" class="slide level3">
+<h3>AdaBoost algorithm (inner loop)</h3>
+<ul>
+<li>Fit a tree <span class="math inline">\(\hat{f}^m\)</span> and compute weighted error <span class="math inline">\(err_m\)</span> (e.g. classification error) using weights on training samples <span class="math inline">\(w_i\)</span>:</li>
+</ul>
+<p><span class="math display">\[err_m = \frac{\sum_{i=1}^N w_i 1(y_i \neq \hat{f}^m(x_i))}{\sum_{i=1}^N w_i}\]</span></p>
+<ul>
+<li>Compute coefficient <span class="math inline">\(\alpha_m = \log \left( \frac{1-err_m}{err_m} \right)\)</span></li>
+<li>Update weights: <span class="math display">\[w_i \leftarrow w_i e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}\]</span></li>
+</ul>
+</section>
+<section id="adaboost-algorithm-final-step" class="slide level3">
+<h3>AdaBoost algorithm (final step)</h3>
+<ol start="3" type="1">
+<li>Output boosted model: <span class="math display">\[\hat{f}(x) = \text{sign} \left[\sum_{m=1}^M \alpha_m \hat{f}^m(x)\right]\]</span></li>
+</ol>
+</section>
+<section id="adaboost-example" class="slide level3">
+<h3>AdaBoost example</h3>
+<figure>
+<img data-src="images/adaboost-example.png" style="width:90.0%" alt="Example via https://xavierbourretsicotte.github.io/AdaBoost.html showing weak learners." /><figcaption aria-hidden="true">Example via https://xavierbourretsicotte.github.io/AdaBoost.html showing weak learners.</figcaption>
+</figure>
+</section>
+<section id="adaboost-example-2" class="slide level3">
+<h3>AdaBoost example (2)</h3>
+<figure>
+<img data-src="images/adaboost-example-final.png" style="width:50.0%" alt="Average output after 10 iterations." /><figcaption aria-hidden="true">Average output after 10 iterations.</figcaption>
+</figure>
+</section>
+<section id="boosting---algorithm-for-regression-tree-1" class="slide level3">
+<h3>Boosting - algorithm for regression tree (1)</h3>
+<ol type="1">
+<li>Let <span class="math inline">\(\hat{f}(x)=0\)</span> and <span class="math inline">\(r_i = y_i\)</span> for all <span class="math inline">\(i\)</span> in training set.</li>
+<li>For <span class="math inline">\(b=1,\ldots,B\)</span>, repeat:</li>
+</ol>
+</section>
+<section id="boosting---algorithm-for-regression-tree-inner-loop" class="slide level3">
+<h3>Boosting - algorithm for regression tree (inner loop)</h3>
+<ul>
+<li>Fit a tree <span class="math inline">\(\hat{f}^b\)</span> with <span class="math inline">\(d\)</span> splits (<span class="math inline">\(d+1\)</span> leaf nodes) on training data <span class="math inline">\((X,r)\)</span>.</li>
+<li>Update <span class="math inline">\(\hat{f}\)</span> with a <em>shrunken</em> version of new tree: <span class="math display">\[\hat{f}(x) \leftarrow \hat{f}(x) + \lambda \hat{f}^b(x)\]</span></li>
+<li>Update residuals: <span class="math display">\[r_i \leftarrow r_i - \lambda \hat{f}^b(x)\]</span></li>
+</ul>
+</section>
+<section id="boosting---algorithm-for-regression-tree-final-step" class="slide level3">
+<h3>Boosting - algorithm for regression tree (final step)</h3>
+<ol start="3" type="1">
+<li>Output boosted model: <span class="math display">\[\hat{f}(x) = \sum_{b=1}^B \lambda \hat{f}^b(x)\]</span></li>
+</ol>
+</section>
+<section id="boosting---algorithm-for-regression-tree-tuning" class="slide level3">
+<h3>Boosting - algorithm for regression tree (tuning)</h3>
+<p>Tuning parameters to select by CV:</p>
+<ul>
+<li>Number of trees <span class="math inline">\(B\)</span> - can overfit if too large.</li>
+<li>Shrinkage parameter <span class="math inline">\(\lambda\)</span>, controls <em>learning rate</em>. Typically <span class="math inline">\(0.001-0.01\)</span>. Very small <span class="math inline">\(\lambda\)</span> may require large <span class="math inline">\(B\)</span> for good performance.</li>
+<li><span class="math inline">\(d\)</span>, number of splits in each tree. ( <span class="math inline">\(d=1 \rightarrow\)</span> tree is called a <em>stump</em> )</li>
+</ul>
+</section>
+<section id="boosting---example" class="slide level3">
+<h3>Boosting - example</h3>
+<figure>
+<img data-src="images/tree-boosting.svg" style="width:60.0%" alt="Boosting: reduce bias and variance!" /><figcaption aria-hidden="true">Boosting: reduce bias and variance!</figcaption>
+</figure>
+</section>
+<section id="gradient-descent-intuition" class="slide level3">
+<h3>Gradient descent intuition</h3>
+<figure>
+<img data-src="images/gradient_descent.png" style="width:30.0%" alt="Intuition: gradient descent." /><figcaption aria-hidden="true">Intuition: gradient descent.</figcaption>
+</figure>
+</section>
+<section id="gradient-boosting" class="slide level3">
+<h3>Gradient Boosting</h3>
+<ul>
+<li><p>General goal of boosting: find the model at each stage that minimizes loss function on ensemble (computationally difficult!)</p></li>
+<li><p>AdaBoost interpretation (discovered years after classification): Gradient descent algorithm that minimizes exponential loss function.</p></li>
+<li><p>Gradient boosting: works for any differentiable loss function. At each stage, find the local gradient of loss function, and take steps in direction of steepest descent.</p></li>
+</ul>
+</section>
+<section id="gradient-descent-learning-rate" class="slide level3">
+<h3>Gradient descent: learning rate</h3>
+<figure>
+<img data-src="images/learning_rate_comparison.png" style="width:60.0%" alt="Intuition: effect of learning rate." /><figcaption aria-hidden="true">Intuition: effect of learning rate.</figcaption>
+</figure>
+</section></section>
+<section id="demo" class="title-slide slide level2">
+<h2>Demo</h2>
+<ul>
+<li>Demo on digits dataset</li>
+</ul>
+</section>
+
+<section>
+<section id="stacking" class="title-slide slide level2">
+<h2>Stacking</h2>
+
+</section>
+<section id="stacking---basic-idea" class="slide level3">
+<h3>Stacking - basic idea</h3>
+<ul>
+<li>Learn base classifiers (not necessarily same type)</li>
+<li>Construct new dataset:
+<ul>
+<li>Features: output of base classifiers</li>
+<li>Label: original label</li>
+</ul></li>
+<li>Learn a classifier on the “new” dataset</li>
+</ul>
+</section></section>
+<section id="summary-of-ensemble-methods" class="title-slide slide level2">
+<h2>Summary of ensemble methods</h2>
+<ul>
+<li>Can use a single estimator that has poor performance</li>
+<li>Combining the output of multiple estimators into a single prediction: better predictive accuracy, less interpretability</li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Linear Regression</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Linear Regression</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Simple linear regression</li>
+<li>Regression performance metrics</li>
+<li>Multiple linear regression</li>
+</ul>
+</section>
+
+<section id="regression" class="title-slide slide level2">
+<h2>Regression</h2>
+<p>The output variable <span class="math inline">\(y\)</span> is continuously valued.</p>
+<p>For each input <span class="math inline">\(\mathbf{x_i}\)</span>, the model estimates</p>
+<p><span class="math display">\[\hat{y_i} = y_i - \epsilon_i\]</span></p>
+<p>where <span class="math inline">\(\epsilon_i\)</span> is an error term, also called the <strong>residual</strong>.</p>
+</section>
+
+<section>
+<section id="simple-linear-regression" class="title-slide slide level2">
+<h2>Simple linear regression</h2>
+<p>Assume a linear relationship between single feature <span class="math inline">\(x\)</span> and target variable <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[ \hat{y} = \beta_0 + \beta_1 x\]</span></p>
+<p><span class="math inline">\(\mathbf{\beta} = (\beta_0, \beta_1)\)</span>, the intercept and slope, are model <strong>parameters</strong>.</p>
+</section>
+<section id="residual-term" class="slide level3">
+<h3>Residual term</h3>
+<p>Actual relationship include variation due to factors other than <span class="math inline">\(x\)</span>, includes <strong>residual</strong> term:</p>
+<p><span class="math display">\[y = \beta_0 + \beta_1 x + \epsilon\]</span></p>
+<p>where <span class="math inline">\(\epsilon = y - \hat{y}\)</span>.</p>
+</section>
+<section id="linear-model-with-residual---illustration" class="slide level3">
+<h3>Linear model with residual - illustration</h3>
+<figure>
+<img data-src="images/residual.svg" style="width:70.0%" alt="Example of linear fit with residuals shown as vertical deviation from regression line." /><figcaption aria-hidden="true">Example of linear fit with residuals shown as vertical deviation from regression line.</figcaption>
+</figure>
+</section>
+<section id="interpretability-of-linear-model" class="slide level3">
+<h3>Interpretability of linear model</h3>
+<p>If slope <span class="math inline">\(\beta_1\)</span> is 0.0475 sales/dollar spent on TV advertising, we can say that a $1,000 increase in TV advertising budget is, on average, associated with an increase of about 47.5 in units sold.</p>
+<p>However, note that:</p>
+<ul>
+<li>we can show a correlation, but can’t say that the relationship is causative.</li>
+<li>the value for <span class="math inline">\(\beta_1\)</span> is only an <em>estimate</em> of the true relationship between TV ad dollars and sales.</li>
+</ul>
+</section>
+<section id="recipe-for-simple-linear-regression" class="slide level3">
+<h3>“Recipe” for simple linear regression</h3>
+<ul>
+<li>Choose a <strong>model</strong>: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x\)</span></li>
+<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,N\)</span></li>
+<li>Choose a <strong>loss function</strong> that will measure how well model fits data: <strong>??</strong></li>
+<li>Find model <strong>parameters</strong> that minimize loss: find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span></li>
+<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
+</ul>
+</section>
+<section id="least-squares-model-fitting" class="slide level3">
+<h3>Least squares model fitting</h3>
+<p>Residual sum of squares:</p>
+<p><span class="math display">\[ RSS(\beta_0, \beta_1) := \sum_{i=1}^n (y_i - \hat{y_i})^2 = \sum_{i=1}^n ( \epsilon_i )^2 \]</span></p>
+<p>Least squares solution: find <span class="math inline">\((\beta_0, \beta_1)\)</span> to minimize RSS.</p>
+</section>
+<section id="recipe-for-simple-linear-regression-1" class="slide level3">
+<h3>“Recipe” for simple linear regression</h3>
+<ul>
+<li>Choose a <strong>model</strong>: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x\)</span></li>
+<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,N\)</span></li>
+<li>Choose a <strong>loss function</strong> that will measure how well model fits data: <span class="math inline">\(RSS(\beta_0,\beta_1)\)</span></li>
+<li>Find model <strong>parameters</strong> that minimize loss: find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span></li>
+<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
+</ul>
+</section>
+<section id="minimizing-rss-1" class="slide level3">
+<h3>Minimizing RSS (1)</h3>
+<p>RSS is convex, so to minimize, we take</p>
+<p><span class="math display">\[ \frac{\partial RSS}{\partial \beta_0} = 0, \frac{\partial RSS}{\partial \beta_1} = 0\]</span></p>
+<p>where</p>
+<p><span class="math display">\[ RSS(\beta_0, \beta_1) = \sum_{i=1}^n (y_i - \beta_0 - \beta_1 x_i )^2 \]</span></p>
+</section>
+<section id="minimizing-rss-2" class="slide level3">
+<h3>Minimizing RSS (2)</h3>
+<p>First, the intercept:</p>
+<p><span class="math display">\[ \frac{\partial RSS}{\partial \beta_0} = \sum_{i=1}^n  2(y_i - \beta_0 -\beta_1 x_i)(-1)\]</span></p>
+<p><span class="math display">\[  = -2 \sum_{i=1}^n (y_i - \beta_0 -\beta_1 x_i)  = 0\]</span></p>
+<p>using chain rule, power rule.</p>
+</section>
+<section id="minimizing-rss-3" class="slide level3">
+<h3>Minimizing RSS (3)</h3>
+<p>This is equivalent to setting sum of residuals to zero:</p>
+<p><span class="math display">\[  \sum_{i=1}^n \epsilon_i  = 0\]</span></p>
+</section>
+<section id="minimizing-rss-4" class="slide level3">
+<h3>Minimizing RSS (4)</h3>
+<p>Now, the slope:</p>
+<p><span class="math display">\[ \frac{\partial RSS}{\partial \beta_1} = \sum_{i=1}^n  2(y_i - \beta_0 -\beta_1 x_i)(-x_i)\]</span></p>
+<p><span class="math display">\[  = -2 \sum_{i=1}^n x_i (y_i - \beta_0 -\beta_1 x_i)  = 0\]</span></p>
+</section>
+<section id="minimizing-rss-5" class="slide level3">
+<h3>Minimizing RSS (5)</h3>
+<p>This is equivalent to:</p>
+<p><span class="math display">\[  \sum_{i=1}^n x_i \epsilon_i  = 0\]</span></p>
+</section>
+<section id="minimizing-rss-6" class="slide level3">
+<h3>Minimizing RSS (6)</h3>
+<p>Two conditions,</p>
+<p><span class="math display">\[  \sum_{i=1}^n \epsilon_i  = 0,  \sum_{i=1}^n x_i \epsilon_i  = 0\]</span></p>
+<p>where</p>
+<p><span class="math display">\[ \epsilon_i = y_i - \beta_0 - \beta_1 x_i \]</span></p>
+</section>
+<section id="minimizing-rss-7" class="slide level3">
+<h3>Minimizing RSS (7)</h3>
+<p>Which we expand into</p>
+<p><span class="math display">\[  \sum_{i=1}^n  y_i = n \beta_0 + \sum_{i=1}^n x_i \beta_1 \]</span></p>
+<p><span class="math display">\[  \sum_{i=1}^n x_i y_i = \sum_{i=1}^n  x_i \beta_0 + \sum_{i=1}^n x_i^2 \beta_1 \]</span></p>
+</section>
+<section id="minimizing-rss-8" class="slide level3">
+<h3>Minimizing RSS (8)</h3>
+<p>Divide</p>
+<p><span class="math display">\[  \sum_{i=1}^n  y_i = n \beta_0 + \sum_{i=1}^n x_i \beta_1 \]</span></p>
+<p>by <span class="math inline">\(n\)</span>, we find the intercept</p>
+<p><span class="math display">\[\beta_0 = \frac{1}{n} \sum_{i=1}^n y_i - \beta_1 \frac{1}{n} \sum_{i=1}^n x_i \]</span></p>
+</section>
+<section id="minimizing-rss-9" class="slide level3">
+<h3>Minimizing RSS (9)</h3>
+<p><span class="math display">\[\beta_0 = \frac{1}{n} \sum_{i=1}^n y_i - \beta_1 \frac{1}{n} \sum_{i=1}^n x_i \]</span></p>
+<p><span class="math display">\[ \beta_0 = \bar{y} - \beta_1 \bar{x} \]</span></p>
+<p>where sample mean <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i\)</span></p>
+</section>
+<section id="minimizing-rss-10" class="slide level3">
+<h3>Minimizing RSS (10)</h3>
+<p>To solve for <span class="math inline">\(\beta_1\)</span>: Multiply</p>
+<p><span class="math display">\[  \sum_{i=1}^n  y_i = n \beta_0 + \sum_{i=1}^n x_i \beta_1 \]</span></p>
+<p>by <span class="math inline">\(\sum x_i\)</span>, and multiply</p>
+<p><span class="math display">\[  \sum_{i=1}^n x_i y_i = \sum_{i=1}^n  x_i \beta_0 + \sum_{i=1}^n x_i^2 \beta_1 \]</span></p>
+<p>by <span class="math inline">\(n\)</span>.</p>
+</section>
+<section id="minimizing-rss-11" class="slide level3">
+<h3>Minimizing RSS (11)</h3>
+<p><span class="math display">\[  \sum_{i=1}^n x_i \sum_{i=1}^n  y_i = n \sum_{i=1}^n x_i \beta_0 + (\sum_{i=1}^n x_i)^2 \beta_1 \]</span></p>
+<p><span class="math display">\[  n \sum_{i=1}^n x_i y_i = n \sum_{i=1}^n  x_i \beta_0 + n \sum_{i=1}^n x_i^2 \beta_1 \]</span></p>
+<p>Subtract the first equation from the second to get…</p>
+</section>
+<section id="minimizing-rss-12" class="slide level3">
+<h3>Minimizing RSS (12)</h3>
+<p><span class="math display">\[  n \sum_{i=1}^n x_i y_i - \sum_{i=1}^n x_i \sum_{i=1}^n  y_i = n \sum_{i=1}^n x_i^2 \beta_1  - (\sum_{i=1}^n x_i)^2 \beta_1 \]</span></p>
+<p><span class="math display">\[ = \beta_1 \left( n \sum_{i=1}^n x_i^2 - (\sum_{i=1}^n x_i)^2 \right) \]</span></p>
+</section>
+<section id="minimizing-rss-13" class="slide level3">
+<h3>Minimizing RSS (13)</h3>
+<p>Solve for <span class="math inline">\(\beta_1\)</span>:</p>
+<p><span class="math display">\[ \beta_1  = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) }{\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
+</section>
+<section id="minimizing-rss-14" class="slide level3">
+<h3>Minimizing RSS (14)</h3>
+<p>which is:</p>
+<p><span class="math display">\[ \frac{s_{xy}}{s_x^2} \]</span></p>
+<ul>
+<li>sample covariance <span class="math inline">\(s_{xy} = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span></li>
+<li>sample variance <span class="math inline">\(s_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x}) ^2\)</span></li>
+</ul>
+</section>
+<section id="minimizing-rss-15" class="slide level3">
+<h3>Minimizing RSS (15)</h3>
+<p>Also express as</p>
+<p><span class="math display">\[ \frac{r_{xy} s_y}{s_x} \]</span></p>
+<p>where sample correlation coefficient <span class="math inline">\(r_{xy} = \frac{s_{xy}}{s_x s_y}\)</span>.</p>
+<p>(Note: from Cauchy-Schwartz law, <span class="math inline">\(|s_{xy}| &lt; s_x s_y\)</span>, we know <span class="math inline">\(r_{xy} \in [-1, 1]\)</span>)</p>
+</section>
+<section id="correlation-coefficient-visual" class="slide level3">
+<h3>Correlation coefficient: visual</h3>
+<figure>
+<img data-src="images/Correlation_examples2.svg" alt="Several sets of (x, y) points, with r_{xy} for each. Image via Wikipedia." /><figcaption aria-hidden="true">Several sets of (x, y) points, with <span class="math inline">\(r_{xy}\)</span> for each. Image via Wikipedia.</figcaption>
+</figure>
+</section>
+<section id="minimizing-rss---final-solution" class="slide level3">
+<h3>Minimizing RSS - final solution</h3>
+<p><span class="math display">\[ \beta_0 = \bar{y} - \beta_1 \bar{x} \]</span></p>
+<p><span class="math display">\[ \beta_1 = \frac{s_{xy}}{s_x^2} = \frac{r_{xy} s_y}{s_x}\]</span></p>
+</section>
+<section id="minimum-rss" class="slide level3">
+<h3>Minimum RSS</h3>
+<p><span class="math display">\[ \min_{\beta_0, \beta_1} RSS(\beta_0, \beta_1) = N (1 - r_{xy}^2) s_y^2\]</span></p>
+<ul>
+<li><strong>coefficient of determination</strong>: <span class="math inline">\(R^2 = r_{xy}^2\)</span>, explains the portion of variance in <span class="math inline">\(y\)</span> explained by <span class="math inline">\(x\)</span>.</li>
+<li><span class="math inline">\(s_y^2\)</span> is variance in target <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\((1-R^2)s_y^2\)</span> is the residual sum of squares after accounting for <span class="math inline">\(x\)</span>.</li>
+</ul>
+</section>
+<section id="visual-example-1" class="slide level3">
+<h3>Visual example (1)</h3>
+<figure>
+<img data-src="images/residual.svg" style="width:70.0%" alt="Example of linear fit with residuals shown as vertical deviation from regression line." /><figcaption aria-hidden="true">Example of linear fit with residuals shown as vertical deviation from regression line.</figcaption>
+</figure>
+</section>
+<section id="visual-example-2" class="slide level3">
+<h3>Visual example (2)</h3>
+<figure>
+<img data-src="images/3.2b.svg" style="width:40.0%" alt="Regression parameters - 3D plot." /><figcaption aria-hidden="true">Regression parameters - 3D plot.</figcaption>
+</figure>
+</section>
+<section id="visual-example-3" class="slide level3">
+<h3>Visual example (3)</h3>
+<figure>
+<img data-src="images/3.2a.svg" style="width:40.0%" alt="Regression parameters - contour plot." /><figcaption aria-hidden="true">Regression parameters - contour plot.</figcaption>
+</figure>
+</section></section>
+<section>
+<section id="regression-performance-metrics" class="title-slide slide level2">
+<h2>Regression performance metrics</h2>
+
+</section>
+<section id="r2-coefficient-of-determination" class="slide level3">
+<h3>R^2: coefficient of determination</h3>
+<p><span class="math display">\[R^2 = 1 - \frac{\frac{RSS}{n}}{s_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
+<ul>
+<li><p>For linear regression: What proportion of the variance in <span class="math inline">\(y\)</span> is “explained” by our model?</p></li>
+<li><p><span class="math inline">\(R^2 \approx 1\)</span> - model “explains” all the variance in <span class="math inline">\(y\)</span></p></li>
+<li><p><span class="math inline">\(R^2 \approx 0\)</span> - model doesn’t “explain” any of the variance in <span class="math inline">\(y\)</span></p></li>
+<li><p>Depends on the sample variance of <span class="math inline">\(y\)</span> - can’t be compared across datasets</p></li>
+</ul>
+</section>
+<section id="rss" class="slide level3">
+<h3>RSS</h3>
+<p>Definition: <strong>Residual sum of squares</strong> (RSS), also called <strong>sum of squared residuals</strong> (SSR) and <strong>sum of squared errors</strong> (SSE):</p>
+<p><span class="math display">\[RSS(\mathbf{\beta}) = \sum_{i=1}^n (y_i - \hat{y_i})^2\]</span></p>
+<p>RSS increases with <span class="math inline">\(n\)</span> (with more data).</p>
+</section>
+<section id="relative-forms-of-rss-1" class="slide level3">
+<h3>Relative forms of RSS (1)</h3>
+<ul>
+<li>RSS per sample</li>
+</ul>
+<p><span class="math display">\[ \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 = \frac{RSS}{n}\]</span></p>
+</section>
+<section id="relative-forms-of-rss-2" class="slide level3">
+<h3>Relative forms of RSS (2)</h3>
+<ul>
+<li>Normalized RSS (divide RSS per sample, by sample variance of <span class="math inline">\(y\)</span>), the ratio of <em>average error of your model</em> to <em>average error of prediction by mean</em>.</li>
+</ul>
+<p><span class="math display">\[\frac{\frac{RSS}{n}}{s_y^2} = 
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
+</section></section>
+<section>
+<section id="multiple-linear-regression" class="title-slide slide level2">
+<h2>Multiple linear regression</h2>
+
+</section>
+<section id="matrix-representation-of-data" class="slide level3">
+<h3>Matrix representation of data</h3>
+<p>Represent data as a <strong>matrix</strong>, with <span class="math inline">\(n\)</span> samples and <span class="math inline">\(k\)</span> features; one sample per row and one feature per column:</p>
+<p><span class="math display">\[ X = 
+\begin{bmatrix}
+x_{1,1} &amp; \cdots &amp; x_{1,k} \\
+\vdots  &amp; \ddots &amp; \vdots  \\
+x_{n,1} &amp; \cdots &amp; x_{n,k} 
+\end{bmatrix},
+y = 
+\begin{bmatrix}
+y_{1}  \\
+\vdots \\
+y_{n} 
+\end{bmatrix}
+\]</span></p>
+<p><span class="math inline">\(x_{i,j}\)</span> is <span class="math inline">\(j\)</span>th feature of <span class="math inline">\(i\)</span>th sample.</p>
+</section>
+<section id="linear-model" class="slide level3">
+<h3>Linear model</h3>
+<p>Assume a linear relationship between feature vector <span class="math inline">\(x = [x_1, \cdots, x_k]\)</span> and target variable <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[ \hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_k + x_k \]</span></p>
+<p>Model has <span class="math inline">\(p=k+1\)</span> terms.</p>
+</section>
+<section id="matrix-representation-of-linear-regression-1" class="slide level3">
+<h3>Matrix representation of linear regression (1)</h3>
+<p>Samples are <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></p>
+<p>Each sample has a feature vector <span class="math inline">\(\mathbf{x_i} = [x_i,1, \cdots, x_i,k]\)</span> and scalar target <span class="math inline">\(y_i\)</span></p>
+<p>Predicted value for <span class="math inline">\(i\)</span>th sample will be <span class="math inline">\(\hat{y_i} = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_k x_{i,k}\)</span></p>
+</section>
+<section id="matrix-representation-of-linear-regression-2" class="slide level3">
+<h3>Matrix representation of linear regression (2)</h3>
+<p>Define <strong>feature matrix</strong> and <strong>regression vector</strong>:</p>
+<p><span class="math display">\[ A = 
+\begin{bmatrix}
+1 &amp; x_{1,1} &amp; \cdots &amp; x_{1,k} \\
+\vdots &amp; \vdots  &amp; \ddots &amp; \vdots  \\
+1 &amp; x_{n,1} &amp; \cdots &amp; x_{n,k} 
+\end{bmatrix},
+\mathbf{\beta} = 
+\begin{bmatrix}
+\beta_{0}  \\
+\beta_{1}  \\
+\vdots \\
+\beta_{k} 
+\end{bmatrix}
+\]</span></p>
+<p>Then, <span class="math inline">\(\hat{\mathbf{y}} = A\mathbf{\beta}\)</span>, and given a new sample with feature vector <span class="math inline">\(\mathbf{x}\)</span>, predicted value is <span class="math inline">\(\hat{y} = [1, \mathbf{x}^T] \mathbf{\beta}\)</span>.</p>
+</section>
+<section id="least-squares-model-fitting-1" class="slide level3">
+<h3>Least squares model fitting</h3>
+<p>Problem: learn the best coefficients <span class="math inline">\(\mathbf{\beta} = [\beta_0, \beta_1, \cdots, \beta_k]\)</span> from the labeled training data.</p>
+<p><span class="math display">\[RSS(\mathbf{\beta}) := \sum_{i=1}^n (y_i - \hat{y_i})^2\]</span></p>
+<p>Least squares solution: Find <span class="math inline">\(\mathbf{\beta}\)</span> to minimize RSS.</p>
+</section>
+<section id="illustration---two-features" class="slide level3">
+<h3>Illustration - two features</h3>
+<figure>
+<img data-src="images/3.4.svg" style="width:50.0%" alt="The least squares regression is now a plane, chosen to minimize sum of squared distance to each observation." /><figcaption aria-hidden="true">The least squares regression is now a plane, chosen to minimize sum of squared distance to each observation.</figcaption>
+</figure>
+</section>
+<section id="supervised-learning-recipe-for-linear-regression" class="slide level3">
+<h3>Supervised learning recipe for linear regression</h3>
+<ul>
+<li>Linear model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k\)</span></li>
+<li>Data: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+<li>Loss function: <span class="math display">\[RSS(\beta_0, \beta_1, \cdots, \beta_k) = \sum_{i=1}^n (y_i - \hat{y_i})^2\]</span></li>
+<li>Find parameters: Select <span class="math inline">\(\mathbf{\beta} = (\beta_0, \beta_1, \cdots, \beta_k)\)</span> to minimize <span class="math inline">\(RSS(\mathbf{\beta})\)</span></li>
+</ul>
+</section>
+<section id="setup-ell-2-norm" class="slide level3">
+<h3>Setup: <span class="math inline">\(\ell 2\)</span> norm</h3>
+<p>Definition: Euclidian norm or <span class="math inline">\(\ell 2\)</span> norm of a vector <span class="math inline">\(\mathbf{x} = (x_1, \cdots, x_n)\)</span>:</p>
+<p><span class="math display">\[ || \mathbf{x} || = \sqrt{x_1^2 + \cdots + x_n^2}\]</span></p>
+<p>Intuitively, it is the “length” of a vector. We will want to minimize the norm of the residual.</p>
+</section>
+<section id="setup-finding-maximaminima" class="slide level3">
+<h3>Setup: Finding maxima/minima</h3>
+<p>For <span class="math inline">\(f(x)\)</span>, can find local maxima and minima by finding where the derivative with respect to <span class="math inline">\(x\)</span> is zero.</p>
+<p>For a multivariate function <span class="math inline">\(f(\mathbf{x}) = f(x_1, \cdots, x_n)\)</span>, we find places where the <strong>gradient</strong> - vector of partial derivatives - is zero, i.e. each entry must be zero:</p>
+<p><span class="math display">\[ \nabla f(\mathbf{x}) = 
+\begin{bmatrix}
+\frac{\partial f(\mathbf{x})}{\partial x_1}  \\
+\vdots \\
+\frac{\partial f(\mathbf{x})}{\partial x_n}  \\
+\end{bmatrix}
+\]</span></p>
+<p>If function is convex, there is a single global minimum.</p>
+</section>
+<section id="setup-rss-as-vector-norm" class="slide level3">
+<h3>Setup: RSS as vector norm</h3>
+<p><span class="math display">\[RSS = || \mathbf{y} - \mathbf{\hat{y}} ||^2\]</span></p>
+<p><span class="math display">\[RSS = || \mathbf{y} - \mathbf{A \beta} ||^2\]</span></p>
+</section>
+<section id="least-squares-solution-1" class="slide level3">
+<h3>Least squares solution (1)</h3>
+<p>RSS is convex, so there is a single global minimum</p>
+<p>Cost function (remember, <span class="math inline">\(p=k+1\)</span>):</p>
+<p><span class="math display">\[ RSS = \sum_{i=1}^n (y_i - \hat{y_i})^2, \hat{y_i} = \sum_{j=0}^p A_{i,j}\beta_j \]</span></p>
+</section>
+<section id="least-squares-solution-2" class="slide level3">
+<h3>Least squares solution (2)</h3>
+<p>In matrix form (note: <span class="math inline">\(||Ax-b|| = ||b-Ax||\)</span>):</p>
+<p><span class="math display">\[RSS = ||  A \mathbf{\beta} - \mathbf{y} || ^2\]</span></p>
+<p>Compute gradient via chain rule, power rule:</p>
+<p><span class="math display">\[ \nabla RSS = 2 A^T(A\mathbf{\beta} - \mathbf{y})\]</span></p>
+</section>
+<section id="least-squares-solution-3" class="slide level3">
+<h3>Least squares solution (3)</h3>
+<p>Set derivative to zero:</p>
+<p><span class="math display">\[  2 A^T(A\mathbf{\beta} - \mathbf{y}) = 0 \rightarrow A^T A\mathbf{\beta} =  A^T \mathbf{y}\]</span></p>
+<p>then</p>
+<p><span class="math display">\[ \mathbf{\beta} = (A^T A)^{-1} A^T \mathbf{y} \]</span></p>
+</section>
+<section id="least-squares-solution-4" class="slide level3">
+<h3>Least squares solution (4)</h3>
+<p>Minimum RSS:</p>
+<p><span class="math display">\[RSS = \mathbf{y}^T[I-A(A^T A)^{-1}A^T]\mathbf{y}\]</span></p>
+</section>
+<section id="interpretation-using-autocorrelation-1" class="slide level3">
+<h3>Interpretation using autocorrelation (1)</h3>
+<p>Each sample has feature vector</p>
+<p><span class="math display">\[A_i = (A_{i0}, \cdots , A_{ik}) = (1, x_{i1}, \cdots, x_{ik})\]</span></p>
+</section>
+<section id="interpretation-using-autocorrelation-2" class="slide level3">
+<h3>Interpretation using autocorrelation (2)</h3>
+<p>Define:</p>
+<ul>
+<li>Sample autocorrelation matrix: <span class="math inline">\(R_{AA} = \frac{1}{n} A^T A, R_{AA}(l,m) = \frac{1}{n} \sum_{i=1}^n A_{il}A_{im}\)</span> (correlation of feature <span class="math inline">\(l\)</span> and feature <span class="math inline">\(m\)</span>)</li>
+<li>Sample cross-correlation vector: <span class="math inline">\(R_{Ay} = \frac{1}{n} A^T y, R_{yA} (l) = \frac{1}{n} \sum_{i=1}^n A_{il}y_i\)</span> (correlation of feature <span class="math inline">\(l\)</span> and target)</li>
+</ul>
+</section>
+<section id="interpretation-using-autocorrelation-3" class="slide level3">
+<h3>Interpretation using autocorrelation (3)</h3>
+<p>Least squares solution:</p>
+<p><span class="math display">\[\mathbf{\beta} = R_{AA}^{-1}R_{Ay} \]</span></p>
+</section>
+<section id="categorical-feature" class="slide level3">
+<h3>Categorical feature?</h3>
+<p>Can use <strong>one hot encoding</strong>:</p>
+<ul>
+<li>For a categorical variable <span class="math inline">\(x\)</span> with values <span class="math inline">\(1,\cdots,M\)</span></li>
+<li>Represent with <span class="math inline">\(M\)</span> binary features: <span class="math inline">\(\phi_1, \phi_2, \cdots , \phi_m\)</span></li>
+<li>Model as <span class="math inline">\(y = \beta_0 + \beta_1 \phi_1 + \cdots + \beta_M \phi_M\)</span></li>
+</ul>
+</section>
+<section id="linear-regression---what-can-go-wrong" class="slide level3">
+<h3>Linear regression - what can go wrong?</h3>
+<ul>
+<li>Relationship may not actually be linear (may be addressed by non-linear transformation - future lecture)</li>
+<li>Violation of additive assumption (need interaction terms)</li>
+<li>“Tracking” in residuals (e.g. time series)</li>
+<li>Outliers - may be difficult to spot - may have outsize effect on regression line and/or <span class="math inline">\(R^2\)</span></li>
+<li>Collinearity</li>
+</ul>
+</section>
+<section id="residuals-plot" class="slide level3">
+<h3>Residuals plot</h3>
+<figure>
+<img data-src="images/3.9.svg" style="width:60.0%" alt="Residuals plot" /><figcaption aria-hidden="true">Residuals plot</figcaption>
+</figure>
+</section>
+<section id="dealing-with-outliers" class="slide level3">
+<h3>Dealing with outliers</h3>
+<figure>
+<img data-src="images/outlier1.jpg" style="width:60.0%" alt="“Remove outliers” is not a strategy for dealing with outliers." /><figcaption aria-hidden="true">“Remove outliers” is not a strategy for dealing with outliers.</figcaption>
+</figure>
+</section>
+<section id="references" class="slide level3">
+<h3>References</h3>
+<ul>
+<li><p>Figures in this presentation are taken from “An Introduction to Statistical Learning, with applications in R” (Springer, 2013) with permission from the authors: G. James, D. Witten, T. Hastie and R. Tibshirani.</p></li>
+<li><p>For more detail on the derivation of the least squares solution to the multiple linear regression, refer to Chapter 12 in “Introduction to Applied Linear Algebra”, Boyd and Vandenberghe.</p></li>
+<li><p>For more detail on the statistical aspects of linear regression (outside the scope of the ML course), please refer to chapter 3 of: “An Introduction to Statistical Learning with Applications in R”, G. James, D. Witten, T. Hastie and R. Tibshirani.</p></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

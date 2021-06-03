@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Model selection: model order and regularization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Model selection: model order and regularization</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Bias-variance tradeoff</li>
+<li>Model selection</li>
+<li>Cross validation</li>
+<li>Regularization</li>
+</ul>
+</section>
+
+<section>
+<section id="model-selection" class="title-slide slide level2">
+<h2>Model selection</h2>
+
+</section>
+<section id="occams-razor" class="slide level3">
+<h3>Occam’s razor</h3>
+</section>
+<section id="choosing-model-complexity" class="slide level3">
+<h3>Choosing model complexity</h3>
+<ul>
+<li>Model order selection</li>
+<li>Feature selection</li>
+<li>Model class selection</li>
+</ul>
+</section></section>
+<section>
+<section id="model-selection-problem" class="title-slide slide level2">
+<h2>Model selection problem</h2>
+<p>TODO - change this to feature selction? Use Andrew Ng notes http://cs229.stanford.edu/notes/cs229-notes5.pdf</p>
+<ul>
+<li>Linear model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_d x_d\)</span></li>
+<li>Model target <span class="math inline">\(y\)</span> as a function of features <span class="math inline">\(\symbf{x} = (x_1, \cdots, x_d)\)</span></li>
+<li>Many features, only some are relevant</li>
+<li>Model selection problem: fit a model with a small number of features</li>
+</ul>
+</section>
+<section id="model-selection-problem---formal" class="slide level3">
+<h3>Model selection problem - formal</h3>
+<p>Problem: determine a subset of features <span class="math inline">\(I \subseteq {1, \cdots, d}\)</span> with <span class="math inline">\(|I|\)</span> small.</p>
+<p>Fit model</p>
+<p><span class="math display">\[\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_d x_d\]</span></p>
+<p>where <span class="math inline">\(\beta_j = 0\)</span> for all <span class="math inline">\(j \notin I\)</span></p>
+</section>
+<section id="motivation-for-model-selection-problem" class="slide level3">
+<h3>Motivation for model selection problem</h3>
+<ul>
+<li>Limited data</li>
+<li>Very large number of features</li>
+<li>Examples: spam detection using “bag of words”, EEG, DNA MicroArray data</li>
+</ul>
+</section></section>
+<section>
+<section id="cross-validation" class="title-slide slide level2">
+<h2>Cross validation</h2>
+
+</section>
+<section id="avoiding-data-leakage-in-cv" class="slide level3">
+<h3>Avoiding data leakage in CV</h3>
+</section></section>
+<section>
+<section id="regularization" class="title-slide slide level2">
+<h2>Regularization</h2>
+
+</section>
+<section id="penalty-for-model-complexity" class="slide level3">
+<h3>Penalty for model complexity</h3>
+<p>With no bounds on complexity of model, we can always get a model with zero training error on finite training set - overfitting.</p>
+</section>
+<section id="regularization-vs.-standard-ls" class="slide level3">
+<h3>Regularization vs. standard LS</h3>
+<p>Least squares estimation:</p>
+<p><span class="math display">\[ \hat{\beta} = \argmin_\beta RSS(\beta), \quad RSS(\beta) = \sum_{i=1}^N (y_i - \hat{y_i})^2 \]</span></p>
+<p>Regularized estimation with a <strong>regularizing function</strong> <span class="math inline">\(\phi(\beta)\)</span>:</p>
+<p><span class="math display">\[ \hat{\beta} = \argmin_\beta J(\beta), \quad  J(\beta) = RSS(\beta) + \phi(\beta) \]</span></p>
+</section>
+<section id="common-regularizers-ridge-and-lasso" class="slide level3">
+<h3>Common regularizers: Ridge and LASSO</h3>
+<p>Ridge regression (L2):</p>
+<p><span class="math display">\[ \phi (\beta) = \alpha \sum_{j=1}^d | \beta_j | ^2 \]</span></p>
+<p>LASSO regression (L1):</p>
+<p><span class="math display">\[ \phi (\beta) = \alpha \sum_{j=1}^d | \beta_j | \]</span></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

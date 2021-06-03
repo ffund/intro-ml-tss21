@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Unsupervised learning (1)</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Unsupervised learning (1)</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="unsupervised-learning" class="title-slide slide level2">
+<h2>Unsupervised learning</h2>
+
+</section>
+<section id="the-basic-supervised-learning-problem" class="slide level3">
+<h3>The basic supervised learning problem</h3>
+<p>Given a <strong>sample</strong> with a vector of <strong>features</strong></p>
+<p><span class="math display">\[\mathbf{x} = (x_1, x_2,...)\]</span></p>
+<p>There is some (unknown) relationship between <span class="math inline">\(\mathbf{x}\)</span> and a <strong>target</strong> variable, <span class="math inline">\(y\)</span>, whose value is unknown.</p>
+<p>We want to find <span class="math inline">\(\hat{y}\)</span>, our <strong>prediction</strong> for the value of <span class="math inline">\(y\)</span>.</p>
+</section>
+<section id="the-basic-unsupervised-learning-problem" class="slide level3">
+<h3>The basic unsupervised learning problem</h3>
+<p>Given a <strong>sample</strong> with a vector of <strong>features</strong></p>
+<p><span class="math display">\[\mathbf{x} = (x_1, x_2,...)\]</span></p>
+<p>We want to learn something about the underlying <em>structure</em> of the data.</p>
+<p>No labels!</p>
+</section>
+<section id="unsupervised-learning-examples" class="slide level3">
+<h3>Unsupervised learning examples</h3>
+<ul>
+<li>dimensionality reduction</li>
+<li>clustering</li>
+<li>anomaly detection</li>
+<li>feature learning</li>
+<li>density estimation</li>
+</ul>
+</section></section>
+<section>
+<section id="dimensionality-reduction" class="title-slide slide level2">
+<h2>Dimensionality reduction</h2>
+<p>Why?</p>
+<ul>
+<li>Supervised ML on small feature set</li>
+<li>Visualize data</li>
+<li>Compress data</li>
+</ul>
+</section>
+<section id="goal-of-dimensionality-reduction" class="slide level3">
+<h3>Goal of dimensionality reduction</h3>
+<p>Previous feature selection:</p>
+<ul>
+<li>Choose subset of existing features</li>
+<li>Many features are somewhat correlated; redundant information</li>
+</ul>
+<p>Now: minimum number of features, maximum information.</p>
+</section>
+<section id="dimensionality-reduction-problem" class="slide level3">
+<h3>Dimensionality reduction problem</h3>
+<ul>
+<li><p>Given <span class="math inline">\(N \times p\)</span> data matrix <span class="math inline">\(\textbf{X}\)</span> where each row is a sample <span class="math inline">\(x_n\)</span></p></li>
+<li><p><strong>Problem</strong>: Map data to <span class="math inline">\(N \times p&#39;\)</span> where <span class="math inline">\(p&#39; \ll p\)</span></p></li>
+<li><p>subject to ???</p></li>
+</ul>
+</section>
+<section id="pca-intution-1" class="slide level3">
+<h3>PCA intution (1)</h3>
+<figure>
+<img data-src="images/pca-intuition-part1.png" style="width:40.0%" alt="Data with two features, on two axes. Data is centered." /><figcaption aria-hidden="true">Data with two features, on two axes. Data is centered.</figcaption>
+</figure>
+</section>
+<section id="pca-intuition-2" class="slide level3">
+<h3>PCA intuition (2)</h3>
+<figure>
+<img data-src="images/pca-animation.gif" style="width:50.0%" alt="Construct a new feature by drawing a line w_1 x_1 + w_2 x_2, and projecting data onto that line (red dots are projections). Animation source" /><figcaption aria-hidden="true">Construct a new feature by drawing a line <span class="math inline">\(w_1 x_1 + w_2 x_2\)</span>, and projecting data onto that line (red dots are projections). <a href="https://stats.stackexchange.com/a/140579/41284">Animation source</a></figcaption>
+</figure>
+</section>
+<section id="pca-intuition-3" class="slide level3">
+<h3>PCA intuition (3)</h3>
+<p>Which line?</p>
+<ul>
+<li>Maximize average squared distance from the center to each red dot; variation of new feature</li>
+<li>Minimize average squared length of the corresponding red connecting lines; total reconstruction error</li>
+</ul>
+</section>
+<section id="projections" class="slide level3">
+<h3>Projections</h3>
+<p>Given vectors <span class="math inline">\(z\)</span> and <span class="math inline">\(v\)</span>, <span class="math inline">\(\theta\)</span> is the angle between them. projection of <span class="math inline">\(z\)</span> onto <span class="math inline">\(v\)</span> is:</p>
+<p><span class="math display">\[\hat{z} = \text{Proj}_v (z) = \alpha v, \quad \alpha = \frac{v^T z}{v^T v} = \frac{||z||}{||v||} \cos \theta\]</span></p>
+<p><span class="math inline">\(V = \{\alpha v | \alpha \in R\}\)</span> are the vectors on the line spanned by <span class="math inline">\(v\)</span>, then <span class="math inline">\(\text{Proj}_v (z)\)</span> is the closest point in <span class="math inline">\(V\)</span> to <span class="math inline">\(z\)</span>: <span class="math inline">\(\hat{z} = \operatorname*{argmin}_{w \in V} || z - w ||^2\)</span>.</p>
+</section>
+<section id="sample-covariance-matrix-1" class="slide level3">
+<h3>Sample covariance matrix (1)</h3>
+<ul>
+<li>sample variance <span class="math inline">\(s_x^2 = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x}) ^2\)</span></li>
+<li>sample covariance <span class="math inline">\(s_{xy} = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})\)</span></li>
+<li>covariance matrix is <span class="math inline">\(p \times p\)</span>: <span class="math inline">\(\text{Cov}(x, y)\)</span> is a matrix <span class="math inline">\(Q\)</span> with components:</li>
+</ul>
+<p><span class="math display">\[ Q_{k,l} = \frac{1}{N} \sum_{i=1}^N (x_{ik} - \bar{x}_k)(x_{il} - \bar{x}_l)\]</span></p>
+</section>
+<section id="sample-covariance-matrix-2" class="slide level3">
+<h3>Sample covariance matrix (2)</h3>
+<p>Let <span class="math inline">\(\widetilde{X}\)</span> be the data matrix with sample mean removed, row <span class="math inline">\(\widetilde{x}_i = x_i - \bar{x}\)</span></p>
+<p>Sample covariance matrix is:</p>
+<p><span class="math display">\[Q = \frac{1}{N} \widetilde{X} ^T \widetilde{X}\]</span></p>
+<p>(compute covariance matrix by matrix product!)</p>
+</section>
+<section id="directional-variance" class="slide level3">
+<h3>Directional variance</h3>
+<p>Projection onto <span class="math inline">\(v\)</span>: <span class="math inline">\(z_i= v^T \widetilde{x}_i\)</span></p>
+<ul>
+<li>Sample mean: <span class="math inline">\(\bar{z} = v^T \bar{x}\)</span></li>
+<li>Sample variance: <span class="math inline">\(s_z^2 = v^T Q v\)</span></li>
+</ul>
+</section>
+<section id="maximizing-directional-variance-1" class="slide level3">
+<h3>Maximizing directional variance (1)</h3>
+<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>, what directions of unit vector <span class="math inline">\(v\)</span> (<span class="math inline">\(||v|| = 1\)</span>) maximizes the variance of projection <span class="math inline">\(z_i= v^T \widetilde{x}_i\)</span> along direction of <span class="math inline">\(v\)</span>?</p>
+<p><span class="math display">\[\operatorname*{max}_v v^T Q v\]</span></p>
+<p>s.t <span class="math inline">\(||v|| = 1\)</span></p>
+</section>
+<section id="maximizing-directional-variance-2" class="slide level3">
+<h3>Maximizing directional variance (2)</h3>
+<p>Let <span class="math inline">\(v_1, \ldots, v_p\)</span> be  of <span class="math inline">\(Q\)</span> (there are <span class="math inline">\(p\)</span>):</p>
+<p><span class="math display">\[Q v_j = \lambda_j v_j\]</span></p>
+<ul>
+<li>Any local maxima of the directional variance is an eigenvector of <span class="math inline">\(Q\)</span>.</li>
+<li>Sort them in descending order: <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq \cdots \lambda_p\)</span>. The largest one is the maximizing vector.</li>
+</ul>
+</section>
+<section id="projections-onto-eigenvectors-uncorrelated-features" class="slide level3">
+<h3>Projections onto eigenvectors: uncorrelated features</h3>
+<ul>
+<li>Eigenvectors are orthogonal: <span class="math inline">\(v_j^T v_k = 0\)</span> if <span class="math inline">\(j \neq k\)</span></li>
+<li>So the projections of the data onto eigenvectors are uncorrelated</li>
+<li>These are called the <em>principal components</em></li>
+<li>In practice, computed using singular value decomposition (SVD): numerically more stable</li>
+</ul>
+</section>
+<section id="pca-intuition-5" class="slide level3">
+<h3>PCA intuition (5)</h3>
+<figure>
+<img data-src="images/pca-animation.gif" style="width:50.0%" alt="Grey and black lines form rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix, and grey line points toward second eigenvector." /><figcaption aria-hidden="true">Grey and black lines form rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix, and grey line points toward second eigenvector.</figcaption>
+</figure>
+</section>
+<section id="approximating-data" class="slide level3">
+<h3>Approximating data</h3>
+<ul>
+<li>Given data <span class="math inline">\(\widetilde{x}_i\)</span>, <span class="math inline">\(i=1, \ldots, N\)</span>, and PCs <span class="math inline">\(v_1, \ldots, v_p\)</span></li>
+</ul>
+<p><span class="math display">\[\widetilde{x}_i = \sum_{j=1}^p \alpha_{i,j} v_j, \quad \alpha_{i,j} = v_j^Y \widetilde{x}_i\]</span></p>
+<p>Consider approximation with <span class="math inline">\(d\)</span> coefficients:</p>
+<p><span class="math display">\[\hat{x}_i = \sum_{i=1}^d \alpha_{i,j} v_j\]</span></p>
+</section>
+<section id="average-approximation-error" class="slide level3">
+<h3>Average approximation error</h3>
+<p>For sample <span class="math inline">\(i\)</span>, error is:</p>
+<p><span class="math inline">\(\widetilde{x}_i - \hat{x}_i = \sum_{j=d+1}^p \alpha_{i,j} v_j\)</span>$</p>
+<p>which is sum of smallest <span class="math inline">\(p-d\)</span> eigenvalues:</p>
+<p><span class="math display">\[\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \lambda_j\]</span></p>
+</section>
+<section id="proportion-of-variance" class="slide level3">
+<h3>Proportion of variance</h3>
+<ul>
+<li>Variance of data set: <span class="math inline">\(\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 = \sum_{j=1}^p \lambda_j\)</span></li>
+<li>Average approximation error: <span class="math inline">\(\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \lambda_j\)</span></li>
+<li>The  explained by <span class="math inline">\(d\)</span> PCs is:</li>
+</ul>
+<p><span class="math display">\[PoV(d) = \frac{\sum_{j=1}^d \lambda_j} {\sum_{j=1}^p \lambda_j }\]</span></p>
+</section>
+<section id="pca-demo" class="slide level3">
+<h3>PCA demo</h3>
+<p><a href="https://colab.research.google.com/drive/18mMQF9VK8A7ehR1v8G4k5yiopoHsptNv">Notebook link</a></p>
+</section>
+<section id="pca-reference" class="slide level3">
+<h3>PCA reference</h3>
+<p>Excellent set of notes on the topic: <a href="https://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf">Link</a></p>
+</section></section>
+<section>
+<section id="clustering" class="title-slide slide level2">
+<h2>Clustering</h2>
+
+</section>
+<section id="clustering-problem" class="slide level3">
+<h3>Clustering problem</h3>
+<ul>
+<li><p>Given <span class="math inline">\(N \times d\)</span> data matrix <span class="math inline">\(\textbf{X}\)</span> where each row is a sample <span class="math inline">\(x_n\)</span></p></li>
+<li><p><strong>Problem</strong>: Group data into <span class="math inline">\(K\)</span> clusters</p></li>
+<li><p>More formally: Assign <span class="math inline">\(\sigma_n = \{1, \ldots, K\}\)</span> cluster label for each sample</p></li>
+<li><p>Samples in same cluster should be close: <span class="math inline">\(||x_n - x_m||\)</span> is small when <span class="math inline">\(\sigma_n = \sigma_m\)</span></p></li>
+</ul>
+</section>
+<section id="k-means-clustering" class="slide level3">
+<h3>K-means clustering</h3>
+<p>We want to minimize</p>
+<p><span class="math display">\[J = \sum_{i=1}^K \sum_{n\in C_i} || x_n - \mu_j || ^2 \]</span></p>
+<ul>
+<li><span class="math inline">\(u_i\)</span> is the mean of each cluster</li>
+<li><span class="math inline">\(\sigma_n \in \{1, \ldots, K\}\)</span> is the cluster that <span class="math inline">\(x_n\)</span> belongs to</li>
+</ul>
+</section>
+<section id="k-means-algorithm" class="slide level3">
+<h3>K-means algorithm</h3>
+<p>Start with random (?) guesses for each <span class="math inline">\(\mu_i\)</span>. Then, iteratively:</p>
+<ul>
+<li>Update cluster membership (nearest neighbor rule): For every <span class="math inline">\(n\)</span>,</li>
+</ul>
+<p><span class="math display">\[\sigma_n = \operatorname*{argmin}_i ||x_n - \mu_i||^2\]</span></p>
+<ul>
+<li>Update mean of each cluster (centroid rule): for every <span class="math inline">\(i\)</span>, <span class="math inline">\(u_i\)</span> is average of <span class="math inline">\(x_n\)</span> in <span class="math inline">\(C_i\)</span></li>
+</ul>
+<p>(Sensitive to initial conditions!)</p>
+</section>
+<section id="k-means-visualization" class="slide level3">
+<h3>K-means visualization</h3>
+<figure>
+<img data-src="images/kmeansViz.png" style="width:60.0%" alt="Visualization of k-means clustering." /><figcaption aria-hidden="true">Visualization of k-means clustering.</figcaption>
+</figure>
+</section>
+<section id="k-means-demo" class="slide level3">
+<h3>K-means demo</h3>
+<p><a href="https://colab.research.google.com/github/jakevdp/PythonDataScienceHandbook/blob/master/notebooks/05.11-K-Means.ipynb">Notebook link</a></p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

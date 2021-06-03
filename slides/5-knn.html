@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>K Nearest Neighbor</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">K Nearest Neighbor</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Parametric vs. non-parametric models</li>
+<li>Nearest neighbor</li>
+<li>Model choices</li>
+<li>The Curse of Dimensionality</li>
+<li>Bias and variance of KNN</li>
+</ul>
+</section>
+
+<section>
+<section id="parametric-vs.-non-parametric-models" class="title-slide slide level2">
+<h2>Parametric vs. non-parametric models</h2>
+
+</section>
+<section id="so-far" class="slide level3">
+<h3>So far…</h3>
+<p>All of our models have looked like</p>
+<p><span class="math display">\[\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p\]</span></p>
+</section>
+<section id="flexible-models" class="slide level3">
+<h3>Flexible models</h3>
+<p>A model is more flexible if it can produce more possibilities for <span class="math inline">\(f(\mathbf{x})\)</span>.</p>
+<ul>
+<li>Some possibilities for <span class="math inline">\(f(x_1,\ldots,x_p) = \beta_0 + \beta_1 x_1\)</span></li>
+<li>More possibilities for <span class="math inline">\(f(x_1,\ldots,x_p) = \beta_0 + \beta_1 x_1 + \beta_2 x_2\)</span></li>
+<li>Even more possibilities for <span class="math inline">\(f(x_1,\ldots,x_p) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3\)</span></li>
+</ul>
+<p>A way to get more flexible models is with a <strong>non-parametric</strong> approach.</p>
+</section>
+<section id="parametric-models" class="slide level3">
+<h3>Parametric models</h3>
+<ul>
+<li>A particular model class is assumed (e.g. linear)</li>
+<li>Number of parameters fixed in advance</li>
+</ul>
+</section>
+<section id="non-parametric-models" class="slide level3">
+<h3>Non-parametric models</h3>
+<ul>
+<li>Minimal assumptions about model class</li>
+<li>Model structure determined by data</li>
+</ul>
+</section></section>
+<section>
+<section id="nearest-neighbor" class="title-slide slide level2">
+<h2>Nearest neighbor</h2>
+<ul>
+<li>A kind of non-parametric model.</li>
+<li>Basic idea: Find labeled samples that are “similar” to the new sample, and use their labels to make prediction for the new sample.</li>
+</ul>
+</section>
+<section id="nn" class="slide level3">
+<h3>1-NN</h3>
+<ul>
+<li>Given training data <span class="math inline">\((\mathbf{x}_{1}, y_{1}), \ldots, (\mathbf{x}_{N}, y_{N})\)</span> and a new sample <span class="math inline">\(\mathbf{x}_{0}\)</span></li>
+<li>Find the sample in the training data <span class="math inline">\(\mathbf{x}_{i&#39;}\)</span> with the least distance to <span class="math inline">\(\mathbf{x}_{0}\)</span>.</li>
+</ul>
+<p><span class="math display">\[ i&#39; = \operatorname*{argmin}_{i=1,\ldots,N}  d(\mathbf{x}_i, \mathbf{x}_0)\]</span></p>
+<ul>
+<li>Let <span class="math inline">\(\hat{y}_0 = y_{i&#39;}\)</span></li>
+</ul>
+</section>
+<section id="nn---decision-boundaries" class="slide level3">
+<h3>1NN - decision boundaries</h3>
+<figure>
+<img data-src="images/knn-decision-boundaries.png" style="width:60.0%" alt="1NN decision boundaries - Nearest neighborhoods for each point of the training data set. Note that there will be zero error on training set!" /><figcaption aria-hidden="true">1NN decision boundaries - Nearest neighborhoods for each point of the training data set. Note that there will be zero error on training set!</figcaption>
+</figure>
+</section>
+<section id="k-nearest-neighbors" class="slide level3">
+<h3>K nearest neighbors</h3>
+<p>Instead of 1 closest sample, we find <span class="math inline">\(K\)</span> closest samples.</p>
+</section>
+<section id="knn-for-classification-1" class="slide level3">
+<h3>KNN for classification (1)</h3>
+<p>Idea: Estimate conditional probability for class as fraction of points among neighbors with that class label.</p>
+</section>
+<section id="knn-for-classification-illustration" class="slide level3">
+<h3>KNN for classification (Illustration)</h3>
+<figure>
+<img data-src="images/3nn-islr.png" style="width:60.0%" alt="3-NN classification. Image from ISLR." /><figcaption aria-hidden="true">3-NN classification. Image from ISLR.</figcaption>
+</figure>
+</section>
+<section id="knn-for-classification-2" class="slide level3">
+<h3>KNN for classification (2)</h3>
+<p>Let <span class="math inline">\(N_0\)</span> be the set of <span class="math inline">\(K\)</span> points in the training data that are closest to <span class="math inline">\(\mathbf{x}_0\)</span>. Then, for each class <span class="math inline">\(m \in M\)</span>, we can estimate the conditional probability</p>
+<p><span class="math display">\[ P(y=m | \mathbf{x_0} ) = \frac{1}{K} \sum_{ (\mathbf{x}_i, y_i) \in N_0} I(y_i = k) \]</span></p>
+<p>where <span class="math inline">\(I(y_i = m)\)</span> is an indicator variable that evaluates to 1 if for a given observation <span class="math inline">\((\mathbf{x}_i, y_i) \in N_0\)</span> is a member of class <span class="math inline">\(m\)</span>, and 0 otherwise.</p>
+</section>
+<section id="knn-for-classification-3" class="slide level3">
+<h3>KNN for classification (3)</h3>
+<ul>
+<li>We can then select the class with the highest probability.</li>
+<li>Practically: select the most frequent class among the neighbors.</li>
+</ul>
+</section>
+<section id="knn-for-regression" class="slide level3">
+<h3>KNN for regression</h3>
+<p>Idea: Use the the combined label of the K nearest neighbors.</p>
+<p>Let <span class="math inline">\(N_0\)</span> be the set of <span class="math inline">\(K\)</span> points in the training data that are closest to <span class="math inline">\(\mathbf{x}_0\)</span>. Then,</p>
+<p><span class="math display">\[\hat{y}_{0} = \frac{1}{K} \sum_{ (\mathbf{x}_i, y_i) \in N_0} y_i \]</span></p>
+</section></section>
+<section>
+<section id="model-choices" class="title-slide slide level2">
+<h2>Model choices</h2>
+<ul>
+<li>What value of <span class="math inline">\(K\)</span>?</li>
+<li>What distance measure?</li>
+<li>How to combine <span class="math inline">\(K\)</span> labels into prediction?</li>
+</ul>
+</section>
+<section id="what-value-of-k" class="slide level3">
+<h3>What value of K?</h3>
+<ul>
+<li><span class="math inline">\(K\)</span> must be specified, can be selected by CV. (In general: larger K, less complex model.)</li>
+<li>Often cited “rule of thumb”: use <span class="math inline">\(K=\sqrt{N}\)</span></li>
+<li>Alternative: Radius-based neighbor learning, where fixed radius <span class="math inline">\(r\)</span> is specified, can be selected by CV. (Number of neighbors depends on local density of points.)</li>
+</ul>
+</section>
+<section id="what-value-of-k-illustration-1nn" class="slide level3">
+<h3>What value of K? Illustration (1NN)</h3>
+<figure>
+<img data-src="images/knnDemo-1nn.png" style="width:70.0%" alt="1NN" /><figcaption aria-hidden="true">1NN</figcaption>
+</figure>
+</section>
+<section id="what-value-of-k-illustration-2nn" class="slide level3">
+<h3>What value of K? Illustration (2NN)</h3>
+<figure>
+<img data-src="images/knnDemo-2nn.png" style="width:70.0%" alt="2NN" /><figcaption aria-hidden="true">2NN</figcaption>
+</figure>
+</section>
+<section id="what-value-of-k-illustration-3nn" class="slide level3">
+<h3>What value of K? Illustration (3NN)</h3>
+<figure>
+<img data-src="images/knnDemo-3nn.png" style="width:70.0%" alt="3NN" /><figcaption aria-hidden="true">3NN</figcaption>
+</figure>
+</section>
+<section id="what-value-of-k-illustration-9nn" class="slide level3">
+<h3>What value of K? Illustration (9NN)</h3>
+<figure>
+<img data-src="images/knnDemo-9nn.png" style="width:70.0%" alt="9NN" /><figcaption aria-hidden="true">9NN</figcaption>
+</figure>
+</section>
+<section id="what-distance-measure-1" class="slide level3">
+<h3>What distance measure? (1)</h3>
+<ul>
+<li>Euclidean (L2): <span class="math inline">\(\sqrt{\sum_{i=1}^k(a_i - b_i)^2}\)</span></li>
+<li>Manhattan (L1): <span class="math inline">\(\sum_{i=1}^k |a_i - b_i|\)</span></li>
+<li>Minkowski (generalization of both): <span class="math inline">\(\left( \sum_{i=1}^k ( | a_i - b_i | ) ^q \right) ^{\frac{1}{q}}\)</span></li>
+</ul>
+<p>(L2 distance prefers many medium disagreements to one big one.)</p>
+</section>
+<section id="what-distance-measure-2" class="slide level3">
+<h3>What distance measure? (2)</h3>
+<ul>
+<li>Feature weight depends on scale</li>
+<li>KNN implicitly weights all features equally</li>
+</ul>
+</section>
+<section id="standardization-1" class="slide level3">
+<h3>Standardization (1)</h3>
+<figure>
+<img data-src="https://i.stack.imgur.com/OCUmI.png" style="width:50.0%" alt="Without standardization, via https://stats.stackexchange.com/a/287439/" /><figcaption aria-hidden="true">Without standardization, via <a href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a></figcaption>
+</figure>
+</section>
+<section id="standardization-2" class="slide level3">
+<h3>Standardization (2)</h3>
+<figure>
+<img data-src="https://i.stack.imgur.com/J5r01.png" style="width:50.0%" alt="With standardization, via https://stats.stackexchange.com/a/287439/" /><figcaption aria-hidden="true">With standardization, via <a href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a></figcaption>
+</figure>
+</section>
+<section id="what-distance-measure-3" class="slide level3">
+<h3>What distance measure? (3)</h3>
+<ul>
+<li>Alternative to equal weighted features: assign feature weights</li>
+</ul>
+<p><span class="math display">\[d(\mathbf{a, b}) = \left(  \sum_{i=1}^k ( w_i | a_i - b_i | ) ^q \right) ^{\frac{1}{q}}\]</span></p>
+</section>
+<section id="how-to-combine-labels-into-prediction" class="slide level3">
+<h3>How to combine labels into prediction?</h3>
+<ul>
+<li>Basic voting: use mode of neighbors for classification, mean or median for regression.</li>
+<li>Distance-weighted: weight of vote inversely proportional to distance from the query point. (“More similar” training points count more.)</li>
+</ul>
+</section>
+<section id="nearest-neighbor-in-sklearn" class="slide level3">
+<h3>Nearest neighbor in <code>sklearn</code></h3>
+<ul>
+<li><code>KNeighborsClassifier</code></li>
+<li><code>KNeighborsRegressor</code></li>
+</ul>
+</section></section>
+<section>
+<section id="the-curse-of-dimensionality" class="title-slide slide level2">
+<h2>The Curse of Dimensionality</h2>
+
+</section>
+<section id="space-grows-exponentially-with-dimension" class="slide level3">
+<h3>Space grows exponentially with dimension</h3>
+<figure>
+<img data-src="images/bishop1-21.png" alt="Number of cells grows exponentially with dimension. From Bishop PRML, Fig. 1-21" /><figcaption aria-hidden="true">Number of cells grows exponentially with dimension. From Bishop PRML, Fig. 1-21</figcaption>
+</figure>
+</section>
+<section id="knn-in-1d" class="slide level3">
+<h3>KNN in 1D</h3>
+<ul>
+<li>Consider a dataset <span class="math inline">\((x_1, y_1), \ldots, (x_N, y_N)\)</span> with N=100</li>
+<li><span class="math inline">\(x\)</span> takes on values in the range [0,1] with uniform distribution</li>
+<li>On average, one data point is located every 1/100 units along 1D feature axis.</li>
+<li>To find 3NN, would expect to cover 3/100 of the feature axis.</li>
+</ul>
+</section>
+<section id="knn-in-2d" class="slide level3">
+<h3>KNN in 2D</h3>
+<ul>
+<li>Now consider a dataset with two features: <span class="math inline">\(([x_{1,1}, x_{1,2}], y_1), \ldots, ([x_{N,1}, x_{N,2}], y_N)\)</span> with N=100</li>
+<li>Each feature takes on values in the range [0,1] with uniform distribution</li>
+<li>To find 3NN, would expect to cover <span class="math inline">\(0.03^{\frac{1}{2}}\)</span> of the unit rectangle.</li>
+</ul>
+</section>
+<section id="density-of-samples-decreases-with-dimensions" class="slide level3">
+<h3>Density of samples decreases with dimensions</h3>
+<p>To get 3NN,</p>
+<ul>
+<li>need to cover 3% of space in 1D</li>
+<li>need to cover 17% of space in 2D</li>
+<li>need to cover 70% of space in 10D. At this point, the nearest neighbors are not much closer than the rest of the dataset.</li>
+</ul>
+</section>
+<section id="density-of-samples-decreases-with-dimensions---general" class="slide level3">
+<h3>Density of samples decreases with dimensions - general</h3>
+<p>The length of the smallest hyper-cube that contains all K-nearest neighbors of a test point:</p>
+<p><span class="math display">\[\left( \frac{K}{N} \right) ^{\frac{1}{d}}\]</span></p>
+<p>for <span class="math inline">\(N\)</span> samples with dimensionality <span class="math inline">\(d\)</span>.</p>
+</section>
+<section id="density-of-samples-decreases-with-dimensions---illustration" class="slide level3">
+<h3>Density of samples decreases with dimensions - illustration</h3>
+<figure>
+<img data-src="images/curseanimation.gif" style="width:60.0%" alt="Image source: https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote02_kNN.html" /><figcaption aria-hidden="true">Image source: <a href="https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote02_kNN.html">https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote02_kNN.html</a></figcaption>
+</figure>
+</section>
+<section id="solutions-to-the-curse-1" class="slide level3">
+<h3>Solutions to the curse (1)</h3>
+<p>Add training data?</p>
+<p><span class="math display">\[\left(\frac{K}{N}\right)^{\frac{1}{d}}\]</span></p>
+<p>As number of dimensions increases linearly, number of training samples must increase exponentially to counter the “curse”.</p>
+</section>
+<section id="solutions-to-the-curse-2" class="slide level3">
+<h3>Solutions to the curse (2)</h3>
+<p>Reduce <span class="math inline">\(d\)</span>?</p>
+<ul>
+<li>Feature selection (and in previous lab)</li>
+<li>Dimensionality reduction: a type of unsupervised learning that <em>transforms</em> high-d data into lower-d data.</li>
+</ul>
+</section></section>
+<section>
+<section id="bias-and-variance-of-knn" class="title-slide slide level2">
+<h2>Bias and variance of KNN</h2>
+
+</section>
+<section id="true-function" class="slide level3">
+<h3>True function</h3>
+<p>Suppose data has true relation</p>
+<p><span class="math display">\[ y = f_0(\mathbf{x}) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2) \]</span></p>
+<p>and our model predicts <span class="math inline">\(\hat{y} = f(\mathbf{x})\)</span>.</p>
+</section>
+<section id="expected-loss" class="slide level3">
+<h3>Expected loss</h3>
+<p>We will use least square loss function, so that the expected error at a given test point <span class="math inline">\(\mathbf{x}_{test}\)</span> is:</p>
+<p><span class="math display">\[ MSE_y(\mathbf{x}_{test}) :=  E[y-\hat{y}] ^2 \]</span></p>
+<p><span class="math display">\[ =  E[f_0(\mathbf{x}_{test}) + \epsilon_0  - f(\mathbf{x}_{test})] ^2 \]</span> <span class="math display">\[ = E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test})] ^2 + \sigma_\epsilon^2 \]</span></p>
+<p>which we know can be further decomposed into squared bias, variance, and irreducible error.</p>
+</section>
+<section id="knn-output" class="slide level3">
+<h3>KNN output</h3>
+<p>The output of the KNN algorithm at a test point is</p>
+<p><span class="math display">\[f(\mathbf{x}_{test}) = \frac{1}{K} \sum_{\ell \in K_x} f_0(\mathbf{x}_\ell) + \epsilon_\ell \]</span></p>
+<p>where <span class="math inline">\(K_x\)</span> is the set of K nearest neighbors of <span class="math inline">\(\mathbf{x}_{test}\)</span>. (We assume that these neighbors are fixed.)</p>
+</section>
+<section id="bias-of-knn" class="slide level3">
+<h3>Bias of KNN</h3>
+<p>When we take the expectation of bias over all test samples, the <span class="math inline">\(\epsilon\)</span> values disappear because it has zero mean, so squared bias becomes</p>
+<p><span class="math display">\[
+\begin{aligned}
+Bias^2 &amp;= \left( f_0(\mathbf{x}_{test})- E[f(\mathbf{x}_{test})] \right) ^2 \\
+&amp;= \left( f_0(\mathbf{x}_{test})   - E \left( \frac{1}{K} \sum_{\ell \in K_x} f_0(\mathbf{x}_\ell) + \epsilon_\ell \right)\right) ^2 \\
+&amp;=\left( f_0(\mathbf{x}_{test}) - \frac{1}{K} \sum_{\ell \in K_x} f_0(\mathbf{x}_\ell)  \right) ^2
+\end{aligned}
+\]</span></p>
+<p>(We also rely on the assumption that neighbors are fixed.)</p>
+</section>
+<section id="variance-of-knn-1" class="slide level3">
+<h3>Variance of KNN (1)</h3>
+<p><span class="math display">\[
+\begin{aligned}
+Var(\hat{y}) &amp;= Var \left( \frac{1}{K} \sum_{\ell \in K_x} f_0(\mathbf{x}_\ell) + \epsilon_\ell \right)  \\
+&amp;= \frac{1}{K^2}  \sum_{\ell \in K_x} Var \left( f_0(x_\ell) + \epsilon_\ell \right)  \\
+&amp;= \frac{1}{K^2}  \sum_{\ell \in K_x} Var \left( f_0(x_\ell) \right) + Var \left( \epsilon_\ell \right)  
+\end{aligned}
+\]</span></p>
+</section>
+<section id="variance-of-knn-2" class="slide level3">
+<h3>Variance of KNN (2)</h3>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;= \frac{1}{K^2}  \sum_{\ell \in K_x} Var \left( \epsilon_\ell \right)  \\
+&amp;= \frac{1}{K^2} K \sigma_\epsilon^2  \\
+&amp;= \frac{\sigma^2_\epsilon}{K}
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(Var(f_0(x_\ell))=0\)</span> only if we assume that the neighbors are fixed.</p>
+</section>
+<section id="mse-of-knn" class="slide level3">
+<h3>MSE of KNN</h3>
+<p>Then the MSE of KNN is</p>
+<p><span class="math display">\[ 
+MSE(\mathbf{x}_{test}) = \left( f_0(\mathbf{x}_{test}) - \frac{1}{K} \sum_{\ell \in K_x} f_0(\mathbf{x}_\ell)  \right) ^2 + \frac{\sigma^2_\epsilon}{K} + \sigma_\epsilon^2
+ \]</span></p>
+<p>where <span class="math inline">\(K_x\)</span> is the set of K nearest neighbors of <span class="math inline">\(\mathbf{x}_{test}\)</span>.</p>
+</section>
+<section id="bias-variance-tradeoff" class="slide level3">
+<h3>Bias variance tradeoff</h3>
+<ul>
+<li>Variance decreases with K</li>
+<li>Bias likely to increase with K, if function <span class="math inline">\(f_0()\)</span> is smooth. (Few closest neighbrs to test point will have similar values, so average will be close to <span class="math inline">\(f_0(\mathbf{x})\)</span>; as K increases, neighbors are further way, and average of neighbors moves away from <span class="math inline">\(f_0(\mathbf{x})\)</span>.)</li>
+</ul>
+</section>
+<section id="bias-variance-tradeoff---selected-problems" class="slide level3">
+<h3>Bias variance tradeoff - selected problems</h3>
+<figure>
+<img data-src="images/knn-two-datasets.png" style="width:70.0%" alt="Via Domingos 2000." /><figcaption aria-hidden="true">Via Domingos 2000.</figcaption>
+</figure>
+</section></section>
+<section>
+<section id="summary-of-nn-method" class="title-slide slide level2">
+<h2>Summary of NN method</h2>
+
+</section>
+<section id="nn-learning" class="slide level3">
+<h3>NN learning</h3>
+<p>Learning:</p>
+<ul>
+<li>Store training data</li>
+<li>Don’t do anything else until you have a new point to classify</li>
+</ul>
+</section>
+<section id="nn-prediction" class="slide level3">
+<h3>NN prediction</h3>
+<p>Prediction:</p>
+<ul>
+<li>Find nearest neighbors using distance metric</li>
+<li>Classification: predict most frequently occuring class among nearest neighbors</li>
+<li>Regression: predict mean value of nearest neighbors</li>
+</ul>
+</section>
+<section id="the-good-and-the-bad-1" class="slide level3">
+<h3>The good and the bad (1)</h3>
+<p>Good:</p>
+<ul>
+<li>Good interpretability</li>
+<li>Fast “learning” (<em>memory-based</em>)</li>
+<li>Works well in low dimensions for complex decision surfaces</li>
+</ul>
+</section>
+<section id="the-good-and-the-bad-2" class="slide level3">
+<h3>The good and the bad (2)</h3>
+<p>Neutral:</p>
+<ul>
+<li>Assumes similar inputs have similar outputs</li>
+</ul>
+</section>
+<section id="the-good-and-the-bad-3" class="slide level3">
+<h3>The good and the bad (3)</h3>
+<p>Bad:</p>
+<ul>
+<li>Slow prediction (especially with large N)</li>
+<li>Curse of dimensionality</li>
+</ul>
+</section>
+<section id="illustration" class="slide level3">
+<h3>Illustration</h3>
+<figure>
+<img data-src="images/knn-3-synthetic.png" alt="1NN, 3NN, 9NN comparison on three types of data, with accuracy on test set shown in the corner." /><figcaption aria-hidden="true">1NN, 3NN, 9NN comparison on three types of data, with accuracy on test set shown in the corner.</figcaption>
+</figure>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

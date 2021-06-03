@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Bias Variance Tradeoff</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Bias Variance Tradeoff</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Quantifying prediction error</li>
+<li>Bias-variance tradeoff</li>
+</ul>
+</section>
+
+<section>
+<section id="prediction-error" class="title-slide slide level2">
+<h2>Prediction error</h2>
+
+</section>
+<section id="model-class" class="slide level3">
+<h3>Model class</h3>
+<p>General ML estimation problem: given data <span class="math inline">\((x_i, y_i)\)</span>, want to learn <span class="math inline">\(y \approx \hat{y} = f(x)\)</span></p>
+<p>The <strong>model class</strong> is the <strong>set</strong> of possible estimates:</p>
+<p><span class="math display">\[ \hat{y} = f(\mathbf{x}, \mathbf{\beta}) \]</span></p>
+<p>parameterized by <span class="math inline">\(\mathbf{\beta}\)</span></p>
+</section>
+<section id="model-class-vs.-true-function" class="slide level3">
+<h3>Model class vs. true function</h3>
+<p>Our learning algorithm <em>assumes</em> a model class</p>
+<p><span class="math display">\[ \hat{y} = f(\mathbf{x}, \mathbf{\beta}) \]</span></p>
+<p>But the data has a <em>true</em> relation</p>
+<p><span class="math display">\[ y = f_0(\mathbf{x}) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2) \]</span></p>
+</section>
+<section id="sources-of-prediction-error" class="slide level3">
+<h3>Sources of prediction error</h3>
+<ul>
+<li>Noise: <span class="math inline">\(\epsilon\)</span> is fundamentally unpredictable, occurs because <span class="math inline">\(y\)</span> is influenced by factors not in <span class="math inline">\(\mathbf{x}\)</span></li>
+<li>Assumed model class: maybe <span class="math inline">\(f(\mathbf{x}, \mathbf{\beta}) \neq f_0(\mathbf{x})\)</span> for <em>any</em> <span class="math inline">\(\mathbf{\beta}\)</span> (<strong>under-modeling</strong>)</li>
+<li>Parameter estimate: maybe <span class="math inline">\(f(\mathbf{x}, \mathbf{\beta}) = f_0(\mathbf{x})\)</span> for some true <span class="math inline">\(\mathbf{\beta}_0\)</span>, but our estimate <span class="math inline">\(\mathbf{\hat{\beta}} \neq \mathbf{\beta}_0\)</span></li>
+</ul>
+</section>
+<section id="quantifying-prediction-error" class="slide level3">
+<h3>Quantifying prediction error</h3>
+<p>Given</p>
+<ul>
+<li>parameter estimate <span class="math inline">\(\mathbf{\hat{\beta}}\)</span> (computed from a fixed training set)</li>
+<li>a <em>test point</em> <span class="math inline">\(\mathbf{x}_{test}\)</span> (was not in training set)</li>
+</ul>
+<p>Then</p>
+<ul>
+<li>predicted value <span class="math inline">\(\hat{y} = f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})\)</span></li>
+<li>true value <span class="math inline">\(y = f_0(\mathbf{x}_{test}) + \epsilon\)</span></li>
+</ul>
+</section>
+<section id="output-mean-squared-error-1" class="slide level3">
+<h3>Output mean squared error (1)</h3>
+<p>Definition: output MSE given <span class="math inline">\(\mathbf{\hat{\beta}}\)</span>:</p>
+<p><span class="math display">\[ MSE_y(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) :=  E[y-\hat{y}] ^2 \]</span></p>
+<p><span class="math display">\[ =  E[f_0(\mathbf{x}_{test}) + \epsilon-f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 \]</span></p>
+</section>
+<section id="output-mean-squared-error-2" class="slide level3">
+<h3>Output mean squared error (2)</h3>
+<p>Noise <span class="math inline">\(\epsilon\)</span> on test sample is independent of <span class="math inline">\(f_0(\mathbf{x}_{test}),f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})\)</span> so</p>
+<p><span class="math display">\[ =  E[f_0(\mathbf{x}_{test}) + \epsilon-f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 \]</span></p>
+<p><span class="math display">\[ =  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 +E[\epsilon]^2\]</span></p>
+<p><span class="math display">\[ =  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 + \sigma_\epsilon^2 \]</span></p>
+</section>
+<section id="irreducible-error-1" class="slide level3">
+<h3>Irreducible error (1)</h3>
+<p>Irreducible error <span class="math inline">\(\sigma_\epsilon^2\)</span> is a fundamental limit on ability to predict <span class="math inline">\(y\)</span> (lower bound on MSE).</p>
+<p><span class="math display">\[MSE(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) \geq  \sigma_\epsilon^2\]</span></p>
+</section>
+<section id="irreducible-error-2" class="slide level3">
+<h3>Irreducible error (2)</h3>
+<p>Best case scenario: if</p>
+<ul>
+<li>true function is in model class: <span class="math inline">\(f(\mathbf{x}, \mathbf{\beta}) = f_0(\mathbf{x})\)</span> for a true <span class="math inline">\(\mathbf{\beta_0}\)</span>, and</li>
+<li>our parameter estimate is perfect: <span class="math inline">\(\mathbf{\hat{\beta}} = \mathbf{\beta_0}\)</span></li>
+</ul>
+<p>then <span class="math inline">\(E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]^2 = 0\)</span> so output error = <span class="math inline">\(\sigma_\epsilon^2\)</span>.</p>
+</section>
+<section id="function-mse-1" class="slide level3">
+<h3>Function MSE (1)</h3>
+<p>We had output MSE, error on predicted value:</p>
+<p><span class="math display">\[ MSE_y(\mathbf{x}_{test}) :=  E[y-\hat{y}] ^2 =  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 +  \sigma_\epsilon^2\]</span></p>
+<p>Now we will define function MSE, error on underlying function:</p>
+<p><span class="math display">\[ MSE_f(\mathbf{x}_{test}) :=  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]^2\]</span></p>
+</section>
+<section id="function-mse-2" class="slide level3">
+<h3>Function MSE (2)</h3>
+<p>Which can be decomposed into two parts:</p>
+<p><span class="math display">\[ MSE_f(\mathbf{x}_{test}) :=  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]^2\]</span></p>
+<p><span class="math display">\[\begin{equation} 
+\begin{split}
+MSE_f(\mathbf{x}_{test}) = \\
+\quad &amp; (f_0(\mathbf{x}_{test}) -  E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})])^2 +  \\
+\quad &amp; E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) - E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]]^2
+\end{split}
+\end{equation}\]</span></p>
+</section>
+<section id="function-mse-3" class="slide level3">
+<h3>Function MSE (3)</h3>
+<p>Note: cancellation of the cross term - Let <span class="math inline">\(\bar{f}(\mathbf{x}_{test})=E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]\)</span>. The cross term</p>
+<p><span class="math display">\[E[( f_0(\mathbf{x}_{test}) -\bar{f}(\mathbf{x}_{test})  )( f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) -\bar{f}(\mathbf{x}_{test})  )]\]</span></p>
+<p><span class="math display">\[= ( f_0(\mathbf{x}_{test}) -\bar{f}(\mathbf{x}_{test})  )E[( f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) -\bar{f}(\mathbf{x}_{test})  )]\]</span></p>
+<p><span class="math display">\[= ( f_0(\mathbf{x}_{test}) -\bar{f}(\mathbf{x}_{test})  )
+(\bar{f}(\mathbf{x}_{test}) - \bar{f}(\mathbf{x}_{test}) ) = 0\]</span></p>
+</section>
+<section id="a-hypothetical-impossible-experiment" class="slide level3">
+<h3>A hypothetical (impossible) experiment</h3>
+<p>Suppose we would get many independent training sets (from same process).</p>
+<p>For each training set,</p>
+<ul>
+<li>train our model (estimate parameters), and</li>
+<li>use this model to estimate value of test point</li>
+</ul>
+</section>
+<section id="bias-in-function-mse" class="slide level3">
+<h3>Bias in function MSE</h3>
+<p><strong>Bias</strong>: How much the average value of our estimate differs from the true value:</p>
+<p><span class="math display">\[ Bias(\mathbf{x}_{test}) := 
+f_0(\mathbf{x}_{test}) -  E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] \]</span></p>
+</section>
+<section id="variance-in-function-mse" class="slide level3">
+<h3>Variance in function MSE</h3>
+<p><strong>Variance</strong>: How much the estimate varies around its average:</p>
+<p><span class="math display">\[ Var(\mathbf{x}_{test}) := 
+E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) - E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]]^2\]</span></p>
+</section>
+<section id="bias-and-variance" class="slide level3">
+<h3>Bias and variance</h3>
+<figure>
+<img data-src="images/bias-variance-trials.png" style="width:90.0%" alt="Example: 100 trials, mean estimate and standard deviation." /><figcaption aria-hidden="true">Example: 100 trials, mean estimate and standard deviation.</figcaption>
+</figure>
+</section>
+<section id="summary-decomposition-of-mse" class="slide level3">
+<h3>Summary: decomposition of MSE</h3>
+<p>Output MSE is the sum of squared bias, variance, and irreducible error:</p>
+<p><span class="math display">\[\begin{equation}
+\begin{split}
+MSE(\mathbf{x}_{test}) = \\
+ &amp;\quad (f_0(\mathbf{x}_{test}) -  E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})])^2 + \\
+ &amp;\quad E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) - E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}]]^2 + \\
+ &amp;\quad \sigma_\epsilon^2
+\end{split}
+\end{equation}\]</span></p>
+</section>
+<section id="what-does-it-indicate" class="slide level3">
+<h3>What does it indicate?</h3>
+<p>Bias:</p>
+<ul>
+<li>Model “not flexible enough” - true function is not in model class (under-modeling or underfitting)</li>
+</ul>
+<p>Variance:</p>
+<ul>
+<li>Model is very different each time we train it on a different training set</li>
+<li>Model “too flexible” - model class is too general and also learns noise (overfitting)</li>
+</ul>
+</section>
+<section id="how-to-get-small-error" class="slide level3">
+<h3>How to get small error?</h3>
+<ul>
+<li>Get model selection right: not too flexible, but flexible enough (<strong>how?</strong>)</li>
+<li>Have enough data to constrain variability of model</li>
+<li>Other ways?</li>
+</ul>
+</section>
+<section id="bias-variance-tradeoff" class="slide level3">
+<h3>Bias variance tradeoff</h3>
+<figure>
+<img data-src="images/bias-variance-tradeoff.png" alt="Bias variance tradeoff" /><figcaption aria-hidden="true">Bias variance tradeoff</figcaption>
+</figure>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Intro to Machine Learning</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Intro to Machine Learning</h1>
+  <p class="author">Fraida Fund</p>
+  <p class="date">Summer 2021</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2 cell markdown">
+<h2>In this lecture</h2>
+<ul>
+<li>What is machine learning?</li>
+<li>Problems where machine learning can help</li>
+<li>Machine learning terminology and framework</li>
+<li>Reality check</li>
+</ul>
+</section>
+
+<section id="what-is-machine-learning" class="title-slide slide level2 cell markdown">
+<h2>What is machine learning?</h2>
+<aside class="notes">
+<ul>
+<li>To answer this question, I’m going to describe some computer systems that solve a problem.</li>
+<li>You’re going to let me know whether you think I’ve described a machine learning solution or not.</li>
+</ul>
+</aside>
+</section>
+
+<section id="solving-problems-example-1" class="slide level3 cell markdown">
+<h3>Solving problems: example (1)</h3>
+<aside class="notes">
+<p>Generally speaking, to solve problems using computer systems, we program them to</p>
+<ul>
+<li>get some input from the “real world”</li>
+<li>produce some output which is “actionable information” for the real world.</li>
+</ul>
+<figure>
+<img data-src="../images/1-intro-drawing-0.png" style="width:60.0%" alt="A system that interacts with the world." /><figcaption aria-hidden="true">A system that interacts with the world.</figcaption>
+</figure>
+</aside>
+<p>Suppose we want a system to help students decide whether to enroll in this course or not.</p>
+<ul>
+<li>Input: grades on previous coursework</li>
+<li>Actionable info: predicted ML course grade</li>
+</ul>
+</section>
+<section id="solving-problems-example-2" class="slide level3 cell markdown">
+<h3>Solving problems: example (2)</h3>
+<p>Let</p>
+<ul>
+<li><span class="math inline">\(x_1\)</span> = grade on previous probability coursework</li>
+<li><span class="math inline">\(x_2\)</span> = grade on previous linear algebra coursework</li>
+<li><span class="math inline">\(x_3\)</span> = grade on previous programming coursework</li>
+</ul>
+<p>and <span class="math inline">\(\hat{y}\)</span> is predicted ML course grade.</p>
+<aside class="notes">
+<p>The “hat” indicates that this is an <em>estimated</em> value.</p>
+<figure>
+<img data-src="../images/1-intro-drawing-1.png" style="width:60.0%" alt="A system that predicts ML course grade." /><figcaption aria-hidden="true">A system that predicts ML course grade.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="solving-problems-example-3" class="slide level3 cell markdown">
+<h3>Solving problems: example (3)</h3>
+<p>Suppose we predict your grade as</p>
+<p><span class="math display">\[\hat{y} = min(x_1, x_2, x_3)\]</span></p>
+<p>Is this ML?</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/1-intro-drawing-2.png" style="width:60.0%" alt="A system that predicts ML course grade as minimum grade from prerequisite coursework. This is a rule-based system." /><figcaption aria-hidden="true">A system that predicts ML course grade as minimum grade from prerequisite coursework. This is a <em>rule-based</em> system.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="solving-problems-example-4" class="slide level3 cell markdown">
+<h3>Solving problems: example (4)</h3>
+<p>Suppose we predict your grade as</p>
+<p><span class="math display">\[\hat{y} = w_1 x_1 + w_2 x_2 + w_3 x_3\]</span></p>
+<p>where <span class="math inline">\(w_1 = \frac{1}{4}, w_2 = \frac{1}{4}, w_3 = \frac{1}{2}\)</span>.</p>
+<p>Is this ML?</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/1-intro-drawing-3.png" style="width:60.0%" alt="A system that predicts ML course grade as weighted sum of grades from prerequisite coursework, where the weights are fixed. This is a rule-based system." /><figcaption aria-hidden="true">A system that predicts ML course grade as weighted sum of grades from prerequisite coursework, where the weights are fixed. This is a <em>rule-based</em> system.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="solving-problems-example-3-1" class="slide level3 cell markdown">
+<h3>Solving problems: example (3)</h3>
+<p>Suppose we predict your grade as the mean of last semester’s grades:</p>
+<p><span class="math display">\[\hat{y} = w_0\]</span></p>
+<p>where <span class="math inline">\(w_0 = \frac{1}{N} \sum_{i=1}^N y_i\)</span>.</p>
+<p>Is this ML?</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/1-intro-drawing-4.png" style="width:60.0%" alt="A system that predicts ML course grade as mean grade of previous students. This is a data-driven system." /><figcaption aria-hidden="true">A system that predicts ML course grade as mean grade of previous students. This is a <em>data-driven</em> system.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="solving-problems-example-4-1" class="slide level3 cell markdown">
+<h3>Solving problems: example (4)</h3>
+<p>Suppose we predict your grade using this algorithm:</p>
+<p>If <span class="math inline">\(S\)</span> is the set of 3 students from last semester with a profile most similar to yours, predict your grade as the median of their grades:</p>
+<p><span class="math display">\[\hat{y} = \underset{y_i \in S}{\mathrm{median}} (y_i) \]</span></p>
+<p>Is this ML?</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/1-intro-drawing-5.png" style="width:60.0%" alt="A system that predicts ML course grade as median of three most similar previous students. This is a data-driven system." /><figcaption aria-hidden="true">A system that predicts ML course grade as median of three most similar previous students. This is a <em>data-driven</em> system.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="rule-based-problem-solving" class="slide level3 cell markdown">
+<h3>“Rule-based” problem solving</h3>
+<ol type="1">
+<li>An algorithm is developed that will produce the desired result for a given input.</li>
+<li>The algorithm is implemented in code.</li>
+<li>Input parameters are fed to the implemented algorithm, which outputs a result.</li>
+</ol>
+</section>
+<section id="problem-solving-with-machine-learning" class="slide level3 cell markdown">
+<h3>Problem solving with machine learning</h3>
+<ol type="1">
+<li>Collect and prepare data.</li>
+<li>Build and train a model using the prepared data.</li>
+<li>Use the model on new inputs to produce a result as output.</li>
+</ol>
+</section>
+<section id="machine-learning-problems" class="title-slide slide level2 cell markdown">
+<h2>Machine learning problems</h2>
+<aside class="notes">
+<p>Now that we understand the difference between rule-based problem solving and ML-based problem solving, which is data driven, we can think about <em>what types of problems</em> are best solved with each approach.</p>
+</aside>
+</section>
+
+<section id="digits" class="cell markdown">
+<h4>Digits</h4>
+<figure>
+<img data-src="../images/digits.png" style="width:50.0%" alt="Handwritten digits in MNIST dataset" /><figcaption aria-hidden="true">Handwritten digits in MNIST dataset</figcaption>
+</figure>
+</section>
+<section id="faces" class="cell markdown">
+<h4>Faces</h4>
+<figure>
+<img data-src="../images/face-detection.png" style="width:50.0%" alt="Face detection" /><figcaption aria-hidden="true">Face detection</figcaption>
+</figure>
+</section>
+<section id="good-candidate-for-ml-or-not" class="slide level3 cell markdown">
+<h3>Good candidate for ML or not?</h3>
+<ul>
+<li>Predict volcanic eruptions</li>
+<li>Recommend new products to customers based on past purchases</li>
+<li>Identify spam email</li>
+<li>Grade students’ multiple choice quiz answers on NYU Classes</li>
+<li>Grade students’ project-based homework</li>
+</ul>
+</section>
+<section id="score-candidates-performance-in-a-job-interview-1" class="cell markdown">
+<h4>Score candidate’s performance in a job interview (1)</h4>
+<p>Is it a good candidate for ML?</p>
+<ul>
+<li>Use video recording as input to ML system</li>
+<li>Train using videos of past interviews + human assessment on key personality features</li>
+</ul>
+</section>
+<section id="score-candidates-performance-in-a-job-interview-2" class="cell markdown">
+<h4>Score candidate’s performance in a job interview (2)</h4>
+<p><img data-src="../images/1-intro-job-interview.jpeg" /></p>
+<p>Source: <a href="https://web.br.de/interaktiv/ki-bewerbung/en/">Bayerischer Rundfunk (German Public Broadcasting)</a></p>
+</section>
+<aside class="notes">
+<p>What characteristics of a problem make it well-suited to ML or not well-suited to ML?</p>
+</aside>
+<section id="problems-that-are-not-well-suited-to-ml" class="slide level3 cell markdown">
+<h3>Problems that are not well suited to ML</h3>
+<ul>
+<li>There is an accurate and simple algorithm that will produce the desired output.</li>
+<li>There is no “good” data available on which to train a model.</li>
+</ul>
+</section>
+<section id="problems-that-are-good-candidates-for-ml" class="slide level3 cell markdown">
+<h3>Problems that are good candidates for ML</h3>
+<ul>
+<li>Human expertise does not exist or is insufficient (for example, complex medical process that is not fully understood)</li>
+<li>Humans cannot easily explain their expertise (for example, handwritten digit recognition)</li>
+<li>The solution is very specific to particular cases (for example, recommendation systems)</li>
+</ul>
+</section>
+<section id="why-now" class="slide level3 cell markdown">
+<h3>Why now?</h3>
+<ul>
+<li>Statistical foundations have been around for decades</li>
+<li>What’s new:
+<ul>
+<li>Storage</li>
+<li>Connectivity</li>
+<li>Computational power</li>
+</ul></li>
+</ul>
+</section>
+<section id="machine-learning-terminology" class="title-slide slide level2 cell markdown">
+<h2>Machine learning terminology</h2>
+
+</section>
+
+<section id="machine-learning-paradigms-1" class="slide level3 cell markdown">
+<h3>Machine learning paradigms (1)</h3>
+<p><strong>Supervised learning</strong>: learn from labeled data, make predictions</p>
+<ul>
+<li>Continuous target variable: <strong>regression</strong></li>
+<li>Categorical target variable: <strong>classification</strong></li>
+</ul>
+</section>
+<section id="machine-learning-paradigms-2" class="slide level3 cell markdown">
+<h3>Machine learning paradigms (2)</h3>
+<p><strong>Unsupervised learning</strong>: learn from unlabeled data, find structure</p>
+<ul>
+<li>Group similar instances: <strong>clustering</strong></li>
+<li>Compress data while retaining relevant information: <strong>dimensionality reduction</strong></li>
+</ul>
+</section>
+<section id="machine-learning-paradigms-3" class="slide level3 cell markdown">
+<h3>Machine learning paradigms (3)</h3>
+<p><strong>Reinforcement learning</strong>: learn from how the environment responds to your actions, solve interactive problems</p>
+</section>
+<section id="the-basic-supervised-learning-problem" class="slide level3 cell markdown">
+<h3>The basic supervised learning problem</h3>
+<p>Given a <strong>sample</strong> with a vector of <strong>features</strong></p>
+<p><span class="math display">\[\mathbf{x} = (x_1, x_2,...)\]</span></p>
+<p>There is some (unknown) relationship between <span class="math inline">\(\mathbf{x}\)</span> and a <strong>target</strong> variable, <span class="math inline">\(y\)</span>, whose value is unknown.</p>
+<p>We want to find <span class="math inline">\(\hat{y}\)</span>, our <strong>prediction</strong> for the value of <span class="math inline">\(y\)</span>.</p>
+</section>
+<section id="a-supervised-machine-learning-recipe" class="slide level3 cell markdown">
+<h3>A supervised machine learning “recipe”</h3>
+<ul>
+<li>Get <strong>data</strong> in some usable <strong>representation</strong></li>
+<li>For supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,N\)</span></li>
+<li>Select a <strong>model</strong> <span class="math inline">\(f\)</span>: <span class="math inline">\(\hat{y} \approx f(x)\)</span></li>
+<li>Select a <strong>loss function</strong> that will measure how good the model is</li>
+<li>Find model <strong>parameters</strong> that minimize the loss function (use a <strong>training algorithm</strong>)</li>
+<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples (<strong>inference</strong>)</li>
+</ul>
+</section>
+<section id="your-role-in-the-ml-process" class="title-slide slide level2 cell markdown">
+<h2>Your role in the ML process</h2>
+
+</section>
+
+<section id="ml-system-via-xkcd" class="slide level3 cell markdown">
+<h3>ML system via XKCD</h3>
+<figure>
+<img data-src="../images/xkcd.png" style="width:40.0%" alt="Image via XKCD" /><figcaption aria-hidden="true">Image via XKCD</figcaption>
+</figure>
+</section>
+<section id="the-machine-learning-process" class="slide level3 cell markdown">
+<h3>The machine learning process</h3>
+<figure>
+<img data-src="../images/ml-process-simple.svg" alt="Image based on https://developers.google.com/machine-learning/" /><figcaption aria-hidden="true">Image based on https://developers.google.com/machine-learning/</figcaption>
+</figure>
+</section>
+<section id="challenges-in-ml-design" class="slide level3 cell markdown">
+<h3>Challenges in ML design</h3>
+<ul>
+<li>Acquiring and preparing data</li>
+<li>Choosing an appropriate model, and “hyperparameters”</li>
+<li>Designing a system that will <em>generalize</em> (not only to “test” data, but also in production)</li>
+</ul>
+</section>
+<section id="model-gap-metric-gap-algorithm-gap" class="title-slide slide level2 cell markdown">
+<h2>Model gap, metric gap, algorithm gap</h2>
+
+</section>
+
+<section id="the-model" class="slide level3 cell markdown">
+<h3>The model</h3>
+</section>
+<section id="the-metric" class="slide level3 cell markdown">
+<h3>The metric</h3>
+<ul>
+<li>Example: how would you train an ML system to develop new recipes?</li>
+</ul>
+</section>
+<section id="the-algorithm" class="slide level3 cell markdown">
+<h3>The algorithm</h3>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js-master/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

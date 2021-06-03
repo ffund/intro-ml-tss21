@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Logistic Regression</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Logistic Regression</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Linear classifiers</li>
+<li>Logistic regression</li>
+<li>Fitting logistic regression</li>
+</ul>
+</section>
+
+<section id="classification" class="title-slide slide level2">
+<h2>Classification</h2>
+<ul>
+<li><p>Suppose we have a series of data points <span class="math inline">\(\{(\mathbf{x_1},y_1),(\mathbf{x_2},y_2),\ldots,(\mathbf{x_n},y_n)\}\)</span> and there is some (unknown) relationship between <span class="math inline">\(\mathbf{x_i}\)</span> and <span class="math inline">\(y_i\)</span>.</p></li>
+<li><p><strong>Classification</strong>: The output variable <span class="math inline">\(y\)</span> is constrained to be <span class="math inline">\(\in {1,2,\cdots,K}\)</span></p></li>
+<li><p><strong>Binary classification</strong>: The output variable <span class="math inline">\(y\)</span> is constrained to be <span class="math inline">\(\in {0, 1}\)</span></p></li>
+</ul>
+</section>
+
+<section>
+<section id="linear-classifiers" class="title-slide slide level2">
+<h2>Linear classifiers</h2>
+
+</section>
+<section id="binary-classification-with-linear-decision-boundary" class="slide level3">
+<h3>Binary classification with linear decision boundary</h3>
+<ul>
+<li>Plot training data points</li>
+<li>Draw a line (<strong>decision boundary</strong>) separating 0 class and 1 class</li>
+<li>If a new data point is in the <strong>decision region</strong> corresponding to class 0, then <span class="math inline">\(\hat{y} = 0\)</span>.</li>
+<li>If it is in the decision region corresponding to class 1, then <span class="math inline">\(\hat{y} = 1\)</span>.</li>
+</ul>
+</section>
+<section id="binary-classification-with-linear-decision-boundary-illustration" class="slide level3">
+<h3>Binary classification with linear decision boundary: illustration</h3>
+<figure>
+<img data-src="images/linear-decision.png" style="width:60.0%" alt="Binary classification problem with linear decision boundary." /><figcaption aria-hidden="true">Binary classification problem with linear decision boundary.</figcaption>
+</figure>
+</section>
+<section id="linear-classification-rule" class="slide level3">
+<h3>Linear classification rule</h3>
+<ul>
+<li>Given a <strong>weight vector</strong>: <span class="math inline">\(\mathbf{w} = (w_0, \cdots, w_d)\)</span></li>
+<li>Compute linear combination <span class="math inline">\(z = w_0 + \sum_{j=1}^d w_d x_d\)</span></li>
+<li>Predict class: <span class="math display">\[  \hat{y} = 
+  \begin{cases}
+  1, z &gt; 0 \\
+  0, z \leq 0
+  \end{cases}
+ \]</span></li>
+</ul>
+</section>
+<section id="multi-class-classification-with-linear-decision-boundary-illustration" class="slide level3">
+<h3>Multi-class classification with linear decision boundary: illustration</h3>
+<figure>
+<img data-src="images/hyperplane.png" style="width:60.0%" alt="Each hyperplane H_i separates the examples of C_i from the examples of all other classes." /><figcaption aria-hidden="true">Each hyperplane <span class="math inline">\(H_i\)</span> separates the examples of <span class="math inline">\(C_i\)</span> from the examples of all other classes.</figcaption>
+</figure>
+</section>
+<section id="linear-separability" class="slide level3">
+<h3>Linear separability</h3>
+<p>Given training data</p>
+<p><span class="math display">\[(\mathbf{x}_i, y_i), i=1,\cdots,N\]</span></p>
+<p>The problem is <strong>perfectly linearly separable</strong> if there exists a <strong>separating hyperplane</strong> <span class="math inline">\(H_i\)</span> such that all <span class="math inline">\(\mathbf{x} \in C_i\)</span> lie on its positive side, and all <span class="math inline">\(\mathbf{x} \in C_j, j \neq i\)</span> lie on its negative side.</p>
+</section>
+<section id="non-uniqueness-of-separating-hyperplane" class="slide level3">
+<h3>Non-uniqueness of separating hyperplane</h3>
+<p>When a separating hyperplane exists, it is not unique</p>
+<figure>
+<img data-src="images/linearly_separable_01.png" style="width:30.0%" alt="Several separating hyperplanes." /><figcaption aria-hidden="true">Several separating hyperplanes.</figcaption>
+</figure>
+</section>
+<section id="non-existence-of-perfectly-separating-hyperplane" class="slide level3">
+<h3>Non-existence of perfectly separating hyperplane</h3>
+<p>Many datasets <em>not</em> linearly separable - some points will be misclassified by separating hyperplane.</p>
+<figure>
+<img data-src="images/not_seperable_01.png" style="width:30.0%" alt="Not separable." /><figcaption aria-hidden="true">Not separable.</figcaption>
+</figure>
+</section>
+<section id="choosing-a-hyperplane" class="slide level3">
+<h3>Choosing a hyperplane</h3>
+<p>We will try to find the hyperplane that minimizes loss according to some <strong>loss function</strong>.</p>
+<p>Will revisit several times this semester.</p>
+</section></section>
+<section>
+<section id="logistic-regression" class="title-slide slide level2">
+<h2>Logistic regression</h2>
+
+</section>
+<section id="probabilistic-model-for-binary-classification-with-linear-decision-boundary" class="slide level3">
+<h3>Probabilistic model for binary classification with linear decision boundary</h3>
+<ul>
+<li><p>Binary classification problem: <span class="math inline">\(y=0,1\)</span></p></li>
+<li><p>Linear classification: <span class="math inline">\(z = w_0 + \sum_{j=1}^k w_j x_j\)</span></p></li>
+<li><p>Rather than predicting <span class="math inline">\(y\)</span> directly, let us predict a probability:</p></li>
+</ul>
+<p><span class="math display">\[ P(y=i|\mathbf{x}) = f(z)? \]</span></p>
+</section>
+<section id="logistic-regression-model-as-log-of-odds-ratio" class="slide level3">
+<h3>Logistic regression model as log of odds ratio</h3>
+<p><span class="math display">\[ \ln \frac{p}{1-p} = w_0 + \sum_{j=1}^k w_k x_k\]</span></p>
+<p><span class="math display">\[ p = \frac{e^{w_0 + w_1 x_1 + \ldots}}{1+e^{w_0 + w_1 x_1 + \ldots}}  = \frac{1}{1 + e^{-(w_0 + w_1 x_1 + \ldots)}}\]</span></p>
+</section>
+<section id="logistic-function" class="slide level3">
+<h3>Logistic function</h3>
+<figure>
+<img data-src="images/sigmoid.png" style="width:50.0%" alt="Shape of sigmoid function." /><figcaption aria-hidden="true">Shape of sigmoid function.</figcaption>
+</figure>
+<ul>
+<li><span class="math inline">\(\sigma(z) = \frac{1}{1 + e^{-z}}\)</span> is a classic “S”-shaped function</li>
+<li>logistic (also called sigmoidal) function</li>
+<li>takes a real value and maps it to range <span class="math inline">\([0,1]\)</span>.</li>
+</ul>
+<p>For classification: <span class="math inline">\(\hat{y} = \sigma(\mathbf{w^T x} + w_0)\)</span></p>
+</section>
+<section id="logistic-function-for-binary-classification" class="slide level3">
+<h3>Logistic function for binary classification</h3>
+<p><span class="math display">\[ P(y=1|\mathbf{x}) = \frac{1}{1 + e^{-z}}, \quad  P(y=0|\mathbf{x}) = \frac{e^{-z}}{1 + e^{-z}} \]</span></p>
+<p>(note: <span class="math inline">\(P(y=1) + P(y=0) = 1\)</span>)</p>
+</section>
+<section id="logistic-function-with-threshold" class="slide level3">
+<h3>Logistic function with threshold</h3>
+<p>Choose a threshold <span class="math inline">\(t\)</span>, then</p>
+<p><span class="math display">\[ \hat{y} = 
+\begin{cases}
+1, \quad P(y=1|\mathbf{x}) &gt; t \\
+0, \quad P(y=1|\mathbf{x}) \leq t
+\end{cases}
+\]</span></p>
+</section>
+<section id="logistic-model-as-a-soft-classifier" class="slide level3">
+<h3>Logistic model as a “soft” classifier</h3>
+<figure>
+<img data-src="images/sigmoid-shape.png" style="width:40.0%" alt="Plot of P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x. As w_1 \to \infty the logistic model becomes a “hard” rule." /><figcaption aria-hidden="true">Plot of <span class="math inline">\(P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x\)</span>. As <span class="math inline">\(w_1 \to \infty\)</span> the logistic model becomes a “hard” rule.</figcaption>
+</figure>
+</section>
+<section id="logistic-classifier-properties-1" class="slide level3">
+<h3>Logistic classifier properties (1)</h3>
+<ul>
+<li>Class probabilities depend on distance from separating hyperplane</li>
+<li>Points far from separating hyperplane have probability <span class="math inline">\(\approx 0\)</span> or <span class="math inline">\(\approx 1\)</span></li>
+<li>When <span class="math inline">\(|| \mathbf{w}||\)</span> is larger, class probabilities go towards extremes (0,1) more quickly</li>
+</ul>
+</section>
+<section id="logistic-classifier-properties-2" class="slide level3">
+<h3>Logistic classifier properties (2)</h3>
+<ul>
+<li>Unlike linear regression, weights do <em>not</em> correspond to change in output associated with one-unit change in input</li>
+<li>Sign of weight <em>does</em> tell us about relationship between a given feature and target variable</li>
+</ul>
+</section>
+<section id="logistic-regression---illustration" class="slide level3">
+<h3>Logistic regression - illustration</h3>
+<figure>
+<img data-src="images/logistic-regression-contour-plot.png" style="width:60.0%" alt="Logistic regression, illustrated with contour plot." /><figcaption aria-hidden="true">Logistic regression, illustrated with contour plot.</figcaption>
+</figure>
+</section>
+<section id="multi-class-linear-regression" class="slide level3">
+<h3>Multi-class linear regression</h3>
+<p>Suppose <span class="math inline">\(y \in 1, \ldots, K\)</span>. We can formulate the multi-class logistic regression using:</p>
+<ul>
+<li><span class="math inline">\(\mathbf{W} \in R^{K\times d}, \mathbf{w}_0 \in R^k\)</span> (slope matrix and bias vector)</li>
+<li><span class="math inline">\(\mathbf{z} = \mathbf{Wx} + \mathbf{w}_0\)</span> (<span class="math inline">\(K\)</span> linear functions)</li>
+</ul>
+</section>
+<section id="softmax-function" class="slide level3">
+<h3>Softmax function</h3>
+<p><span class="math display">\[ g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
+<ul>
+<li>Takes as input a vector of <span class="math inline">\(K\)</span> numbers</li>
+<li>Outputs <span class="math inline">\(K\)</span> probabilities proportional to the exponentials of the input numbers.</li>
+</ul>
+</section>
+<section id="softmax-function-as-a-pmf" class="slide level3">
+<h3>Softmax function as a PMF</h3>
+<p>Acts like a probability mass function:</p>
+<ul>
+<li><span class="math inline">\(g_k(\mathbf{z}) \in [0,1]\)</span> for each <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(\sum_{k=1}^K g_k(\mathbf{z}) = 1\)</span></li>
+<li>larger input corresponds to larger “probability”</li>
+</ul>
+</section>
+<section id="softmax-function-for-multi-class-logistic-regression-1" class="slide level3">
+<h3>Softmax function for multi-class logistic regression (1)</h3>
+<p>Class probabilities are given by</p>
+<p><span class="math display">\[P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
+</section>
+<section id="softmax-function-for-multi-class-logistic-regression-2" class="slide level3">
+<h3>Softmax function for multi-class logistic regression (2)</h3>
+<p>When <span class="math inline">\(z_k \gg z_{\ell}\)</span> for all <span class="math inline">\(\ell \neq k\)</span>:</p>
+<ul>
+<li><span class="math inline">\(g_k(\mathbf{z}) \approx 1\)</span></li>
+<li><span class="math inline">\(g_\ell(\mathbf{z}) \approx 0\)</span> for all <span class="math inline">\(\ell \neq k\)</span></li>
+</ul>
+<p>Assign highest probability to class <span class="math inline">\(k\)</span> when <span class="math inline">\(z_k\)</span> is largest.</p>
+</section></section>
+<section>
+<section id="fitting-logistic-regression-model" class="title-slide slide level2">
+<h2>Fitting logistic regression model</h2>
+
+</section>
+<section id="learning-logistic-model-parameters" class="slide level3">
+<h3>Learning logistic model parameters</h3>
+<p>Let <span class="math inline">\(\mathbf{W} \in R^{K\times p}\)</span> be a weight matrix including bias term <span class="math inline">\((p=d+1)\)</span>.</p>
+<p>Linear weights are unknown <strong>model parameters</strong>:</p>
+<p><span class="math display">\[ \mathbf{z} = \mathbf{W x}, \mathbf{W} \in R^{K \times p}\]</span></p>
+<p><span class="math display">\[ P(y=k | \mathbf{x}) = g_k(\mathbf{z}) = g_k(\mathbf{Wx})\]</span></p>
+<p>Given training data <span class="math inline">\((\mathbf{x}_i, y_i), i=1,\ldots,N\)</span>, we must learn <span class="math inline">\(\mathbf{W}\)</span>.</p>
+</section>
+<section id="maximum-likelihood-estimation-1" class="slide level3">
+<h3>Maximum likelihood estimation (1)</h3>
+<p>Let <span class="math inline">\(P(\mathbf{y}| \mathbf{X}, \mathbf{W})\)</span> be the probability of class labels <span class="math inline">\(\mathbf{y} = (y_1, \ldots, y_N)^T\)</span> given inputs <span class="math inline">\(\mathbf{X} = (\mathbf{x}_1, \ldots, \mathbf{x}_N)^T\)</span> and weights <span class="math inline">\(\mathbf{W}\)</span>.</p>
+<p>The <strong>maximum likelihood estimate</strong></p>
+<p><span class="math display">\[ \mathbf{\hat{W}} = \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W})\]</span></p>
+<p>is the estimate of parameters for which these observations are most likely.</p>
+</section>
+<section id="maximum-likelihood-estimation-2" class="slide level3">
+<h3>Maximum likelihood estimation (2)</h3>
+<p>Assume outputs <span class="math inline">\(y_i\)</span> are independent of one another,</p>
+<p><span class="math display">\[ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \prod_{i=1}^N P(y_i| \mathbf{x_i}, \mathbf{W})\]</span></p>
+</section>
+<section id="maximum-likelihood-estimation-3" class="slide level3">
+<h3>Maximum likelihood estimation (3)</h3>
+<p>Define the <strong>negative log likelihood</strong>:</p>
+<p><span class="math display">\[ L(\mathbf{W}) = -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W})\]</span></p>
+<p><span class="math display">\[ = - \sum_{i=1}^N \ln P(y_i| \mathbf{x_i}, \mathbf{W})\]</span></p>
+<p>(also called cross-entropy)</p>
+</section>
+<section id="maximum-likelihood-estimation-4" class="slide level3">
+<h3>Maximum likelihood estimation (4)</h3>
+<p>Then we can re-write max likelihood estimator using a loss function to minimize:</p>
+<p><span class="math display">\[ \mathbf{\hat{W}} = \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \operatorname*{argmin}_W L(\mathbf{W})\]</span></p>
+</section>
+<section id="binary-cross-entropy-loss-1" class="slide level3">
+<h3>Binary cross-entropy loss (1)</h3>
+<p>For binary classification with class labels <span class="math inline">\(0, 1\)</span>:</p>
+<p><span class="math display">\[\begin{equation} 
+\begin{aligned}
+\ln P(y_i | \mathbf{x_i}, \mathbf{w}) &amp; \\
+ &amp; = y_i \ln P(y_i = 1| \mathbf{x_i}, \mathbf{w}) + (1 − y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{w}) \\
+ &amp; = y_i \ln \sigma(z_i)  + (1 − y_i) \ln (1-\sigma(z_i)) \\
+ &amp; = y_i (\ln \sigma(z_i) - \ln \sigma(-z_i)) + \ln \sigma(-z_i) \\
+ &amp; = y_i \ln \frac{\sigma(z_i)}{\sigma(-z_i)} + \ln \sigma(-z_i) \\
+ &amp; = y_i \ln \frac{1+e^{z_i}}{1+e^{-z_i}} + \ln \sigma(-z_i) \\
+ &amp; = y_i \ln \frac{e^{z_i}(e^{-z_i}+1)}{1+e^{-z_i}} + \ln \sigma(-z_i)  \\
+ &amp; =  y_i z_i - \ln (1+e^{z_i}) 
+\end{aligned}
+\end{equation}\]</span></p>
+<p>(Note: <span class="math inline">\(\sigma(-z) = 1-\sigma(z)\)</span>)</p>
+</section>
+<section id="binary-cross-entropy-loss-2" class="slide level3">
+<h3>Binary cross-entropy loss (2)</h3>
+<p>Binary cross-entropy loss function (negative log likelihood):</p>
+<p><span class="math display">\[\sum_{i=1}^N \ln (1+e^{z_i}) - y_i z_i\]</span></p>
+</section>
+<section id="cross-entropy-loss-for-multi-class-classification-1" class="slide level3">
+<h3>Cross-entropy loss for multi-class classification (1)</h3>
+<p>Define “one-hot” vector - for a sample from class <span class="math inline">\(k\)</span>, all entries in the vector are <span class="math inline">\(0\)</span> except for the <span class="math inline">\(k\)</span>th entry which is <span class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[r_{ik} = 
+\begin{cases}
+1 \quad y_i = k \\
+0 \quad y_i \neq k
+\end{cases}
+\]</span></p>
+<p><span class="math display">\[i = 1,\ldots , N, \quad k=1, \ldots, K\]</span></p>
+</section>
+<section id="cross-entropy-loss-for-multi-class-classification-2" class="slide level3">
+<h3>Cross-entropy loss for multi-class classification (2)</h3>
+<p>Then,</p>
+<p><span class="math display">\[ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) = \sum_{k=1}^K r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})\]</span></p>
+<p>Cross-entropy loss function is</p>
+<p><span class="math display">\[ \sum_{i=1}^N \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right]\]</span></p>
+</section>
+<section id="minimizing-cross-entropy-loss" class="slide level3">
+<h3>Minimizing cross-entropy loss</h3>
+<p>To minimize, we would take the partial derivative:</p>
+<p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} = 0 \]</span></p>
+<p>for all <span class="math inline">\(W_{kj}\)</span></p>
+<p><strong>But</strong>, there is no closed-form expression - can only estimate weights via numerical optimization.</p>
+</section></section>
+<section id="recipe-for-logistic-regression" class="title-slide slide level2">
+<h2>“Recipe” for logistic regression</h2>
+<ul>
+<li>Choose a <strong>model</strong>: get <span class="math inline">\(P(y = k | \mathbf{x})\)</span> using sigmoid or softmax.</li>
+<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,N\)</span></li>
+<li>Choose a <strong>loss function</strong> that will measure how well model fits data: cross-entropy loss</li>
+<li>Find model <strong>parameters</strong> that minimize loss: use numerical optimization to find weights</li>
+<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Neural networks</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Neural networks</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="recap" class="title-slide slide level2">
+<h2>Recap</h2>
+<ul>
+<li>Last week: neural networks</li>
+<li>Many parameters</li>
+<li>Train using gradient descent</li>
+<li>How to compute gradients?</li>
+</ul>
+</section>
+
+<section>
+<section id="backpropagation" class="title-slide slide level2">
+<h2>Backpropagation</h2>
+
+</section>
+<section id="how-to-compute-gradients" class="slide level3">
+<h3>How to compute gradients?</h3>
+<ul>
+<li>Gradient descent requires computation of the gradient <span class="math inline">\(\nabla L(\theta)\)</span></li>
+<li>Backpropagation is key to efficient computation of gradients</li>
+</ul>
+</section>
+<section id="composite-functions-and-computation-graphs" class="slide level3">
+<h3>Composite functions and computation graphs</h3>
+<p>Suppose we have a composite function <span class="math inline">\(f(g(h(x)))\)</span></p>
+<p>We can represent it as a computational graph, where each connection is an input and each node performs a function or operation:</p>
+</section>
+<section id="forward-pass-on-computational-graph" class="slide level3">
+<h3>Forward pass on computational graph</h3>
+<p>To compute the output <span class="math inline">\(f(g(h(x)))\)</span>, we do a <em>forward pass</em> on the computational graph:</p>
+<ul>
+<li>Compute <span class="math inline">\(v=h(x)\)</span></li>
+<li>Compute <span class="math inline">\(u=g(v)\)</span></li>
+<li>Compute <span class="math inline">\(f(u)\)</span></li>
+</ul>
+</section>
+<section id="derivative-of-composite-function" class="slide level3">
+<h3>Derivative of composite function</h3>
+<ul>
+<li><p>Suppose need to compute the derivative of the composite function <span class="math inline">\(f(g(h(x)))\)</span> with respect to <span class="math inline">\(x\)</span></p></li>
+<li><p>We will use the chain rule.</p></li>
+</ul>
+</section>
+<section id="backward-pass-on-computational-graph" class="slide level3">
+<h3>Backward pass on computational graph</h3>
+<p>We can compute this chain rule derivative by doing a <em>backward pass</em> on the computational graph:</p>
+<p>We just need to get the derivative of each node with respect to its inputs:</p>
+<p><span class="math display">\[\frac{df}{dx} = \frac{df}{du} \frac{dg}{dv} \frac{dh}{dx}\]</span></p>
+</section>
+<section id="neural-network-computation-graph" class="slide level3">
+<h3>Neural network computation graph</h3>
+
+</section>
+<section id="backpropagation-error-illustration" class="slide level3">
+<h3>Backpropagation error: illustration</h3>
+<p>At a node <span class="math inline">\(j\)</span>,</p>
+<ul>
+<li><span class="math inline">\(z_j = \sum_i w_{j,i} u_{i}\)</span></li>
+<li><span class="math inline">\(u_j = g(z_j)\)</span></li>
+</ul>
+</section>
+<section id="backpropagation-error-definition" class="slide level3">
+<h3>Backpropagation error: definition</h3>
+<ul>
+<li><p>Chain rule: <span class="math inline">\(\frac{\partial L}{\partial w_{j,i}} = \frac{\partial L}{\partial z_{j}} \frac{\partial z_{j}}{\partial w_{j,i}}\)</span></p></li>
+<li><p>Denote the backpropagation error of the node <span class="math inline">\(j\)</span> as <span class="math inline">\(\delta_j = \frac{\partial L}{\partial z_j}\)</span></p></li>
+<li><p>Since <span class="math inline">\(z_j = \sum_i w_{j,i} u_{i}\)</span>, <span class="math inline">\(\frac{\partial z_j}{\partial w_{j,i}} = u_i\)</span></p></li>
+<li><p>Then <span class="math inline">\(\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i\)</span></p></li>
+</ul>
+</section>
+<section id="backpropagation-error-output-unit" class="slide level3">
+<h3>Backpropagation error: output unit</h3>
+<p>For output unit in regression network, with</p>
+<p><span class="math display">\[L =  \frac{1}{2}\sum_n (y_n - z_{O,n})^2\]</span></p>
+<p>Then <span class="math inline">\(\delta_O = \frac{\partial L}{\partial z_O} = -(y_n - z_{O})\)</span></p>
+</section>
+<section id="backpropagation-error-hidden-unit-illustration" class="slide level3">
+<h3>Backpropagation error: hidden unit illustration</h3>
+
+</section>
+<section id="backpropagation-error-hidden-unit" class="slide level3">
+<h3>Backpropagation error: hidden unit</h3>
+<p>For a hidden unit,</p>
+<p><span class="math display">\[\delta_j = \frac{\partial L}{\partial z_j} = \sum_k \frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial z_j}\]</span></p>
+<p><span class="math display">\[\delta_j = \sum_k \delta_k \frac{\partial z_k}{\partial z_j} =  \sum_k \delta_k w_{k,j} g&#39;(z_j) = g&#39;(z_j) \sum_k \delta_k w_{k,j} \]</span></p>
+<p>using <span class="math inline">\(\delta_k = \frac{\partial L}{\partial z_k}\)</span>. And because <span class="math inline">\(z_k = \sum_l w_{k,l} u_l = \sum_l w_{k,l} g(z_l)\)</span>, <span class="math inline">\(\frac{\partial z_k}{\partial z_j} = w_{k,j}g&#39;(z_j)\)</span>.</p>
+</section>
+<section id="derivatives-for-common-loss-functions" class="slide level3">
+<h3>Derivatives for common loss functions</h3>
+<p>Squared/L2 loss:</p>
+<p><span class="math display">\[L = \sum_i (y_i - z_{O,i})^2, \quad \frac{\partial L}{\partial z_{O,i}} = \sum_i -(y_i - z_{O,i})\]</span></p>
+<p>Binary cross entropy loss:</p>
+<p><span class="math display">\[L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partial L}{\partial z_{O,i}} = y_i - \frac{ e^{y_i z_{O,i}} }{1 + e^{y_i z_{O,i}} }\]</span></p>
+</section>
+<section id="derivatives-for-common-activation-functions" class="slide level3">
+<h3>Derivatives for common activation functions</h3>
+<ul>
+<li>Sigmoid activation: <span class="math inline">\(g&#39;(x) = \sigma(x) (1-\sigma(x))\)</span></li>
+<li>Tanh activation: <span class="math inline">\(g&#39;(x) = \frac{1}{\text{cosh}^2(x)}\)</span></li>
+</ul>
+</section>
+<section id="backpropagation-gradient-descent-algorithm" class="slide level3">
+<h3>Backpropagation + gradient descent algorithm</h3>
+<ol type="1">
+<li>Start with random (small) weights. Apply input <span class="math inline">\(x_n\)</span> to network and propagate values forward using <span class="math inline">\(z_j = \sum_i w_{j,i} u_i\)</span> and <span class="math inline">\(u_j = g(z_j)\)</span>. (Sum is over all inputs to node <span class="math inline">\(j\)</span>.)</li>
+<li>Evaluate <span class="math inline">\(\delta_k\)</span> for all output units.</li>
+<li>Backpropagate the <span class="math inline">\(\delta\)</span>s to get <span class="math inline">\(\delta_j\)</span> for each hidden unit. (Sum is over all outputs of node <span class="math inline">\(j\)</span>.)</li>
+</ol>
+<p><span class="math display">\[\delta_j = g&#39;(z_j) \sum_k w_{k,j} \delta_k\]</span></p>
+<ol start="4" type="1">
+<li>Use <span class="math inline">\(\frac{\partial L_n}{\partial w_{j,i}} = \delta_j u_i\)</span> to evaluate derivatives.</li>
+<li>Update weights using gradient descent.</li>
+</ol>
+</section>
+<section id="backpropagation-demo-notebook" class="slide level3">
+<h3>Backpropagation demo notebook</h3>
+<p><a href="https://colab.research.google.com/drive/1RXYHjJQiG97nzGiMNyJmHO9LxMQm9Sjh">Link to demo notebook</a></p>
+</section>
+<section id="why-backpropagation" class="slide level3">
+<h3>Why backpropagation?</h3>
+<figure>
+<img data-src="images/tree-forwradmode.png" style="width:60.0%" alt="Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input. Image via https://colah.github.io/posts/2015-08-Backprop/." /><figcaption aria-hidden="true">Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input. Image via <a href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</figcaption>
+</figure>
+<figure>
+<img data-src="images/tree-backprop.png" style="width:60.0%" alt="Reverse-mode differentiation from output to input gives us derivative of output with respect to every node. Image via https://colah.github.io/posts/2015-08-Backprop/." /><figcaption aria-hidden="true">Reverse-mode differentiation from output to input gives us derivative of output with respect to every node. Image via <a href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</figcaption>
+</figure>
+</section></section>
+<section>
+<section id="training-challenges" class="title-slide slide level2">
+<h2>Training challenges</h2>
+<p>Some models may not “converge” - why?</p>
+</section>
+<section id="learning-rate" class="slide level3">
+<h3>Learning rate</h3>
+<ul>
+<li>If learning rate is too high, weights can oscillate</li>
+<li>Can use adaptive learning rate algorithm like: momentum, RMSProp, Adam</li>
+</ul>
+</section>
+<section id="local-minima" class="slide level3">
+<h3>Local minima</h3>
+<ul>
+<li>Error surface may have local minima</li>
+<li>Gradient descent can get “trapped”</li>
+<li>“Noise” can help get out of local minima: using stochastic gradient descent with one sample at a time, adding noise to data or weights, etc.</li>
+</ul>
+</section>
+<section id="unstable-gradients" class="slide level3">
+<h3>Unstable gradients</h3>
+<ul>
+<li>Backprop in a neural network involves multiplication of terms of the form <span class="math inline">\(w_j g&#39;(z_j)\)</span></li>
+<li>When this term tends to be small: gradients get smaller and smaller as we move from output to input</li>
+<li>When this term tends to be large: gradients get larger and larger as we move from output to input</li>
+</ul>
+</section>
+<section id="vanishing-gradient-problem-illustration" class="slide level3">
+<h3>Vanishing gradient problem: illustration</h3>
+<figure>
+<img data-src="images/sigmoid-derivative.png" style="width:40.0%" alt="Note the “flat spot” on the sigmoid, where the derivative is close to zero. Ideally, we want to operate in “linear” region of activation function" /><figcaption aria-hidden="true">Note the “flat spot” on the sigmoid, where the derivative is close to zero. Ideally, we want to operate in “linear” region of activation function</figcaption>
+</figure>
+</section>
+<section id="herd-effect" class="slide level3">
+<h3>“Herd effect”</h3>
+<ul>
+<li>Hidden units all move in the same direction at once, instead of “specializing”</li>
+<li>Solution: use initial (small!) random weights</li>
+<li>Use small initial learning rate so that hidden units can find “specialization” before taking large steps</li>
+</ul>
+</section>
+<section id="many-factors-affect-training-efficiency" class="slide level3">
+<h3>Many factors affect training efficiency</h3>
+<ul>
+<li>Number of layers/hidden units</li>
+<li>Choice of activation function</li>
+<li>Choice of loss function</li>
+</ul>
+<p>Classic paper: <a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf">“Efficient BackProp”, Yann LeCun et al, 1998</a></p>
+</section></section>
+<section>
+<section id="training-a-neural-network-in-python" class="title-slide slide level2">
+<h2>Training a neural network in Python</h2>
+
+</section>
+<section id="keras" class="slide level3">
+<h3>Keras</h3>
+<ul>
+<li>High-level Python library for building and fitting neural networks</li>
+<li>Runs on top of a <em>backend</em></li>
+</ul>
+</section>
+<section id="backends-for-deep-learning" class="slide level3">
+<h3>Backends for deep learning</h3>
+<p>Keras-compatible backends:</p>
+<ul>
+<li>TensorFlow (Google)</li>
+<li>CNTK (Microsoft)</li>
+<li>Theano (LISA Lab at Université de Montréal)</li>
+</ul>
+</section>
+<section id="pytorch" class="slide level3">
+<h3>PyTorch</h3>
+<ul>
+<li>Also a high-level Python library for neural networks</li>
+<li>Developed by Facebook</li>
+</ul>
+</section>
+<section id="keras-recipe" class="slide level3">
+<h3>Keras recipe</h3>
+<ol type="1">
+<li>Describe model architecture</li>
+<li>Select optimizer</li>
+<li>Select loss function, compile model</li>
+<li>Fit model</li>
+<li>Test/use model</li>
+</ol>
+</section>
+<section id="demo-notebook" class="slide level3">
+<h3>Demo notebook</h3>
+<p><a href="https://colab.research.google.com/github/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Link to demo notebook (by Sundeep Rangan)</a></p>
+</section></section>
+<section>
+<section id="networks-with-multiple-hidden-layers" class="title-slide slide level2">
+<h2>Networks with multiple hidden layers</h2>
+
+</section>
+<section id="networks-of-linear-units" class="slide level3">
+<h3>Networks of linear units</h3>
+<ul>
+<li>Recall: hidden layer doesn’t do anything with linear activation function</li>
+<li>Equivalent to a single layer of weights</li>
+</ul>
+</section>
+<section id="non-linear-units-and-one-layer-of-weights" class="slide level3">
+<h3>Non-linear units and one layer of weights</h3>
+<figure>
+<img data-src="images/nn-1-layer.png" style="width:60.0%" alt="One layer of weights with non-linear activation creates a separating hyperplane." /><figcaption aria-hidden="true">One layer of weights with non-linear activation creates a separating hyperplane.</figcaption>
+</figure>
+<p><a href="https://playground.tensorflow.org/#activation=sigmoid&amp;batchSize=30&amp;dataset=gauss&amp;regDataset=reg-gauss&amp;learningRate=0.03&amp;regularizationRate=0&amp;noise=15&amp;networkShape=&amp;seed=0.29600&amp;showTestData=false&amp;discretize=false&amp;percTrainData=70&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;cosX=false&amp;sinX=false&amp;cosY=false&amp;sinY=false&amp;collectStats=false&amp;problem=classification&amp;initZero=false&amp;hideText=false">TensorFlow Playground Link: Logistic regression on linearly separable data</a></p>
+</section>
+<section id="non-linear-units-and-two-layers-of-weights" class="slide level3">
+<h3>Non-linear units and two layers of weights</h3>
+<figure>
+<img data-src="images/nn-2-layer.png" style="width:60.0%" alt="Two layers of weights with non-linear activation create a convex polygon region." /><figcaption aria-hidden="true">Two layers of weights with non-linear activation create a convex polygon region.</figcaption>
+</figure>
+<p><a href="https://playground.tensorflow.org/#activation=sigmoid&amp;batchSize=30&amp;dataset=circle&amp;regDataset=reg-gauss&amp;learningRate=0.03&amp;regularizationRate=0&amp;noise=15&amp;networkShape=3&amp;seed=0.84765&amp;showTestData=false&amp;discretize=false&amp;percTrainData=70&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;cosX=false&amp;sinX=false&amp;cosY=false&amp;sinY=false&amp;collectStats=false&amp;problem=classification&amp;initZero=false&amp;hideText=false">TensorFlow Playground Link: One hidden layer on circles</a></p>
+</section>
+<section id="non-linear-units-and-many-layers-of-weights" class="slide level3">
+<h3>Non-linear units and many layers of weights</h3>
+<figure>
+<img data-src="images/nn-3-layer.png" style="width:60.0%" alt="Three layers of weights with non-linear activation create a composition of polygon regions." /><figcaption aria-hidden="true">Three layers of weights with non-linear activation create a composition of polygon regions.</figcaption>
+</figure>
+</section>
+<section id="deep-networks" class="slide level3">
+<h3>Deep networks</h3>
+<p>Networks with many hidden layers are challenging -</p>
+<ul>
+<li>Computationally expensive to train</li>
+<li>Many parameters - at risk of overfitting</li>
+<li>Vanishing gradient problem</li>
+</ul>
+</section>
+<section id="breakthroughs" class="slide level3">
+<h3>Breakthroughs</h3>
+<p>In early 2010s, some breakthroughts</p>
+<ul>
+<li>Efficient training with GPU</li>
+<li>Huge data sets</li>
+<li>ReLu activation function</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

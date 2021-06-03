@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Neural networks</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Neural networks</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+
+</section>
+
+<section>
+<section id="from-linear-to-non-linear" class="title-slide slide level2">
+<h2>From linear to non-linear</h2>
+
+</section>
+<section id="review-learning-non-linear-decision-boundaries-from-linear-classifiers" class="slide level3">
+<h3>Review: learning non-linear decision boundaries from linear classifiers</h3>
+<ul>
+<li>Logistic regression - using basis functions</li>
+<li>SVM - using kernel</li>
+<li>Decision tree - AdaBoost uses multiple linear classifiers (decision stumps)</li>
+</ul>
+</section>
+<section id="using-multiple-logistic-regressions" class="slide level3">
+<h3>Using multiple logistic regressions?</h3>
+<p>TODO example notebook</p>
+<p>Step 1: Classify into small number of linear regions. Each output from step 1 is a linear classifier with soft decision.</p>
+<p>Step 2: Predict class label. Output is weighted average of step 1 weights</p>
+</section>
+<section id="model-of-example-two-stage-classifier-1" class="slide level3">
+<h3>Model of example two-stage classifier (1)</h3>
+<p>First step (<em>hidden layer</em>):</p>
+<ul>
+<li>Take <span class="math inline">\(N_H=4\)</span> linear discriminants.</li>
+</ul>
+<p><span class="math display">\[\begin{bmatrix}
+z_{H,1} = {w}_{H,1}^T x + b_{H,1} \\
+\cdots \\
+z_{H,N_H} = {w}_{H,N_H}^T x + b_{H,N_H} 
+\end{bmatrix}\]</span></p>
+<ul>
+<li>Each makes a soft decision: <span class="math inline">\(u_{H,m} = g(z_{H,m}) = \frac{1}{1+e^{-z_{H,m}}}\)</span></li>
+</ul>
+</section>
+<section id="model-of-example-two-stage-classifier-2" class="slide level3">
+<h3>Model of example two-stage classifier (2)</h3>
+<p>Second step (<em>output layer</em>):</p>
+<ul>
+<li>Linear discriminant using output of previous stage as features:</li>
+</ul>
+<p><span class="math display">\[ z_o = w^T_o u_H + b_o\]</span></p>
+<ul>
+<li>Soft decision:</li>
+</ul>
+<p><span class="math display">\[u_o = g(z_o) =  \frac{1}{1+e^{-z_{o}}}\]</span></p>
+</section>
+<section id="illustration-of-two-stage-classifier" class="slide level3">
+<h3>Illustration of two-stage classifier</h3>
+<figure>
+<img data-src="images/two-stage-classifier.png" style="width:90.0%" alt="Two-stage classifier" /><figcaption aria-hidden="true">Two-stage classifier</figcaption>
+</figure>
+</section>
+<section id="training-the-two-stage-classifier" class="slide level3">
+<h3>Training the two-stage classifier</h3>
+<ul>
+<li>From final stage: <span class="math inline">\(z_o = F(\mathbf{x}, \theta)\)</span> where parameters <span class="math inline">\(\theta = (\mathbf{W}_H, \mathbf{W}_o, b_H, b_o)\)</span></li>
+<li>Given training data <span class="math inline">\((\mathbf{x}_i, y_i), i = 1, \ldots, N\)</span> and loss function <span class="math inline">\(L(\theta) := -\sum_{i=1}^N \text{ln} P(y_i | \mathbf{x}_i, \theta)\)</span></li>
+<li>Choose parameters to minimize loss: <span class="math inline">\(\hat{\theta} = \operatorname*{argmin}_\theta L(\theta)\)</span> ## Neural networks</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

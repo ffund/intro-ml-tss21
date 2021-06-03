@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Resampling methods</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Resampling methods</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="resampling-methods" class="title-slide slide level2">
+<h2>Resampling methods</h2>
+
+</section>
+<section id="simple-traintest-split---basic-idea" class="slide level3">
+<h3>Simple train/test split - basic idea</h3>
+<ul>
+<li>Divide data into training and test sets</li>
+<li>For each candidate model order <span class="math inline">\(p\)</span>, learn model parameters <span class="math inline">\(\hat{\beta}\)</span> on training set</li>
+<li>Measure error on test set</li>
+<li>Select model order <span class="math inline">\(p\)</span> and corresponding <span class="math inline">\(\hat{\beta}\)</span> that minimizes error on test set</li>
+</ul>
+</section>
+<section id="simple-traintest-split" class="slide level3">
+<h3>Simple train/test split</h3>
+<ul>
+<li>Get data <span class="math inline">\(X, y\)</span></li>
+<li>Split into training <span class="math inline">\(X_{tr}, y_{tr}\)</span> and test <span class="math inline">\(X_{ts}, y_{ts}\)</span></li>
+<li>Loop over models of increasing complexity: For <span class="math inline">\(p=1\)</span> to <span class="math inline">\(p_{max}\)</span>,
+<ul>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{\beta}_p = fit_p(X_{tr}, y_{tr})\)</span></li>
+<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{ts} = pred(X_{ts}, \hat{\beta}_p)\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_p = score(y_{ts}, \hat{y}_{ts})\)</span></li>
+</ul></li>
+<li>Select model order with best score (min loss/max perf): <span class="math inline">\(\hat{p} = \operatorname*{argmin}_p S_p\)</span></li>
+</ul>
+</section>
+<section id="problems-with-simple-traintest-split" class="slide level3">
+<h3>Problems with simple train/test split</h3>
+<ul>
+<li>Fitted model, and test error, varies a lot depending on samples selected for training</li>
+<li>Fewer samples available for estimating parameters</li>
+<li>Especially bad for problems with small number of samples</li>
+</ul>
+</section>
+<section id="resampling" class="slide level3">
+<h3>Resampling</h3>
+<p><em>Resampling</em> methods:</p>
+<ul>
+<li>Repeatedly draw samples from the training data.</li>
+<li>Re-fit the model on each new sample.</li>
+<li>Use all of the re-fitted models to draw conclusions</li>
+</ul>
+</section>
+<section id="k-fold-cross-validation" class="slide level3">
+<h3>K-fold cross validation</h3>
+<p>Alternative to simple train/test split:</p>
+<ul>
+<li>Divide data into <span class="math inline">\(K\)</span> equal-sized parts (typically 5, 10)</li>
+<li>Use <span class="math inline">\(K-1\)</span> parts for training, last part for test</li>
+<li>Average over <span class="math inline">\(K\)</span> test choices</li>
+<li>Gives better estimate of test error</li>
+</ul>
+</section>
+<section id="k-fold-cv-illustrated" class="slide level3">
+<h3>K-fold CV illustrated</h3>
+<figure>
+<img data-src="images/sklearn_cross_validation.png" style="width:60.0%" alt="K-fold CV" /><figcaption aria-hidden="true">K-fold CV</figcaption>
+</figure>
+</section>
+<section id="k-fold-cv---pseudocode-1" class="slide level3">
+<h3>K-fold CV - pseudocode (1)</h3>
+<p><strong>Outer loop</strong> over folds: for <span class="math inline">\(i=1\)</span> to <span class="math inline">\(K\)</span></p>
+<ul>
+<li>Split into training <span class="math inline">\(X_{tr}, y_{tr}\)</span> and test <span class="math inline">\(X_{ts}, y_{ts}\)</span></li>
+<li><strong>Inner loop</strong> over models of increasing complexity: For <span class="math inline">\(p=1\)</span> to <span class="math inline">\(p_{max}\)</span>,
+<ul>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{\beta}_p = fit_p(X_{tr}, y_{tr}\)</span></li>
+<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{ts} = pred(X_{ts}, \hat{\beta}_p\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_{p,i} = score(y_{ts}, \hat{y}_{ts})\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="k-fold-cv---pseudocode-2" class="slide level3">
+<h3>K-fold CV - pseudocode (2)</h3>
+<ul>
+<li>Find average score (across <span class="math inline">\(K\)</span> scores) for each model: <span class="math inline">\(\bar{S}_p\)</span></li>
+<li>Select model with best <em>average</em> score: <span class="math inline">\(\hat{p} = \operatorname*{argmin}_p \bar{S}_p\)</span></li>
+</ul>
+</section>
+<section id="k-fold-cv---how-to-divide" class="slide level3">
+<h3>K-fold CV - how to divide?</h3>
+<p>How to split?</p>
+<ul>
+<li>Avoid data leakage between parts.</li>
+<li>Stratified K-fold CV: make sure distribution of classes is similar in each part.</li>
+</ul>
+</section>
+<section id="leave-one-out-cross-validation-loocv" class="slide level3">
+<h3>Leave one out cross validation (LOOCV)</h3>
+<ul>
+<li>Let <span class="math inline">\(K=N\)</span></li>
+<li>One sample is left out on each iteration</li>
+<li>Often used when <span class="math inline">\(N\)</span> is small</li>
+</ul>
+</section>
+<section id="bootstrapping" class="slide level3">
+<h3>Bootstrapping</h3>
+<ul>
+<li>Basic idea: Sampling <strong>with replacement</strong></li>
+<li>Each “bootstrap training set” is <em>same size</em> as full training set, and is created by sampling with replacement</li>
+<li>Some samples will appear more than once, some samples not at all</li>
+<li>Bootstrap method will underestimate true prediction error</li>
+</ul>
+</section>
+<section id="using-resampling-methods" class="slide level3">
+<h3>Using resampling methods</h3>
+<p>Two ways to use CV:</p>
+<ul>
+<li>Use CV to select “best” model; for each candidate model, evaluate CV error, and select model with least CV error</li>
+<li>When the “best” model is known, use CV to estimate test error</li>
+</ul>
+<p>Bootstrapping is also used to estimate test error.</p>
+</section>
+<section id="one-standard-error-rule" class="slide level3">
+<h3>One standard error rule</h3>
+<ul>
+<li>Model selection that minimizes mean error often results in too-complex model</li>
+<li>One standard error rule: use simplest model where mean error is within one SE of the minimum mean error</li>
+</ul>
+</section>
+<section id="one-standard-error-rule---algorithm-1" class="slide level3">
+<h3>One standard error rule - algorithm (1)</h3>
+<ul>
+<li>Given data <span class="math inline">\(X, y\)</span></li>
+<li>Compute score <span class="math inline">\(S(p,i)\)</span> for model <span class="math inline">\(p\)</span> on fold <span class="math inline">\(i\)</span> (of <span class="math inline">\(K\)</span>)</li>
+<li>Compute average (<span class="math inline">\(\bar{S}_p\)</span>), standard deviation <span class="math inline">\(\sigma_p\)</span>, and standard error of scores:</li>
+</ul>
+<p><span class="math display">\[SE_p = \frac{\sigma_p}{\sqrt{K-1}}\]</span></p>
+</section>
+<section id="one-standard-error-rule---algorithm-2" class="slide level3">
+<h3>One standard error rule - algorithm (2)</h3>
+<ul>
+<li>Normal rule for model selection:</li>
+</ul>
+<p><span class="math display">\[\hat{p}_0 = \operatorname*{argmin}_p \bar{S}_p\]</span></p>
+<ul>
+<li>Compute target score: <span class="math inline">\(S_t = \bar{S}_{p_0} + SE_{p_0}\)</span></li>
+<li><strong>One SE rule</strong>: select simplest model with score lower than target</li>
+</ul>
+<p><span class="math display">\[\hat{p} = min \{p | \bar{S}_p \leq S_t\}\]</span></p>
+</section>
+<section id="final-performance-estimate-with-resampling" class="slide level3">
+<h3>Final performance estimate with resampling</h3>
+<figure>
+<img data-src="images/inner-outer-loop.png" style="width:60.0%" alt="Hyperparameter tuning vs final performance evaluation" /><figcaption aria-hidden="true">Hyperparameter tuning vs final performance evaluation</figcaption>
+</figure>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

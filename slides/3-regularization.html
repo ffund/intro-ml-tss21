@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Feature selection and regularization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Feature selection and regularization</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="feature-selection" class="title-slide slide level2">
+<h2>Feature selection</h2>
+<p>Problem: given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{N \times p}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
+<p>Select a subset of <span class="math inline">\(k &lt;&lt; p\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{N \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+</section>
+<section id="motivation-for-feature-selection-problem" class="slide level3">
+<h3>Motivation for feature selection problem</h3>
+<ul>
+<li>Limited data</li>
+<li>Very large number of features</li>
+<li>Examples: spam detection using “bag of words”, EEG, DNA MicroArray data</li>
+</ul>
+</section></section>
+<section>
+<section id="feature-selection-1" class="title-slide slide level2">
+<h2>Feature selection</h2>
+
+</section>
+<section id="many-possible-models" class="slide level3">
+<h3>Many possible models</h3>
+<ul>
+<li>Given <span class="math inline">\(n\)</span> features, there are <span class="math inline">\(2^n\)</span> possible feature subsets</li>
+<li>Feature selection is model selection over <span class="math inline">\(2^n\)</span> models - too expensive for large <span class="math inline">\(n\)</span></li>
+</ul>
+</section>
+<section id="feature-selection-methods" class="slide level3">
+<h3>Feature selection methods</h3>
+<ul>
+<li><strong>Wrapper methods</strong>: use learning model on training data, and select relevant features based on the performance of the learning algorithm.</li>
+<li><strong>Filter methods</strong>: consider only the statistics of the training data, don’t actually fit any learning model. Much cheaper!</li>
+<li><strong>Embedded methods</strong>: use something built-in to learning method (e.g. coefficient magnitude in linear regression)</li>
+</ul>
+</section>
+<section id="univariate-feature-selection" class="slide level3">
+<h3>Univariate feature selection</h3>
+<ul>
+<li>Score each feature <span class="math inline">\(x_i\)</span> according to its importance in predicting target <span class="math inline">\(y\)</span></li>
+<li>Pick <span class="math inline">\(k\)</span> features that are most important (use CV to choose k?)</li>
+<li>Problem: features may not be independent (remember attractiveness rankings in linear regression lab?)</li>
+</ul>
+</section>
+<section id="greedy-feature-selection" class="slide level3">
+<h3>Greedy feature selection</h3>
+<ul>
+<li>Let <span class="math inline">\(S^{t-1}\)</span> be the set of selected features at time <span class="math inline">\(t-1\)</span></li>
+<li>Compute the score for all combinations of current set + one more feature</li>
+<li>For the next time step <span class="math inline">\(S^t\)</span>, add the feature that gave you the best score.</li>
+</ul>
+<p>(Alternatively: start with all features, and “prune” one at a time.)</p>
+</section>
+<section id="scoring-by-mutual-information-1" class="slide level3">
+<h3>Scoring by mutual information (1)</h3>
+<p>How to score features? One way is to use <strong>mutual information</strong>:</p>
+<p>For continuous variables:</p>
+<p><span class="math display">\[I(X;Y) = \int_X \int_Y p(x,y) log \frac{p(x,y)}{p(x)p(y)} dx dy\]</span></p>
+<p>For discrete variables:</p>
+<p><span class="math display">\[I(X;Y) = \sum_X \sum_Y p(x,y) log \frac{p(x,y)}{p(x)p(y)} dx dy\]</span></p>
+</section>
+<section id="scoring-by-mutual-information-2" class="slide level3">
+<h3>Scoring by mutual information (2)</h3>
+<p>Determines how similar the joint distribution <span class="math inline">\(p(x,y)\)</span> is to the products of the marginal distributions <span class="math inline">\(p(x)p(y)\)</span>.</p>
+<p>If <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are independent, <span class="math inline">\(p(x,y) = p(x)p(y)\)</span> and then the integral will be zero.</p>
+</section>
+<section id="scoring-by-mutual-information-3" class="slide level3">
+<h3>Scoring by mutual information (3)</h3>
+<p>For feature selection: choose <span class="math inline">\(\mathbf{X}_S\)</span> to maximize mutual information between <span class="math inline">\(\mathbf{X}_S\)</span> and <span class="math inline">\(y\)</span>.</p>
+<p><span class="math display">\[ \tilde{S} =  \operatorname*{argmax}_S I (\mathbf{X}_S ; y), \quad s.t. |S| = k\]</span></p>
+<p>where <span class="math inline">\(k\)</span> is the number of features we want to select.</p>
+</section>
+<section id="scoring-by-mutual-information-4" class="slide level3">
+<h3>Scoring by mutual information (4)</h3>
+<p>Greedy method: Let <span class="math inline">\(S^{t-1}\)</span> be the set of selected features at time <span class="math inline">\(t-1\)</span>. Select feature <span class="math inline">\(f_t\)</span> so that</p>
+<p><span class="math display">\[ f_t = \arg\max_{i \notin S^{t - 1}} I(\mathbf{X}_{S^{t - 1} \cup i} ; y)\]</span></p>
+</section>
+<section id="scoring-by-mutual-information-5" class="slide level3">
+<h3>Scoring by mutual information (5)</h3>
+<p>Basic intuition: MI is a measure of <strong>relevancy</strong> of new feature minus <strong>redundancy</strong> of new feature vs. features already in the set.</p>
+</section>
+<section id="other-scoring-metrics" class="slide level3">
+<h3>Other scoring metrics</h3>
+<ul>
+<li>Correlation coefficient between feature and target</li>
+<li>F-test: measures whether a feature is significant. F-test for one features is difference in MSE for single feature vs. prediction by mean.</li>
+</ul>
+<p><span class="math display">\[F = (N-2)\frac{R2}{1-R2}\]</span></p>
+</section>
+<section id="illustration-scoring-features" class="slide level3">
+<h3>Illustration: scoring features</h3>
+<figure>
+<img data-src="images/f-test-vs-mi.png" alt="F-test selects x_1 as the most informative feature, MI selects x_2." /><figcaption aria-hidden="true">F-test selects <span class="math inline">\(x_1\)</span> as the most informative feature, MI selects <span class="math inline">\(x_2\)</span>.</figcaption>
+</figure>
+</section></section>
+<section>
+<section id="regularization" class="title-slide slide level2">
+<h2>Regularization</h2>
+
+</section>
+<section id="penalty-for-model-complexity" class="slide level3">
+<h3>Penalty for model complexity</h3>
+<p>With no bounds on complexity of model, we can always get a model with zero training error on finite training set - overfitting.</p>
+<p>Basic idea: apply penalty in loss function to discourage more complex models</p>
+</section>
+<section id="regularization-vs.-standard-ls" class="slide level3">
+<h3>Regularization vs. standard LS</h3>
+<p>Least squares estimation:</p>
+<p><span class="math display">\[ \hat{\beta} = \operatorname*{argmin}_\beta RSS(\beta), \quad RSS(\beta) = \sum_{i=1}^N (y_i - \hat{y_i})^2 \]</span></p>
+<p>Regularized estimation w/ <strong>regularizing function</strong> <span class="math inline">\(\phi(\beta)\)</span>:</p>
+<p><span class="math display">\[ \hat{\beta} = \operatorname*{argmin}_\beta J(\beta), \quad  J(\beta) = RSS(\beta) + \phi(\beta) \]</span></p>
+</section>
+<section id="common-regularizers-ridge-and-lasso" class="slide level3">
+<h3>Common regularizers: Ridge and LASSO</h3>
+<p>Ridge regression (L2):</p>
+<p><span class="math display">\[ \phi (\beta) = \alpha \sum_{j=1}^d | \beta_j | ^2 \]</span></p>
+<p>LASSO regression (L1):</p>
+<p><span class="math display">\[ \phi (\beta) = \alpha \sum_{j=1}^d | \beta_j | \]</span></p>
+</section>
+<section id="graphical-representation" class="slide level3">
+<h3>Graphical representation</h3>
+<figure>
+<img data-src="images/regularization-contour.png" style="width:100.0%" alt="LS solution (+), RSS contours. As we increase \alpha, LASSO solution moves from the LS solution to 0." /><figcaption aria-hidden="true">LS solution (+), RSS contours. As we increase <span class="math inline">\(\alpha\)</span>, LASSO solution moves from the LS solution to 0.</figcaption>
+</figure>
+</section>
+<section id="common-features-ridge-and-lasso" class="slide level3">
+<h3>Common features: Ridge and LASSO</h3>
+<ul>
+<li>Both penalize large <span class="math inline">\(\beta_j\)</span></li>
+<li>Both have parameter <span class="math inline">\(\alpha\)</span> that controls level of regularization</li>
+<li>Intercept <span class="math inline">\(\beta_0\)</span> not included in regularization sum (starts at 1!), this depends on mean of <span class="math inline">\(y\)</span> and should not be constrained.</li>
+</ul>
+</section>
+<section id="differences-ridge-and-lasso-1" class="slide level3">
+<h3>Differences: Ridge and LASSO (1)</h3>
+<p>Ridge (L2):</p>
+<ul>
+<li>minimizes <span class="math inline">\(|\beta_j|^2\)</span>,</li>
+<li>does not penalize small non-zero coefficients</li>
+<li>heavily penalizes large coefficients</li>
+<li>tends to make many “small” coefficients</li>
+<li>Not for feature selection</li>
+</ul>
+</section>
+<section id="differences-lasso-2" class="slide level3">
+<h3>Differences: LASSO (2)</h3>
+<p>LASSO (L1)</p>
+<ul>
+<li>minimizes <span class="math inline">\(|\beta_j|\)</span></li>
+<li>tends to make coefficients either 0 or large (sparse!)</li>
+<li>does feature selection (setting <span class="math inline">\(\beta_j\)</span> to zero is equivalent to un-selecting feature)</li>
+</ul>
+</section>
+<section id="standardization-1" class="slide level3">
+<h3>Standardization (1)</h3>
+<p>Before learning a model with regularization, we typically <em>standardize</em> each feature and target to have zero mean, unit variance:</p>
+<ul>
+<li><span class="math inline">\(x_{i,j} \rightarrow \frac{x_{i,j} - \bar{x}_j}{s_{x_j}}\)</span></li>
+<li><span class="math inline">\(y_{i} \rightarrow \frac{y_{i} - \bar{y}}{s_{y}}\)</span></li>
+</ul>
+</section>
+<section id="standardization-2" class="slide level3">
+<h3>Standardization (2)</h3>
+<p>Why?</p>
+<ul>
+<li>Without scaling, regularization depends on data range</li>
+<li>With mean removal, no longer need <span class="math inline">\(\beta_0\)</span>, so regularization term is just L1 or L2 norm of coefficient vector</li>
+</ul>
+</section>
+<section id="l1-and-l2-norm-with-standardization-1" class="slide level3">
+<h3>L1 and L2 norm with standardization (1)</h3>
+<p>Assuming data standardized to zero mean, unit variance:</p>
+<ul>
+<li>Ridge cost function:</li>
+</ul>
+<p><span class="math display">\[J(\mathbf{\beta}) = \sum_{i=1}^N (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |\beta_j| ^2 = || \mathbf{A} \mathbf{\beta} -  \mathbf{y} || ^2 + \alpha || \mathbf{\beta} || ^2 \]</span></p>
+</section>
+<section id="l1-and-l2-norm-with-standardization-2" class="slide level3">
+<h3>L1 and L2 norm with standardization (2)</h3>
+<ul>
+<li>LASSO cost function (<span class="math inline">\(|| \mathbf{\beta} ||_1\)</span> is L1 norm):</li>
+</ul>
+<p><span class="math display">\[J(\mathbf{\beta}) = \sum_{i=1}^N (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |\beta_j| = ||\mathbf{A} \mathbf{\beta} -  \mathbf{y} || ^2 + \alpha || \mathbf{\beta} ||_1 \]</span></p>
+</section>
+<section id="ridge-regularization" class="slide level3">
+<h3>Ridge regularization</h3>
+<p>Why minimize <span class="math inline">\(|| \mathbf{\beta} || ^2\)</span>?</p>
+<p>Without regularization:</p>
+<ul>
+<li>large coefficients lead to high variance</li>
+<li>large positive and negative coefficients cancel each other for correlated features (remember attractiveness ratings in linear regression lab…)</li>
+</ul>
+</section>
+<section id="ridge-term-and-derivative" class="slide level3">
+<h3>Ridge term and derivative</h3>
+<figure>
+<img data-src="images/ridge-derivative.png" style="width:40.0%" alt="L2 term and its derivative for one parameter." /><figcaption aria-hidden="true">L2 term and its derivative for one parameter.</figcaption>
+</figure>
+</section>
+<section id="ridge-closed-form-solution" class="slide level3">
+<h3>Ridge closed-form solution</h3>
+<p><span class="math display">\[J(\mathbf{\beta}) = ||\mathbf{A} \mathbf{\beta} -  \mathbf{y} || ^2 + \alpha || \mathbf{\beta} || ^2\]</span></p>
+<p>Taking derivative:</p>
+<p><span class="math display">\[\frac{\partial J(\mathbf{\beta})}{\partial \mathbf{\beta}} = 2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{\beta}) + 2 \alpha \mathbf{\beta} \]</span></p>
+<p>Setting it to zero, we find</p>
+<p><span class="math display">\[\mathbf{\beta}_{ridge} = (\mathbf{A}^T\mathbf{A} + \alpha \mathbf{I})^{-1} \mathbf{A}^T \mathbf{y}\]</span></p>
+</section>
+<section id="lasso-term-and-derivative" class="slide level3">
+<h3>LASSO term and derivative</h3>
+<figure>
+<img data-src="images/lasso-derivative.png" style="width:40.0%" alt="L1 term and its derivative for one parameter." /><figcaption aria-hidden="true">L1 term and its derivative for one parameter.</figcaption>
+</figure>
+<ul>
+<li>No closed-form solution: derivative of <span class="math inline">\(|\beta_j|\)</span> is not continuous</li>
+<li>But there is a unique minimum, because cost function is convex, can solve iteratively</li>
+</ul>
+</section>
+<section id="effect-of-regularization-level" class="slide level3">
+<h3>Effect of regularization level</h3>
+<p>Greater <span class="math inline">\(\alpha\)</span>, more complex model.</p>
+<ul>
+<li>Ridge: Greater <span class="math inline">\(\alpha\)</span> makes coefficients smaller.</li>
+<li>LASSO: Greater <span class="math inline">\(\alpha\)</span> makes more weights zero.</li>
+</ul>
+</section>
+<section id="effect-of-regularization---lasso" class="slide level3">
+<h3>Effect of regularization - LASSO</h3>
+<figure>
+<img data-src="images/lasso-alpha.png" style="width:100.0%" alt="Increasing \alpha" /><figcaption aria-hidden="true">Increasing <span class="math inline">\(\alpha\)</span></figcaption>
+</figure>
+</section>
+<section id="effect-of-regularization---ridge" class="slide level3">
+<h3>Effect of regularization - Ridge</h3>
+<figure>
+<img data-src="images/ridge-alpha.png" style="width:100.0%" alt="Increasing \alpha" /><figcaption aria-hidden="true">Increasing <span class="math inline">\(\alpha\)</span></figcaption>
+</figure>
+</section>
+<section id="selecting-regularization-level" class="slide level3">
+<h3>Selecting regularization level</h3>
+<p>How to select <span class="math inline">\(\alpha\)</span>? by CV!</p>
+<ul>
+<li>Outer loop: loop over CV folds</li>
+<li>Inner loop: loop over <span class="math inline">\(\alpha\)</span></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

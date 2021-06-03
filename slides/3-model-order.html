@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Model selection problems</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Model selection problems</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="model-selection-problems" class="title-slide slide level2">
+<h2>Model selection problems</h2>
+
+</section>
+<section id="bias-variance-tradeoff" class="slide level3">
+<h3>Bias variance tradeoff</h3>
+<figure>
+<img data-src="images/bias-variance-tradeoff.png" style="width:60.0%" alt="Bias variance tradeoff" /><figcaption aria-hidden="true">Bias variance tradeoff</figcaption>
+</figure>
+</section>
+<section id="choosing-model-complexity" class="slide level3">
+<h3>Choosing model complexity</h3>
+<p>We need to select a model of appropriate complexity -</p>
+<ul>
+<li>what does that mean, and</li>
+<li>how do we select one?</li>
+</ul>
+</section></section>
+<section>
+<section id="transformed-linear-models" class="title-slide slide level2">
+<h2>Transformed linear models</h2>
+
+</section>
+<section id="transformation-of-linear-model" class="slide level3">
+<h3>Transformation of linear model</h3>
+<p>Standard linear model:</p>
+<p><span class="math display">\[ \hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_d x_d \]</span></p>
+<p>Transformed linear model:</p>
+<p><span class="math display">\[ \hat{y} =  \beta_1 \phi_1(\mathbf{x}) + \cdots + \beta_p \phi_p(\mathbf{x}) \]</span></p>
+</section>
+<section id="basis-function" class="slide level3">
+<h3>Basis function</h3>
+<p>Each function</p>
+<p><span class="math display">\[ \phi_j (\mathbf{x}) = \phi_j (x_1, \cdots, x_d) \]</span></p>
+<p>is called a <strong>basis function</strong>. These can be expressed in vector form:</p>
+<p><span class="math display">\[\hat{y} = \mathbf{\phi (x)} \mathbf{\beta}\]</span></p>
+<p><span class="math display">\[
+\mathbf{\phi (x)} = [\phi_1 (\mathbf{x}), \cdots, \phi_p (\mathbf{x})], \mathbf{\beta} = [\beta_1, \cdots, \beta_p]
+\]</span></p>
+</section>
+<section id="least-squares-for-transformed-linear-models" class="slide level3">
+<h3>Least squares for transformed linear models</h3>
+<p>Given data <span class="math inline">\((\mathbf{x_i},y_i), i=1,\cdots,N\)</span>:</p>
+<p><span class="math display">\[ 
+A = 
+\begin{bmatrix}
+\phi_1 (\mathbf{x_1}) &amp; \cdots &amp; \phi_p (\mathbf{x_1}) \\
+\vdots  &amp; \ddots &amp; \vdots  \\
+\phi_1 (\mathbf{x_N}) &amp; \cdots &amp; \phi_p (\mathbf{x_N}) 
+\end{bmatrix} 
+\]</span></p>
+<p>Least squares fit is still <span class="math inline">\(\hat{\beta} = (A^T A)^{-1} A^T y\)</span></p>
+</section>
+<section id="polynomial-fitting" class="slide level3">
+<h3>Polynomial fitting</h3>
+<ul>
+<li>Given data <span class="math inline">\((x_i, y_i), i=1\cdots,N\)</span> (one feature)</li>
+<li>Polynomial model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x + \cdots + \beta_d x^d\)</span></li>
+<li><span class="math inline">\(d\)</span> is degree of polynomial, called <strong>model order</strong>. Given <span class="math inline">\(d\)</span>, can get regression coefficients via LS</li>
+</ul>
+</section>
+<section id="transformed-model-for-logistic-regression" class="slide level3">
+<h3>Transformed model for logistic regression</h3>
+<p>As with linear regression, can apply logistic regression to transformed features:</p>
+<ul>
+<li><span class="math inline">\(\phi(\mathbf{x}) = [\phi_1(\mathbf{x}), \ldots, \phi_p(\mathbf{x})]^T\)</span></li>
+<li>Linear weights: <span class="math inline">\(z_k = \sum_{j=1}^p W_{kj} \phi_j(\mathbf{x})\)</span></li>
+<li>Softmax: <span class="math inline">\(P(y=k|\mathbf{z}) = g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell} e^{z_{\ell}}}\)</span></li>
+</ul>
+</section>
+<section id="logistic-regression-illustration" class="slide level3">
+<h3>Logistic regression: illustration</h3>
+<p>Example: using non-linear features to classify data that is not linearly separable:</p>
+<figure>
+<img data-src="images/linear-vs-circle.png" style="width:60.0%" alt="Non-linear data." /><figcaption aria-hidden="true">Non-linear data.</figcaption>
+</figure>
+</section>
+<section id="logistic-regression-example" class="slide level3">
+<h3>Logistic regression: example</h3>
+<p><span class="math display">\[\phi(\mathbf{x}) = [1, x_1, x_2, x_1^2, x_2^2]^T\]</span></p>
+<p>Then can use <span class="math inline">\(z = [-r^2, 0, 0, 1, 1]\phi(\mathbf{x}) = x_1^2 + x_2^2 -r^2\)</span></p>
+</section></section>
+<section>
+<section id="model-order-selection-problem" class="title-slide slide level2">
+<h2>Model order selection problem</h2>
+<p>Polynomial model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x + \cdots + \beta_d x^d\)</span></p>
+<p>How can we select <span class="math inline">\(d\)</span> when “true” model order is not known?</p>
+</section>
+<section id="model-order-illustrations" class="slide level3">
+<h3>Model order illustrations</h3>
+<figure>
+<img data-src="images/sklearn-model-order.png" alt="Model order selection; overfitting vs. underfitting" /><figcaption aria-hidden="true">Model order selection; overfitting vs. underfitting</figcaption>
+</figure>
+</section>
+<section id="using-loss-function-for-model-order-selection" class="slide level3">
+<h3>Using loss function for model order selection?</h3>
+<p>Suppose we would “search” over each possible <span class="math inline">\(d\)</span>:</p>
+<ul>
+<li>Fit model of order <span class="math inline">\(d\)</span> on draining data, get <span class="math inline">\(\hat{\mathbf{\beta}}\)</span></li>
+<li>Compute predictions on training data: <span class="math inline">\(\hat{y_i} = \mathbf{\hat{\beta}}^T\mathbf{x_i}\)</span></li>
+<li>Compute loss function (e.g. RSS) on training data: <span class="math inline">\(RSS = \sum_{i=1}^N (y_i - \hat{y_i})^2\)</span></li>
+<li>Select <span class="math inline">\(d\)</span> that minimizes loss</li>
+<li>Problem: loss function always decreasing with <span class="math inline">\(d\)</span> (training error decreases with model complexity!)</li>
+</ul>
+</section></section>
+<section>
+<section id="feature-selection-problem" class="title-slide slide level2">
+<h2>Feature selection problem</h2>
+
+</section>
+<section id="feature-selection-problem-1" class="slide level3">
+<h3>Feature selection problem</h3>
+<ul>
+<li>Linear model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_d x_d\)</span></li>
+<li>Model target <span class="math inline">\(y\)</span> as a function of features <span class="math inline">\(\mathbf{x} = (x_1, \cdots, x_d)\)</span></li>
+<li>Many features, only some are relevant</li>
+<li>High risk of overfitting if you use all features!</li>
+<li>Problem: fit a model with a small number of features</li>
+</ul>
+</section>
+<section id="feature-selection-problem---formal" class="slide level3">
+<h3>Feature selection problem - formal</h3>
+<p>Problem: given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{N \times p}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
+<p>Select a subset of <span class="math inline">\(k &lt;&lt; p\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{N \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+</section>
+<section id="motivation-for-feature-selection-problem" class="slide level3">
+<h3>Motivation for feature selection problem</h3>
+<ul>
+<li>Limited data</li>
+<li>Very large number of features</li>
+<li>Decrease variance</li>
+</ul>
+</section>
+<section id="limit-on-features-for-linear-regression-ls-solution" class="slide level3">
+<h3>Limit on features for linear regression LS solution</h3>
+<p>For linear regression:</p>
+<ul>
+<li>We will have a unique solution to the least squares problem only if <span class="math inline">\(A^T A\)</span> is invertible.</li>
+<li>Solution is unique if <span class="math inline">\(N \geq p\)</span>.</li>
+</ul>
+<p>The unique solution exists only if the number of data samples for training (<span class="math inline">\(N\)</span>) is greater than or equal to the number of parameters <span class="math inline">\(p\)</span>.</p>
+</section>
+<section id="important-applications-for-feature-selection-problem" class="slide level3">
+<h3>Important applications for feature selection problem</h3>
+<ul>
+<li>Document classification using “bag of words” - enumerate all words, represent each document using word count</li>
+<li>EEG - measure brain activity with electrodes, typically &gt;10,000 “voxels” but only 100s of observations</li>
+<li>DNA MicroArray data - measures “expression” levels of large number of genes (~1000) but only a small number of data points (~100)</li>
+</ul>
+</section>
+<section id="decreasing-variance-for-linear-regression" class="slide level3">
+<h3>Decreasing variance for linear regression</h3>
+<p>For linear regression, when <span class="math inline">\(N \geq p\)</span>,</p>
+<p><span class="math display">\[Var = \frac{p}{N} \sigma_\epsilon ^2\]</span></p>
+<p>Variance increases linearly with number of parameters, inversely with number of samples.</p>
+<p>(not derived in class, but read notes at home.)</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
+  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
