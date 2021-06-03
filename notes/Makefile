@@ -4,6 +4,7 @@ FILES+=3-cubic-model.pdf
 
 SOURCES := 0-tss-faq.md 0-prerequisite-review.md 0-books.md
 SOURCES += 1-handwritten-digits.md
+SOURCES += 2-gd-background-videos.md
 
 PDFS := $(patsubst %.md,%.pdf,$(SOURCES))
 PAGES:=  $(patsubst %.md, %.html,$(SOURCES))
