@@ -27,7 +27,6 @@
 <section id="title-slide">
   <h1 class="title">Intro to Machine Learning</h1>
   <p class="author">Fraida Fund</p>
-  <p class="date">Summer 2021</p>
 </section>
 
 <section id="in-this-lecture" class="title-slide slide level2 cell markdown">
@@ -131,6 +130,15 @@
 </figure>
 </aside>
 </section>
+<section id="rule-based-vs.-data-driven-problem-solving" class="slide level3 cell markdown">
+<h3>Rule-based vs. data driven problem solving</h3>
+<aside class="notes">
+<ul>
+<li>The first two were examples of <em>rule-based</em> problem solving. I used my domain knowledge and expertise to establish rules for solving the problem.</li>
+<li>The second two were examples of <em>data-driven</em> problem solving. I still used some of my own expertise to establish rules - for example, the structure of the solution - but I used <em>data</em> (and not just data from the current input) to produce the output.</li>
+</ul>
+</aside>
+</section>
 <section id="rule-based-problem-solving" class="slide level3 cell markdown">
 <h3>“Rule-based” problem solving</h3>
 <ol type="1">
@@ -154,11 +162,14 @@
 </aside>
 </section>
 
-<section id="digits" class="cell markdown">
-<h4>Digits</h4>
+<section id="handwritten-digits-1" class="slide level3 cell markdown">
+<h3>Handwritten digits (1)</h3>
 <figure>
 <img data-src="../images/digits.png" style="width:50.0%" alt="Handwritten digits in MNIST dataset" /><figcaption aria-hidden="true">Handwritten digits in MNIST dataset</figcaption>
 </figure>
+<aside class="notes">
+<p>Let’s take a classic example: recognizing handwritten digits. Early solutions to this problem date back to the 1960s.</p>
+</aside>
 </section>
 <section id="faces" class="cell markdown">
 <h4>Faces</h4>
@@ -244,13 +255,19 @@
 <h3>Machine learning paradigms (3)</h3>
 <p><strong>Reinforcement learning</strong>: learn from how the environment responds to your actions, solve interactive problems</p>
 </section>
-<section id="the-basic-supervised-learning-problem" class="slide level3 cell markdown">
+<div class="cell markdown">
+<section id="simple-example-revisited" class="slide level3 cell markdown">
+<h3>Simple example, revisited</h3>
+<p>Earlier, we described four systems to predict a student’s grade in the course.</p>
+</section>
+<section id="the-basic-supervised-learning-problem" class="slide level3">
 <h3>The basic supervised learning problem</h3>
 <p>Given a <strong>sample</strong> with a vector of <strong>features</strong></p>
 <p><span class="math display">\[\mathbf{x} = (x_1, x_2,...)\]</span></p>
 <p>There is some (unknown) relationship between <span class="math inline">\(\mathbf{x}\)</span> and a <strong>target</strong> variable, <span class="math inline">\(y\)</span>, whose value is unknown.</p>
 <p>We want to find <span class="math inline">\(\hat{y}\)</span>, our <strong>prediction</strong> for the value of <span class="math inline">\(y\)</span>.</p>
 </section>
+</div>
 <section id="a-supervised-machine-learning-recipe" class="slide level3 cell markdown">
 <h3>A supervised machine learning “recipe”</h3>
 <ul>
@@ -258,7 +275,7 @@
 <li>For supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,N\)</span></li>
 <li>Select a <strong>model</strong> <span class="math inline">\(f\)</span>: <span class="math inline">\(\hat{y} \approx f(x)\)</span></li>
 <li>Select a <strong>loss function</strong> that will measure how good the model is</li>
-<li>Find model <strong>parameters</strong> that minimize the loss function (use a <strong>training algorithm</strong>)</li>
+<li>If your model has <strong>parameters</strong>, find the parameter values that minimize the loss function (use a <strong>training algorithm</strong>)</li>
 <li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples (<strong>inference</strong>)</li>
 </ul>
 </section>

@@ -1,7 +1,6 @@
 ---
 title:  'Intro to Machine Learning'
 author: 'Fraida Fund'
-date:   'Summer 2021'
 ---
 
 ::: {.cell .markdown}
