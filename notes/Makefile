@@ -1,4 +1,12 @@
-FILES=0-tss-faq.pdf 0-prerequisite-review.pdf 0-books.pdf 3-cubic-model.pdf
+FILES=0-tss-faq.pdf 0-prerequisite-review.pdf 0-books.pdf 
+FILES+=1-handwritten-digits.pdf
+FILES+=3-cubic-model.pdf
+
+SOURCES := 0-tss-faq.md 0-prerequisite-review.md 0-books.md
+SOURCES += 1-handwritten-digits.md
+
+PDFS := $(patsubst %.md,%.pdf,$(SOURCES))
+PAGES:=  $(patsubst %.md, %.html,$(SOURCES))
 
 PANDOCFLAGS= --pdf-engine=xelatex\
          -V mainfont='Fira Sans' \
@@ -9,8 +17,13 @@ PANDOCFLAGS= --pdf-engine=xelatex\
 %.pdf: %.md
 	pandoc $^ $(PANDOCFLAGS) -o $@ 
 
-all: $(FILES)
+%.html: %.md
+	cat $^ | sed '/newpage/d' > $^.tmp
+	pandoc -t html5 -o $@ $^.tmp -c ../styles/style.css
+	rm $^.tmp
+
+all: $(PDFS) $(PAGES)
 
 clean: 
-	rm -f *.pdf
+	rm -f *.pdf *.html
 
