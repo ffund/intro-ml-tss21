@@ -23,6 +23,7 @@ summary {
     display: block;
 }
 
+
 /**
  * Correct `inline-block` display not defined in IE 8/9.
  */
@@ -250,6 +251,14 @@ svg:not(:root) {
 
 figure {
     margin: 0;
+}
+
+figure {
+  text-align: center;
+  font-style: italic;
+  border: thin silver solid;
+  margin: 0.5em;
+  padding: 0.5em;
 }
 
 /* ==========================================================================
