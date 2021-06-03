@@ -256,7 +256,7 @@ figure {
 figure {
   text-align: center;
   font-style: italic;
-  border: thin silver solid;
+  #border: thin silver solid;
   margin: 0.5em;
   padding: 0.5em;
 }
