@@ -4,7 +4,6 @@ author: Fraida Fund
 ---
 
 
-## Prerequisite review 
 This course is mathematically oriented, and undergraduate-level knowledge of probability and linear algebra is a prerequisite. If you need to brush up, here's what you should review:
 
 

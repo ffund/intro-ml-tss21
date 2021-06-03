@@ -19,7 +19,7 @@ author: Fraida Fund
 * Python Machine Learning, (Raschka, Mirjalili), 2017. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008027112), [Notebooks on Github](https://github.com/rasbt/python-machine-learning-book-3rd-edition)
 
 
-## Background (Linear Algebra, Optimization, Probability and Statistics)
+## Background/Prerequisites
 
 ### Linear Algebra
 
