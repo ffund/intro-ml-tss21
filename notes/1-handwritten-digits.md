@@ -16,7 +16,7 @@ It therefore seemed almost "magical" when, at the 1964 World's Fair in New York,
 
 ![Visitors entering date on a card. Source: [Computer History Museum](https://computerhistory.org/blog/ibm-and-1964-worlds-fair/).](../images/1-ibm-1964-worlds-fair-enter-date-on-card.png){ width=30% }
 
-Then, the computer converted the handwritten date into digital form, look up the date in a database of New York Times headlines, and show a headline from that day on an overhead display. Watch the first minute of [this video](https://www.youtube.com/watch?v=6EGllGYiFa8&t=1s) to see a demonstration!
+Then, the computer would convert the handwritten date into digital form, look up the date in a database of New York Times headlines, and show a headline from that day on an overhead display. Watch the first minute of [this video](https://www.youtube.com/watch?v=6EGllGYiFa8&t=1s) to see a demonstration!
 
 <div style="text-align:center;"><iframe width="640" height="385" src="https://www.youtube.com/embed/6EGllGYiFa8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 
@@ -50,11 +50,11 @@ First, there is some discussion of the challenges associated with character reco
 
 Greanias et al want the system to recognize handwritten digits located anywhere within a larger area, and of various sizes. This seems to rule out a naive pixel-based approach involving pre-defined rules that say (for example): "A 1 should always have writing in the horizontal center of the writing area, and should have no writing on the left and right sides of the writing area," since this would fail to recognize a 1 written on the side of the writing area instead of the center. Greanias et al also wanted the system to tolerate variation in digit shape, minor rotation, or slant. 
 
-The next section of the paper describes in more detail how the image is acquired using the cathode ray tube scanner. This section clarifies that in a first "pass" over the image, the scanner acquires the size and position of the handwritten character, and then in the "second" pass it would acquire a more detailed contour of the handwritten character that is normalized to its position within the writing area and its size.
+The next section of the paper describes in more detail how the image is acquired using the cathode ray tube scanner. This section clarifies that in a first pass over the image, the scanner acquires the size and position of the handwritten character, and then in the second pass it would acquire a more detailed contour of the handwritten character that is normalized to its position within the writing area and its size.
 
 ![This image shows how in the first pass over the writing area, the scanner "finds" the handwritten character and determines its position and size. In the second pass (shown on the bottom), the scanner gets the detailed contour of the handwritten character.](../images/1-handwritten-1.png){ width=30% }
 
-The next section of the paper gets into some detail regarding the electrical circuits used to process the scanner output. We are mainly concerned with the logic, rather than the electronics, so all we need to know is that the area with the handwritten character is divided into 12 "zones" in a 3x4 array, and the circuit determines the direction of the line within each zone (N, NE, E, SE, S, SW, W, or NW).
+The next section of the paper gets into some detail regarding the electronic circuits used to process the scanner output. We are mainly concerned with the logic, rather than the electronics, so all we need to know is that the area with the handwritten character is divided into 12 "zones" in a 3x4 array, and the circuit determines the direction of the line within each zone (N, NE, E, SE, S, SW, W, or NW).
 
 ![Each handwritten character is divided into 12 "zones", and the circuit determines the direction of the line within each zone.](../images/1-handwritten-2.png){ width=30% }
 
@@ -67,7 +67,7 @@ Next, we turn to the character *recognition* part of the system. Greanias et al 
 \newpage
 
 
-Finally, the paper gives a detailed example with reference to a handwritten 5 example, and shows how an electronic circuit identifies what features are present in an image as the scanner moves along the countours of the handwriting.  In this example, as the scanner moves along the edge of the written digit,
+Finally, the paper gives a detailed example with reference to a handwritten example of a 5, and shows how an electronic circuit identifies what features are present in an image as the scanner moves along the countours of the handwriting.  In this example, as the scanner moves along the edge of the written digit,
 
 ![Detailed example showing recognition of a handwritten 5.](../images/1-recognition-example-5.png){ width=80% }
 
