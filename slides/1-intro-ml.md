@@ -1,7 +1,9 @@
 ---
 title:  'Intro to Machine Learning'
 author: 'Fraida Fund'
+
 ---
+
 
 ::: {.cell .markdown}
 
@@ -12,6 +14,13 @@ author: 'Fraida Fund'
 * Machine learning terminology and framework
 * Reality check
 
+:::
+
+::: {.cell .markdown}
+
+## ML via XKCD
+
+![Image via XKCD](../images/xkcd.png){ width=40% }
 
 :::
 
@@ -30,13 +39,11 @@ author: 'Fraida Fund'
 
 :::
 
-
-
+\newpage
 
 ::: {.cell .markdown}
 
-### Solving problems: example (1) 
-
+### Solving problems: example
 
 ::: notes
 
@@ -45,9 +52,18 @@ Generally speaking, to solve problems using computer systems, we program them to
 * get some input from the "real world" 
 * produce some output which is "actionable information" for the real world.
 
-![A system that interacts with the world.](../images/1-intro-drawing-0.png){ width=60% }
+![A system that interacts with the world.](../images/1-intro-drawing-0.png){ width=55% }
 
 :::
+
+
+:::
+
+::: {.cell .markdown}
+
+
+### Solving problems: example (1) 
+
 
 
 Suppose we want a system to help students decide whether to enroll in this course or not.
@@ -76,11 +92,14 @@ and $\hat{y}$ is predicted ML course grade.
 The "hat" indicates that this is an *estimated* value.
 
 
-![A system that predicts ML course grade.](../images/1-intro-drawing-1.png){ width=60% }
+![A system that predicts ML course grade.](../images/1-intro-drawing-1.png){ width=55% }
 
 :::
 
 :::
+
+\newpage
+
 
 ::: {.cell .markdown}
 
@@ -95,12 +114,13 @@ Is this ML?
 
 ::: notes
 
-![A system that predicts ML course grade as minimum grade from prerequisite coursework. This is a *rule-based* system.](../images/1-intro-drawing-2.png){ width=60% }
+![A system that predicts ML course grade as minimum grade from prerequisite coursework. This is a *rule-based* system.](../images/1-intro-drawing-2.png){ width=55% }
 
 
 :::
 
 :::
+
 
 ::: {.cell .markdown}
 
@@ -116,17 +136,20 @@ Is this ML?
 
 ::: notes
 
-![A system that predicts ML course grade as weighted sum of grades from prerequisite coursework, where the weights are fixed. This is a *rule-based* system.](../images/1-intro-drawing-3.png){ width=60% }
+![A system that predicts ML course grade as weighted sum of grades from prerequisite coursework, where the weights are fixed. This is a *rule-based* system.](../images/1-intro-drawing-3.png){ width=55% }
 
 
 :::
 
 
 :::
+
+\newpage
+
 
 ::: {.cell .markdown}
 
-### Solving problems: example (3)
+### Solving problems: example (5)
 
 Suppose we predict your grade as the mean of last semester's grades:
 
@@ -138,56 +161,45 @@ Is this ML?
 
 ::: notes
 
-![A system that predicts ML course grade as mean grade of previous students. This is a *data-driven* system.](../images/1-intro-drawing-4.png){ width=60% }
+![A system that predicts ML course grade as mean grade of previous students. This is a *data-driven* system.](../images/1-intro-drawing-4.png){ width=55% }
 
 :::
 
 :::
+
 
 
 ::: {.cell .markdown}
 
-### Solving problems: example (4)
+### Solving problems: example (6)
 
 Suppose we predict your grade using this algorithm:
 
-If $S$ is the set of 3 students from last semester with a profile most similar to yours, predict your grade as the median of their grades:
+If $S_y$ is the grades of a set of 3 students from previous semesters with the profile most similar to yours, predict your grade as the median of their grades:
 
-$$\hat{y} = \underset{y_i \in S}{\mathrm{median}} (y_i) $$
+$$\hat{y} = \mathrm{median} (S_y) $$
 
 Is this ML?
 
 ::: notes
 
-![A system that predicts ML course grade as median of three most similar previous students. This is a *data-driven* system.](../images/1-intro-drawing-5.png){ width=60% }
+![A system that predicts ML course grade as median of three most similar previous students. This is a *data-driven* system.](../images/1-intro-drawing-5.png){ width=55% }
 
 :::
 
 :::
 
-::: {.cell .markdown}
-
-### Rule-based vs. data driven problem solving
-
-::: notes
-
-* The first two were examples of *rule-based* problem solving. I used my domain knowledge and expertise to establish rules for solving the problem.
-* The second two were examples of *data-driven* problem solving. I still used some of my own expertise to establish rules - for example, the structure of the solution - but I used *data* (and not just data from the current input) to produce the output.
-
-:::
-
-:::
+\newpage
 
 ::: {.cell .markdown}
 
 ### "Rule-based" problem solving 
 
-1. An algorithm is developed that will produce the desired result for a given input.
-2. The algorithm is implemented in code.
-3. Input parameters are fed to the implemented algorithm, which outputs a result.
+1. Develop an algorithm that will produce the desired result for a given input.
+2. Implement the algorithm.
+3. Feed input to the implemented algorithm, which outputs a result.
 
 :::
-
 
 
 ::: {.cell .markdown}
@@ -201,8 +213,27 @@ Is this ML?
 :::
 
 
+
 ::: {.cell .markdown}
-\newpage
+
+### Rule-based vs. data driven problem solving
+
+::: notes
+
+* The first two were examples of *rule-based* problem solving. I used my domain knowledge and expertise to establish rules for solving the problem.
+* The second two were examples of *data-driven* problem solving. I still used some of my own expertise to establish rules - for example, the structure of the solution - but I used *data* (and not just data from the current input) to produce the output.
+
+What are some benefits of predicting course grade using the data-driven approach?
+
+* it's easy to update with more experience or if the "world" changes. For example: 
+  * if over time the quality of admitted students goes up and I give higher grades, the system that predicts the mean of last semester's scores will "track" with that.
+  * if I didn't have many students with poor programming background the first semester, but I do the second semester, I will be able to predict their performance better in subsequent semesters.
+:::
+
+:::
+
+
+::: {.cell .markdown}
 
 ## Machine learning problems
 
@@ -217,112 +248,215 @@ Now that we understand the difference between rule-based problem solving and ML-
 
 ::: {.cell .markdown}
 
-### Handwritten digits (1)
+### Recognize handwritten digits 
 
 ![Handwritten digits in MNIST dataset](../images/digits.png){ width=50% }
 
 ::: notes
 
-Let's take a classic example: recognizing handwritten digits. Early solutions to this problem date back to the 1960s. 
+You read or will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?
+
+Are there any important reasons *not* to use ML for this?
 
 :::
 
 :::
 
-
-
+\newpage
 
 ::: {.cell .markdown}
 
-#### Faces
+### Autonomous driving control (1)
 
-![Face detection](../images/face-detection.png){ width=50% }
-
-:::
-
-
-::: {.cell .markdown}
-
-### Good candidate for ML or not?
-
-* Predict volcanic eruptions
-* Recommend new products to customers based on past purchases
-* Identify spam email
-* Grade students' multiple choice quiz answers on NYU Classes
-* Grade students' project-based homework
-
-:::
-
-::: {.cell .markdown}
-
-#### Score candidate's performance in a job interview (1)
-
-Is it a good candidate for ML?
-
-* Use video recording as input to ML system
-* Train using videos of past interviews + human assessment on key personality features
-
-:::
-
-::: {.cell .markdown}
-
-#### Score candidate's performance in a job interview (2)
-
-![](../images/1-intro-job-interview.jpeg)
-
-Source: [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/)
-
-:::
-
+![Autonomous vehicle prototype.](../images/1-self-driving.png){ width=50% }
 
 ::: notes
 
-What characteristics of a problem make it well-suited to ML or not well-suited to ML?
+What makes this problem a good/bad candidate for ML? Are there reasons *not* to use ML for this?
+
+* Much too complex to program a rule-based system for autonomous driving.
+* ML may not generalize to "weird" situations as well as a *human* driver would. See e.g. [Autonomous Vehicles vs. Kangaroos: the Long Furry Tail of Unlikely Events](https://spectrum.ieee.org/cars-that-think/transportation/self-driving/autonomous-cars-vs-kangaroos-the-long-furry-tail-of-unlikely-events) in IEEE Spectrum.
+* ML may be "tricked" by certain attacks that wouldn't affect *human* drivers. See e.g. [Slight Street Sign Modifications Can Completely Fool Machine Learning Algorithms](https://spectrum.ieee.org/cars-that-think/transportation/sensors/slight-street-sign-modifications-can-fool-machine-learning-algorithms) and [Three Small Stickers in Intersection Can Cause Tesla Autopilot to Swerve Into Wrong Lane
+](https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane) in IEEE Spectrum.
 
 :::
 
 
+:::
 
 ::: {.cell .markdown}
 
-### Problems that are not well suited to ML
+### Autonomous driving control (2)
+
+![Adversarial attack: "graffiti" stuck on stop sign causes ML to interpret it as a speed limit sign.](../images/1-self-driving-attack.png){ width=40% }
+
+
+:::
+
+\newpage 
+
+::: {.cell .markdown}
+
+### Grading students' essays (1)
+
+![Sample GRE essay generated by [the Basic Automatic B.S. Essay Language Generator](https://lesperelman.com/writing-assessment-robo-grading/babel-generator/).](../images/1-essay-score.png){width=70%}
+
+::: notes
+
+Are there reasons not to use ML here?
+
+* ML may not be explainable or auditable.
+* ML may perpetuate and/or exacerbate bias in the training data. See [Flawed Algorithms Are Grading Millions of Students’ Essays](https://www.vice.com/en/article/pa7dj9/flawed-algorithms-are-grading-millions-of-students-essays) in Mother board by Vice. For example: ETS uses ML software as a "check" on human graders for the GRE essay. But its system overscores students from mainland China (by about 1.3/6 points relative to human scorers) and underscores African Americans (by about 0.8/6 points) and other groups.
+
+:::
+
+
+:::
+
+::: {.cell .markdown}
+
+### Grading students' essays (2)
+![The essay was scored by ML as a 6/6.](../images/1-essay-score2.png){width=70%}
+
+
+:::
+
+\newpage
+
+
+::: {.cell .markdown}
+
+### Score candidate's performance in a job interview (1)
+
+::: notes
+
+* Use video recording as input to ML system
+* Train using videos of past interviews + human assessment on key personality features
+* Do you think the video (not audio) of your interview is a good predictor of how you will perform the job?
+
+:::
+
+![Source: [An Interview with Alex](http://theinterview.ai/) by artist Carrie Sijia Wang.](../images/1-alex-interview.jpg){ width=50% }
+
+
+:::
+
+
+::: {.cell .markdown}
+
+### Score candidate's performance in a job interview (2)
+
+![ML job interview scoring by ML. Source: [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/)](../images/1-intro-job-interview.jpeg){ width=60% }
+
+::: notes
+
+* This ML system was easily influenced by things like bookshelves in the background, or wearing a headscarf. 
+* The company that makes the scoring system said: "Just like in a normal job interview, these factors are taken into account for the assessment. However, that does not happen on demand. There’s no pressure, that can appear in talking to real people." Is this a satisfactory answer?
+* See the report by [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/).
+
+:::
+
+:::
+
+\newpage
+
+::: {.cell .markdown}
+
+### Determine severity of injury from knee X-ray (1)
+
+![Example of a knee X-ray. [Source](https://www.nature.com/articles/s41591-020-01192-7)](../images/1-knee-xray.jpeg){ width=35% }
+
+:::
+
+
+::: {.cell .markdown}
+
+### Determine severity of injury from knee X-ray (2)
+
+* Among patients with a similar X-ray "score" (from expert), Black patients tend to have more pain.
+* What if radiologists may miss some sources of pain? (Medical science often comes from very limited study populations.)
+
+:::
+
+
+::: {.cell .markdown}
+
+### Determine severity of injury from knee X-ray (3)
+
+* This algorithm was trained to predict patient pain, rather than radiologist's score.
+* Reduced "pain disparity" by 43% (does  a better job than radiologists of finding things that "hurt", especially in Black knees!)
+
+:::
+
+::: {.cell .markdown}
+
+### What problems are "good" for ML, overall?
+
+:::
+
+::: {.cell .markdown}
+
+### Problems that may not be well suited to ML
 
 * There is an accurate and simple algorithm that will produce the desired output.
-* There is no "good" data available on which to train a model.
+* There is no "good" data available to train the model.
+* The model can be "tricked", with potentially severe consequences.
+* Need to audit or explain the output.
 
 :::
 
 
 ::: {.cell .markdown}
 
-### Problems that are good candidates for ML
+### Problems that are often good candidates for ML
 
-* Human expertise does not exist or is insufficient (for example, complex medical process that is not fully understood)
-* Humans cannot easily explain their expertise (for example, handwritten digit recognition)
-* The solution is very specific to particular cases (for example, recommendation systems)
+* Human expertise does not exist or is insufficient
+* Humans cannot easily explain their expertise 
+* The solution is very specific to particular cases
+* It is useful to know answer *and* degree of certainty
+* We will get more data during operation + can improve with experience
 
 :::
 
+
+
+\newpage
 
 ::: {.cell .markdown}
 
 ### Why now?
 
-* Statistical foundations have been around for decades
+* Statistical foundations are around for decades
 * What's new:
-  * Storage
-  * Connectivity
+  * Storage + Connectivity
   * Computational power
 
 :::
 
 
+::: {.cell .markdown}
+
+
+## Machine learning basics
+
+:::
 
 ::: {.cell .markdown}
 
-\newpage
+### Goal of a machine learning system
 
-## Machine learning terminology
+
+
+Seeks to estimate a "true" value $y$ (known as the target variable) for some input $x$.
+
+
+::: notes
+
+
+![A basic ML system.](../images/1-basics-0.png){width=60%}
+
+
+:::
 
 :::
 
@@ -330,13 +464,21 @@ What characteristics of a problem make it well-suited to ML or not well-suited t
 
 ### Machine learning paradigms (1)
 
-**Supervised learning**: learn from labeled data, make predictions
 
-* Continuous target variable: **regression**
-* Categorical target variable: **classification**
+**Supervised learning**: learn from labeled data, make predictions. 
 
+* If the target variable is continuous: **regression** 
+* If the target value is discrete (categorical): **classification**
+
+::: notes
+
+![Supervised learning.](../images/1-basics-supervised.png){ width=60% }
 
 :::
+
+:::
+
+\newpage
 
 ::: {.cell .markdown}
 
@@ -347,26 +489,31 @@ What characteristics of a problem make it well-suited to ML or not well-suited t
 * Group similar instances: **clustering**
 * Compress data while retaining relevant information: **dimensionality reduction**
 
+::: notes
+
+![Unsupervised learning.](../images/1-basics-unsupervised.png){ width=60% }
+
+:::
+
 :::
 
 ::: {.cell .markdown}
 
 ### Machine learning paradigms (3)
 
-**Reinforcement learning**: learn from how the environment responds to your actions, solve interactive problems
+**Reinforcement learning**: learn from how the environment responds to your actions, solve interactive problems.
+
+::: notes
+
+![Reinforcement learning.](../images/1-basics-reinforcement.png){ width=60% }
 
 :::
 
-::: {.cell .markdown}
-
-
-::: {.cell .markdown}
-
-### Simple example, revisited
-
-Earlier, we described four systems to predict a student's grade in the course. 
-
 :::
+
+\newpage
+
+::: {.cell .markdown}
 
 ### The basic supervised learning problem
 
@@ -379,82 +526,93 @@ There is some (unknown) relationship between $\mathbf{x}$ and a **target** varia
 We want to find $\hat{y}$, our **prediction** for the value of $y$.
 :::
 
+
 ::: {.cell .markdown}
 
-### A supervised machine learning "recipe"
+### A supervised machine learning "recipe" (1)
 
 
-* Get **data** in some usable **representation** 
-* For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1,2,\cdots,N$
-* Select a **model** $f$: $\hat{y} \approx f(x)$
-* Select a **loss function** that will measure how good the model is
-* If your model has **parameters**, find the parameter values that minimize the loss function (use a **training algorithm**)
-* Use model to **predict** $\hat{y}$ for new, unlabeled samples (**inference**)
+* *Step 1*: Get (good) **data** in some usable **representation**.
+
+For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1,2,\cdots,N$.
+
+:::
+
+::: {.cell .markdown}
+
+### A supervised machine learning "recipe" (2)
+
+* *Step 2*: Choose a candidate **model** $f$: $\hat{y} = f(x)$.
+
+* *Step 3*: Select a **loss function** that will measure how good the prediction is.
+
+* *Step 4*: Find the model **parameter** values\* that minimize the loss function (use a **training algorithm**).
+
+<small>\* If your model has parameters.</small>
+
+:::
+
+::: {.cell .markdown}
+
+### A supervised machine learning "recipe" (3)
+
+* *Step 5*: Use trained model to **predict** $\hat{y}$ for new samples not used in training (**inference**).
+
+* *Step 6*: Evaluate how well your model **generalizes** to this new, unseen data.
+
 
 :::
 
 
-
-::: {.cell .markdown}
 
 \newpage
 
-## Your role in the ML process
+::: {.cell .markdown}
+
+### Simple example, revisited
+
+::: notes
+
+
+![A "recipe" for our simple ML system.](../images/1-ml-recipe-w0.png){ width=55% }
+
+![A "recipe" for another simple ML system.](../images/1-ml-recipe-knn.png){ width=55% }
+
+
+:::
+
+:::
+
+
+\newpage
+
+
+::: {.cell .markdown}
+
+## Reality check
+
 
 :::
 
 
 ::: {.cell .markdown}
 
-### ML system via XKCD
+### ML as a "leaky pipeline"
 
-![Image via XKCD](../images/xkcd.png){ width=40% }
+![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)](../images/1-wot-leaky-pipelines.png){ width=70% }
 
-:::
+::: notes
 
+> We want to create an adaptive system that performs well in the wild, but to do so, we:
+> 
+> * Set up a benchmark task, so we have some way to compare different systems.
+> * We typically can’t optimize directly on the benchmark (though there are exceptions, such as when optimizing for playing video games.) Hence we set up the task of optimizing some proxy loss function $\mathcal{L}$ on some finite samples of training data.
+> * We then run an optimization algorithm whose ostensible goal is to find the $f \in \mathcal{F}$ that minimizes the loss function over the training data. ($\mathcal{F}$ is a set of models, sometimes known as architecture, and sometimes we also add other restrictions such norms of weights, which is known as regularization)
+> 
+> All these steps are typically "leaky". Test performance on benchmarks is not the same as real-world performance. Minimizing the loss over the training set is not the same as test performance. Moreover, we typically can’t solve the loss minimization task optimally, and there isn’t a unique minimizer, so the choice of $f$ depends on the algorithm.
 
-::: {.cell .markdown}
-
-### The machine learning process
-
-
-![Image based on https://developers.google.com/machine-learning/](../images/ml-process-simple.svg)
-
-:::
-
-::: {.cell .markdown}
-
-### Challenges in ML design
-
-* Acquiring and preparing data 
-* Choosing an appropriate model, and "hyperparameters"
-* Designing a system that will *generalize* (not only to "test" data, but also in production)
+Quotes from: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)
 
 :::
-
-
-::: {.cell .markdown}
-
-## Model gap, metric gap, algorithm gap
-
-:::
-
-::: {.cell .markdown}
-
-### The model 
-
-:::
-
-::: {.cell .markdown}
-
-### The metric
-
-* Example: how would you train an ML system to develop new recipes?
-
-:::
-
-::: {.cell .markdown}
-
-### The algorithm
 
 :::
