@@ -3,7 +3,9 @@ title: Background - videos on convexity, directional derivatives, gradient desce
 author: Fraida Fund
 ---
 
-If you have not encountered these concepts before - convexity, directional derivatives, gradient descent - you may find it helpful to watch these short videos before our lecture, and ask any questions you have on our Q&A site.
+Last week, we said that one of the "ingredients" in the "recipe" for supervised machine learning is a *training algorithm*, which we use to find model parameters that minimize the loss function. This is fundamentally an *optimization* problem, and in our discussion we will assume some background knowledge of the foundational math concepts for optimization.
+
+If you have not encountered these concepts before - convexity, directional derivatives, gradient descent - please watch these short videos before our lecture (note: subtitles are available). Ask any questions you have on our Q&A site.
 
 ### [Objective function: convexity](https://www.youtube.com/watch?v=LJAaNR1PbsQ)
 

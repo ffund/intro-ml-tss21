@@ -1,10 +1,12 @@
 FILES=0-tss-faq.pdf 0-prerequisite-review.pdf 0-books.pdf 
 FILES+=1-handwritten-digits.pdf
+FILES+=2-beauty-classroom-case-study.pdf
 FILES+=3-cubic-model.pdf
 
 SOURCES := 0-tss-faq.md 0-prerequisite-review.md 0-books.md
 SOURCES += 1-handwritten-digits.md
 SOURCES += 2-gd-background-videos.md
+SOURCES += 2-beauty-classroom-case-study.md
 
 PDFS := $(patsubst %.md,%.pdf,$(SOURCES))
 PAGES:=  $(patsubst %.md, %.html,$(SOURCES))
