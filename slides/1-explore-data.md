@@ -4,21 +4,27 @@ author: 'Fraida Fund'
 ---
 
 
-
 ## Garbage in, garbage out
 
 ::: notes
 
 If you remember nothing else from this semester, remember this!
 
-If you use "garbage" to train a machine learning model, you will only ever get "garbage" out. Even worse, since you are testing on the same data, you might not even realize it is "garbage" until the model is in production!
+If you use "garbage" to train a machine learning model, you will only ever get "garbage" out. Also, since you are testing on the same data, you might not even realize it is "garbage" until the model is in production!
 
 :::
 
 ### Recall: ML as a "leaky pipeline"
 
-![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/1-wot-leaky-pipelines.png){ width=70% }
+![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/1-wot-leaky-pipelines.png){ width=40% }
 
+::: notes
+
+"Garbage" affects the pipeline in several places.
+
+:::
+
+\newpage
 
 ### Example: a data problem (1)
 
@@ -32,25 +38,32 @@ What are our expectations about what this should look like?
 
 ### Example: a data problem (2)
 
-![Does this look reasonable?](../images/1-pubmed-authors.png){ width=60% }
-
-### Example: a data problem (3)
-
-![The real distribution. Example via [Steven Skiena @ SBU](https://www3.cs.stonybrook.edu/~skiena/519/).](../images/1-pubmed-authors2.png){ width=60% }
+![Does this look reasonable?](../images/1-pubmed-authors.png){ width=50% }
 
 ::: notes
 
-The explanation: in 2002, PubMed started using full first names in authors instead of just initials.
+We can think of many potential explanations for this pattern, even though it is actually a data artifact.
+
+The true explanation: in 2002, PubMed started using full first names in authors instead of just initials. The same author is represented in the dataset as a "new" author with a first date of publication in 2002.
 
 :::
 
+### Example: a data problem (3)
+
+![The real distribution, after name unification. Example via [Steven Skiena @ SBU](https://www3.cs.stonybrook.edu/~skiena/519/).](../images/1-pubmed-authors2.png){ width=50% }
+
+\newpage
+
+
 ### Example: another data problem (1)
 
-![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=50% }
+![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
 
 ::: notes
 
-What are our assumptions about this data, and how are they violated here?
+What are our assumptions about election night data, and how are they violated here? 
+
+We expect that per-candidate vote totals (computed by multiplying total votes and vote share) should increase as more votes are counted, but never decrease.
 
 What are possible explanations?
 
@@ -58,24 +71,26 @@ What are possible explanations?
 
 ### Example: another data problem (2)
 
-![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=80% }
+![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=75% }
 
 ::: notes
 
-How Edison/AP collects the data for the data feed used by New York Times and other sites on Election Night:
+This anomaly makes a lot of sense as a correction of a data entry or duplicate entry error. 
 
-* There are "reporters at county elections offices who call results" into their phone center
-* They use "data feeds provided by some states and counties"
-* They have people who "scour state and county websites for results" to enter into the system
-* They have people who monitor "results sent from counties, cities, and towns via email or fax"
-* They have people ("chasers") who monitor other news sources for results not yet in the system.
+How Edison/AP collects the data for their Election Night feed:
+
+* There are "stringers" (temporary reporters) at various elections offices who call results into their phone center
+* They have people who look at official government websites for new results that they manually enter into the system
+* They have people who monitor results sent by fax from counties and cities
+
+all working as fast as they can! Data entry and duplicate entry errors are not only likely, they are almost guaranteed. When they are corrected, vote totals may decrease.
 
 Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us/topics/politics/elections/counting-the-vote), [Edison](http://www.edisonresearch.com/wp-content/uploads/2020/10/Web-Entry-Team-Handout-2020.pdf)
 
 :::
 
 
-
+\newpage
 
 ## What kinds of data problems?
 
@@ -89,7 +104,7 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
 
 ::: notes
 
-How should you handle little bits of missing data? Depending on the circumstances, it may make sense to:
+How should you handle little bits of missing data? It always depends on the data and the circumstances. Some possibilities include:
 
 * omit the row
 * fill with mean
@@ -99,7 +114,9 @@ How should you handle little bits of missing data? Depending on the circumstance
 
 How should you handle unreasonable values or outliers?
 
-* e.g. suppose in a dataset of voter information, some have impossible year of birth - would make the voter a child, or 120 years old. (Voters with no DOB, who registered before DOB was required, are often encoded with a January 1990 DOB.)
+* e.g. suppose in a dataset of voter information, some have impossible year of birth - would make the voter a child, or some indicate the voter is 120 years old. (Voters with no known DOB, who registered before DOB was required, are often encoded with a January 1900 DOB.)
+* **not** a good idea to just remove outliers unless you are sure they are a data entry error or otherwise not a "true" value.
+* Even if an outlier is due to some sort of error, if you remove them, you may skew the dataset (as in the 1/1/1900 voters example).
 
 :::
 
@@ -114,13 +131,14 @@ How should you handle unreasonable values or outliers?
 
 Examples:
 
-* Twitter API terms of use don't allow researchers to share tweets directly, only message IDs (except for limited distribution, e.g. by email). To reproduce the dataset, you use the Twitter API to download messages using their IDs. But, posts that have been removed are not available - and posts are not equally likely to be removed! (For example: you might end up with a dataset that has offensive posts but few "obvious" offensive posts.)
-* Many social media datasets used for "offensive post" classification are subject to human bias (especially if they were produced without adequate training procedures in place). For example, they may label posts containing African-American dialects of English as "offensive" much more often. [Source](https://www.aclweb.org/anthology/P19-1163.pdf), [User-friendly article](https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter)
+* Twitter API terms of use don't allow researchers to share tweets directly, only message IDs (except for limited distribution, e.g. by email). To reproduce the dataset, you use the Twitter API to download messages using their IDs. But, tweets that have been removed are not available - the distribution of removed tweets is not flat! (For example: you might end up with a dataset that has offensive posts but few "obvious" offensive posts.)
+* Many social media datasets used for "offensive post" classification have biased labels (especially if they were produced without adequate training procedures in place). For example, they may label posts containing African-American dialects of English as "offensive" much more often. [Source](https://www.aclweb.org/anthology/P19-1163.pdf), [User-friendly article](https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter)
 * A dataset of Tweets following Hurricane Sandy makes it looks like Manhattan was the hub of the disaster, because of power blackouts and limited cell service in the most affected areas. [Source](https://hbr.org/2013/04/the-hidden-biases-in-big-data)
 * The City of Boston released a smartphone app that uses accelerometer and GPS data to detect potholes and report them automatically. But, low income and older residents are less likely to have smartphones, so this dataset presents a skewed view of where potholes are. [Source](https://hbr.org/2013/04/the-hidden-biases-in-big-data)
 
 :::
 
+\newpage
 
 ### What kind of problems might you encounter? (3)
 
@@ -151,24 +169,18 @@ In machine learning, we train models on a training set of data, then evaluate th
 
 Sometimes, information from the training set can "leak" into the evaluation - this is called data leakage.
 
+Or, information from the target variable (which should not be available during inference) leaks into the feature data.
+
 :::
 
 ### Some types of data leakage
 
 * Learning from adjacent temporal data
 * Learning from duplicate data
-* Learning from features that are not available at prediction time
+* Learning from features that are not available at prediction time (e.g. data from the future)
 * Learning from a feature that is a proxy for target variable
 
-::: notes
 
-Example: 
-
-* human activity recognition data
-* email spam detection data
-* credit card approval 
-
-:::
 ### COVID-19 chest radiography (1)
 
 * **Problem**: diagnose COVID-19 from chest radiography images
@@ -207,9 +219,9 @@ Findings:
 These findings are based on techniques like 
 
 * saliency maps, where the model is made to highlight the part of the image (the pixels) that it considered most relevant to its decision.
-* using generative models and asking it to take a COVID-negative X-ray and make it positive (or vice versa)
+* using generative models and asking it to take a COVID-negative X-ray and make it positive (or v.v.)
 
-Many of the findings are not interpretable without domain knowledge (e.g. knowing what part of the X-ray *should* be important and what part should not be.) For example: should the diaphragm area be helpful?
+Many of the findings are not easy to understand without domain knowledge (e.g. knowing what part of the X-ray *should* be important and what part should not be.) For example: should the diaphragm area be helpful?
 
 :::
 
