@@ -46,7 +46,7 @@ The explanation: in 2002, PubMed started using full first names in authors inste
 
 ### Example: another data problem (1)
 
-![Data like this was widely used as evidence of anomaly in the 2020 election.](.../images/1-election2020.png){ width=30% }
+![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=50% }
 
 ::: notes
 
@@ -58,7 +58,7 @@ What are possible explanations?
 
 ### Example: another data problem (2)
 
-![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=60% }
+![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=80% }
 
 ::: notes
 
