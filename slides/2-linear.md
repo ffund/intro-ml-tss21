@@ -741,7 +741,7 @@ Many of the steps will be in the wrong direction, but progress towards minimum o
 
 ::: notes
 
-Each iteration is now only $O(d)$, but we may need more iterations. However, as long as we need fewer than $n$ iterations, we come out ahead.
+Each iteration is now only $O(d)$, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if $n$ is large!).
 
 See supplementary notes for an analysis of the number of iterations needed.
 
