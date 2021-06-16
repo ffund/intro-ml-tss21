@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -18,7 +18,7 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
 <body>
   <div class="reveal">
@@ -32,244 +32,118 @@
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
-<li>Simple linear regression</li>
-<li>Regression performance metrics</li>
+<li>Simple (univariate) linear regression</li>
 <li>Multiple linear regression</li>
+<li>Linear basis function regression</li>
+<li>OLS solution for simple regression</li>
+<li>Interpretation</li>
+<li>OLS solution for multiple/LBF regression</li>
+<li>Solution using gradient descent</li>
 </ul>
 </section>
 
+<section>
 <section id="regression" class="title-slide slide level2">
 <h2>Regression</h2>
-<p>The output variable <span class="math inline">\(y\)</span> is continuously valued.</p>
-<p>For each input <span class="math inline">\(\mathbf{x_i}\)</span>, the model estimates</p>
-<p><span class="math display">\[\hat{y_i} = y_i - \epsilon_i\]</span></p>
-<p>where <span class="math inline">\(\epsilon_i\)</span> is an error term, also called the <strong>residual</strong>.</p>
-</section>
 
+</section>
+<section id="regression---quick-review" class="slide level3">
+<h3>Regression - quick review</h3>
+<p>The output variable <span class="math inline">\(y\)</span> is continuously valued.</p>
+<p>We need a function <span class="math inline">\(f\)</span> to map each input vector <span class="math inline">\(\mathbf{x_i}\)</span> to a prediction,</p>
+<p><span class="math display">\[\hat{y_i} = f(\mathbf{x_i})\]</span></p>
+<p>where (we hope!) <span class="math inline">\(\hat{y_i} \approx y_i\)</span>.</p>
+</section>
+<section id="prediction-by-mean" class="slide level3">
+<h3>Prediction by mean</h3>
+<p>Last week, we imagined a simple model that predicts the mean of target variable in training data:</p>
+<p><span class="math display">\[\hat{y} = w_0\]</span></p>
+<p>where <span class="math inline">\(w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}\)</span>.</p>
+</section>
+<section id="prediction-by-mean-illustration" class="slide level3">
+<h3>Prediction by mean, illustration</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/2-prediction-mean-zero-variance.png" style="width:80.0%" alt="A “recipe” for our simple ML system." /><figcaption aria-hidden="true">A “recipe” for our simple ML system.</figcaption>
+</figure>
+<p>Note that the loss function we defined for this problem - sum of squared differences between the true value and predicted value - is the variance of <span class="math inline">\(y\)</span>.</p>
+<p>Under what conditions will that loss function be very small (or even zero)?</p>
+<figure>
+<img data-src="../images/2-variance-y.png" style="width:50.0%" alt="Prediction by mean is a good model if there is no variance in y. But, if there is variance in y, a good model should explain some/all of that variance." /><figcaption aria-hidden="true">Prediction by mean is a good model if there is no <em>variance</em> in <span class="math inline">\(y\)</span>. But, if there <em>is</em> variance in <span class="math inline">\(y\)</span>, a good model should <em>explain</em> some/all of that variance.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="sample-mean-variance---definitions" class="slide level3">
+<h3>Sample mean, variance - definitions</h3>
+<p>Sample mean and variance:</p>
+<p><span class="math display">\[\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i, \quad \sigma_y^2 = \frac{1}{n} \sum_{i=1}^n (y_i - \bar{y}) ^2\]</span></p>
+</section></section>
 <section>
 <section id="simple-linear-regression" class="title-slide slide level2">
 <h2>Simple linear regression</h2>
-<p>Assume a linear relationship between single feature <span class="math inline">\(x\)</span> and target variable <span class="math inline">\(y\)</span>:</p>
-<p><span class="math display">\[ \hat{y} = \beta_0 + \beta_1 x\]</span></p>
-<p><span class="math inline">\(\mathbf{\beta} = (\beta_0, \beta_1)\)</span>, the intercept and slope, are model <strong>parameters</strong>.</p>
+<aside class="notes">
+<p>A “simple” linear regression is a linear regression with only one feature.</p>
+</aside>
 </section>
-<section id="residual-term" class="slide level3">
-<h3>Residual term</h3>
-<p>Actual relationship include variation due to factors other than <span class="math inline">\(x\)</span>, includes <strong>residual</strong> term:</p>
-<p><span class="math display">\[y = \beta_0 + \beta_1 x + \epsilon\]</span></p>
-<p>where <span class="math inline">\(\epsilon = y - \hat{y}\)</span>.</p>
+<section id="regression-with-one-feature" class="slide level3">
+<h3>Regression with one feature</h3>
+<p>For simple linear regression, we have feature-label pairs:</p>
+<p><span class="math display">\[(x_i, y_i), i=1,2,\cdots,n\]</span></p>
+<p>(we’ll often drop the index <span class="math inline">\(i\)</span> when it’s convenient.)</p>
 </section>
-<section id="linear-model-with-residual---illustration" class="slide level3">
-<h3>Linear model with residual - illustration</h3>
+<section id="simple-linear-regression-model" class="slide level3">
+<h3>Simple linear regression model</h3>
+<p>Assume a linear relationship:</p>
+<p><span class="math display">\[ \hat{y} = w_0 + w_1 x\]</span></p>
+<p>where <span class="math inline">\(\mathbf{w} = [w_0, w_1]\)</span>, the intercept and slope, are model <strong>parameters</strong> that we <em>fit</em> in training.</p>
+</section>
+<section id="residual-term-1" class="slide level3">
+<h3>Residual term (1)</h3>
+<p>There is variance in <span class="math inline">\(y\)</span> among the data:</p>
+<ul>
+<li>some of it is “explained” by <span class="math inline">\(f(x) = w_0 + w_1 x\)</span></li>
+<li>some of the variance in <span class="math inline">\(y\)</span> is <em>not</em> explained by <span class="math inline">\(f(x)\)</span></li>
+</ul>
+<aside class="notes">
 <figure>
-<img data-src="images/residual.svg" style="width:70.0%" alt="Example of linear fit with residuals shown as vertical deviation from regression line." /><figcaption aria-hidden="true">Example of linear fit with residuals shown as vertical deviation from regression line.</figcaption>
+<img data-src="../images/2-variance-y-2.png" style="width:40.0%" alt="Some (but) not necessarily all of variance of y is explained by the linear model." /><figcaption aria-hidden="true">Some (but) not necessarily all of variance of <span class="math inline">\(y\)</span> is explained by the linear model.</figcaption>
 </figure>
+<p>Maybe <span class="math inline">\(y\)</span> varies with some other function of <span class="math inline">\(x\)</span>, maybe part of the variance in <span class="math inline">\(y\)</span> is explained by other features not in <span class="math inline">\(x\)</span>, maybe it is truly “random”…</p>
+</aside>
 </section>
-<section id="interpretability-of-linear-model" class="slide level3">
-<h3>Interpretability of linear model</h3>
-<p>If slope <span class="math inline">\(\beta_1\)</span> is 0.0475 sales/dollar spent on TV advertising, we can say that a $1,000 increase in TV advertising budget is, on average, associated with an increase of about 47.5 in units sold.</p>
-<p>However, note that:</p>
-<ul>
-<li>we can show a correlation, but can’t say that the relationship is causative.</li>
-<li>the value for <span class="math inline">\(\beta_1\)</span> is only an <em>estimate</em> of the true relationship between TV ad dollars and sales.</li>
-</ul>
+<section id="residual-term-2" class="slide level3">
+<h3>Residual term (2)</h3>
+<p>The <em>residual</em> term captures everything that isn’t in the model:</p>
+<p><span class="math display">\[y = w_0 + w_1 x + e\]</span></p>
+<p>where <span class="math inline">\(e = y - \hat{y}\)</span>.</p>
 </section>
-<section id="recipe-for-simple-linear-regression" class="slide level3">
-<h3>“Recipe” for simple linear regression</h3>
-<ul>
-<li>Choose a <strong>model</strong>: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x\)</span></li>
-<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,N\)</span></li>
-<li>Choose a <strong>loss function</strong> that will measure how well model fits data: <strong>??</strong></li>
-<li>Find model <strong>parameters</strong> that minimize loss: find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span></li>
-<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
-</ul>
-</section>
-<section id="least-squares-model-fitting" class="slide level3">
-<h3>Least squares model fitting</h3>
-<p>Residual sum of squares:</p>
-<p><span class="math display">\[ RSS(\beta_0, \beta_1) := \sum_{i=1}^n (y_i - \hat{y_i})^2 = \sum_{i=1}^n ( \epsilon_i )^2 \]</span></p>
-<p>Least squares solution: find <span class="math inline">\((\beta_0, \beta_1)\)</span> to minimize RSS.</p>
-</section>
-<section id="recipe-for-simple-linear-regression-1" class="slide level3">
-<h3>“Recipe” for simple linear regression</h3>
-<ul>
-<li>Choose a <strong>model</strong>: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x\)</span></li>
-<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,N\)</span></li>
-<li>Choose a <strong>loss function</strong> that will measure how well model fits data: <span class="math inline">\(RSS(\beta_0,\beta_1)\)</span></li>
-<li>Find model <strong>parameters</strong> that minimize loss: find <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span></li>
-<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
-</ul>
-</section>
-<section id="minimizing-rss-1" class="slide level3">
-<h3>Minimizing RSS (1)</h3>
-<p>RSS is convex, so to minimize, we take</p>
-<p><span class="math display">\[ \frac{\partial RSS}{\partial \beta_0} = 0, \frac{\partial RSS}{\partial \beta_1} = 0\]</span></p>
-<p>where</p>
-<p><span class="math display">\[ RSS(\beta_0, \beta_1) = \sum_{i=1}^n (y_i - \beta_0 - \beta_1 x_i )^2 \]</span></p>
-</section>
-<section id="minimizing-rss-2" class="slide level3">
-<h3>Minimizing RSS (2)</h3>
-<p>First, the intercept:</p>
-<p><span class="math display">\[ \frac{\partial RSS}{\partial \beta_0} = \sum_{i=1}^n  2(y_i - \beta_0 -\beta_1 x_i)(-1)\]</span></p>
-<p><span class="math display">\[  = -2 \sum_{i=1}^n (y_i - \beta_0 -\beta_1 x_i)  = 0\]</span></p>
-<p>using chain rule, power rule.</p>
-</section>
-<section id="minimizing-rss-3" class="slide level3">
-<h3>Minimizing RSS (3)</h3>
-<p>This is equivalent to setting sum of residuals to zero:</p>
-<p><span class="math display">\[  \sum_{i=1}^n \epsilon_i  = 0\]</span></p>
-</section>
-<section id="minimizing-rss-4" class="slide level3">
-<h3>Minimizing RSS (4)</h3>
-<p>Now, the slope:</p>
-<p><span class="math display">\[ \frac{\partial RSS}{\partial \beta_1} = \sum_{i=1}^n  2(y_i - \beta_0 -\beta_1 x_i)(-x_i)\]</span></p>
-<p><span class="math display">\[  = -2 \sum_{i=1}^n x_i (y_i - \beta_0 -\beta_1 x_i)  = 0\]</span></p>
-</section>
-<section id="minimizing-rss-5" class="slide level3">
-<h3>Minimizing RSS (5)</h3>
-<p>This is equivalent to:</p>
-<p><span class="math display">\[  \sum_{i=1}^n x_i \epsilon_i  = 0\]</span></p>
-</section>
-<section id="minimizing-rss-6" class="slide level3">
-<h3>Minimizing RSS (6)</h3>
-<p>Two conditions,</p>
-<p><span class="math display">\[  \sum_{i=1}^n \epsilon_i  = 0,  \sum_{i=1}^n x_i \epsilon_i  = 0\]</span></p>
-<p>where</p>
-<p><span class="math display">\[ \epsilon_i = y_i - \beta_0 - \beta_1 x_i \]</span></p>
-</section>
-<section id="minimizing-rss-7" class="slide level3">
-<h3>Minimizing RSS (7)</h3>
-<p>Which we expand into</p>
-<p><span class="math display">\[  \sum_{i=1}^n  y_i = n \beta_0 + \sum_{i=1}^n x_i \beta_1 \]</span></p>
-<p><span class="math display">\[  \sum_{i=1}^n x_i y_i = \sum_{i=1}^n  x_i \beta_0 + \sum_{i=1}^n x_i^2 \beta_1 \]</span></p>
-</section>
-<section id="minimizing-rss-8" class="slide level3">
-<h3>Minimizing RSS (8)</h3>
-<p>Divide</p>
-<p><span class="math display">\[  \sum_{i=1}^n  y_i = n \beta_0 + \sum_{i=1}^n x_i \beta_1 \]</span></p>
-<p>by <span class="math inline">\(n\)</span>, we find the intercept</p>
-<p><span class="math display">\[\beta_0 = \frac{1}{n} \sum_{i=1}^n y_i - \beta_1 \frac{1}{n} \sum_{i=1}^n x_i \]</span></p>
-</section>
-<section id="minimizing-rss-9" class="slide level3">
-<h3>Minimizing RSS (9)</h3>
-<p><span class="math display">\[\beta_0 = \frac{1}{n} \sum_{i=1}^n y_i - \beta_1 \frac{1}{n} \sum_{i=1}^n x_i \]</span></p>
-<p><span class="math display">\[ \beta_0 = \bar{y} - \beta_1 \bar{x} \]</span></p>
-<p>where sample mean <span class="math inline">\(\bar{x} = \frac{1}{n} \sum_{i=1}^n x_i\)</span></p>
-</section>
-<section id="minimizing-rss-10" class="slide level3">
-<h3>Minimizing RSS (10)</h3>
-<p>To solve for <span class="math inline">\(\beta_1\)</span>: Multiply</p>
-<p><span class="math display">\[  \sum_{i=1}^n  y_i = n \beta_0 + \sum_{i=1}^n x_i \beta_1 \]</span></p>
-<p>by <span class="math inline">\(\sum x_i\)</span>, and multiply</p>
-<p><span class="math display">\[  \sum_{i=1}^n x_i y_i = \sum_{i=1}^n  x_i \beta_0 + \sum_{i=1}^n x_i^2 \beta_1 \]</span></p>
-<p>by <span class="math inline">\(n\)</span>.</p>
-</section>
-<section id="minimizing-rss-11" class="slide level3">
-<h3>Minimizing RSS (11)</h3>
-<p><span class="math display">\[  \sum_{i=1}^n x_i \sum_{i=1}^n  y_i = n \sum_{i=1}^n x_i \beta_0 + (\sum_{i=1}^n x_i)^2 \beta_1 \]</span></p>
-<p><span class="math display">\[  n \sum_{i=1}^n x_i y_i = n \sum_{i=1}^n  x_i \beta_0 + n \sum_{i=1}^n x_i^2 \beta_1 \]</span></p>
-<p>Subtract the first equation from the second to get…</p>
-</section>
-<section id="minimizing-rss-12" class="slide level3">
-<h3>Minimizing RSS (12)</h3>
-<p><span class="math display">\[  n \sum_{i=1}^n x_i y_i - \sum_{i=1}^n x_i \sum_{i=1}^n  y_i = n \sum_{i=1}^n x_i^2 \beta_1  - (\sum_{i=1}^n x_i)^2 \beta_1 \]</span></p>
-<p><span class="math display">\[ = \beta_1 \left( n \sum_{i=1}^n x_i^2 - (\sum_{i=1}^n x_i)^2 \right) \]</span></p>
-</section>
-<section id="minimizing-rss-13" class="slide level3">
-<h3>Minimizing RSS (13)</h3>
-<p>Solve for <span class="math inline">\(\beta_1\)</span>:</p>
-<p><span class="math display">\[ \beta_1  = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) }{\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
-</section>
-<section id="minimizing-rss-14" class="slide level3">
-<h3>Minimizing RSS (14)</h3>
-<p>which is:</p>
-<p><span class="math display">\[ \frac{s_{xy}}{s_x^2} \]</span></p>
-<ul>
-<li>sample covariance <span class="math inline">\(s_{xy} = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span></li>
-<li>sample variance <span class="math inline">\(s_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x}) ^2\)</span></li>
-</ul>
-</section>
-<section id="minimizing-rss-15" class="slide level3">
-<h3>Minimizing RSS (15)</h3>
-<p>Also express as</p>
-<p><span class="math display">\[ \frac{r_{xy} s_y}{s_x} \]</span></p>
-<p>where sample correlation coefficient <span class="math inline">\(r_{xy} = \frac{s_{xy}}{s_x s_y}\)</span>.</p>
-<p>(Note: from Cauchy-Schwartz law, <span class="math inline">\(|s_{xy}| &lt; s_x s_y\)</span>, we know <span class="math inline">\(r_{xy} \in [-1, 1]\)</span>)</p>
-</section>
-<section id="correlation-coefficient-visual" class="slide level3">
-<h3>Correlation coefficient: visual</h3>
+<section id="example-tx-vaccination-levels" class="slide level3">
+<h3>Example: TX vaccination levels</h3>
 <figure>
-<img data-src="images/Correlation_examples2.svg" alt="Several sets of (x, y) points, with r_{xy} for each. Image via Wikipedia." /><figcaption aria-hidden="true">Several sets of (x, y) points, with <span class="math inline">\(r_{xy}\)</span> for each. Image via Wikipedia.</figcaption>
+<img data-src="../images/2-reg-tx-covid.jpeg" style="width:45.0%" alt="Texas vaccination levels vs. share of 2020 Trump vote, by county. Via Charles Gaba." /><figcaption aria-hidden="true">Texas vaccination levels vs. share of 2020 Trump vote, by county. Via <a href="https://twitter.com/charles_gaba/status/1404472166926651395">Charles Gaba</a>.</figcaption>
 </figure>
-</section>
-<section id="minimizing-rss---final-solution" class="slide level3">
-<h3>Minimizing RSS - final solution</h3>
-<p><span class="math display">\[ \beta_0 = \bar{y} - \beta_1 \bar{x} \]</span></p>
-<p><span class="math display">\[ \beta_1 = \frac{s_{xy}}{s_x^2} = \frac{r_{xy} s_y}{s_x}\]</span></p>
-</section>
-<section id="minimum-rss" class="slide level3">
-<h3>Minimum RSS</h3>
-<p><span class="math display">\[ \min_{\beta_0, \beta_1} RSS(\beta_0, \beta_1) = N (1 - r_{xy}^2) s_y^2\]</span></p>
+<aside class="notes">
+<p>Suppose we want to use linear regression to “predict” the vaccination levels of a TX county, given its vote in the 2020 election. The share of vote for the Republican candidate partly “explains” the variance among TX counties.</p>
 <ul>
-<li><strong>coefficient of determination</strong>: <span class="math inline">\(R^2 = r_{xy}^2\)</span>, explains the portion of variance in <span class="math inline">\(y\)</span> explained by <span class="math inline">\(x\)</span>.</li>
-<li><span class="math inline">\(s_y^2\)</span> is variance in target <span class="math inline">\(y\)</span></li>
-<li><span class="math inline">\((1-R^2)s_y^2\)</span> is the residual sum of squares after accounting for <span class="math inline">\(x\)</span>.</li>
+<li>The predicted value for each county, <span class="math inline">\(\hat{y}\)</span>, is along the diagonal line. Draw a vertical line from each county’s point (<span class="math inline">\(y\)</span>) to the corresponding point on the line (<span class="math inline">\(\hat{y}\)</span>). This is the residual <span class="math inline">\(e = y - \hat{y}\)</span>.</li>
+<li>Travis county is an example of a county that is explained “well” by the linear model.</li>
+<li>Presidio county is an example of a county that is not explained as well by the linear model. The magnitude of the <em>residual</em> is greater for this county.</li>
+<li>The difference between the “true” value <span class="math inline">\(y\)</span> and the predicted value <span class="math inline">\(\hat{y}\)</span> may be due to all kinds of differences between Travis county and Presidio county - not everything about vaccination level can be explained by 2020 vote share! This is what the residual captures.</li>
 </ul>
-</section>
-<section id="visual-example-1" class="slide level3">
-<h3>Visual example (1)</h3>
-<figure>
-<img data-src="images/residual.svg" style="width:70.0%" alt="Example of linear fit with residuals shown as vertical deviation from regression line." /><figcaption aria-hidden="true">Example of linear fit with residuals shown as vertical deviation from regression line.</figcaption>
-</figure>
-</section>
-<section id="visual-example-2" class="slide level3">
-<h3>Visual example (2)</h3>
-<figure>
-<img data-src="images/3.2b.svg" style="width:40.0%" alt="Regression parameters - 3D plot." /><figcaption aria-hidden="true">Regression parameters - 3D plot.</figcaption>
-</figure>
-</section>
-<section id="visual-example-3" class="slide level3">
-<h3>Visual example (3)</h3>
-<figure>
-<img data-src="images/3.2a.svg" style="width:40.0%" alt="Regression parameters - contour plot." /><figcaption aria-hidden="true">Regression parameters - contour plot.</figcaption>
-</figure>
-</section></section>
-<section>
-<section id="regression-performance-metrics" class="title-slide slide level2">
-<h2>Regression performance metrics</h2>
-
-</section>
-<section id="r2-coefficient-of-determination" class="slide level3">
-<h3>R^2: coefficient of determination</h3>
-<p><span class="math display">\[R^2 = 1 - \frac{\frac{RSS}{n}}{s_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
+<p>Interpreting the linear regression: If slope <span class="math inline">\(w_1\)</span> is -0.4176 percent vaccinated/percent voting for Trump, we can say that</p>
 <ul>
-<li><p>For linear regression: What proportion of the variance in <span class="math inline">\(y\)</span> is “explained” by our model?</p></li>
-<li><p><span class="math inline">\(R^2 \approx 1\)</span> - model “explains” all the variance in <span class="math inline">\(y\)</span></p></li>
-<li><p><span class="math inline">\(R^2 \approx 0\)</span> - model doesn’t “explain” any of the variance in <span class="math inline">\(y\)</span></p></li>
-<li><p>Depends on the sample variance of <span class="math inline">\(y\)</span> - can’t be compared across datasets</p></li>
+<li>a 1-point increase in share of Trump voters is, on average, associated with a 0.4176 point decrease in percent of population vaccinated as of 6/14/21.</li>
 </ul>
-</section>
-<section id="rss" class="slide level3">
-<h3>RSS</h3>
-<p>Definition: <strong>Residual sum of squares</strong> (RSS), also called <strong>sum of squared residuals</strong> (SSR) and <strong>sum of squared errors</strong> (SSE):</p>
-<p><span class="math display">\[RSS(\mathbf{\beta}) = \sum_{i=1}^n (y_i - \hat{y_i})^2\]</span></p>
-<p>RSS increases with <span class="math inline">\(n\)</span> (with more data).</p>
-</section>
-<section id="relative-forms-of-rss-1" class="slide level3">
-<h3>Relative forms of RSS (1)</h3>
+<p>What can we say about possible explanations? We can’t say much using this method - anything is possible:</p>
 <ul>
-<li>RSS per sample</li>
+<li>statistical fluke</li>
+<li>causal - Republican local governments may run less aggressive vaccine campaign</li>
+<li>partisanship/political values may be responsible for both vote and vaccination attitude among individuals</li>
+<li>confounding variable -. rural areas are more difficult to coordinate vaccines for, and also have higher vote share for Trump</li>
 </ul>
-<p><span class="math display">\[ \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 = \frac{RSS}{n}\]</span></p>
-</section>
-<section id="relative-forms-of-rss-2" class="slide level3">
-<h3>Relative forms of RSS (2)</h3>
-<ul>
-<li>Normalized RSS (divide RSS per sample, by sample variance of <span class="math inline">\(y\)</span>), the ratio of <em>average error of your model</em> to <em>average error of prediction by mean</em>.</li>
-</ul>
-<p><span class="math display">\[\frac{\frac{RSS}{n}}{s_y^2} = 
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
+<p>This method doesn’t tell us <em>why</em> this association is observed, only that it is. (There are other methods in statistics for determining whether it is a statistical fluke, or for determining whether it is a causal relationship.)</p>
+<p>(Also note that the 0.4176 point decrease is only an <em>estimate</em> of the “true” relationship.)</p>
+</aside>
 </section></section>
 <section>
 <section id="multiple-linear-regression" class="title-slide slide level2">
@@ -278,12 +152,12 @@
 </section>
 <section id="matrix-representation-of-data" class="slide level3">
 <h3>Matrix representation of data</h3>
-<p>Represent data as a <strong>matrix</strong>, with <span class="math inline">\(n\)</span> samples and <span class="math inline">\(k\)</span> features; one sample per row and one feature per column:</p>
+<p>Represent data as a <strong>matrix</strong>, with <span class="math inline">\(n\)</span> samples and <span class="math inline">\(d\)</span> features; one sample per row and one feature per column:</p>
 <p><span class="math display">\[ X = 
 \begin{bmatrix}
-x_{1,1} &amp; \cdots &amp; x_{1,k} \\
+x_{1,1} &amp; \cdots &amp; x_{1,d} \\
 \vdots  &amp; \ddots &amp; \vdots  \\
-x_{n,1} &amp; \cdots &amp; x_{n,k} 
+x_{n,1} &amp; \cdots &amp; x_{n,d} 
 \end{bmatrix},
 y = 
 \begin{bmatrix}
@@ -296,66 +170,289 @@ y_{n}
 </section>
 <section id="linear-model" class="slide level3">
 <h3>Linear model</h3>
-<p>Assume a linear relationship between feature vector <span class="math inline">\(x = [x_1, \cdots, x_k]\)</span> and target variable <span class="math inline">\(y\)</span>:</p>
-<p><span class="math display">\[ \hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_k + x_k \]</span></p>
-<p>Model has <span class="math inline">\(p=k+1\)</span> terms.</p>
+<p>For a given sample (row), assume a linear relationship between feature vector <span class="math inline">\(\mathbf{x_i} = [x_{i,1}, \cdots, x_{i,d}]\)</span> and scalar target variable <span class="math inline">\(y_i\)</span>:</p>
+<p><span class="math display">\[ \hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d} \]</span></p>
+<p>Model has <span class="math inline">\(d+1\)</span> <strong>parameters</strong>.</p>
+<aside class="notes">
+<ul>
+<li>Samples are vector-label pairs: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+<li>Each sample has a feature vector <span class="math inline">\(\mathbf{x_i} = [x_i,1, \cdots, x_i,d]\)</span> and scalar target <span class="math inline">\(y_i\)</span></li>
+<li>Predicted value for <span class="math inline">\(i\)</span>th sample will be <span class="math inline">\(\hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d}\)</span></li>
+</ul>
+<p>It’s a little awkward to carry around that <span class="math inline">\(w_0\)</span> separately, if we roll it in to the rest of the weights we can use a matrix representation…</p>
+</aside>
 </section>
 <section id="matrix-representation-of-linear-regression-1" class="slide level3">
 <h3>Matrix representation of linear regression (1)</h3>
-<p>Samples are <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></p>
-<p>Each sample has a feature vector <span class="math inline">\(\mathbf{x_i} = [x_i,1, \cdots, x_i,k]\)</span> and scalar target <span class="math inline">\(y_i\)</span></p>
-<p>Predicted value for <span class="math inline">\(i\)</span>th sample will be <span class="math inline">\(\hat{y_i} = \beta_0 + \beta_1 x_{i,1} + \cdots + \beta_k x_{i,k}\)</span></p>
+<p>Define a new <strong>design matrix</strong> and <strong>weight vector</strong>:</p>
+<p><span class="math display">\[ A = 
+\begin{bmatrix}
+1 &amp; x_{1,1} &amp; \cdots &amp; x_{1,d} \\
+\vdots &amp; \vdots  &amp; \ddots &amp; \vdots  \\
+1 &amp; x_{n,1} &amp; \cdots &amp; x_{n,d} 
+\end{bmatrix},
+\mathbf{w} = 
+\begin{bmatrix}
+w_{0}  \\
+w_{1}  \\
+\vdots \\
+w_{d} 
+\end{bmatrix}
+\]</span></p>
 </section>
 <section id="matrix-representation-of-linear-regression-2" class="slide level3">
 <h3>Matrix representation of linear regression (2)</h3>
-<p>Define <strong>feature matrix</strong> and <strong>regression vector</strong>:</p>
-<p><span class="math display">\[ A = 
-\begin{bmatrix}
-1 &amp; x_{1,1} &amp; \cdots &amp; x_{1,k} \\
-\vdots &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-1 &amp; x_{n,1} &amp; \cdots &amp; x_{n,k} 
-\end{bmatrix},
-\mathbf{\beta} = 
-\begin{bmatrix}
-\beta_{0}  \\
-\beta_{1}  \\
-\vdots \\
-\beta_{k} 
-\end{bmatrix}
-\]</span></p>
-<p>Then, <span class="math inline">\(\hat{\mathbf{y}} = A\mathbf{\beta}\)</span>, and given a new sample with feature vector <span class="math inline">\(\mathbf{x}\)</span>, predicted value is <span class="math inline">\(\hat{y} = [1, \mathbf{x}^T] \mathbf{\beta}\)</span>.</p>
-</section>
-<section id="least-squares-model-fitting-1" class="slide level3">
-<h3>Least squares model fitting</h3>
-<p>Problem: learn the best coefficients <span class="math inline">\(\mathbf{\beta} = [\beta_0, \beta_1, \cdots, \beta_k]\)</span> from the labeled training data.</p>
-<p><span class="math display">\[RSS(\mathbf{\beta}) := \sum_{i=1}^n (y_i - \hat{y_i})^2\]</span></p>
-<p>Least squares solution: Find <span class="math inline">\(\mathbf{\beta}\)</span> to minimize RSS.</p>
-</section>
-<section id="illustration---two-features" class="slide level3">
-<h3>Illustration - two features</h3>
+<p>Then, <span class="math inline">\(\hat{\mathbf{y}} = A\mathbf{w}\)</span>.</p>
+<p>And given a new sample with feature vector <span class="math inline">\(\mathbf{x}\)</span>, predicted value is <span class="math inline">\(\hat{y} = [1, \mathbf{x}^T] \mathbf{w}\)</span>.</p>
+<aside class="notes">
+<p>Here is an example showing the computation:</p>
 <figure>
-<img data-src="images/3.4.svg" style="width:50.0%" alt="The least squares regression is now a plane, chosen to minimize sum of squared distance to each observation." /><figcaption aria-hidden="true">The least squares regression is now a plane, chosen to minimize sum of squared distance to each observation.</figcaption>
+<img data-src="../images/2-multiple-reg-example.png" style="width:60.0%" alt="Example of a multiple linear regression." /><figcaption aria-hidden="true">Example of a multiple linear regression.</figcaption>
+</figure>
+<p>What does the residual look like in the multivariate case?</p>
+</aside>
+</section>
+<section id="illustration---residual-with-two-features" class="slide level3">
+<h3>Illustration - residual with two features</h3>
+<figure>
+<img data-src="../images/3.4.svg" style="width:50.0%" alt="In 2D, the least squares regression is now a plane. In higher d, it’s a hyperplane." /><figcaption aria-hidden="true">In 2D, the least squares regression is now a plane. In higher <span class="math inline">\(d\)</span>, it’s a hyperplane.</figcaption>
+</figure>
+</section></section>
+<section>
+<section id="linear-basis-function-regression" class="title-slide slide level2">
+<h2>Linear basis function regression</h2>
+<aside class="notes">
+<p>The assumption that the output is a linear function of the input features is very restrictive. Instead, what if we consider <em>linear combinations</em> of <em>fixed non-linear</em> functions?</p>
+</aside>
+</section>
+<section id="basis-functions" class="slide level3">
+<h3>Basis functions</h3>
+<p>A function</p>
+<p><span class="math display">\[ \phi_j (\mathbf{x}) = \phi_j (x_1, \cdots, x_d) \]</span></p>
+<p>is called a <strong>basis function</strong>.</p>
+</section>
+<section id="linear-basis-function-model-for-regression" class="slide level3">
+<h3>Linear basis function model for regression</h3>
+<p>Standard linear model:</p>
+<p><span class="math display">\[ \hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d} \]</span></p>
+<p>Linear basis function model:</p>
+<p><span class="math display">\[ \hat{y_i} =  w_0 \phi_0(\mathbf{x_i}) + \cdots + w_p \phi_p(\mathbf{x_i}) \]</span></p>
+<aside class="notes">
+<p>Some notes:</p>
+<ul>
+<li>The 1s column we added to the design matrix is easily represented as a basis function.</li>
+<li>There is not necessarily a one-to-one correspondence between the columns of <span class="math inline">\(X\)</span> and the basis functions (<span class="math inline">\(p \neq d\)</span> is OK!). You can have more basis functions than columns of <span class="math inline">\(X\)</span>.</li>
+<li>Each basis function can accept as input the entire vector <span class="math inline">\(\mathbf{x_i}\)</span>.</li>
+<li>The model has <span class="math inline">\(p + 1\)</span> parameters.</li>
+</ul>
+</aside>
+</section>
+<section id="vector-form-of-linear-basis-function-model" class="slide level3">
+<h3>Vector form of linear basis function model</h3>
+<p>The prediction of this model expressed in vector form is:</p>
+<p><span class="math display">\[\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle \]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\mathbf{\phi (x_i)} = [\phi_0 (\mathbf{x_i}), \cdots, \phi_p (\mathbf{x_i})], \mathbf{w} = [w_0, \cdots, w_p]
+\]</span></p>
+<aside class="notes">
+<p>Note: the angle brackets denote a dot product!</p>
+</aside>
+</section>
+<section id="matrix-form-of-linear-basis-function-model" class="slide level3">
+<h3>Matrix form of linear basis function model</h3>
+<p>Given data <span class="math inline">\((\mathbf{x_i},y_i), i=1,\cdots,n\)</span>:</p>
+<p><span class="math display">\[ 
+\Phi = 
+\begin{bmatrix}
+\phi_0 (\mathbf{x_1}) &amp; \phi_1 (\mathbf{x_1}) &amp; \cdots &amp; \phi_p (\mathbf{x_1}) \\
+\vdots  &amp; \vdots &amp; \ddots &amp; \vdots  \\
+\phi_0 (\mathbf{x_n}) &amp; \phi_1 (\mathbf{x_n}) &amp;\cdots &amp; \phi_p (\mathbf{x_n}) 
+\end{bmatrix} 
+\]</span></p>
+<p>and <span class="math inline">\(\mathbf{\hat{y}} = \Phi \mathbf{w}\)</span>.</p>
+</section>
+<section id="recipe-for-linear-regression" class="slide level3">
+<h3>“Recipe” for linear regression (???)</h3>
+<ol type="1">
+<li>Get <strong>data</strong>: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+<li>Choose a <strong>model</strong>: <span class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle\)</span></li>
+<li>Choose a <strong>loss function</strong>: <strong>???</strong></li>
+<li>Find model <strong>parameters</strong> that minimize loss: <strong>???</strong></li>
+<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
+<li>Evaluate model performance on new, unseen data</li>
+</ol>
+<aside class="notes">
+<p>Now that we have described some more flexible versions of the linear regression model, we will turn to the problem of finding the weight parameters, starting with the simple linear regression. (The simple linear regression solution will highlight some interesting statistical relationships.)</p>
+</aside>
+</section></section>
+<section>
+<section id="ordinary-least-squares-solution-for-simple-linear-regression" class="title-slide slide level2">
+<h2>Ordinary least squares solution for simple linear regression</h2>
+
+</section>
+<section id="mean-squared-error" class="slide level3">
+<h3>Mean squared error</h3>
+<p>We will use the <em>mean squared error</em> (MSE) loss function:</p>
+<p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 = \frac{1}{n} \sum_{i=1}^n ( e_i )^2 \]</span></p>
+<p>a variation on the <em>residual sum of squares</em> (RSS):</p>
+<p><span class="math display">\[\sum_{i=1}^n (y_i - \hat{y_i})^2 = \sum_{i=1}^n ( e_i )^2 \]</span></p>
+<aside class="notes">
+<p>“Least squares” solution: find values of <span class="math inline">\(\mathbf{w}\)</span> to minimize MSE.</p>
+</aside>
+</section>
+<section id="recipe-for-linear-regression-1" class="slide level3">
+<h3>“Recipe” for linear regression</h3>
+<ol type="1">
+<li>Get <strong>data</strong>: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+<li>Choose a <strong>model</strong>: <span class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle\)</span></li>
+<li>Choose a <strong>loss function</strong>: <span class="math inline">\(L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2\)</span></li>
+<li>Find model <strong>parameters</strong> that minimize loss: <span class="math inline">\(\mathbf{w^*}\)</span></li>
+<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
+<li>Evaluate model performance on new, unseen data</li>
+</ol>
+<aside class="notes">
+<p>How to find <span class="math inline">\(\mathbf{w^*}\)</span>?</p>
+<p>The loss function is convex, so to find <span class="math inline">\(\mathbf{w^*}\)</span> where <span class="math inline">\(L(\mathbf{w})\)</span> is minimized, we:</p>
+<ul>
+<li>take the partial derivative of <span class="math inline">\(L(\mathbf{w})\)</span> with respect to each entry of <span class="math inline">\(\mathbf{w}\)</span></li>
+<li>set each partial derivative to zero</li>
+</ul>
+</aside>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-1" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (1)</h3>
+<p>Given</p>
+<p><span class="math display">\[ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 \]</span></p>
+<p>we take</p>
+<p><span class="math display">\[ \frac{\partial MSE}{\partial w_0} = 0, \frac{\partial MSE}{\partial w_1} = 0\]</span></p>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-2" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (2)</h3>
+<p>First, the intercept:</p>
+<p><span class="math display">\[ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
+<p><span class="math display">\[ \frac{\partial MSE}{\partial w_0} =  -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] \]</span></p>
+<p>using chain rule, power rule.</p>
+<aside class="notes">
+<p>(We can then drop the <span class="math inline">\(-2\)</span> constant factor when we set this expression equal to <span class="math inline">\(0\)</span>.)</p>
+</aside>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-3" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (3)</h3>
+<p>Set this equal to <span class="math inline">\(0\)</span>, “distribute” the sum, and we can see</p>
+<p><span class="math display">\[\frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] = 0\]</span></p>
+<p><span class="math display">\[ \implies w_0^* = \bar{y} - w_1^* \bar{x}\]</span></p>
+<p>where <span class="math inline">\(\bar{x}, \bar{y}\)</span> are the means of <span class="math inline">\(x, y\)</span>.</p>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-4" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (4)</h3>
+<p>Now, the slope coefficient:</p>
+<p><span class="math display">\[ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
+<p><span class="math display">\[ \frac{\partial MSE}{\partial w_1} = \frac{1}{n}\sum_{i=1}^n  2(y_i - w_0 -w_1 x_i)(-x_i)\]</span></p>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-5" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (5)</h3>
+<p><span class="math display">\[  \implies -\frac{2}{n} \sum_{i=1}^n x_i (y_i - w_0 -w_1 x_i)  = 0\]</span></p>
+<p>Solve for <span class="math inline">\(w_1^*\)</span>:</p>
+<p><span class="math display">\[ w_1^*  = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) }{\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
+<aside class="notes">
+<p>Note: some algebra is omitted here, but refer to the secondary notes for details.</p>
+</aside>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-6" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (6)</h3>
+<p>The slope coefficient is the ratio of <em>sample covariance</em> <span class="math inline">\(\sigma_{xy}\)</span> to <em>sample variance</em> <span class="math inline">\(\sigma_x^2\)</span>:</p>
+<p><span class="math display">\[ \frac{\sigma_{xy}}{\sigma_x^2} \]</span></p>
+<p>where <span class="math inline">\(\sigma_{xy} = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span> and <span class="math inline">\(\sigma_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x}) ^2\)</span></p>
+</section>
+<section id="optimizing-mathbfw---simple-linear-regression-7" class="slide level3">
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple linear regression (7)</h3>
+<p>We can also express it as</p>
+<p><span class="math display">\[ \frac{r_{xy} \sigma_y}{\sigma_x} \]</span></p>
+<p>where sample correlation coefficient <span class="math inline">\(r_{xy} = \frac{\sigma_{xy}}{\sigma_x \sigma_y}\)</span>.</p>
+<aside class="notes">
+<p>(Note: from Cauchy-Schwartz law, <span class="math inline">\(|\sigma_{xy}| &lt; \sigma_x \sigma_y\)</span>, we know <span class="math inline">\(r_{xy} \in [-1, 1]\)</span>)</p>
+</aside>
+</section>
+<section id="mse-for-optimal-simple-linear-regression" class="slide level3 cell markdown">
+<h3>MSE for optimal simple linear regression</h3>
+<p><span class="math display">\[MSE(w_0^*, w_1^*) = \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} \]</span></p>
+<p><span class="math display">\[\implies \frac{MSE(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}\]</span></p>
+<aside class="notes">
+<ul>
+<li>the ratio on the left is the <em>fraction of unexplained variance</em>: of all the variance in <span class="math inline">\(y\)</span>, how much is still “left” unexplained after our model explains some of it? (best case: 0)</li>
+<li>the ratio on the right is the <em>coefficient of determination</em>, R2 (best case: 1).</li>
+</ul>
+</aside>
+</section></section>
+<section>
+<section id="regression-metrics" class="title-slide slide level2">
+<h2>Regression metrics</h2>
+
+</section>
+<section id="many-numbers" class="slide level3">
+<h3>Many numbers:</h3>
+<ul>
+<li>Correlation coefficient R (<span class="math inline">\(r_{xy}\)</span>)</li>
+<li>Slope coefficient <span class="math inline">\(w_1\)</span> and intercept <span class="math inline">\(w_0\)</span></li>
+<li>RSS, MSE, R2</li>
+</ul>
+<aside class="notes">
+<p>Which of these depend only on the data, and which depend on the model too?</p>
+<p>Which of these tell us something about the “goodness” of our model?</p>
+</aside>
+</section>
+<section id="interpreting-r-correlation-coefficient" class="slide level3">
+<h3>Interpreting R: correlation coefficient</h3>
+<figure>
+<img data-src="../images/Correlation_examples2.svg" alt="Several sets of (x, y) points, with r_{xy} for each. Image via Wikipedia." /><figcaption aria-hidden="true">Several sets of (x, y) points, with <span class="math inline">\(r_{xy}\)</span> for each. Image via Wikipedia.</figcaption>
 </figure>
 </section>
-<section id="supervised-learning-recipe-for-linear-regression" class="slide level3">
-<h3>Supervised learning recipe for linear regression</h3>
+<section id="interpreting-r2-coefficient-of-determination-1" class="slide level3">
+<h3>Interpreting R2: coefficient of determination (1)</h3>
+<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
+<p>For linear regression: What proportion of the variance in <span class="math inline">\(y\)</span> is “explained” by our model?</p>
 <ul>
-<li>Linear model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_k x_k\)</span></li>
-<li>Data: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
-<li>Loss function: <span class="math display">\[RSS(\beta_0, \beta_1, \cdots, \beta_k) = \sum_{i=1}^n (y_i - \hat{y_i})^2\]</span></li>
-<li>Find parameters: Select <span class="math inline">\(\mathbf{\beta} = (\beta_0, \beta_1, \cdots, \beta_k)\)</span> to minimize <span class="math inline">\(RSS(\mathbf{\beta})\)</span></li>
+<li><span class="math inline">\(R^2 \approx 1\)</span> - model “explains” all the variance in <span class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(R^2 \approx 0\)</span> - model doesn’t “explain” any of the variance in <span class="math inline">\(y\)</span></li>
 </ul>
 </section>
-<section id="setup-ell-2-norm" class="slide level3">
-<h3>Setup: <span class="math inline">\(\ell 2\)</span> norm</h3>
-<p>Definition: Euclidian norm or <span class="math inline">\(\ell 2\)</span> norm of a vector <span class="math inline">\(\mathbf{x} = (x_1, \cdots, x_n)\)</span>:</p>
-<p><span class="math display">\[ || \mathbf{x} || = \sqrt{x_1^2 + \cdots + x_n^2}\]</span></p>
-<p>Intuitively, it is the “length” of a vector. We will want to minimize the norm of the residual.</p>
+<section id="interpreting-r2-coefficient-of-determination-2" class="slide level3">
+<h3>Interpreting R2: coefficient of determination (2)</h3>
+<p>Alternatively: what is the ratio of error of our model, to error of prediction by mean?</p>
+<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
 </section>
-<section id="setup-finding-maximaminima" class="slide level3">
-<h3>Setup: Finding maxima/minima</h3>
-<p>For <span class="math inline">\(f(x)\)</span>, can find local maxima and minima by finding where the derivative with respect to <span class="math inline">\(x\)</span> is zero.</p>
-<p>For a multivariate function <span class="math inline">\(f(\mathbf{x}) = f(x_1, \cdots, x_n)\)</span>, we find places where the <strong>gradient</strong> - vector of partial derivatives - is zero, i.e. each entry must be zero:</p>
+<section id="example-tx-vaccination-levels-2" class="slide level3">
+<h3>Example: TX vaccination levels (2)</h3>
+<figure>
+<img data-src="../images/2-reg-tx-covid.jpeg" style="width:40.0%" alt="Texas vaccination levels vs. share of 2020 Trump vote, by county. Via Charles Gaba." /><figcaption aria-hidden="true">Texas vaccination levels vs. share of 2020 Trump vote, by county. Via <a href="https://twitter.com/charles_gaba/status/1404472166926651395">Charles Gaba</a>.</figcaption>
+</figure>
+</section>
+<section id="example-fl-vaccination-levels" class="slide level3">
+<h3>Example: FL vaccination levels</h3>
+<figure>
+<img data-src="../images/2-reg-fl-covid.jpeg" style="width:40.0%" alt="Florida vaccination levels vs. share of 2020 Trump vote, by county. Via Charles Gaba." /><figcaption aria-hidden="true">Florida vaccination levels vs. share of 2020 Trump vote, by county. Via <a href="https://twitter.com/charles_gaba/status/1404472166926651395">Charles Gaba</a>.</figcaption>
+</figure>
+<aside class="notes">
+<p>In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.</p>
+</aside>
+</section></section>
+<section>
+<section id="ordinary-least-squares-solution-for-multiplelinear-basis-function-regression" class="title-slide slide level2">
+<h2>Ordinary least squares solution for multiple/linear basis function regression</h2>
+
+</section>
+<section id="setup-l2-norm" class="slide level3">
+<h3>Setup: L2 norm</h3>
+<p>Definition: L2 norm of a vector <span class="math inline">\(\mathbf{x} = (x_1, \cdots, x_n)\)</span>:</p>
+<p><span class="math display">\[ || \mathbf{x} || = \sqrt{x_1^2 + \cdots + x_n^2}\]</span></p>
+<p>We will want to minimize the L2 norm of the residual.</p>
+</section>
+<section id="setup-gradient-vector" class="slide level3">
+<h3>Setup: Gradient vector</h3>
+<p>To minimize a multivariate function <span class="math inline">\(f(\mathbf{x}) = f(x_1, \cdots, x_n)\)</span>, we find places where the <strong>gradient</strong> is zero, i.e. each entry must be zero:</p>
 <p><span class="math display">\[ \nabla f(\mathbf{x}) = 
 \begin{bmatrix}
 \frac{\partial f(\mathbf{x})}{\partial x_1}  \\
@@ -363,105 +460,148 @@ y_{n}
 \frac{\partial f(\mathbf{x})}{\partial x_n}  \\
 \end{bmatrix}
 \]</span></p>
-<p>If function is convex, there is a single global minimum.</p>
+<aside class="notes">
+<p>The gradient is the vector of partial derivatives.</p>
+</aside>
 </section>
-<section id="setup-rss-as-vector-norm" class="slide level3">
-<h3>Setup: RSS as vector norm</h3>
-<p><span class="math display">\[RSS = || \mathbf{y} - \mathbf{\hat{y}} ||^2\]</span></p>
-<p><span class="math display">\[RSS = || \mathbf{y} - \mathbf{A \beta} ||^2\]</span></p>
+<section id="mse-for-multiplelbf-regresion" class="slide level3">
+<h3>MSE for multiple/LBF regresion</h3>
+<p>Given a vector <span class="math inline">\(\mathbf{y}\)</span> and matrix <span class="math inline">\(\Phi\)</span> (with <span class="math inline">\(d\)</span> columns, <span class="math inline">\(n\)</span> rows),</p>
+<p><span class="math display">\[L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y} - \Phi \mathbf{w}\|^2\]</span></p>
+<p>where the norm above is the L2 norm.</p>
+<aside class="notes">
+<p>(we defined it with a <span class="math inline">\(\frac{1}{2}\)</span> constant factor for convenience.)</p>
+</aside>
 </section>
-<section id="least-squares-solution-1" class="slide level3">
-<h3>Least squares solution (1)</h3>
-<p>RSS is convex, so there is a single global minimum</p>
-<p>Cost function (remember, <span class="math inline">\(p=k+1\)</span>):</p>
-<p><span class="math display">\[ RSS = \sum_{i=1}^n (y_i - \hat{y_i})^2, \hat{y_i} = \sum_{j=0}^p A_{i,j}\beta_j \]</span></p>
+<section id="gradient-of-mse" class="slide level3">
+<h3>Gradient of MSE</h3>
+<p><span class="math display">\[L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y} - \Phi \mathbf{w}\|^2\]</span></p>
+<p>gives us the gradient</p>
+<p><span class="math display">\[\nabla L(\mathbf{w}) = - \Phi^T (\mathbf{y} -  \Phi \mathbf{w})\]</span></p>
 </section>
-<section id="least-squares-solution-2" class="slide level3">
-<h3>Least squares solution (2)</h3>
-<p>In matrix form (note: <span class="math inline">\(||Ax-b|| = ||b-Ax||\)</span>):</p>
-<p><span class="math display">\[RSS = ||  A \mathbf{\beta} - \mathbf{y} || ^2\]</span></p>
-<p>Compute gradient via chain rule, power rule:</p>
-<p><span class="math display">\[ \nabla RSS = 2 A^T(A\mathbf{\beta} - \mathbf{y})\]</span></p>
+<section id="solving-for-mathbfw" class="slide level3">
+<h3>Solving for <span class="math inline">\(\mathbf{w}\)</span></h3>
+<p><span class="math display">\[
+\begin{aligned}
+\nabla L(\mathbf{w}) &amp;= 0, \\
+- \Phi^T (\mathbf{y}  - \Phi \mathbf{w}) &amp;= 0, \\
+\Phi^T \Phi \mathbf{w} &amp;= \Phi^T \mathbf{y} ,~~\text{or}\\
+\mathbf{w} &amp;= (\Phi^T \Phi)^{-1} \Phi^T \mathbf{y}  .
+\end{aligned}
+\]</span></p>
 </section>
-<section id="least-squares-solution-3" class="slide level3">
-<h3>Least squares solution (3)</h3>
-<p>Set derivative to zero:</p>
-<p><span class="math display">\[  2 A^T(A\mathbf{\beta} - \mathbf{y}) = 0 \rightarrow A^T A\mathbf{\beta} =  A^T \mathbf{y}\]</span></p>
-<p>then</p>
-<p><span class="math display">\[ \mathbf{\beta} = (A^T A)^{-1} A^T \mathbf{y} \]</span></p>
+<section id="solving-a-set-of-linear-equations" class="slide level3">
+<h3>Solving a set of linear equations</h3>
+<p>If <span class="math inline">\(\Phi^T \Phi\)</span> is full rank (usually: if <span class="math inline">\(n \geq d\)</span>), then a unique solution is given by</p>
+<p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
+<p>This expression:</p>
+<p><span class="math display">\[\Phi^T \Phi \mathbf{w} =  \Phi^T \mathbf{y}\]</span></p>
+<p>represents a set of <span class="math inline">\(d\)</span> equations in <span class="math inline">\(d\)</span> unknowns, called the <em>normal equations</em>.</p>
+<aside class="notes">
+<p>We can solve this as we would any set of linear equations (see supplementary notebook on computing regression coefficients by hand.)</p>
+</aside>
+</section></section>
+<section>
+<section id="solution-using-gradient-descent" class="title-slide slide level2">
+<h2>Solution using gradient descent</h2>
+
 </section>
-<section id="least-squares-solution-4" class="slide level3">
-<h3>Least squares solution (4)</h3>
-<p>Minimum RSS:</p>
-<p><span class="math display">\[RSS = \mathbf{y}^T[I-A(A^T A)^{-1}A^T]\mathbf{y}\]</span></p>
-</section>
-<section id="interpretation-using-autocorrelation-1" class="slide level3">
-<h3>Interpretation using autocorrelation (1)</h3>
-<p>Each sample has feature vector</p>
-<p><span class="math display">\[A_i = (A_{i0}, \cdots , A_{ik}) = (1, x_{i1}, \cdots, x_{ik})\]</span></p>
-</section>
-<section id="interpretation-using-autocorrelation-2" class="slide level3">
-<h3>Interpretation using autocorrelation (2)</h3>
-<p>Define:</p>
+<section id="why-gradient-descent" class="slide level3">
+<h3>Why gradient descent?</h3>
+<p>We had</p>
+<p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
+<p>where <span class="math inline">\(\Phi\)</span> is an <span class="math inline">\(n \times d\)</span> matrix. If <span class="math inline">\(n \geq d\)</span> then it is (usually) full rank and a unique solution exists.</p>
+<p>What if <span class="math inline">\(n\)</span>, <span class="math inline">\(d\)</span> are large?</p>
+<aside class="notes">
+<p>Runtime of a “naive” solution using “standard” matrix multiplication:</p>
 <ul>
-<li>Sample autocorrelation matrix: <span class="math inline">\(R_{AA} = \frac{1}{n} A^T A, R_{AA}(l,m) = \frac{1}{n} \sum_{i=1}^n A_{il}A_{im}\)</span> (correlation of feature <span class="math inline">\(l\)</span> and feature <span class="math inline">\(m\)</span>)</li>
-<li>Sample cross-correlation vector: <span class="math inline">\(R_{Ay} = \frac{1}{n} A^T y, R_{yA} (l) = \frac{1}{n} \sum_{i=1}^n A_{il}y_i\)</span> (correlation of feature <span class="math inline">\(l\)</span> and target)</li>
+<li><span class="math inline">\(O(dn^2)\)</span> to multiply <span class="math inline">\(\Phi^T \Phi\)</span></li>
+<li><span class="math inline">\(O(dn)\)</span> to muplity <span class="math inline">\(\Phi^T y\)</span></li>
+<li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span> (the “naive” way, although there are more efficient ways)</li>
+</ul>
+<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>. Can we do better?</p>
+<p>(Note: in practice, there ways to solve a system of linear equations that are quicker than <span class="math inline">\(O(dn^2)\)</span>.)</p>
+</aside>
+</section>
+<section id="gradients-and-optimization" class="slide level3">
+<h3>Gradients and optimization</h3>
+<p>Gradient has <em>two</em> important properties for optimization:</p>
+<p>At a minima (or maxima, or saddle point),</p>
+<p><span class="math display">\[\nabla L(\mathbf{w}) = 0\]</span></p>
+<p>At other points, <span class="math inline">\(\nabla L(\mathbf{w})\)</span> points towards direction of maximum (infinitesimal) <em>increase</em>.</p>
+</section>
+<section id="gradient-descent-idea" class="slide level3">
+<h3>Gradient descent idea</h3>
+<p>To move towards minimum of a (smooth, convex) function, use first order approximation:</p>
+<p>Start from some initial point, then iteratively</p>
+<ul>
+<li>compute gradient at current point, and</li>
+<li>add some fraction of the negative gradient to the current point</li>
 </ul>
 </section>
-<section id="interpretation-using-autocorrelation-3" class="slide level3">
-<h3>Interpretation using autocorrelation (3)</h3>
-<p>Least squares solution:</p>
-<p><span class="math display">\[\mathbf{\beta} = R_{AA}^{-1}R_{Ay} \]</span></p>
-</section>
-<section id="categorical-feature" class="slide level3">
-<h3>Categorical feature?</h3>
-<p>Can use <strong>one hot encoding</strong>:</p>
-<ul>
-<li>For a categorical variable <span class="math inline">\(x\)</span> with values <span class="math inline">\(1,\cdots,M\)</span></li>
-<li>Represent with <span class="math inline">\(M\)</span> binary features: <span class="math inline">\(\phi_1, \phi_2, \cdots , \phi_m\)</span></li>
-<li>Model as <span class="math inline">\(y = \beta_0 + \beta_1 \phi_1 + \cdots + \beta_M \phi_M\)</span></li>
-</ul>
-</section>
-<section id="linear-regression---what-can-go-wrong" class="slide level3">
-<h3>Linear regression - what can go wrong?</h3>
-<ul>
-<li>Relationship may not actually be linear (may be addressed by non-linear transformation - future lecture)</li>
-<li>Violation of additive assumption (need interaction terms)</li>
-<li>“Tracking” in residuals (e.g. time series)</li>
-<li>Outliers - may be difficult to spot - may have outsize effect on regression line and/or <span class="math inline">\(R^2\)</span></li>
-<li>Collinearity</li>
-</ul>
-</section>
-<section id="residuals-plot" class="slide level3">
-<h3>Residuals plot</h3>
+<section id="visual-example-least-square-solution-3d-plot" class="slide level3">
+<h3>Visual example: least square solution 3D plot</h3>
 <figure>
-<img data-src="images/3.9.svg" style="width:60.0%" alt="Residuals plot" /><figcaption aria-hidden="true">Residuals plot</figcaption>
+<img data-src="../images/3.2b.svg" style="width:40.0%" alt="Regression parameters - 3D plot." /><figcaption aria-hidden="true">Regression parameters - 3D plot.</figcaption>
 </figure>
 </section>
-<section id="dealing-with-outliers" class="slide level3">
-<h3>Dealing with outliers</h3>
-<figure>
-<img data-src="images/outlier1.jpg" style="width:60.0%" alt="“Remove outliers” is not a strategy for dealing with outliers." /><figcaption aria-hidden="true">“Remove outliers” is not a strategy for dealing with outliers.</figcaption>
-</figure>
+<section id="standard-batch-gradient-descent" class="slide level3">
+<h3>Standard (“batch”) gradient descent</h3>
+<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbf{w}^{t+1} &amp;= \mathbf{w}^t - \alpha \nabla L(\mathbf{w}^t) \\
+ &amp;= \mathbf{w}^t - \frac{\alpha}{n} \sum_{i=1}^n \nabla L_i(\mathbf{w}^t, \mathbf{x}_i, y_i)
+\end{aligned}
+\]</span></p>
+<p>Repeat until stopping criterion is met.</p>
+<aside class="notes">
+<p>To update <span class="math inline">\(\mathbf{w}\)</span>, must compute <span class="math inline">\(n\)</span> loss functions and gradients - each iteration is <span class="math inline">\(O(nd)\)</span>. We need multiple iterations, but as long as we need fewer than <span class="math inline">\(n\)</span> iterations, it’s more efficient than the previous approach.</p>
+<p>However, if <span class="math inline">\(n\)</span> is large, it may still be expensive!</p>
+</aside>
 </section>
-<section id="references" class="slide level3">
-<h3>References</h3>
+<section id="stochastic-gradient-descent" class="slide level3">
+<h3>Stochastic gradient descent</h3>
+<p>Idea:</p>
+<p>At each step, compute estimate of gradient using only one randomly selected sample, and move in the direction it indicates.</p>
+<p>Many of the steps will be in the wrong direction, but progress towards minimum occurs <em>on average</em>, as long as the steps are small.</p>
+<aside class="notes">
+<p>Each iteration is now only <span class="math inline">\(O(d)\)</span>, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if <span class="math inline">\(n\)</span> is large!).</p>
+<p>See supplementary notes for an analysis of the number of iterations needed.</p>
+</aside>
+</section>
+<section id="mini-batch-also-stochastic-gradient-descent-1" class="slide level3">
+<h3>Mini-batch (also “stochastic”) gradient descent (1)</h3>
+<p>Idea:</p>
+<p>At each step, select a small subset of training data (“mini-batch”), and evaluate gradient on that mini-batch.</p>
+<p>Then move in the direction it indicates.</p>
+</section>
+<section id="mini-batch-also-stochastic-gradient-descent-2" class="slide level3">
+<h3>Mini-batch (also “stochastic”) gradient descent (2)</h3>
+<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
 <ul>
-<li><p>Figures in this presentation are taken from “An Introduction to Statistical Learning, with applications in R” (Springer, 2013) with permission from the authors: G. James, D. Witten, T. Hastie and R. Tibshirani.</p></li>
-<li><p>For more detail on the derivation of the least squares solution to the multiple linear regression, refer to Chapter 12 in “Introduction to Applied Linear Algebra”, Boyd and Vandenberghe.</p></li>
-<li><p>For more detail on the statistical aspects of linear regression (outside the scope of the ML course), please refer to chapter 3 of: “An Introduction to Statistical Learning with Applications in R”, G. James, D. Witten, T. Hastie and R. Tibshirani.</p></li>
+<li>Select random mini-batch <span class="math inline">\(I_t\subset{1,\ldots,n}\)</span></li>
+<li>Compute gradient approximation:</li>
+</ul>
+<p><span class="math display">\[g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, \mathbf{w}^t)\]</span></p>
+<ul>
+<li>Update parameters: <span class="math inline">\(\mathbf{w}^{t+1} = \mathbf{w}^t - \alpha^t g^t\)</span></li>
 </ul>
 </section></section>
+<section id="next-more-on-linear-regression" class="title-slide slide level2">
+<h2>Next: more on linear regression</h2>
+
+</section>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+  <script src="reveal.js-master/dist/reveal.js"></script>
 
   // reveal.js plugins
-  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
 
   <script>
 
