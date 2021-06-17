@@ -22,7 +22,7 @@ PANDOCFLAGS= --pdf-engine=xelatex\
 
 %.html: %.md
 	cat $^ | sed '/newpage/d' > $^.tmp
-	pandoc -s -t html5 -o $@ $^.tmp -c ../style/pandoc.css
+	pandoc -s -t html5 --mathjax -o $@ $^.tmp -c ../style/pandoc.css
 	rm $^.tmp
 
 all: $(PDFS) $(PAGES)

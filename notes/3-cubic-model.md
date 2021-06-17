@@ -56,4 +56,5 @@ The forecasts produced by these models were all *very wrong*, but they appeared 
 * Building and using models without domain knowledge.
 * Extrapolating into the future.
 
+https://www.statschat.org.nz/2020/05/07/prediction-is-hard-2/
 -->
