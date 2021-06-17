@@ -670,11 +670,11 @@ Runtime of a "naive" solution using "standard" matrix multiplication:
 
 * $O(dn^2)$ to multiply $\Phi^T \Phi$
 * $O(dn)$ to muplity $\Phi^T y$
-* $O(d^3)$ to compute the inverse of $\Phi^T \Phi$ (the "naive" way, although there are more efficient ways)
+* $O(d^3)$ to compute the inverse of $\Phi^T \Phi$ 
 
 Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(dn^2)$. Can we do better?
 
-(Note: in practice, there ways to solve a system of linear equations that are quicker than $O(dn^2)$.)
+(Note: in practice, we would not necessarily use the "naive" way.)
 
 :::
 

@@ -517,10 +517,10 @@ w_{d}
 <ul>
 <li><span class="math inline">\(O(dn^2)\)</span> to multiply <span class="math inline">\(\Phi^T \Phi\)</span></li>
 <li><span class="math inline">\(O(dn)\)</span> to muplity <span class="math inline">\(\Phi^T y\)</span></li>
-<li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span> (the “naive” way, although there are more efficient ways)</li>
+<li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span></li>
 </ul>
 <p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>. Can we do better?</p>
-<p>(Note: in practice, there ways to solve a system of linear equations that are quicker than <span class="math inline">\(O(dn^2)\)</span>.)</p>
+<p>(Note: in practice, we would not necessarily use the “naive” way.)</p>
 </aside>
 </section>
 <section id="gradients-and-optimization" class="slide level3">
