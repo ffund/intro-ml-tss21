@@ -5,6 +5,7 @@ SOURCES := 0-tss-faq.md 0-prerequisite-review.md 0-books.md
 SOURCES += 1-handwritten-digits.md
 SOURCES += 2-gd-background-videos.md
 SOURCES += 2-beauty-classroom-case-study.md
+SOURCES += 2-linear-extended-derivation.md
 SOURCES += 3-cubic-model.md
 SOURCES += 3-when-learning-fails.md
 
