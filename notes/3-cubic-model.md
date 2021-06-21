@@ -13,29 +13,27 @@ to fit a polynomial model
 
 $$\hat{y_i} = w_0 + w_1 x_i^1 + \cdots + w_d x_i^d $$ 
 
-We can use ordinary least squares to find optimal values for the parameters $w_0, \ldots, w_d$.
+of degree $d$. We can the use ordinary least squares to find optimal values for the parameters $w_0, \ldots, w_d$.
 
 
 ### Using a polynomial model to forecast the course of a pandemic
 
-
-In retrospect, the course of the COVID-19 pandemic in late spring and summer of 2020 is known. 
-
-In Spring 2020, however, with the rest of the spring and summer still to come, a number of models were developed to predict the number of COVID-19 deaths over the coming weeks. Most of these models tried to simulate the epidemiological processes involved in the spread of disease, under various conditions and assumptions (e.g. different levels of restrictions on mobility and other non-pharmaceutical interventions). The predictions of these models varied widely according to their assumptions. 
+In retrospect, the course of the COVID-19 pandemic in late spring and summer of 2020 is known. In Spring 2020, however, with the rest of the spring and summer still to come, a number of models were developed to predict the number of COVID-19 deaths over the coming weeks. Most of these models tried to simulate the epidemiological processes involved in the spread of disease, under various conditions and assumptions (e.g. different levels of restrictions on mobility and other non-pharmaceutical interventions). The predictions of these models varied widely according to their assumptions. 
 
 There was one model in particular that seemed to suggest the pandemic would come to an end very soon. In May 2020, an [article](https://www.washingtonpost.com/health/government-report-predicts-covid-19-cases-will-reach-200000-a-day-by-june-1/2020/05/04/02fe743e-8e27-11ea-a9c0-73b93422d691_story.html) in the Washington Post revealed the existence of the "cubic model":
 
 > Even more optimistic than that [a different model], however, is the "cubic model" prepared by Trump adviser and economist Kevin Hassett. People with knowledge of that model say it shows deaths dropping precipitously in May — and essentially going to zero by May 15.
 
-This "cubic model" attracted some attention, because it predicted fewer deaths than other models. (In retrospect, we know now that U.S. COVID deaths did *not* go to zero by mid-May.) 
 
 ![The slide with the infamous "cubic model". [Source](https://twitter.com/WhiteHouseCEA45/status/1257680258364555264).](../images/cubic-model.jpeg){ width=75% }
 
 
-Shortly afterward, Kevin Hassett and the Council of Economic Advisors clarified that the model was indeed "just a canned function in Excel, a cubic polynomial", but that it was for data visualization purposes only. It was not, he said, intended to be a projection of future deaths. Another member of the adminstration told CNN that "we didn't change anything based on that," i.e. the "cubic model" was not used to inform any U.S. policy.
+This "cubic model" attracted some attention, because it predicted fewer deaths than other models. Also, many individuals pointed out that the "cubic model" looked like someone had just fit a polynomial model to the available data, without any consideration of whether epidemiology or infectious disease dynamics supported the use of such a model. 
+
+Shortly after this, the Council of Economic Advisors clarified that the model was indeed "just a canned function in Excel, a cubic polynomial." However, they said that this "cubic model" was for data visualization purposes only; it was never intended to be a projection of future deaths. Another member of the adminstration told CNN that "we didn't change anything based on that," i.e. the "cubic model" was not used to inform any U.S. policy.
 
 
-However, even if the Council of Economic Advisors hadn't intended for the cubic model shown above to be used as a forecast, others around the world were also fitting polynomial models to COVID-19 data, and claiming that their models had predictive value. In Israel, Isaac Ben-Israel, a professor at Tel Aviv University (and also chairman of the Israeli Space Agency and of Israel's National Council for Research and Development), simiarly [claimed](https://www.timesofisrael.com/the-end-of-exponential-growth-the-decline-in-the-spread-of-coronavirus/) that cases would go to zero in May 2020. In the [report](https://www.industry.org.il/files/marketing/SOS/april/kr1204.pdf) he produced to support his claims, he cited fitted models like the following, based on a fitted polynomial of degree 6:
+Even if the Council of Economic Advisors hadn't intended for the cubic model shown above to be used as a forecast, others around the world were *also* fitting polynomial models to COVID-19 data, and claiming that their models had predictive value. In Israel, Isaac Ben-Israel, a professor at Tel Aviv University (and also chairman of the Israeli Space Agency and of Israel's National Council for Research and Development), simiarly [claimed](https://www.timesofisrael.com/the-end-of-exponential-growth-the-decline-in-the-spread-of-coronavirus/) that cases would go to zero in May 2020. In the [report](https://www.industry.org.il/files/marketing/SOS/april/kr1204.pdf) he produced to support his claims, he cited models like the following, based on a fitted polynomial of degree 6:
 
 ![A model produced by an Israeli professor, which made similar claims based on a polynomial model of degree 6. [Source](https://www.industry.org.il/files/marketing/SOS/april/kr1204.pdf).](../images/3-israel-polynomial.jpg){ width=75% }
 
