@@ -13,7 +13,7 @@ to fit a polynomial model
 
 $$\hat{y_i} = w_0 + w_1 x_i^1 + \cdots + w_d x_i^d $$ 
 
-of degree $d$. We can the use ordinary least squares to find optimal values for the parameters $w_0, \ldots, w_d$.
+of degree $d$. We can then use ordinary least squares to find optimal values for the parameters $w_0, \ldots, w_d$.
 
 
 ### Using a polynomial model to forecast the course of a pandemic
