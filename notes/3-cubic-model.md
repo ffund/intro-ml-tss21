@@ -18,7 +18,7 @@ of degree $d$. We can then use ordinary least squares to find optimal values for
 
 ### Using a polynomial model to forecast the course of a pandemic
 
-In retrospect, the course of the COVID-19 pandemic in late spring and summer of 2020 is known. In Spring 2020, however, with the rest of the spring and summer still to come, a number of models were developed to predict the number of COVID-19 deaths over the coming weeks. Most of these models tried to simulate the epidemiological processes involved in the spread of disease, under various conditions and assumptions (e.g. different levels of restrictions on mobility and other non-pharmaceutical interventions). The predictions of these models varied widely according to their assumptions. 
+In retrospect, the course of the COVID-19 pandemic in late spring and summer of 2020 is known. In Spring 2020, however, with the rest of the spring and summer still to come, a number of models were developed to predict the extent of COVID-19 deaths over the coming weeks. Most of these models tried to simulate the epidemiological processes involved in the spread of disease, under various conditions and assumptions (e.g. different levels of restrictions on mobility and other non-pharmaceutical interventions). The predictions of these models varied widely according to their assumptions. 
 
 There was one model in particular that seemed to suggest the pandemic would come to an end very soon. In May 2020, an [article](https://www.washingtonpost.com/health/government-report-predicts-covid-19-cases-will-reach-200000-a-day-by-june-1/2020/05/04/02fe743e-8e27-11ea-a9c0-73b93422d691_story.html) in the Washington Post revealed the existence of the "cubic model":
 
