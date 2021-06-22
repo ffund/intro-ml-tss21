@@ -273,13 +273,13 @@ When $n \geq p$ and the least squares estimate of the coefficients is unique, *a
 
 When $n \geq p$, the least squares estimate of the coefficients is unique, there is no under-modeling, *and* the test point is drawn from the same distribution as the trainng data, then the variance of the estimate of the target variable increases linearly with the number of parameters and inversely with the number of samples used for training:
 
-$$ Var = \frac{p}{N} \sigma_\epsilon^2 $$
+$$ Var = \frac{p}{n} \sigma_\epsilon^2 $$
 
 ### Result 4: Overall prediction error
 
 The overall expected in-sample prediction error for the ordinary least squares linear regression is
 
-$$0 + \frac{p}{N} \sigma_\epsilon^2 + \sigma_\epsilon^2$$
+$$0 + \frac{p}{n} \sigma_\epsilon^2 + \sigma_\epsilon^2$$
 
 
 where the three terms represent the squared bias, the variance, and the irreducible error.

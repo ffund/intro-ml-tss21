@@ -195,10 +195,10 @@ E [Var(x_t)] &amp; = \sigma_\epsilon^2 E [\phi(x_t)^T (\Phi^T \Phi)^{-1} \phi(x_
 <p>When <span class="math inline">\(n \geq p\)</span> and the least squares estimate of the coefficients is unique, <em>and</em> there is no under-modeling, then the estimate of the target variable is unbiased.</p>
 <h3 id="result-3-variance-of-estimate-of-target-variable">Result 3: Variance of estimate of target variable</h3>
 <p>When <span class="math inline">\(n \geq p\)</span>, the least squares estimate of the coefficients is unique, there is no under-modeling, <em>and</em> the test point is drawn from the same distribution as the trainng data, then the variance of the estimate of the target variable increases linearly with the number of parameters and inversely with the number of samples used for training:</p>
-<p><span class="math display">\[ Var = \frac{p}{N} \sigma_\epsilon^2 \]</span></p>
+<p><span class="math display">\[ Var = \frac{p}{n} \sigma_\epsilon^2 \]</span></p>
 <h3 id="result-4-overall-prediction-error">Result 4: Overall prediction error</h3>
 <p>The overall expected in-sample prediction error for the ordinary least squares linear regression is</p>
-<p><span class="math display">\[0 + \frac{p}{N} \sigma_\epsilon^2 + \sigma_\epsilon^2\]</span></p>
+<p><span class="math display">\[0 + \frac{p}{n} \sigma_\epsilon^2 + \sigma_\epsilon^2\]</span></p>
 <p>where the three terms represent the squared bias, the variance, and the irreducible error.</p>
 </body>
 </html>
