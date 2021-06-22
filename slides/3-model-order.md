@@ -27,7 +27,6 @@ We need to select a model of appropriate complexity -
 * Given data $(x_i, y_i), i=1\cdots,N$ (one feature)
 * Polynomial model: $\hat{y} = w_0 + w_1 x + \cdots + w_d x^d$
 * $d$ is degree of polynomial, called **model order**
-* Given $d$, can get regression coefficients via OLS
 * **Model order selection problem**: choosing $d$
 
 ### Using loss function for model order selection?
@@ -35,8 +34,8 @@ We need to select a model of appropriate complexity -
 Suppose we would "search" over each possible $d$:
 
 * Fit model of order $d$ on training data, get $\mathbf{w}$
-* Compute predictions on training data: $\hat{y_i}, i=1,\ldots,n$.
-* Compute loss function (e.g. RSS) on training data: $RSS = \sum_{i=1}^n (y_i - \hat{y_i})^2$
+* Compute predictions on training data
+* Compute loss function on training data: $MSE = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2$
 * Select $d$ that minimizes loss
 
 ::: notes
@@ -48,12 +47,18 @@ Suppose we would "search" over each possible $d$:
 
 ### Feature selection problem
 
+Given high dimensional data $\mathbf{X} \in R^{n \times d}$ and target variable $y$, 
+
+Select a subset of $k << d$ features, $\mathbf{X}_S \in R^{n \times k}$ that is most relevant to target $y$. 
+
+
+
+::: notes
+
 * Linear model: $\hat{y} = w_0 + w_1 x_1 + \cdots + w_d x_d$
-* Model target $y$ as a function of features $\mathbf{x} = (x_1, \cdots, x_d)$
 * Many features, only some are relevant
 * **Feature selection problem**: fit a model with a small number of features
 
-::: notes
 
 Why use a subset of features?
 
@@ -61,21 +66,11 @@ Why use a subset of features?
 * For linear regression, there's a unique OLS solution only if $n \geq d$
 * For linear regression, when $N \geq p$, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)
 
-* Important applications where you have many features:
-  * EEG - measure brain activity with electrodes, typically >10,000 "voxels" but only 100s of observations
-  * DNA microarray data - measures "expression" levels of large number of genes (~1000) but only a small number of data points (~100)
-
 :::
 
-### Feature selection problem - formal
+\newpage
 
-Problem: given high dimensional data $\mathbf{X} \in R^{n \times d}$ and target variable $y$, 
-
-Select a subset of $k << d$ features, $\mathbf{X}_S \in R^{n \times k}$ that is most relevant to target $y$. 
-
-
-
-## Cross validation
+## Validation
 
 
 ### Simple train/validation/test split
@@ -93,15 +88,19 @@ Note: sometimes you'll hear "validation set" and "test set" used according to th
 
 :::
 
-### Simple train/validation/test algorithm 
+### Simple train/validation/test algorithm (1)
 
-* Get data $X, y$ and split into training, validation, and test.
+* Split $X, y$ into training, validation, and test.
 * Loop over models of increasing complexity: For $p=1,\ldots,p_{max}$,
   * **Fit**: $\hat{w}_p = \text{fit}_p(X_{tr}, y_{tr})$
   * **Predict**: $\hat{y}_{v,p} = \text{pred}(X_{v}, \hat{w}_p)$
   * **Score**: $S_p = \text{score}(y_{v}, \hat{y}_{v,p})$
-* Select model order with best score: $p^* = \operatorname*{argmin}_p S_p$
-* Evaluate: $S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*})$ where $\hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})$
+
+
+### Simple train/validation/test algorithm (1)
+
+* Select model order with best score (here, assuming "lower is better"): $$p^* = \operatorname*{argmin}_p S_p$$
+* Evaluate: $$S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})$$
 
 ### Problems with simple split
 
@@ -113,10 +112,10 @@ Note: sometimes you'll hear "validation set" and "test set" used according to th
 * Especially bad for problems with small number of samples.
 
 
-![Summary of approaches. [Source](https://sebastianraschka.com/faq/docs/evaluate-a-model.html).](https://sebastianraschka.com/images/faq/evaluate-a-model/evaluate_overview.png){ width=60% }
 
 :::
 
+\newpage
 
 
 ### K-fold cross validation
@@ -133,11 +132,11 @@ Alternative to simple split:
 
 
 
-### K-fold CV - pseudocode (1)
+### K-fold CV - algorithm (1)
 
 **Outer loop** over folds: for $i=1$ to $K$
 
-* Split training data into training and validation:
+* Get training and validation sets for fold $i$:
 
 * **Inner loop** over models of increasing complexity: For $p=1$ to $p_{max}$,
   * **Fit**: $\hat{w}_{p,i} = \text{fit}_p(X_{tr_i}, y_{tr_i})$
@@ -145,24 +144,29 @@ Alternative to simple split:
   * **Score**: $S_{p,i} = score(y_{v_i}, \hat{y}_{v_i,p})$
 
 
-### K-fold CV - pseudocode (2)
+### K-fold CV - algorithm (2)
 
 * Find average score (across $K$ scores) for each model: $\bar{S}_p$
 * Select model with best *average* score: $p^* = \operatorname*{argmin}_p \bar{S}_p$
 * Re-train model on entire training set: $\hat{w}_{p^*} = \text{fit}_p(X_{tr}, y_{tr})$
 * Evaluate new fitted model on test set
 
-### K-fold CV - how to split?
-
-Choose the split strategy based on the data:
-
-* Shuffle and split ("standard" K-fold CV)
-* Split without shuffling
-* Stratified K-fold CV: make sure distribution of target variable is similar in each part
-* Group K-fold CV: samples from the same "group" go in either training or validation data, but never in both
-* Time series CV
+\newpage
 
 ::: notes
+
+![Summary of approaches. [Source](https://sebastianraschka.com/faq/docs/evaluate-a-model.html).](../images/3-validation-options.png){ width=100% }
+
+\newpage
+
+:::
+
+### K-fold CV - how to split?
+
+![K-fold CV variations.](../images/3-kfold-variations.png){ width=75% }
+
+::: notes
+
 
 Selecting the right K-fold CV is very important for avoiding data leakage!
 
@@ -170,6 +174,7 @@ Refer to [the function documentation](https://scikit-learn.org/stable/modules/cr
 
 :::
 
+\newpage
 
 ### One standard error rule
 
@@ -186,14 +191,9 @@ $$SE_p = \frac{\sigma_p}{\sqrt{K-1}}$$
 
 ### One standard error rule - algorithm (2)
 
-"Best score" (smallest loss) model selection:
+"Best score" model selection: $p^* = \operatorname*{argmin}_p \bar{S}_p$
 
-$$p^* = \operatorname*{argmin}_p \bar{S}_p$$
-
-**One SE rule**: 
-
-
-Compute target score: $S_t = \bar{S}_{p^*} + SE_{p^*}$
+**One SE rule** for "lower is better" scoring metric: Compute target score: $S_t = \bar{S}_{p^*} + SE_{p^*}$
 
 then select simplest model with score lower than target:
 
@@ -201,14 +201,20 @@ $$p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \leq S_t\}$$
 
 ::: notes
 
-Note: this assumes you are using a "smaller is better" metric such as MSE. If you are using a "larger is better" metric, like R2, adjust the algorithm accordingly.
-
-
-TODO: add illustration
-
-TODO: add explanation of how to adjust to a "larger is better" metric.
+Note: this assumes you are using a "smaller is better" metric such as MSE. If you are using a "larger is better" metric, like R2, how would we change the algorithm?
 
 :::
+
+
+### One standard error rule - algorithm (3)
+
+"Best score" model selection: $p^* = \operatorname*{argmax}_p \bar{S}_p$
+
+**One SE rule** for "higher is better" scoring metric: Compute target score: $S_t = \bar{S}_{p^*} - SE_{p^*}$
+
+then select simplest model with score higher than target:
+
+$$p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \geq S_t\}$$
 
 
 

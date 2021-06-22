@@ -16,17 +16,17 @@ Basic idea: apply penalty in loss function to discourage more complex models
 
 ### Regularization vs. standard LS
 
-Least squares estimation:
+Least squares estimate:
 
 $$ \hat{w} = \operatorname*{argmin}_w MSE(w), \quad MSE(w) = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2 $$
 
-Regularized estimation w/ **regularizing function** $\phi(w)$:
+Regularized estimate w/ **regularizing function** $\phi(w)$:
 
 
 $$ \hat{w} = \operatorname*{argmin}_w J(w), \quad  J(w) = MSE(w) + \phi(w) $$
 
 
-### Common regularizers: Ridge and LASSO
+### Common regularizers
 
 Ridge regression (L2):
 
@@ -53,7 +53,7 @@ $$ \phi (w) = \alpha \sum_{j=1}^d | w_j | $$
 Ridge (L2):
 
 * minimizes $|w_j|^2$, 
-* does not penalize small non-zero coefficients
+* minimal penalty for small non-zero coefficients
 * heavily penalizes large coefficients
 * tends to make many "small" coefficients
 * Not for feature selection
@@ -84,18 +84,25 @@ Why?
 
 ### L1 and L2 norm with standardization (1)
 
-Assuming data standardized to zero mean, unit variance:
+Assuming data standardized to zero mean, unit variance, the Ridge cost function is:
 
-* Ridge cost function:
-
-$$J(\mathbf{w}) = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| ^2 = || \mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2 $$ 
+$$
+\begin{aligned}
+J(\mathbf{w}) &= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| ^2  \\
+&= || \mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2 
+\end{aligned}
+$$ 
 
 ### L1 and L2 norm with standardization (2)
 
+LASSO cost function ($|| \mathbf{w} ||_1$ is L1 norm):
 
-* LASSO cost function ($|| \mathbf{w} ||_1$ is L1 norm):
-
-$$J(\mathbf{w}) = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| = ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} ||_1 $$ 
+$$
+\begin{aligned}
+J(\mathbf{w}) &= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| \\
+&= ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} ||_1 
+\end{aligned}
+$$ 
 
 ### Ridge regularization
 

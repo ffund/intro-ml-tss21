@@ -51,7 +51,6 @@
 <li>Given data <span class="math inline">\((x_i, y_i), i=1\cdots,N\)</span> (one feature)</li>
 <li>Polynomial model: <span class="math inline">\(\hat{y} = w_0 + w_1 x + \cdots + w_d x^d\)</span></li>
 <li><span class="math inline">\(d\)</span> is degree of polynomial, called <strong>model order</strong></li>
-<li>Given <span class="math inline">\(d\)</span>, can get regression coefficients via OLS</li>
 <li><strong>Model order selection problem</strong>: choosing <span class="math inline">\(d\)</span></li>
 </ul>
 </section>
@@ -60,8 +59,8 @@
 <p>Suppose we would “search” over each possible <span class="math inline">\(d\)</span>:</p>
 <ul>
 <li>Fit model of order <span class="math inline">\(d\)</span> on training data, get <span class="math inline">\(\mathbf{w}\)</span></li>
-<li>Compute predictions on training data: <span class="math inline">\(\hat{y_i}, i=1,\ldots,n\)</span>.</li>
-<li>Compute loss function (e.g. RSS) on training data: <span class="math inline">\(RSS = \sum_{i=1}^n (y_i - \hat{y_i})^2\)</span></li>
+<li>Compute predictions on training data</li>
+<li>Compute loss function on training data: <span class="math inline">\(MSE = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2\)</span></li>
 <li>Select <span class="math inline">\(d\)</span> that minimizes loss</li>
 </ul>
 <aside class="notes">
@@ -72,34 +71,25 @@
 </section>
 <section id="feature-selection-problem" class="slide level3">
 <h3>Feature selection problem</h3>
+<p>Given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{n \times d}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
+<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+<aside class="notes">
 <ul>
 <li>Linear model: <span class="math inline">\(\hat{y} = w_0 + w_1 x_1 + \cdots + w_d x_d\)</span></li>
-<li>Model target <span class="math inline">\(y\)</span> as a function of features <span class="math inline">\(\mathbf{x} = (x_1, \cdots, x_d)\)</span></li>
 <li>Many features, only some are relevant</li>
 <li><strong>Feature selection problem</strong>: fit a model with a small number of features</li>
 </ul>
-<aside class="notes">
 <p>Why use a subset of features?</p>
 <ul>
-<li><p>High risk of overfitting if you use all features!</p></li>
-<li><p>For linear regression, there’s a unique OLS solution only if <span class="math inline">\(n \geq d\)</span></p></li>
-<li><p>For linear regression, when <span class="math inline">\(N \geq p\)</span>, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)</p></li>
-<li><p>Important applications where you have many features:</p>
-<ul>
-<li>EEG - measure brain activity with electrodes, typically &gt;10,000 “voxels” but only 100s of observations</li>
-<li>DNA microarray data - measures “expression” levels of large number of genes (~1000) but only a small number of data points (~100)</li>
-</ul></li>
+<li>High risk of overfitting if you use all features!</li>
+<li>For linear regression, there’s a unique OLS solution only if <span class="math inline">\(n \geq d\)</span></li>
+<li>For linear regression, when <span class="math inline">\(N \geq p\)</span>, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)</li>
 </ul>
 </aside>
-</section>
-<section id="feature-selection-problem---formal" class="slide level3">
-<h3>Feature selection problem - formal</h3>
-<p>Problem: given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{n \times d}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
-<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
 </section></section>
 <section>
-<section id="cross-validation" class="title-slide slide level2">
-<h2>Cross validation</h2>
+<section id="validation" class="title-slide slide level2">
+<h2>Validation</h2>
 
 </section>
 <section id="simple-trainvalidationtest-split" class="slide level3">
@@ -115,18 +105,23 @@
 <p>Note: sometimes you’ll hear “validation set” and “test set” used according to the reverse meanings.</p>
 </aside>
 </section>
-<section id="simple-trainvalidationtest-algorithm" class="slide level3">
-<h3>Simple train/validation/test algorithm</h3>
+<section id="simple-trainvalidationtest-algorithm-1" class="slide level3">
+<h3>Simple train/validation/test algorithm (1)</h3>
 <ul>
-<li>Get data <span class="math inline">\(X, y\)</span> and split into training, validation, and test.</li>
+<li>Split <span class="math inline">\(X, y\)</span> into training, validation, and test.</li>
 <li>Loop over models of increasing complexity: For <span class="math inline">\(p=1,\ldots,p_{max}\)</span>,
 <ul>
 <li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_p = \text{fit}_p(X_{tr}, y_{tr})\)</span></li>
 <li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{v,p} = \text{pred}(X_{v}, \hat{w}_p)\)</span></li>
 <li><strong>Score</strong>: <span class="math inline">\(S_p = \text{score}(y_{v}, \hat{y}_{v,p})\)</span></li>
 </ul></li>
-<li>Select model order with best score: <span class="math inline">\(p^* = \operatorname*{argmin}_p S_p\)</span></li>
-<li>Evaluate: <span class="math inline">\(S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*})\)</span> where <span class="math inline">\(\hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})\)</span></li>
+</ul>
+</section>
+<section id="simple-trainvalidationtest-algorithm-1-1" class="slide level3">
+<h3>Simple train/validation/test algorithm (1)</h3>
+<ul>
+<li>Select model order with best score (here, assuming “lower is better”): <span class="math display">\[p^* = \operatorname*{argmin}_p S_p\]</span></li>
+<li>Evaluate: <span class="math display">\[S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})\]</span></li>
 </ul>
 </section>
 <section id="problems-with-simple-split" class="slide level3">
@@ -137,9 +132,6 @@
 <li>Fewer samples available for estimating parameters.</li>
 <li>Especially bad for problems with small number of samples.</li>
 </ul>
-<figure>
-<img data-src="https://sebastianraschka.com/images/faq/evaluate-a-model/evaluate_overview.png" style="width:60.0%" alt="Summary of approaches. Source." /><figcaption aria-hidden="true">Summary of approaches. <a href="https://sebastianraschka.com/faq/docs/evaluate-a-model.html">Source</a>.</figcaption>
-</figure>
 </aside>
 </section>
 <section id="k-fold-cross-validation" class="slide level3">
@@ -157,11 +149,11 @@
 <img data-src="../images/sklearn_cross_validation.png" style="width:60.0%" alt="K-fold CV" /><figcaption aria-hidden="true">K-fold CV</figcaption>
 </figure>
 </section>
-<section id="k-fold-cv---pseudocode-1" class="slide level3">
-<h3>K-fold CV - pseudocode (1)</h3>
+<section id="k-fold-cv---algorithm-1" class="slide level3">
+<h3>K-fold CV - algorithm (1)</h3>
 <p><strong>Outer loop</strong> over folds: for <span class="math inline">\(i=1\)</span> to <span class="math inline">\(K\)</span></p>
 <ul>
-<li><p>Split training data into training and validation:</p></li>
+<li><p>Get training and validation sets for fold <span class="math inline">\(i\)</span>:</p></li>
 <li><p><strong>Inner loop</strong> over models of increasing complexity: For <span class="math inline">\(p=1\)</span> to <span class="math inline">\(p_{max}\)</span>,</p>
 <ul>
 <li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_{p,i} = \text{fit}_p(X_{tr_i}, y_{tr_i})\)</span></li>
@@ -170,25 +162,25 @@
 </ul></li>
 </ul>
 </section>
-<section id="k-fold-cv---pseudocode-2" class="slide level3">
-<h3>K-fold CV - pseudocode (2)</h3>
+<section id="k-fold-cv---algorithm-2" class="slide level3">
+<h3>K-fold CV - algorithm (2)</h3>
 <ul>
 <li>Find average score (across <span class="math inline">\(K\)</span> scores) for each model: <span class="math inline">\(\bar{S}_p\)</span></li>
 <li>Select model with best <em>average</em> score: <span class="math inline">\(p^* = \operatorname*{argmin}_p \bar{S}_p\)</span></li>
 <li>Re-train model on entire training set: <span class="math inline">\(\hat{w}_{p^*} = \text{fit}_p(X_{tr}, y_{tr})\)</span></li>
 <li>Evaluate new fitted model on test set</li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/3-validation-options.png" style="width:100.0%" alt="Summary of approaches. Source." /><figcaption aria-hidden="true">Summary of approaches. <a href="https://sebastianraschka.com/faq/docs/evaluate-a-model.html">Source</a>.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="k-fold-cv---how-to-split" class="slide level3">
 <h3>K-fold CV - how to split?</h3>
-<p>Choose the split strategy based on the data:</p>
-<ul>
-<li>Shuffle and split (“standard” K-fold CV)</li>
-<li>Split without shuffling</li>
-<li>Stratified K-fold CV: make sure distribution of target variable is similar in each part</li>
-<li>Group K-fold CV: samples from the same “group” go in either training or validation data, but never in both</li>
-<li>Time series CV</li>
-</ul>
+<figure>
+<img data-src="../images/3-kfold-variations.png" style="width:75.0%" alt="K-fold CV variations." /><figcaption aria-hidden="true">K-fold CV variations.</figcaption>
+</figure>
 <aside class="notes">
 <p>Selecting the right K-fold CV is very important for avoiding data leakage!</p>
 <p>Refer to <a href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation">the function documentation</a> for more examples.</p>
@@ -212,17 +204,20 @@
 </section>
 <section id="one-standard-error-rule---algorithm-2" class="slide level3">
 <h3>One standard error rule - algorithm (2)</h3>
-<p>“Best score” (smallest loss) model selection:</p>
-<p><span class="math display">\[p^* = \operatorname*{argmin}_p \bar{S}_p\]</span></p>
-<p><strong>One SE rule</strong>:</p>
-<p>Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} + SE_{p^*}\)</span></p>
+<p>“Best score” model selection: <span class="math inline">\(p^* = \operatorname*{argmin}_p \bar{S}_p\)</span></p>
+<p><strong>One SE rule</strong> for “lower is better” scoring metric: Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} + SE_{p^*}\)</span></p>
 <p>then select simplest model with score lower than target:</p>
 <p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \leq S_t\}\]</span></p>
 <aside class="notes">
-<p>Note: this assumes you are using a “smaller is better” metric such as MSE. If you are using a “larger is better” metric, like R2, adjust the algorithm accordingly.</p>
-<p>TODO: add illustration</p>
-<p>TODO: add explanation of how to adjust to a “larger is better” metric.</p>
+<p>Note: this assumes you are using a “smaller is better” metric such as MSE. If you are using a “larger is better” metric, like R2, how would we change the algorithm?</p>
 </aside>
+</section>
+<section id="one-standard-error-rule---algorithm-3" class="slide level3">
+<h3>One standard error rule - algorithm (3)</h3>
+<p>“Best score” model selection: <span class="math inline">\(p^* = \operatorname*{argmax}_p \bar{S}_p\)</span></p>
+<p><strong>One SE rule</strong> for “higher is better” scoring metric: Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} - SE_{p^*}\)</span></p>
+<p>then select simplest model with score higher than target:</p>
+<p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \geq S_t\}\]</span></p>
 </section></section>
     </div>
   </div>

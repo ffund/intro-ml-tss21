@@ -41,13 +41,13 @@
 </section>
 <section id="regularization-vs.-standard-ls" class="slide level3">
 <h3>Regularization vs. standard LS</h3>
-<p>Least squares estimation:</p>
+<p>Least squares estimate:</p>
 <p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w MSE(w), \quad MSE(w) = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2 \]</span></p>
-<p>Regularized estimation w/ <strong>regularizing function</strong> <span class="math inline">\(\phi(w)\)</span>:</p>
+<p>Regularized estimate w/ <strong>regularizing function</strong> <span class="math inline">\(\phi(w)\)</span>:</p>
 <p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w J(w), \quad  J(w) = MSE(w) + \phi(w) \]</span></p>
 </section>
-<section id="common-regularizers-ridge-and-lasso" class="slide level3">
-<h3>Common regularizers: Ridge and LASSO</h3>
+<section id="common-regularizers" class="slide level3">
+<h3>Common regularizers</h3>
 <p>Ridge regression (L2):</p>
 <p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j | ^2 \]</span></p>
 <p>LASSO regression (L1):</p>
@@ -72,7 +72,7 @@
 <p>Ridge (L2):</p>
 <ul>
 <li>minimizes <span class="math inline">\(|w_j|^2\)</span>,</li>
-<li>does not penalize small non-zero coefficients</li>
+<li>minimal penalty for small non-zero coefficients</li>
 <li>heavily penalizes large coefficients</li>
 <li>tends to make many “small” coefficients</li>
 <li>Not for feature selection</li>
@@ -105,18 +105,23 @@
 </section>
 <section id="l1-and-l2-norm-with-standardization-1" class="slide level3">
 <h3>L1 and L2 norm with standardization (1)</h3>
-<p>Assuming data standardized to zero mean, unit variance:</p>
-<ul>
-<li>Ridge cost function:</li>
-</ul>
-<p><span class="math display">\[J(\mathbf{w}) = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| ^2 = || \mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2 \]</span></p>
+<p>Assuming data standardized to zero mean, unit variance, the Ridge cost function is:</p>
+<p><span class="math display">\[
+\begin{aligned}
+J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| ^2  \\
+&amp;= || \mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2 
+\end{aligned}
+\]</span></p>
 </section>
 <section id="l1-and-l2-norm-with-standardization-2" class="slide level3">
 <h3>L1 and L2 norm with standardization (2)</h3>
-<ul>
-<li>LASSO cost function (<span class="math inline">\(|| \mathbf{w} ||_1\)</span> is L1 norm):</li>
-</ul>
-<p><span class="math display">\[J(\mathbf{w}) = \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| = ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} ||_1 \]</span></p>
+<p>LASSO cost function (<span class="math inline">\(|| \mathbf{w} ||_1\)</span> is L1 norm):</p>
+<p><span class="math display">\[
+\begin{aligned}
+J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| \\
+&amp;= ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} ||_1 
+\end{aligned}
+\]</span></p>
 </section>
 <section id="ridge-regularization" class="slide level3">
 <h3>Ridge regularization</h3>

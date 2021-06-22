@@ -237,7 +237,11 @@ because:
 
 * the true value $t(\mathbf{x_t})$ is independent of the training sample drawn from $\mathcal{D}$.
 
+<!-- 
+
 TODO: refer to https://stats.stackexchange.com/questions/164378/bias-variance-decomposition-and-independence-of-x-and-epsilon
+
+-->
 
 :::
 
@@ -345,11 +349,6 @@ $$(\textcolor{red}{\text{Bias}})^2 +
 
 It's often the case that changing the model to reduce bias, increases variance (and vice versa). Why?
 
-::: notes
-
-TODO: add illustration
-
-:::
 
 ### Bias variance tradeoff
 
