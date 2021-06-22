@@ -212,9 +212,9 @@ The expected value (over the $\epsilon$) of squared error is because:
 * under the assumption that training sample is fixed, $f$ and $t$ are constant
 * $E[\epsilon_t] = 0$
 
-The last term is not affected when we then take the expectation over ${\mathcal{D}}$. 
+The last term is not affected when we then take the expectation over ${\mathcal{D}}$. This term is called the *irreducible error*, and it not under our control. 
 
-This term is called the *irreducible error*.
+The first term ($(t-f)^2$) is the model estimation error, and this *is* under our control - it is *reducible* error - so next we will turn to $E_{\mathcal{D}}[(t-f)^2]$.
 
 :::
 

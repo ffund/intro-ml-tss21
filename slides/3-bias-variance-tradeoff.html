@@ -189,8 +189,8 @@ E_{\epsilon} [(y_t-\hat{y_t})^2] &amp;= E_{\epsilon}[(t + \epsilon_t - f)^2] \\
 <li>under the assumption that training sample is fixed, <span class="math inline">\(f\)</span> and <span class="math inline">\(t\)</span> are constant</li>
 <li><span class="math inline">\(E[\epsilon_t] = 0\)</span></li>
 </ul>
-<p>The last term is not affected when we then take the expectation over <span class="math inline">\({\mathcal{D}}\)</span>.</p>
-<p>This term is called the <em>irreducible error</em>.</p>
+<p>The last term is not affected when we then take the expectation over <span class="math inline">\({\mathcal{D}}\)</span>. This term is called the <em>irreducible error</em>, and it not under our control.</p>
+<p>The first term (<span class="math inline">\((t-f)^2\)</span>) is the model estimation error, and this <em>is</em> under our control - it is <em>reducible</em> error - so next we will turn to <span class="math inline">\(E_{\mathcal{D}}[(t-f)^2]\)</span>.</p>
 </aside>
 </section>
 <section id="second-expectation-over-mathcald" class="slide level3">
