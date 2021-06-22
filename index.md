@@ -38,4 +38,4 @@
 * [Notes: Predicting the course of COVID-19 with a "cubic model"](notes/3-cubic-model) <a href="notes/3-cubic-model.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Error decomposition and the bias-variance tradeoff <a href="slides/3-bias-variance-tradeoff.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Model selection <a href="slides/3-model-order.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Notes: Bias and variance for linear regression <a href="notes/linear-regression-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* [Notes: Bias and variance for linear regression](notes/3-linear-regression-bias-variance) <a href="notes/3-linear-regression-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
