@@ -3,6 +3,7 @@ SOURCES := $(wildcard *.md)
 SOURCES := 1-intro-ml.md
 SOURCES += 1-explore-data.md
 SOURCES += 2-linear.md
+SOURCES += 3-bias-variance-tradeoff.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files

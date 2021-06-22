@@ -1,207 +1,371 @@
 ---
-title:  'Bias Variance Tradeoff'
+title:  'Error decomposition, bias-variance tradeoff'
 author: 'Fraida Fund'
 ---
 
 ## In this lecture
 
-* Quantifying prediction error
-* Bias-variance tradeoff
+* Prediction error
+* Error decomposition
+* Bias variance tradeoff
 
 
 
 \newpage
 
+## When learning fails
+
+::: notes
+
+Consider the following scenario: You were given a learning task and have approached it with a choice of model, a training algorithm, and parameters. You used some of the data to fit the parameters and tested the fitted model on a test set. The test results, unfortunately, turn out to be unsatisfactory.
+
+What went wrong then, and what should you do next?
+
+There are many elements that can be "fixed." The main approaches are listed as follows:
+
+* Fix a data problem
+* Get more data
+* Change the model (i.e. the function that maps input data to target variable) by:
+  * Making it more flexible using hyperparameters
+  * Making it less flexible using hyperparameters
+  * Completely changing its form
+* Change the feature representation of the data
+* Change the training algorithm used to fit the model
+
+In order to find the best remedy, it is essential first to understand the cause of the bad performance. 
+
+Note: this scenario is closely parahprased from *Section 11.3 What to Do If Learning Fails* in [Understanding Machine Learning: From Theory to Algorithms](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/) (Shalev-Shwartz and Ben-David).
+
+
+:::
+
 ## Prediction error
 
+### ML premise: fit a function
 
-### Model class
+Given as *training* data a set of feature vector-label pairs 
 
-General ML estimation problem: given data $(x_i, y_i)$, want to learn $y \approx \hat{y} = f(x)$
+$$(\mathbf{x_i}, y_i), \quad i = 1,\ldots n$$ 
 
+we want to fit a function $f$ (parameterized by $\mathbf{w}$, which we'll estimate as $\mathbf{\hat{w}}$) such that 
 
-The **model class** is the **set** of possible estimates:
+$$y_i \approx f(\mathbf{x_i}, \mathbf{w})$$
 
-$$ \hat{y} = f(\mathbf{x}, \mathbf{\beta}) $$
+(i.e. $y_i \approx \hat{y_i}$.)
 
-parameterized by  $\mathbf{\beta}$
+### ML premise: true function
 
-### Model class vs. true function
+Suppose our data is sampled from some *unknown* "true" function $t$ so that
 
-Our learning algorithm _assumes_ a model class 
+$$y_i = t(\mathbf{x_i}) + \epsilon_i $$
 
-$$ \hat{y} = f(\mathbf{x}, \mathbf{\beta}) $$
+where $\epsilon \sim N(0, \sigma_\epsilon^2)$ is some *unknowable* stochastic error.
 
-But the data has a _true_ relation
+### ML premise: minimize error
 
-$$ y = f_0(\mathbf{x}) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2) $$
+Our goal is to minimize a squared error loss function on some *test* point, $(\mathbf{x_t}, y_t)$:
 
+$$E[ (y_t - \hat{y_t})^2]$$
 
-### Sources of prediction error
+where the expectation is over the sampled data, and the noise.
 
-* Noise: $\epsilon$ is fundamentally unpredictable, occurs because $y$ is influenced by factors not in $\mathbf{x}$
-* Assumed model class: maybe $f(\mathbf{x}, \mathbf{\beta}) \neq f_0(\mathbf{x})$ for _any_ $\mathbf{\beta}$ (**under-modeling**)
-* Parameter estimate: maybe $f(\mathbf{x}, \mathbf{\beta}) = f_0(\mathbf{x})$ for some true $\mathbf{\beta}_0$, but our estimate $\mathbf{\hat{\beta}} \neq \mathbf{\beta}_0$
+\newpage
 
+### ML premise: illustration
 
+::: notes
 
-### Quantifying prediction error
+![Imagine an infinite population of data, from which we sample training data and a test point.](../images/3-error.png){ width=35% }
 
-Given 
-
-* parameter estimate $\mathbf{\hat{\beta}}$ (computed from a fixed training set)
-* a _test point_ $\mathbf{x}_{test}$ (was not in training set)
-
-Then 
-
-* predicted value $\hat{y} = f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})$
-* true value $y = f_0(\mathbf{x}_{test}) + \epsilon$
+:::
 
 
-### Output mean squared error (1)
+### Source of prediction error: noise
 
-Definition: output MSE given $\mathbf{\hat{\beta}}$:
+In the best case scenario, even if the model is exactly the true function
 
-$$ MSE_y(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) :=  E[y-\hat{y}] ^2 $$
+$$ f(\mathbf{x}, \mathbf{w}) = t(\mathbf{x}) \quad  \forall x$$
 
+we still have some prediction error due to the stochastic noise!
 
-$$ =  E[f_0(\mathbf{x}_{test}) + \epsilon-f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 $$
-
-### Output mean squared error (2)
-
-Noise $\epsilon$ on test sample is independent of $f_0(\mathbf{x}_{test}),f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})$ so
-
-$$ =  E[f_0(\mathbf{x}_{test}) + \epsilon-f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 $$
-
-$$ =  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 +E[\epsilon]^2$$
+::: notes
 
 
-$$ =  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 + \sigma_\epsilon^2 $$
+![In the best case scenario, we still expect some error due to noise.](../images/3-error-noise.png){width=35%}
 
-### Irreducible error (1)
+:::
 
-Irreducible error $\sigma_\epsilon^2$ is a fundamental limit on ability to predict $y$ (lower bound on MSE).
+\newpage
 
-$$MSE(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) \geq  \sigma_\epsilon^2$$
-
-### Irreducible error (2)
-
-Best case scenario: if
-
-* true function is in model class: $f(\mathbf{x}, \mathbf{\beta}) = f_0(\mathbf{x})$ for a true $\mathbf{\beta_0}$, and
-* our parameter estimate is perfect: $\mathbf{\hat{\beta}} = \mathbf{\beta_0}$
-
-then $E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]^2 = 0$ so output error = $\sigma_\epsilon^2$. 
-
-### Function MSE (1)
-
-We had output MSE, error on predicted value:
-
-$$ MSE_y(\mathbf{x}_{test}) :=  E[y-\hat{y}] ^2 =  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] ^2 +  \sigma_\epsilon^2$$
-
-Now we will define function MSE, error on underlying function:
-
-$$ MSE_f(\mathbf{x}_{test}) :=  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]^2$$
+### Source of prediction error: parameter estimate
 
 
-### Function MSE (2)
+Perhaps the true function is 
 
-Which can be decomposed into two parts:
+$$ t(\mathbf{x}) = f(\mathbf{x}, \mathbf{w_t}) \quad  \forall x$$
 
-
-$$ MSE_f(\mathbf{x}_{test}) :=  E[f_0(\mathbf{x}_{test}) - f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]^2$$
-
-
-\begin{equation} 
-\begin{split}
-MSE_f(\mathbf{x}_{test}) = \\
-\quad & (f_0(\mathbf{x}_{test}) -  E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})])^2 +  \\
-\quad & E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) - E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]]^2
-\end{split}
-\end{equation}
+but because of the random sample of training data + noise in the data, our parameter estimate is not exactly correct: $\mathbf{\hat{w}} \neq \mathbf{w_t}$.
 
 
-### Function MSE (3)
+::: notes
 
-Note: cancellation of the cross term - Let $\bar{f}(\mathbf{x}_{test})=E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]$. The cross term
 
-$$E[( f_0(\mathbf{x}_{test}) -\bar{f}(\mathbf{x}_{test})  )( f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) -\bar{f}(\mathbf{x}_{test})  )]$$
+![We may have an error in our parameter estimate (due to sample of training data + noise).](../images/3-error-parameter.png){width=35%}
 
-$$= ( f_0(\mathbf{x}_{test}) -\bar{f}(\mathbf{x}_{test})  )E[( f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) -\bar{f}(\mathbf{x}_{test})  )]$$
+:::
 
-$$= ( f_0(\mathbf{x}_{test}) -\bar{f}(\mathbf{x}_{test})  )
-(\bar{f}(\mathbf{x}_{test}) - \bar{f}(\mathbf{x}_{test}) ) = 0$$
+
+### Source of prediction error: assumed model class (1)
+
+
+Maybe 
+
+$$ t(\mathbf{x}) \neq f(\mathbf{x}, \mathbf{w})$$
+
+for any $\mathbf{w}$!
+
+Our assumed *model class* (or *hypothesis class*) may not be complex enough to model the true function.
+
+::: notes
+
+
+**Note**: the *model class* is the set of possible models we could fit, parameterized by the parameter vector.
+
+**Note**: the set of assumptions we make - such as selecting a model class $f$ - introduce what's known as *inductive bias* into our model.
+
+![Our model class is not flexible enough.](../images/3-error-model.png){width=35%}
+
+
+:::
 
 
 
+### Source of prediction error: assumed model class (2)
+
+
+What if we use a model class that is *too* complex?
+
+::: notes
+
+![If there was no noise, a too-complex model class wouldn't necessarily be a problem.](../images/3-error-overfit-no-noise.png){ width=35% }
+
+![But the combination of too-complex model + noise in training data *is* a problem! The too-complex model "overfits" to the unknowable stochastic noise in the *training* data - which will increase expected error on the *test* data.](../images/3-error-overfit.png){width=40%}
+
+This is not specific to polynomial models - there are many situations where a training algorithm will "learn" a parameter value that should be zero, because it fits the noise. For example, if you have irrelevant features used as input to the model.
+
+:::
+
+### Sources of prediction error: summary
+
+* Stochastic noise which is fundamentally unpredictable
+* Parameter estimate has some error due to noise in training data 
+* Assumed model class is not complex enough (**under-modeling**)
+
+::: notes
+
+Note: the "parameter estimate" error also includes overfitting!
+
+:::
+
+\newpage
+
+## Error decomposition
+
+
+
+### A note on this decomposition
+
+We will derive the expected error on the test *point*:
+
+* first, assuming the training sample is fixed, so the expectation is only over $\epsilon_t$
+* then, relaxing this assumption, so the expectation is over the training set sampled from $\mathcal{D}$
+
+
+::: notes
+
+This is allowed because $\epsilon_t$ is independent of $\mathcal{D}$; so
+
+$$E_{\mathcal{D}, \epsilon}[\ldots] = E_{\mathcal{D}}[E_{\epsilon}[\ldots]]$$
+
+Finally, we'll take that expectation over all the test points.
+
+
+:::
+
+### First: assuming fixed training sample
+
+For convenience, denote $f(\mathbf{x_t}, \mathbf{\hat{w}})$ as $f$ and $t(\mathbf{x_t})$ as $t$.
+
+$$
+\begin{aligned}
+E_{\epsilon} [(y_t-\hat{y_t})^2] &= E_{\epsilon}[(t + \epsilon_t - f)^2] \\
+ &= E_{\epsilon}[(t - f)^2 + \epsilon_t^2 + 2\epsilon_t(t - f)] \\
+ &= (t-f)^2 + E_\epsilon[\epsilon_t^2] + 0 \\
+ &= (t-f)^2 + \sigma_\epsilon^2
+\end{aligned} 
+$$
+
+::: notes
+
+The expected value (over the $\epsilon$) of squared error is because:
+
+* under the assumption that training sample is fixed, $f$ and $t$ are constant
+* $E[\epsilon_t] = 0$
+
+The last term is not affected when we then take the expectation over ${\mathcal{D}}$. 
+
+This term is called the *irreducible error*.
+
+:::
+
+### Second: expectation over ${\mathcal{D}}$
+
+We again denote $f(\mathbf{x_t}, \mathbf{\hat{w}})$ as $f$ and $t(\mathbf{x_t})$ as $t$.
+
+$$
+\begin{aligned}
+E_{\mathcal{D}} [(t-f)^2 + \sigma_\epsilon^2] &= E_{\mathcal{D}}[(t-f)^2] + \sigma_\epsilon^2 \\
+ &= E_{\mathcal{D}}[t^2 + f^2 -2tf] + \sigma_\epsilon^2 \\
+ &= t^2 + E_{\mathcal{D}}[f^2] -2t E_{\mathcal{D}}[f] + \sigma_\epsilon^2 \\
+ &= (t - E_{\mathcal{D}}[f])^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) + \sigma_\epsilon^2 
+\end{aligned} 
+$$
+
+::: notes
+
+because:
+
+* the true value $t(\mathbf{x_t})$ is independent of the training sample drawn from $\mathcal{D}$.
+
+TODO: refer to https://stats.stackexchange.com/questions/164378/bias-variance-decomposition-and-independence-of-x-and-epsilon
+
+:::
+
+\newpage
 
 ### A hypothetical (impossible) experiment
+
+::: notes
+
+To understand this decomposition, it helps to think about this experiment.
+
+:::
 
 Suppose we would get many independent training sets (from same process).
 
 For each training set,
 
 * train our model (estimate parameters), and
-* use this model to estimate value of test point
-
-### Bias in function MSE
-
-**Bias**: How much the average value of our estimate differs from the true value:
-
-$$ Bias(\mathbf{x}_{test}) := 
-f_0(\mathbf{x}_{test}) -  E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})] $$
+* use this model to estimate value of test point(s)
 
 
-### Variance in function MSE
+::: notes
 
-**Variance**: How much the estimate varies around its average:
-
-$$ Var(\mathbf{x}_{test}) := 
-E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) - E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})]]^2$$
+![Hypothetical experiment, showing many trained models, and the mean of all those trained models.](../images/3-hypothetical.png){ width=35% }
+:::
 
 
-\newpage
+### Error decomposition: bias
 
-### Bias and variance
+In the first term in
 
-![Example: 100 trials, mean estimate and standard deviation.](images/bias-variance-trials.png){ width=90% }
-
-
-### Summary: decomposition of MSE
-
-Output MSE is the sum of squared  bias, variance, and irreducible error:
+$$(\textcolor{red}{t - E_{\mathcal{D}}[f]})^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) + \sigma_\epsilon^2$$
 
 
-\begin{equation}
-\begin{split}
-MSE(\mathbf{x}_{test}) = \\
- &\quad (f_0(\mathbf{x}_{test}) -  E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}})])^2 + \\
- &\quad E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}) - E[f(\mathbf{x}_{test}, \mathbf{\hat{\beta}}]]^2 + \\
- &\quad \sigma_\epsilon^2
-\end{split}
-\end{equation}
+$\textcolor{red}{t - E_{\mathcal{D}}[f]}$ is called the **bias**. 
 
-### What does it indicate?
+::: notes
 
-Bias:
+The bias is the difference between the *true value* and the *mean prediction of the model* (over many different random samples of training data.)
 
-* Model "not flexible enough" - true function is not in model class (under-modeling or underfitting)
+Informally: it tells us to what extent the model is *systematically* wrong!
 
-Variance: 
+![The bias term is the difference between the mean model and true function.](../images/3-hypothetical-bias.png){ width=35% }
 
-* Model is very different each time we train it on a different training set
-* Model "too flexible" - model class is too general and also learns noise (overfitting)
+:::
+
+### Error decomposition: variance
+
+The second term in
+
+$$(t - E_{\mathcal{D}}[f])^2 + \textcolor{blue}{(E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2)} + \sigma_\epsilon^2$$
+
+
+$\textcolor{blue}{E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2}$ is the **variance** of the model prediction over $\mathcal{D}$. 
+
+::: notes
+
+Informally: it tells us: if you train many of these models, with a new sample of training data each time, how much variation is there in the model output?
+
+Or: how much does the model output depend on the training data?
+
+![The variance term is the difference between the mean model and the individual models.](../images/3-hypothetical-variance.png){ width=35% }
+
+
+:::
+
+### Error decomposition: irreducible error
+
+We already said that the third term in 
+
+$$(t - E_{\mathcal{D}}[f])^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) + \textcolor{brown}{\sigma_\epsilon^2}$$
+
+
+is called the **irreducible errror**.
+
+::: notes
+
+This term is a *lower bound* on the MSE.
+
+
+![The irreducible error is the difference between data points and the output of the true function.](../images/3-bias-irreducible.png){ width=35% }
+
+
+
+
+:::
+
+### Error decomposition: summary
+
+Putting it together, the expected test point error
+
+$$(\textcolor{red}{t - E_{\mathcal{D}}[f]})^2 + \textcolor{blue}{(E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2)} + \textcolor{brown}{\sigma_\epsilon^2}$$
+
+
+is
+
+$$(\textcolor{red}{\text{Bias}})^2 + 
+\textcolor{blue}{\text{Variance over } \mathcal{D}} + 
+\textcolor{brown}{\text{Irreducible Error}}$$
+
+## Bias-variance tradeoff
+
+
+### Intuition behind bias-variance and model complexity
+
+It's often the case that changing the model to reduce bias, increases variance (and vice versa). Why?
+
+::: notes
+
+TODO: add illustration
+
+:::
+
+### Bias variance tradeoff
+
+![Bias variance tradeoff](../images/bias-variance-tradeoff.png){width=50%}
+
+
+::: notes
+
+Note: this is a "classic" view of the bias-variance tradeoff. Recent results suggest that this is only part of the picture - we'll discuss this again later in the semester.
+
+:::
 
 
 ### How to get small error?
 
-* Get model selection right: not too flexible, but flexible enough (**how?**)
-* Have enough data to constrain variability of model
-* Other ways?
-
-
-### Bias variance tradeoff
-
-![Bias variance tradeoff](images/bias-variance-tradeoff.png)
+* Get model selection right: not too flexible, but flexible enough - **how?**
+* Get enough data to constrain variability of model?
 
 
