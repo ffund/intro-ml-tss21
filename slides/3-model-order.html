@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Fraida Fund">
-  <title>Model selection problems</title>
+  <title>Model selection</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -18,27 +18,24 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Model selection problems</h1>
+  <h1 class="title">Model selection</h1>
   <p class="author">Fraida Fund</p>
 </section>
 
 <section>
 <section id="model-selection-problems" class="title-slide slide level2">
 <h2>Model selection problems</h2>
-
-</section>
-<section id="bias-variance-tradeoff" class="slide level3">
-<h3>Bias variance tradeoff</h3>
-<figure>
-<img data-src="images/bias-variance-tradeoff.png" style="width:60.0%" alt="Bias variance tradeoff" /><figcaption aria-hidden="true">Bias variance tradeoff</figcaption>
-</figure>
+<aside class="notes">
+<p>Model selection problem: how to select the <span class="math inline">\(f()\)</span> that maps features <span class="math inline">\(X\)</span> to target <span class="math inline">\(y\)</span>?</p>
+<p>We’ll look at two examples of model selection problems, but there are many more.</p>
+</aside>
 </section>
 <section id="choosing-model-complexity" class="slide level3">
 <h3>Choosing model complexity</h3>
@@ -47,156 +44,196 @@
 <li>what does that mean, and</li>
 <li>how do we select one?</li>
 </ul>
-</section></section>
-<section>
-<section id="transformed-linear-models" class="title-slide slide level2">
-<h2>Transformed linear models</h2>
-
 </section>
-<section id="transformation-of-linear-model" class="slide level3">
-<h3>Transformation of linear model</h3>
-<p>Standard linear model:</p>
-<p><span class="math display">\[ \hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_d x_d \]</span></p>
-<p>Transformed linear model:</p>
-<p><span class="math display">\[ \hat{y} =  \beta_1 \phi_1(\mathbf{x}) + \cdots + \beta_p \phi_p(\mathbf{x}) \]</span></p>
-</section>
-<section id="basis-function" class="slide level3">
-<h3>Basis function</h3>
-<p>Each function</p>
-<p><span class="math display">\[ \phi_j (\mathbf{x}) = \phi_j (x_1, \cdots, x_d) \]</span></p>
-<p>is called a <strong>basis function</strong>. These can be expressed in vector form:</p>
-<p><span class="math display">\[\hat{y} = \mathbf{\phi (x)} \mathbf{\beta}\]</span></p>
-<p><span class="math display">\[
-\mathbf{\phi (x)} = [\phi_1 (\mathbf{x}), \cdots, \phi_p (\mathbf{x})], \mathbf{\beta} = [\beta_1, \cdots, \beta_p]
-\]</span></p>
-</section>
-<section id="least-squares-for-transformed-linear-models" class="slide level3">
-<h3>Least squares for transformed linear models</h3>
-<p>Given data <span class="math inline">\((\mathbf{x_i},y_i), i=1,\cdots,N\)</span>:</p>
-<p><span class="math display">\[ 
-A = 
-\begin{bmatrix}
-\phi_1 (\mathbf{x_1}) &amp; \cdots &amp; \phi_p (\mathbf{x_1}) \\
-\vdots  &amp; \ddots &amp; \vdots  \\
-\phi_1 (\mathbf{x_N}) &amp; \cdots &amp; \phi_p (\mathbf{x_N}) 
-\end{bmatrix} 
-\]</span></p>
-<p>Least squares fit is still <span class="math inline">\(\hat{\beta} = (A^T A)^{-1} A^T y\)</span></p>
-</section>
-<section id="polynomial-fitting" class="slide level3">
-<h3>Polynomial fitting</h3>
+<section id="model-order-selection-problem" class="slide level3">
+<h3>Model order selection problem</h3>
 <ul>
 <li>Given data <span class="math inline">\((x_i, y_i), i=1\cdots,N\)</span> (one feature)</li>
-<li>Polynomial model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x + \cdots + \beta_d x^d\)</span></li>
-<li><span class="math inline">\(d\)</span> is degree of polynomial, called <strong>model order</strong>. Given <span class="math inline">\(d\)</span>, can get regression coefficients via LS</li>
+<li>Polynomial model: <span class="math inline">\(\hat{y} = w_0 + w_1 x + \cdots + w_d x^d\)</span></li>
+<li><span class="math inline">\(d\)</span> is degree of polynomial, called <strong>model order</strong></li>
+<li>Given <span class="math inline">\(d\)</span>, can get regression coefficients via OLS</li>
+<li><strong>Model order selection problem</strong>: choosing <span class="math inline">\(d\)</span></li>
 </ul>
-</section>
-<section id="transformed-model-for-logistic-regression" class="slide level3">
-<h3>Transformed model for logistic regression</h3>
-<p>As with linear regression, can apply logistic regression to transformed features:</p>
-<ul>
-<li><span class="math inline">\(\phi(\mathbf{x}) = [\phi_1(\mathbf{x}), \ldots, \phi_p(\mathbf{x})]^T\)</span></li>
-<li>Linear weights: <span class="math inline">\(z_k = \sum_{j=1}^p W_{kj} \phi_j(\mathbf{x})\)</span></li>
-<li>Softmax: <span class="math inline">\(P(y=k|\mathbf{z}) = g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell} e^{z_{\ell}}}\)</span></li>
-</ul>
-</section>
-<section id="logistic-regression-illustration" class="slide level3">
-<h3>Logistic regression: illustration</h3>
-<p>Example: using non-linear features to classify data that is not linearly separable:</p>
-<figure>
-<img data-src="images/linear-vs-circle.png" style="width:60.0%" alt="Non-linear data." /><figcaption aria-hidden="true">Non-linear data.</figcaption>
-</figure>
-</section>
-<section id="logistic-regression-example" class="slide level3">
-<h3>Logistic regression: example</h3>
-<p><span class="math display">\[\phi(\mathbf{x}) = [1, x_1, x_2, x_1^2, x_2^2]^T\]</span></p>
-<p>Then can use <span class="math inline">\(z = [-r^2, 0, 0, 1, 1]\phi(\mathbf{x}) = x_1^2 + x_2^2 -r^2\)</span></p>
-</section></section>
-<section>
-<section id="model-order-selection-problem" class="title-slide slide level2">
-<h2>Model order selection problem</h2>
-<p>Polynomial model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x + \cdots + \beta_d x^d\)</span></p>
-<p>How can we select <span class="math inline">\(d\)</span> when “true” model order is not known?</p>
-</section>
-<section id="model-order-illustrations" class="slide level3">
-<h3>Model order illustrations</h3>
-<figure>
-<img data-src="images/sklearn-model-order.png" alt="Model order selection; overfitting vs. underfitting" /><figcaption aria-hidden="true">Model order selection; overfitting vs. underfitting</figcaption>
-</figure>
 </section>
 <section id="using-loss-function-for-model-order-selection" class="slide level3">
 <h3>Using loss function for model order selection?</h3>
 <p>Suppose we would “search” over each possible <span class="math inline">\(d\)</span>:</p>
 <ul>
-<li>Fit model of order <span class="math inline">\(d\)</span> on draining data, get <span class="math inline">\(\hat{\mathbf{\beta}}\)</span></li>
-<li>Compute predictions on training data: <span class="math inline">\(\hat{y_i} = \mathbf{\hat{\beta}}^T\mathbf{x_i}\)</span></li>
-<li>Compute loss function (e.g. RSS) on training data: <span class="math inline">\(RSS = \sum_{i=1}^N (y_i - \hat{y_i})^2\)</span></li>
+<li>Fit model of order <span class="math inline">\(d\)</span> on training data, get <span class="math inline">\(\mathbf{w}\)</span></li>
+<li>Compute predictions on training data: <span class="math inline">\(\hat{y_i}, i=1,\ldots,n\)</span>.</li>
+<li>Compute loss function (e.g. RSS) on training data: <span class="math inline">\(RSS = \sum_{i=1}^n (y_i - \hat{y_i})^2\)</span></li>
 <li>Select <span class="math inline">\(d\)</span> that minimizes loss</li>
+</ul>
+<aside class="notes">
+<ul>
 <li>Problem: loss function always decreasing with <span class="math inline">\(d\)</span> (training error decreases with model complexity!)</li>
 </ul>
-</section></section>
-<section>
-<section id="feature-selection-problem" class="title-slide slide level2">
-<h2>Feature selection problem</h2>
-
+</aside>
 </section>
-<section id="feature-selection-problem-1" class="slide level3">
+<section id="feature-selection-problem" class="slide level3">
 <h3>Feature selection problem</h3>
 <ul>
-<li>Linear model: <span class="math inline">\(\hat{y} = \beta_0 + \beta_1 x_1 + \cdots + \beta_d x_d\)</span></li>
+<li>Linear model: <span class="math inline">\(\hat{y} = w_0 + w_1 x_1 + \cdots + w_d x_d\)</span></li>
 <li>Model target <span class="math inline">\(y\)</span> as a function of features <span class="math inline">\(\mathbf{x} = (x_1, \cdots, x_d)\)</span></li>
 <li>Many features, only some are relevant</li>
-<li>High risk of overfitting if you use all features!</li>
-<li>Problem: fit a model with a small number of features</li>
+<li><strong>Feature selection problem</strong>: fit a model with a small number of features</li>
 </ul>
+<aside class="notes">
+<p>Why use a subset of features?</p>
+<ul>
+<li><p>High risk of overfitting if you use all features!</p></li>
+<li><p>For linear regression, there’s a unique OLS solution only if <span class="math inline">\(n \geq d\)</span></p></li>
+<li><p>For linear regression, when <span class="math inline">\(N \geq p\)</span>, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)</p></li>
+<li><p>Important applications where you have many features:</p>
+<ul>
+<li>EEG - measure brain activity with electrodes, typically &gt;10,000 “voxels” but only 100s of observations</li>
+<li>DNA microarray data - measures “expression” levels of large number of genes (~1000) but only a small number of data points (~100)</li>
+</ul></li>
+</ul>
+</aside>
 </section>
 <section id="feature-selection-problem---formal" class="slide level3">
 <h3>Feature selection problem - formal</h3>
-<p>Problem: given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{N \times p}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
-<p>Select a subset of <span class="math inline">\(k &lt;&lt; p\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{N \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+<p>Problem: given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{n \times d}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
+<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+</section></section>
+<section>
+<section id="cross-validation" class="title-slide slide level2">
+<h2>Cross validation</h2>
+
 </section>
-<section id="motivation-for-feature-selection-problem" class="slide level3">
-<h3>Motivation for feature selection problem</h3>
+<section id="simple-trainvalidationtest-split" class="slide level3">
+<h3>Simple train/validation/test split</h3>
 <ul>
-<li>Limited data</li>
-<li>Very large number of features</li>
-<li>Decrease variance</li>
+<li>Divide data into training, validation, test sets</li>
+<li>For each candidate model, learn model parameters on training set</li>
+<li>Measure error for all models on validation set</li>
+<li>Select model that minimizes error on validation set</li>
+<li>Evaluate model on test set</li>
+</ul>
+<aside class="notes">
+<p>Note: sometimes you’ll hear “validation set” and “test set” used according to the reverse meanings.</p>
+</aside>
+</section>
+<section id="simple-trainvalidationtest-algorithm" class="slide level3">
+<h3>Simple train/validation/test algorithm</h3>
+<ul>
+<li>Get data <span class="math inline">\(X, y\)</span> and split into training, validation, and test.</li>
+<li>Loop over models of increasing complexity: For <span class="math inline">\(p=1,\ldots,p_{max}\)</span>,
+<ul>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_p = \text{fit}_p(X_{tr}, y_{tr})\)</span></li>
+<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{v,p} = \text{pred}(X_{v}, \hat{w}_p)\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_p = \text{score}(y_{v}, \hat{y}_{v,p})\)</span></li>
+</ul></li>
+<li>Select model order with best score: <span class="math inline">\(p^* = \operatorname*{argmin}_p S_p\)</span></li>
+<li>Evaluate: <span class="math inline">\(S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*})\)</span> where <span class="math inline">\(\hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})\)</span></li>
 </ul>
 </section>
-<section id="limit-on-features-for-linear-regression-ls-solution" class="slide level3">
-<h3>Limit on features for linear regression LS solution</h3>
-<p>For linear regression:</p>
+<section id="problems-with-simple-split" class="slide level3">
+<h3>Problems with simple split</h3>
+<aside class="notes">
 <ul>
-<li>We will have a unique solution to the least squares problem only if <span class="math inline">\(A^T A\)</span> is invertible.</li>
-<li>Solution is unique if <span class="math inline">\(N \geq p\)</span>.</li>
+<li>Fitted model (and test error!) varies a lot depending on samples selected for training and validation.</li>
+<li>Fewer samples available for estimating parameters.</li>
+<li>Especially bad for problems with small number of samples.</li>
 </ul>
-<p>The unique solution exists only if the number of data samples for training (<span class="math inline">\(N\)</span>) is greater than or equal to the number of parameters <span class="math inline">\(p\)</span>.</p>
+<figure>
+<img data-src="https://sebastianraschka.com/images/faq/evaluate-a-model/evaluate_overview.png" style="width:60.0%" alt="Summary of approaches. Source." /><figcaption aria-hidden="true">Summary of approaches. <a href="https://sebastianraschka.com/faq/docs/evaluate-a-model.html">Source</a>.</figcaption>
+</figure>
+</aside>
 </section>
-<section id="important-applications-for-feature-selection-problem" class="slide level3">
-<h3>Important applications for feature selection problem</h3>
+<section id="k-fold-cross-validation" class="slide level3">
+<h3>K-fold cross validation</h3>
+<p>Alternative to simple split:</p>
 <ul>
-<li>Document classification using “bag of words” - enumerate all words, represent each document using word count</li>
-<li>EEG - measure brain activity with electrodes, typically &gt;10,000 “voxels” but only 100s of observations</li>
-<li>DNA MicroArray data - measures “expression” levels of large number of genes (~1000) but only a small number of data points (~100)</li>
+<li>Divide data into <span class="math inline">\(K\)</span> equal-sized parts (typically 5, 10)</li>
+<li>For each of the “splits”: evaluate model using <span class="math inline">\(K-1\)</span> parts for training, last part for validation</li>
+<li>Average the <span class="math inline">\(K\)</span> validation scores and choose based on average</li>
 </ul>
 </section>
-<section id="decreasing-variance-for-linear-regression" class="slide level3">
-<h3>Decreasing variance for linear regression</h3>
-<p>For linear regression, when <span class="math inline">\(N \geq p\)</span>,</p>
-<p><span class="math display">\[Var = \frac{p}{N} \sigma_\epsilon ^2\]</span></p>
-<p>Variance increases linearly with number of parameters, inversely with number of samples.</p>
-<p>(not derived in class, but read notes at home.)</p>
+<section id="k-fold-cv-illustrated" class="slide level3">
+<h3>K-fold CV illustrated</h3>
+<figure>
+<img data-src="../images/sklearn_cross_validation.png" style="width:60.0%" alt="K-fold CV" /><figcaption aria-hidden="true">K-fold CV</figcaption>
+</figure>
+</section>
+<section id="k-fold-cv---pseudocode-1" class="slide level3">
+<h3>K-fold CV - pseudocode (1)</h3>
+<p><strong>Outer loop</strong> over folds: for <span class="math inline">\(i=1\)</span> to <span class="math inline">\(K\)</span></p>
+<ul>
+<li><p>Split training data into training and validation:</p></li>
+<li><p><strong>Inner loop</strong> over models of increasing complexity: For <span class="math inline">\(p=1\)</span> to <span class="math inline">\(p_{max}\)</span>,</p>
+<ul>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_{p,i} = \text{fit}_p(X_{tr_i}, y_{tr_i})\)</span></li>
+<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{v_i,p} = \text{pred}(X_{v_i}, \hat{w}_{p,i})\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_{p,i} = score(y_{v_i}, \hat{y}_{v_i,p})\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="k-fold-cv---pseudocode-2" class="slide level3">
+<h3>K-fold CV - pseudocode (2)</h3>
+<ul>
+<li>Find average score (across <span class="math inline">\(K\)</span> scores) for each model: <span class="math inline">\(\bar{S}_p\)</span></li>
+<li>Select model with best <em>average</em> score: <span class="math inline">\(p^* = \operatorname*{argmin}_p \bar{S}_p\)</span></li>
+<li>Re-train model on entire training set: <span class="math inline">\(\hat{w}_{p^*} = \text{fit}_p(X_{tr}, y_{tr})\)</span></li>
+<li>Evaluate new fitted model on test set</li>
+</ul>
+</section>
+<section id="k-fold-cv---how-to-split" class="slide level3">
+<h3>K-fold CV - how to split?</h3>
+<p>Choose the split strategy based on the data:</p>
+<ul>
+<li>Shuffle and split (“standard” K-fold CV)</li>
+<li>Split without shuffling</li>
+<li>Stratified K-fold CV: make sure distribution of target variable is similar in each part</li>
+<li>Group K-fold CV: samples from the same “group” go in either training or validation data, but never in both</li>
+<li>Time series CV</li>
+</ul>
+<aside class="notes">
+<p>Selecting the right K-fold CV is very important for avoiding data leakage!</p>
+<p>Refer to <a href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation">the function documentation</a> for more examples.</p>
+</aside>
+</section>
+<section id="one-standard-error-rule" class="slide level3">
+<h3>One standard error rule</h3>
+<ul>
+<li>Model selection that minimizes mean error often results in too-complex model</li>
+<li>One standard error rule: use simplest model where mean error is within one SE of the minimum mean error</li>
+</ul>
+</section>
+<section id="one-standard-error-rule---algorithm-1" class="slide level3">
+<h3>One standard error rule - algorithm (1)</h3>
+<ul>
+<li>Given data <span class="math inline">\(X, y\)</span></li>
+<li>Compute score <span class="math inline">\(S_{p,i}\)</span> for model <span class="math inline">\(p\)</span> on fold <span class="math inline">\(i\)</span> (of <span class="math inline">\(K\)</span>)</li>
+<li>Compute average (<span class="math inline">\(\bar{S}_p\)</span>), standard deviation <span class="math inline">\(\sigma_p\)</span>, and standard error of scores:</li>
+</ul>
+<p><span class="math display">\[SE_p = \frac{\sigma_p}{\sqrt{K-1}}\]</span></p>
+</section>
+<section id="one-standard-error-rule---algorithm-2" class="slide level3">
+<h3>One standard error rule - algorithm (2)</h3>
+<p>“Best score” (smallest loss) model selection:</p>
+<p><span class="math display">\[p^* = \operatorname*{argmin}_p \bar{S}_p\]</span></p>
+<p><strong>One SE rule</strong>:</p>
+<p>Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} + SE_{p^*}\)</span></p>
+<p>then select simplest model with score lower than target:</p>
+<p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \leq S_t\}\]</span></p>
+<aside class="notes">
+<p>Note: this assumes you are using a “smaller is better” metric such as MSE. If you are using a “larger is better” metric, like R2, adjust the algorithm accordingly.</p>
+<p>TODO: add illustration</p>
+<p>TODO: add explanation of how to adjust to a “larger is better” metric.</p>
+</aside>
 </section></section>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+  <script src="reveal.js-master/dist/reveal.js"></script>
 
   // reveal.js plugins
-  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
 
   <script>
 
