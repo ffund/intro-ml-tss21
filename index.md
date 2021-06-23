@@ -32,10 +32,12 @@
 * Notebook: Linear regression in depth <a href="notebooks/notebooks/2-linear-regression-deep-dive.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-deep-dive.ipynb)
 * Notebook: Gradient descent in depth <a href="notebooks/notebooks/3-gradient-descent-deep-dive.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/3-gradient-descent-deep-dive.ipynb)
 * Notebook: Case study on "Beauty in the Classroom" <a href="notebooks/notebooks/2-linear-regression-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-case-study.ipynb)
+* Notebook: Residual analysis on Advertising data (homework) <a href="notebooks/notebooks/2-advertising-hw.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-advertising-hw.ipynb)
 
-## Week 3: Bias-variance tradeoff, model selection
+## Week 3: Bias-variance tradeoff, model selection, regularization
 
 * [Notes: Predicting the course of COVID-19 with a "cubic model"](notes/3-cubic-model) <a href="notes/3-cubic-model.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Error decomposition and the bias-variance tradeoff <a href="slides/3-bias-variance-tradeoff.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Model selection <a href="slides/3-model-order.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * [Notes: Bias and variance for linear regression](notes/3-linear-regression-bias-variance) <a href="notes/3-linear-regression-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Regularization <a href="slides/3-regularization.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
