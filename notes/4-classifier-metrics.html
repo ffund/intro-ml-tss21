@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>Classifier performance metrics</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Classifier performance metrics</h1>
+<p class="author">Fraida Fund</p>
+</header>
+<p>Suppose we have a series of data points <span class="math inline">\(\{(\mathbf{x_1},y_1),(\mathbf{x_2},y_2),\ldots,(\mathbf{x_n},y_n)\}\)</span> and there is some (unknown) relationship between <span class="math inline">\(\mathbf{x_i}\)</span> and <span class="math inline">\(y_i\)</span>. Furthermore, the target variable <span class="math inline">\(y\)</span> is constrained to be either a <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>: a <span class="math inline">\(1\)</span> label is considered a <em>positive</em> label, and a <span class="math inline">\(0\)</span> label is considered a <em>negative</em> label.</p>
+<p>We also have a black box  that, given some input <span class="math inline">\(\mathbf{x_i}\)</span>, will produce as its output an estimate of <span class="math inline">\(y_i\)</span>, denoted <span class="math inline">\(\hat{y_i}\)</span>. This model is called a .</p>
+<p>The question we will consider in these notes - without knowing any details of the classifier model - is <em>how can we evaluate the performance of the classifier</em>?</p>
+<h3 id="possible-outcomes">Possible outcomes</h3>
+<p>Consider a classifier model that is trained to identify cat photographs. Its output is <span class="math inline">\(\hat{y} = 1\)</span> if it thinks the photograph is of a cat, and <span class="math inline">\(\hat{y} = 0\)</span> otherwise.</p>
+<p>For each prediction the classifier makes, there are four possible outcomes:</p>
+<ul>
+<li><strong>True positive</strong>: <span class="math inline">\(y=1, \hat{y}=1\)</span>. This is a <em>correct</em> prediction.</li>
+<li><strong>False positive</strong>: <span class="math inline">\(y=0, \hat{y} = 1\)</span>. This is called <em>Type 1</em> error. (Also known as a <em>false alarm</em>.)</li>
+<li><strong>False negative</strong>: <span class="math inline">\(y=1, \hat{y} = 0\)</span>. This is called <em>Type 2</em> error. (Also known as a <em>missed detection</em>.)</li>
+<li><strong>True negative</strong>: <span class="math inline">\(y=0, \hat{y}=0\)</span>. This is a <em>correct</em> prediction.</li>
+</ul>
+<figure>
+<img src="../images/4-classifier-event-types.png" style="width:65.0%" alt="Four outcomes for a cat photograph classifier." /><figcaption aria-hidden="true">Four outcomes for a cat photograph classifier.</figcaption>
+</figure>
+<p>The number of <em>true positive</em> (TP) outcomes, <em>true negative</em> (TN) outcomes, false positive (FP) outcomes, and false negative (FN) outcomes, are often presented together in a <strong>confusion matrix</strong>:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Actual <span class="math inline">\(\downarrow\)</span> Pred. <span class="math inline">\(\rightarrow\)</span></th>
+<th style="text-align: right;">1</th>
+<th style="text-align: right;">0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td style="text-align: right;">TP</td>
+<td style="text-align: right;">FN</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td style="text-align: right;">FP</td>
+<td style="text-align: right;">TN</td>
+</tr>
+</tbody>
+</table>
+<p>We may also define two more quantities, each of which is computed as the sum of a row in the confusion matrix:</p>
+<ul>
+<li>The number of actual positive values (when <span class="math inline">\(y = 1\)</span>) <strong>P</strong> = TP+FN, is the sum of the <span class="math inline">\(1\)</span> row.</li>
+<li>The number of actual negative values (when <span class="math inline">\(y = 0\)</span>) <strong>N</strong> = FP+TN is the sum of the <span class="math inline">\(0\)</span> row.</li>
+</ul>
+<p>The <strong>total population</strong>, P + N, is the total number of samples.</p>
+<h3 id="metrics-related-to-error">Metrics related to error</h3>
+<p>The most basic classifier performance metric is <strong>accuracy</strong>, defined as</p>
+<p><span class="math display">\[ \frac{TP + TN}{TP + FP + TN + FN} = \frac{TP + TN}{P + N}\]</span></p>
+<p>i.e., the portion of samples classified correctly.</p>
+<p>However, accuracy is not always a useful metric. For example, imagine you are training a model to classify credit card transactions as fraudulent (<span class="math inline">\(1\)</span>) or not fraudulent (<span class="math inline">\(0\)</span>), but only 1% of transactions are fraudulent. A very basic classifier that <em>always</em> outputs <span class="math inline">\(0\)</span> will have 99% accuracy! It is clear that accuracy is not a very useful metric here.</p>
+<p>For a data set with highly imbalanced classes (<span class="math inline">\(P &gt;&gt; N\)</span> or <span class="math inline">\(P &lt;&lt; N\)</span>), <strong>balanced accuracy</strong> is often a more appropriate metric:</p>
+<p><span class="math display">\[ \frac{1}{2} \left( \frac{TP}{P} + \frac{TN}{N} \right) \]</span></p>
+<p>Balanced accuracy gives the proportion of correct predictions in each class, averaged across classes.</p>
+<p>In addition to the overall accuracy, a number of other metrics are used in various contexts. These are defined in terms of the four basic numbers described above: TP, FN, FP, TN.</p>
+<ul>
+<li><strong>True Positive Rate</strong> (TPR) also called <em>recall</em> or <em>sensitivity</em>:</li>
+</ul>
+<p><span class="math display">\[ TPR = \frac{TP}{P} = \frac{TP}{TP + FN} = P(\hat{y}=1 | y = 1)\]</span></p>
+<ul>
+<li><strong>True Negative Rate</strong> (TNR) also called <em>specificity</em>:</li>
+</ul>
+<p><span class="math display">\[ TNR = \frac{TN}{N} = \frac{TN}{FP + TN} = P(\hat{y}=0 | y = 0)\]</span></p>
+<ul>
+<li><strong>Positive Predictive Value</strong> (PPV) also called <em>precision</em>:</li>
+</ul>
+<p><span class="math display">\[ PPV = \frac{TP}{TP + FP} = P(y=1 | \hat{y} = 1)\]</span></p>
+<ul>
+<li><strong>Negative Predictive Value</strong> (NPV):</li>
+</ul>
+<p><span class="math display">\[ NPV = \frac{TN}{TN + FN} = P(y=0 | \hat{y} = 0)\]</span></p>
+<ul>
+<li><strong>False Positive Rate</strong> (FPR):</li>
+</ul>
+<p><span class="math display">\[ FPR = \frac{FP}{N} = \frac{FP}{FP+TN} = 1 - TNR = P(\hat{y}=1 | y = 0)\]</span></p>
+<ul>
+<li><strong>False Discovery Rate</strong> (FDR):</li>
+</ul>
+<p><span class="math display">\[ FDR = \frac{FP}{FP+TP} = 1 - PPV = P(y = 0 | \hat{y} = 1)\]</span></p>
+<ul>
+<li><strong>False Negative Rate</strong> (FNR):</li>
+</ul>
+<p><span class="math display">\[ FNR = \frac{FN}{FN+TP}  = 1 - TPR = P(\hat{y}=0 | y = 1)\]</span></p>
+<ul>
+<li><strong>False Omission Rate</strong> (FOR):</li>
+</ul>
+<p><span class="math display">\[ FOR = \frac{FN}{FN+TN}  = 1 - TPR = P(y=1 | \hat{y} = 0)\]</span></p>
+<p>These metrics are illustrated in the following table:</p>
+<figure>
+<img src="../images/ConfusionMatrix.svg" style="width:60.0%" alt="Selected classifier metrics." /><figcaption aria-hidden="true">Selected classifier metrics.</figcaption>
+</figure>
+<p>Another metric, known as F1 score, combines precision (<span class="math inline">\(\frac{TP}{TP + FP}\)</span>) and recall (<span class="math inline">\(\frac{TP}{TP + FN}\)</span>) in one metric:</p>
+<p><span class="math display">\[F_1 =  2  \left( \frac{ \textrm{precision} \times  \textrm{recall}}{\textrm{precision} + \textrm{recall}} \right)\]</span></p>
+<p>The most appropriate choice of metric for evaluating a classifier depends on the context - for example, whether there is class imbalance, and what the relative cost of each type of error is.</p>
+<h3 id="tradeoff-between-fpr-and-tpr-using-thresholds">Tradeoff between FPR and TPR using thresholds</h3>
+<p>It is trivial to build a classifier with no Type 1 error (no false positives) - if the classifier predicts a negative value for all samples, it will not produce any false positives. However, it also won’t produce any true positives! (Similarly, it is trivial to build a classifier with no Type 2 error, by predicting a positive value for all samples. This model will have no false negatives, but also no true negatives.)</p>
+<p>We can often adjust the tradeoff between the FPR and TPR. Many classifiers are actually <strong>soft decision</strong> classifiers, which means that their output is a probability, <span class="math inline">\(P(y=1|\mathbf{x})\)</span>.</p>
+<p>(This is in contrast to <strong>hard decision</strong> classifiers, whose output is a label, e.g. <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>.)</p>
+<p>We get a “hard” label from a “soft” classifier by setting a threshold <span class="math inline">\(t\)</span>, so that:</p>
+<p><span class="math display">\[
+  \hat{y} = 
+  \begin{cases}
+    1, &amp; P(y=1|\mathbf{x}) \geq t \\
+    0, &amp; P(y=1|\mathbf{x}) &lt; t
+  \end{cases}
+\]</span></p>
+<p>By tuning this <strong>threshold</strong> we can adjust the tradeoff between FPR and TPR.</p>
+<p>For example, consider our cat photo classifier from earlier, but suppose it is a soft decision classifier:</p>
+<figure>
+<img src="../images/4-soft-decision-classifier.png" style="width:100.0%" alt="Soft decision classifier for cat photos." /><figcaption aria-hidden="true">Soft decision classifier for cat photos.</figcaption>
+</figure>
+<p>The performance of this classifier depends on where we set the threshold <span class="math inline">\(t\)</span> for a positive prediction:</p>
+<ul>
+<li>If we set the threshold at 50%, this classifier has one TP, one TN, one FP, and one FN on the data shown. (<span class="math inline">\(TPR = 0.5, FPR = 0.5\)</span>.)</li>
+<li>What if the cost of missing a “true” cat is high, but the cost of accidentally classifying a non-cat as a cat is low? Then we might set the threshold at 25%. The classifier then has two TPs, one TN, and one FP. (<span class="math inline">\(TPR = 1, FPR = 0.5\)</span>.)</li>
+<li>What if the cost of missing a “true” cat is low, but the cost of accidentally classifying a non-cat as a cat is high? Then we might set the threshold at 75%. The classifier then has one TP, two TNs, and one FN. (<span class="math inline">\(TPR = 0.5, FPR = 0\)</span>.)</li>
+</ul>
+<p>The label applied by the classifier depends on where we set the threshold, the error metrics above also depend on where we set the threshold. But, it’s useful to be able to evaluate the classifier performance in general, instead of for a specific threshold. We do this by plotting the TPR vs. FPR for every possible threshold, like in this plot:</p>
+<figure>
+<img src="../images/4-soft-decision-roc.png" style="width:50.0%" alt="Plot of TPR vs. FPR for the cat photo classifier." /><figcaption aria-hidden="true">Plot of TPR vs. FPR for the cat photo classifier.</figcaption>
+</figure>
+<p>This plot is know as the <strong>ROC curve</strong> (receiver operating characteristic). The shaded area underneath the ROC curve is known as the <strong>AUC</strong> (area under the curve), and it is a classification-threshold-invariant way of evaluating the classifier performance.</p>
+<p>A random classifier that doesn’t use any information about the problem will have an AUC of 0.5. A perfect classifier will have an AUC of 1. A typical machine learning model will have an AUC somewhere between the two, with a number closer to 1 being a better score.</p>
+<figure>
+<img src="../images/4-roc-curve.png" style="width:50.0%" alt="Plot of TPR vs. FPR for the cat photo classifier." /><figcaption aria-hidden="true">Plot of TPR vs. FPR for the cat photo classifier.</figcaption>
+</figure>
+<h3 id="multi-class-classifier-performance-metrics">Multi-class classifier performance metrics</h3>
+<p>So far, we have only discussed a binary classifier. For a multi-class classifier, the output variable is no longer restricted to <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>; instead, we have <span class="math inline">\(y \in {1,2,\cdots,K}\)</span> where <span class="math inline">\(K\)</span> is the number of classes.</p>
+<p>The same performance metrics apply to a multi-class classifier, with some minor modifications:</p>
+<ul>
+<li>The <strong>accuracy</strong> is the number of correct labels, divided by number of samples</li>
+<li>The <strong>balanced accuracy</strong> is a direct extension of two-class version: compute the per-class accuracy, and average across classes.</li>
+<li>For other metrics, we can use pairwise comparisons between one class and all others, to compute a per-class version of the metric.</li>
+<li>A <strong>soft-decision classifier</strong> will produce a vector of probabilities, one for each class.</li>
+</ul>
+<p>The error of a multi-class classifier can also be visualized using a confusion matrix, for example:</p>
+<figure>
+<img src="../images/multiclass.jpg" style="width:50.0%" alt="Example of a multi-class confusion matrix, via Cross Validated." /><figcaption aria-hidden="true">Example of a multi-class confusion matrix, via Cross Validated.</figcaption>
+</figure>
+<h3 id="fairness-metrics">Fairness metrics</h3>
+<p>In addition to evaluating the <strong>error</strong> of a classifier, we are also often concerned with the <strong>fairness</strong> of a classifier.</p>
+<p>Suppose samples come from two groups: <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>. What does it mean for a classifier to treat both groups <em>fairly</em>? There are a number of different types of fairness, and like the error metrics described above, we are often stuck in a situation where we must sacrifice on one fairness measure to improve another.</p>
+<ul>
+<li><p><strong>Fairness through unawareness</strong> is not a measure of fairness, but describes a situation in which features related to group membership are not used in classification. (This doesn’t necessarily mean that the classifier produces fair outcomes! For example, if the classifier is trained on data that reflects an underlying bias in society, the classifier will be biased even if it is not trained on features related to group membership.)</p></li>
+<li><p><strong>Causal discrimination</strong> says that two samples that are identical w.r.t all features except group membership, should have same classification.</p></li>
+<li><p><strong>Group fairness</strong> (also called <em>statistical parity</em>) says that for groups <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span>, the classifier should have equal probability of positive classification:</p></li>
+</ul>
+<p><span class="math display">\[P(\hat{y}=1 | G = a) = P(\hat{y}=1 | G = b)\]</span></p>
+<ul>
+<li><strong>Conditional statistical parity</strong> is a related metric, but now we are also controlling for factor <span class="math inline">\(F\)</span>:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y}=1 | G = a, F=f) = P(\hat{y}=1 | G = b, F=f)\]</span></p>
+<ul>
+<li><strong>Balance for positive/negative class</strong> is similar to <em>group fairness</em>, but it is for classifiers that produce soft output. It applies to every probability <span class="math inline">\(S\)</span> produced by the classifier. This says that the expected value of probability assigned by the classifier should be the same for both groups -</li>
+<li>For <strong>positive class balance</strong></li>
+</ul>
+<p><span class="math display">\[E(S|y=1, G=a) = E(S|y=1, G=b)\]</span></p>
+<ul>
+<li>For <strong>negative class balance</strong></li>
+</ul>
+<p><span class="math display">\[E(S|y=0, G=a) = E(S|y=0, G=b)\]</span></p>
+<ul>
+<li><strong>Predictive parity</strong> (also called <em>outcome test</em>) says that the groups should have equal PPV, i.e. the prediction should carry similar meaning (w.r.t. probability of positive outcome) for both groups:</li>
+</ul>
+<p><span class="math display">\[P(y = 1 | \hat{y} = 1, G = a) = P(y = 1 | \hat{y} = 1, G = b)  \]</span></p>
+<ul>
+<li>Predictive parity also implies equal FDR:</li>
+</ul>
+<p><span class="math display">\[P(y = 0 | \hat{y} = 1, G = a) = P(y = 0 | \hat{y} = 1, G = b)  \]</span></p>
+<ul>
+<li><strong>Calibration</strong> (also called <em>test fairness</em>, <em>matching conditional frequencies</em>) is similar to <em>predictive parity</em>, but it is for classifiers that produce soft output. It applies to every probability <span class="math inline">\(S\)</span> produced by the classifier:</li>
+</ul>
+<p><span class="math display">\[P(y = 1 | S = s, G = a) = P(y = 1 | S = s, G = b) \]</span></p>
+<ul>
+<li><strong>Well-calibration</strong> extends this definition to add that the probability of positive outcome should actually be <span class="math inline">\(s\)</span>:</li>
+</ul>
+<p><span class="math display">\[P(y = 1 | S = s, G = a) = P(y = 1 | S = s, G = b) = s\]</span></p>
+<ul>
+<li><strong>False positive error rate balance</strong> (also called <em>predictive equality</em>) says that groups should have equal FPR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 1 | y = 0, G = a) = P(\hat{y} = 1 | y = 0, G = b)\]</span></p>
+<ul>
+<li>False positive error rate balance also implies equal TNR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 0 | y = 0, G = a) = P(\hat{y} = 0 | y = 0, G = b)\]</span></p>
+<ul>
+<li><strong>False negative error rate balance</strong> (also called <em>equal opportunity</em>) says that groups should have have equal FNR. This is equivalent to group fairness <strong>only</strong> if the prevalence of positive result is the same among both groups:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 0 | y = 1, G = a) = P(\hat{y} = 0 | y = 1, G = b)\]</span></p>
+<ul>
+<li>False negative error rate balance also implies equal TPR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 1 | y = 1, G = a) = P(\hat{y} = 1 | y = 1, G = b)\]</span></p>
+<ul>
+<li><strong>Equalized odds</strong> (also called <em>disparate mistreatment</em>) says that both groups should have equal TPR <em>and</em> FPR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 0 | y = i, G = a) = P(\hat{y} = 0 | y = i, G = b), i \in 0,1\]</span></p>
+<ul>
+<li><p>Note that if the prevalence of the (actual) positive result is <em>different</em> between groups, then it is not possible to satisfy FP and FN error rate balance <em>and</em> predictive parity at the same time!</p></li>
+<li><p><strong>Conditional use accuracy equality</strong> says that the groups have equal PPV <em>and</em> NPV:</p></li>
+</ul>
+<p><span class="math display">\[P(y = 1 | \hat{y} = 1, G = a) = P(y = 1 | \hat{y} = 1, G = b)\]</span></p>
+<p><span class="math display">\[P(y = 0 | \hat{y} = 0, G = a) = P(y = 0 | \hat{y} = 0, G = b)\]</span></p>
+<ul>
+<li><strong>Overall accuracy equality</strong> says that the groups have equal overall accuracy</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = y | G = a) = P((\hat{y} = y | G = b)\]</span></p>
+<ul>
+<li><strong>Treatment equality</strong> says that the groups have equal ratio of FN to FP, <span class="math inline">\(\frac{FN}{FP}\)</span></li>
+</ul>
+<h2 id="questions">Questions</h2>
+<p>(You can check your answers to the first four questions <a href="https://developers.google.com/machine-learning/crash-course/classification/check-your-understanding-accuracy-precision-recall">here</a>.)</p>
+<ol type="1">
+<li>In which of the following scenarios does the accuracy value suggest that the ML model is doing a good job?</li>
+</ol>
+<ul>
+<li>In the game of roulette, a ball is dropped on a spinning wheel and eventually lands in one of 38 slots. Using visual features (the spin of the ball, the position of the wheel when the ball was dropped, the height of the ball over the wheel), an ML model can predict the slot that the ball will land in with an accuracy of 4%.</li>
+<li>A deadly, but curable, medical condition afflicts .01% of the population. An ML model uses symptoms as features and predicts this affliction with an accuracy of 99.99%.</li>
+<li>An expensive robotic chicken crosses a very busy road a thousand times per day. An ML model evaluates traffic patterns and predicts when this chicken can safely cross the street with an accuracy of 99.99%.</li>
+</ul>
+<ol start="2" type="1">
+<li>Consider a classification model that separates email into two categories: “spam” or “not spam.” If you raise the classification threshold, what will happen to precision?</li>
+</ol>
+<ul>
+<li>Probably increase</li>
+<li>Probably decrease</li>
+</ul>
+<ol start="3" type="1">
+<li>Consider a classification model that separates email into two categories: “spam” or “not spam.” If you raise the classification threshold, what will happen to recall?</li>
+</ol>
+<ul>
+<li>Always stay constant</li>
+<li>Either decrease, or stay the same</li>
+<li>Always increase</li>
+</ul>
+<ol start="4" type="1">
+<li>Consider two models—A and B—that each evaluate the same dataset. Which one of the following statements is true?</li>
+</ol>
+<ul>
+<li>If model A has better recall than model B, then model A is better.</li>
+<li>If Model A has better precision than model B, then model A is better.</li>
+<li>If model A has better precision and better recall than model B, then model A is probably better.</li>
+</ul>
+<ol start="5" type="1">
+<li>Read the ProPublica article, <a href="https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing">Machine Bias</a>. Based on their description, what type of fairness is violated by the COMPAS recidivism risk prediction algorithm? (Choose one of the fairness measures described above.)</li>
+</ol>
+</body>
+</html>

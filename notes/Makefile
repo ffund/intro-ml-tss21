@@ -5,7 +5,7 @@ SOURCES += 2-beauty-classroom-case-study.md
 SOURCES += 2-linear-extended-derivation.md
 SOURCES += 3-cubic-model.md
 SOURCES += 3-linear-regression-bias-variance.md
-
+SOURCES += 4-classifier-metrics.md
 
 #SOURCES += 3-when-learning-fails.md
 
