@@ -6,6 +6,7 @@ SOURCES += 2-linear.md
 SOURCES += 3-bias-variance-tradeoff.md
 SOURCES += 3-model-order.md
 SOURCES += 3-regularization.md
+SOURCES += 4-logistic-regression.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
