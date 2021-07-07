@@ -7,6 +7,9 @@ SOURCES += 3-bias-variance-tradeoff.md
 SOURCES += 3-model-order.md
 SOURCES += 3-regularization.md
 SOURCES += 4-logistic-regression.md
+SOURCES += 5-knn.md
+SOURCES += 5-tree.md
+SOURCES += 5-ensemble.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
