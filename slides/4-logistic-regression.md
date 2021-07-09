@@ -193,7 +193,7 @@ $$
 \newpage
 
 
-### Multi-class linear regression
+### Multi-class logistic regression
 
 Suppose $y \in 1, \ldots, K$. We use:
 
