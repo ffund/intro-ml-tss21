@@ -78,10 +78,16 @@ Grow many decorrelated trees:
 
 Typically $m = \frac{p}{3}$ but this should be considered a tuning parameter.
 
+### Bagged trees illustration
+
+![Identical data, bootstrapped data, and bootstrapped data with split variable randomization. ](../images/5-ensemble-trees.png){ width=90% }
+
 ### A note on computation
 
 * Bagged trees and random forests can be fitted in parallel on many cores!
 * Each tree is built independently of the others
+
+\newpage
 
 ## Boosting
 

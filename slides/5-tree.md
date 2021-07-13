@@ -3,16 +3,19 @@ title:  'Decision trees'
 author: 'Fraida Fund'
 ---
 
+\newpage
+
 ## In this lecture
 
 * Decision trees
 * Training decision trees
 * Bias and variance of decision trees
 
-\newpage
-
 
 ## Recap
+
+<!--
+
 
 
 
@@ -21,21 +24,22 @@ author: 'Fraida Fund'
 
 ::: notes
 
-\def \lintrain {$\hat{w} = (A^T A)^{-1} A^T y$ }
-\def \linregress {$\hat{y} = [1, x^T] \hat{w}$}
+\def \lintrain {$\hat{w} = (X^T X)^{-1} X^T y$ }
+\def \linregress {$\hat{y} = x^T \hat{w}$}
 \def \linloss {$(\hat{y}-y)^2$}
 
 \def \knnregress {$\hat{y} = \frac{1}{K} \sum_{ K_x} y_i $}
 
-+-----------+-----------------+---------+-------------------+----------------+----------------+
-| Model     | Function shape  | Loss fn.| Training          | Prediction     | ⇩ complexity   |
-+===========+=================+=========+===================+================+================+
-| Linear    | Linear          | \linloss| \lintrain         | \linregress    | Regularization |
-| regression| (or transformed)|         |                   |                |                |
-+-----------+-----------------+---------+-------------------+----------------+----------------+   
-| KNN       | Arbitrarily     | NA      |Non-parametric,    | \knnregress    |Increase K      |
-|           | complicated     |         |store training data|                |                |
-+-----------+-----------------+---------+-------------------+----------------+----------------+
++-----------+-------------+---------+---------------+----------------+----------------+
+| Model     | Fn. shape   | Loss fn.| Training      | Prediction     | ⇩ complexity   |
++===========+=============+=========+===============+================+================+
+| Linear    | Linear      | \linloss| \lintrain     | \linregress    | Regularization |
+| regression| (or LBF)    |         |               |                |                |
++-----------+-------------+---------+---------------+----------------+----------------+   
+| KNN       | Arbitrarily | NA      |Non-parametric,| \knnregress    |Increase K      |
+|           | complicated |         |store training |                |                |
+|           |             |         |data           |                |                |
++-----------+-------------+---------+---------------+----------------+----------------+
 
 :::
 
@@ -49,18 +53,21 @@ author: 'Fraida Fund'
 \def \knnclass {$\frac{1}{K} \sum_{K_x} I(y_i = m)$}
 \def \logloss {$-\ln P(y|X)$ }
 
-+----------+----------------+----------+-------------------+----------------+---------------+
-|Model     | Function shape | Loss fn. | Training          | \predclass     |⇩ complexity   |
-+==========+================+==========+===================+================+===============+
-|Logistic  | Linear         | \logloss | No closed form    | \logclass      |Regularization |
-|regression|(or transformed)|          | soln., use solver |                |               |
-+----------+----------------+----------+-------------------+----------------+---------------+   
-|KNN       |Arbitrarily     | NA       |Non-parametric,    | \knnclass      |Increase K     |
-|          |complicated     |          |store training data|                |               |
-+----------+----------------+----------+-------------------+----------------+----------------+
++----------+------------+-----------+---------------+-------------+---------------+
+|Model     | Fn. shape  | Loss fn.  | Training      | \predclass  |⇩ complexity   |
++==========+============+===========+===============+=============+===============+
+|Logistic  | Linear     | \logloss  | No closed     | \logclass   |Regularization |
+|regression|(or LBF)    |           | form soln.,   |             |               |
+|          |            |           | use solver    |             |               |
++----------+------------+-----------+---------------+-------------+---------------+
+|KNN       |Arbitrarily | NA        |Non-parametric,| \knnclass   |Increase K     |
+|          |complicated |           |store training |             |               |
+|          |            |           |data           |             |               |
++----------+------------+-----------+---------------+-------------+----------------+
 
 :::
 
+-->
 
 ### Flexible decisions with cheap prediction?
 
@@ -69,8 +76,6 @@ KNN was very flexible, but prediction is **slow**.
 Next: flexible decisions, non-parametric approach, fast prediction
 
 
-\newpage
-
 ## Decision tree
 
 
@@ -78,9 +83,7 @@ Next: flexible decisions, non-parametric approach, fast prediction
 
 ::: notes
 
-TODO: add illustration
-
-![A binary tree.](../images/tree-terminology.png){ width=50% }
+![A binary tree.](../images/5-tree-terminology.png){ width=50% }
 
 
 :::
@@ -97,6 +100,12 @@ Following notation of ISLR, Chapter 8:
 
 * Given set of possible predictors, $X_1, \ldots, X_p$
 * Training: Divide predictor space (set of possible values of $X$) into $J$ non-overlapping regions: $R_1, \ldots, R_J$, by splitting sequentially on one feature at a time.
+
+::: notes
+
+![Dividing the feature space with a decision tree.](../images/5-tree-stratification.png){ width=80% }
+
+:::
 
 ### Stratification of feature space (2)
 
@@ -163,11 +172,19 @@ Start at root of the tree, considering all training samples.
 
 ### Loss function for regression tree 
 
-For regression: look for feature $j$ and cutpoint $s$ that leads to the greatest possible reduction in squared error:
+For regression: look for feature $j$ and cutpoint $s$ that leads to the greatest possible reduction in squared error, where the "new" squared error is:
 
 $$\sum_{i: x_i \in R_1(j,s)} (y_i - \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i - \hat{y}_{R_2})^2$$ 
 
-(where $\hat{y}_{R_j}$ is the prediction for the samples in $R_j$.)
+($\hat{y}_{R_j}$ is the prediction for the samples in $R_j$.)
+
+::: notes
+
+![Training a regression tree.](../images/5-train-regression-tree.png){ width=60% }
+
+\newpage
+
+:::
 
 ### Loss function for classification tree 
 
@@ -202,7 +219,7 @@ You can see that this is small when all values of $\hat{p}_{mk}$ are around 0 or
 
 ### Entropy 
 
-::: notes
+<!--
 
 Entropy of a random variable $X$ (from information theory):
 
@@ -210,7 +227,7 @@ Entropy of a random variable $X$ (from information theory):
 $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 
 
-:::
+-->
 
 Entropy as a measure of impurity on subset of samples:
 
@@ -221,7 +238,9 @@ where $\hat{p}_{mk}$ is the proportion of training samples in $R_m$ belonging to
 
 ### Comparison - measures of node impurity
 
-![Measures of node "impurity".](../images/impurity.png){ width=50% }
+![Measures of node "impurity".](../images/impurity.png){ width=30% }
+
+\newpage
 
 ### Conditional entropy
 
@@ -262,6 +281,13 @@ Considering the Strong branch:
 * $S_{\text{strong}} = \{3+, 3-\}, |S_{\text{strong}}| = 6$
 * $\text{Entropy}(S_{\text{strong}}) = 1$
 
+::: notes
+
+![Considering the split on Wind.](../images/5-tennis-example.png){ width=45% }
+
+:::
+
+
 ### Example: should I play tennis? (4)
 
 $\text{Entropy}(S) = -\frac{9}{14}\log_2 \frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94$
@@ -295,6 +321,13 @@ $\rightarrow$ Split on Outlook!
 
 * If tree is too deep - likely to overfit (high variance)
 * If tree is not deep enough - likely to have high bias
+
+::: notes
+
+![The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff.](../images/5-tree-bias-variance.png){ width=60% }
+
+:::
+
 
 \newpage
 
@@ -332,11 +365,27 @@ Prune a large tree from leaves to root:
 
 $$\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}$$
 
+::: notes
+
+![Weakest link pruning.](../images/5-tree-pruning.png){ width=60% }
+
+
+:::
+
 
 ### Weakest link pruning (2)
 
 * Iterate to produce a sequence of trees $T_0, T_1, \ldots, T_m$ where $T_m$ is a tree of minimum size.
 * Select optimal tree by CV
+
+::: notes
+
+![Selecting tree from the set of candidate trees.](../images/5-best-pruned-tree.png){ width=90% }
+
+
+:::
+
+
 
 ### Cost complexity pruning 
 

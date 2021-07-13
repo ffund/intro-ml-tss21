@@ -87,7 +87,9 @@ For any "candidate" hyperplane,
 
 ::: notes
 
-![Maximal margin classifier.](../images/6-mm-classifier.png){ width=25% }
+
+
+![Maximal margin classifier. Width of the "slab" is 2x the margin.](../images/6-mm-classifier.png){ width=25% }
 
 :::
 
@@ -310,7 +312,7 @@ $$
 \operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad &  \gamma \\
 \text{subject to} \quad &\sum_{j=1}^{p} w_j^2 = 1 \\
 & y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i \\
-&  \epsilon_i \geq 0 \quad \forall i \\
+&  \epsilon_i \geq 0, \quad \forall i \\
 & \sum_{i=1}^n \epsilon_i \leq K 
 \end{aligned}
 $$
@@ -321,7 +323,7 @@ $$
 
 ::: notes
 
-Remember that any scaled version of the hyperplane is the same line. So let's make $\sum_{j=1}^{p} w_j^2$ inversely proportional to $\gamma$. Then we can formulate the equivalent problem:
+Remember that any scaled version of the hyperplane is the same line. So let's make $||w||$ inversely proportional to $\gamma$. Then we can formulate the equivalent problem:
 
 :::
 
@@ -505,7 +507,7 @@ This turns out to be not too terrible to solve.
 
 Optimal coefficients for $j=1,\ldots,p$ are:
 
-$${w_j^*} = \sum_{i=1}^n {\alpha_i^*} y_i \mathbf{x}_{i}$$
+$$\mathbf{w}^* = \sum_{i=1}^n {\alpha_i^*} y_i \mathbf{x}_{i}$$
 
 where ${\alpha_i^*}$ come from the solution to the dual problem.
 

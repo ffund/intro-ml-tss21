@@ -41,93 +41,60 @@
 <section>
 <section id="recap" class="title-slide slide level2">
 <h2>Recap</h2>
+<!--
 
-</section>
-<section id="models-for-regression" class="slide level3">
-<h3>Models for regression</h3>
-<aside class="notes">
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 19%" />
-<col style="width: 10%" />
-<col style="width: 21%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Function shape</th>
-<th>Loss fn.</th>
-<th>Training</th>
-<th>Prediction</th>
-<th>⇩ complexity</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Linear regression</td>
-<td>Linear (or transformed)</td>
-<td></td>
-<td></td>
-<td></td>
-<td>Regularization</td>
-</tr>
-<tr class="even">
-<td>KNN</td>
-<td>Arbitrarily complicated</td>
-<td>NA</td>
-<td>Non-parametric, store training data</td>
-<td></td>
-<td>Increase K</td>
-</tr>
-</tbody>
-</table>
-</aside>
-</section>
-<section id="models-for-classification" class="slide level3">
-<h3>Models for classification</h3>
-<aside class="notes">
-<table>
-<colgroup>
-<col style="width: 11%" />
-<col style="width: 18%" />
-<col style="width: 11%" />
-<col style="width: 21%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Model</th>
-<th>Function shape</th>
-<th>Loss fn.</th>
-<th>Training</th>
-<th></th>
-<th>⇩ complexity</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Logistic regression</td>
-<td>Linear (or transformed)</td>
-<td></td>
-<td>No closed form soln., use solver</td>
-<td></td>
-<td>Regularization</td>
-</tr>
-<tr class="even">
-<td>KNN</td>
-<td>Arbitrarily complicated</td>
-<td>NA</td>
-<td>Non-parametric, store training data</td>
-<td></td>
-<td>Increase K</td>
-</tr>
-</tbody>
-</table>
-</aside>
+
+
+
+
+### Models for regression
+
+::: notes
+
+\def \lintrain {$\hat{w} = (X^T X)^{-1} X^T y$ }
+\def \linregress {$\hat{y} = x^T \hat{w}$}
+\def \linloss {$(\hat{y}-y)^2$}
+
+\def \knnregress {$\hat{y} = \frac{1}{K} \sum_{ K_x} y_i $}
+
++-----------+-------------+---------+---------------+----------------+----------------+
+| Model     | Fn. shape   | Loss fn.| Training      | Prediction     | ⇩ complexity   |
++===========+=============+=========+===============+================+================+
+| Linear    | Linear      | \linloss| \lintrain     | \linregress    | Regularization |
+| regression| (or LBF)    |         |               |                |                |
++-----------+-------------+---------+---------------+----------------+----------------+   
+| KNN       | Arbitrarily | NA      |Non-parametric,| \knnregress    |Increase K      |
+|           | complicated |         |store training |                |                |
+|           |             |         |data           |                |                |
++-----------+-------------+---------+---------------+----------------+----------------+
+
+:::
+
+### Models for classification
+
+::: notes
+
+
+\def \predclass {$P(y=m | x) =$}
+\def \logclass {$\frac{e^{z_m}}{\sum_{\ell=1}^M e^{z_\ell}}$}
+\def \knnclass {$\frac{1}{K} \sum_{K_x} I(y_i = m)$}
+\def \logloss {$-\ln P(y|X)$ }
+
++----------+------------+-----------+---------------+-------------+---------------+
+|Model     | Fn. shape  | Loss fn.  | Training      | \predclass  |⇩ complexity   |
++==========+============+===========+===============+=============+===============+
+|Logistic  | Linear     | \logloss  | No closed     | \logclass   |Regularization |
+|regression|(or LBF)    |           | form soln.,   |             |               |
+|          |            |           | use solver    |             |               |
++----------+------------+-----------+---------------+-------------+---------------+
+|KNN       |Arbitrarily | NA        |Non-parametric,| \knnclass   |Increase K     |
+|          |complicated |           |store training |             |               |
+|          |            |           |data           |             |               |
++----------+------------+-----------+---------------+-------------+----------------+
+
+:::
+
+-->
 </section>
 <section id="flexible-decisions-with-cheap-prediction" class="slide level3">
 <h3>Flexible decisions with cheap prediction?</h3>
@@ -142,9 +109,8 @@
 <section id="tree-terminology" class="slide level3">
 <h3>Tree terminology</h3>
 <aside class="notes">
-<p>TODO: add illustration</p>
 <figure>
-<img data-src="../images/tree-terminology.png" style="width:50.0%" alt="A binary tree." /><figcaption aria-hidden="true">A binary tree.</figcaption>
+<img data-src="../images/5-tree-terminology.png" style="width:50.0%" alt="A binary tree." /><figcaption aria-hidden="true">A binary tree.</figcaption>
 </figure>
 </aside>
 </section>
@@ -162,6 +128,11 @@
 <li>Given set of possible predictors, <span class="math inline">\(X_1, \ldots, X_p\)</span></li>
 <li>Training: Divide predictor space (set of possible values of <span class="math inline">\(X\)</span>) into <span class="math inline">\(J\)</span> non-overlapping regions: <span class="math inline">\(R_1, \ldots, R_J\)</span>, by splitting sequentially on one feature at a time.</li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-tree-stratification.png" style="width:80.0%" alt="Dividing the feature space with a decision tree." /><figcaption aria-hidden="true">Dividing the feature space with a decision tree.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="stratification-of-feature-space-2" class="slide level3">
 <h3>Stratification of feature space (2)</h3>
@@ -235,9 +206,14 @@
 </section>
 <section id="loss-function-for-regression-tree" class="slide level3">
 <h3>Loss function for regression tree</h3>
-<p>For regression: look for feature <span class="math inline">\(j\)</span> and cutpoint <span class="math inline">\(s\)</span> that leads to the greatest possible reduction in squared error:</p>
+<p>For regression: look for feature <span class="math inline">\(j\)</span> and cutpoint <span class="math inline">\(s\)</span> that leads to the greatest possible reduction in squared error, where the “new” squared error is:</p>
 <p><span class="math display">\[\sum_{i: x_i \in R_1(j,s)} (y_i - \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i - \hat{y}_{R_2})^2\]</span></p>
-<p>(where <span class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction for the samples in <span class="math inline">\(R_j\)</span>.)</p>
+<p>(<span class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction for the samples in <span class="math inline">\(R_j\)</span>.)</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-train-regression-tree.png" style="width:60.0%" alt="Training a regression tree." /><figcaption aria-hidden="true">Training a regression tree.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="loss-function-for-classification-tree" class="slide level3">
 <h3>Loss function for classification tree</h3>
@@ -264,10 +240,15 @@
 </section>
 <section id="entropy" class="slide level3">
 <h3>Entropy</h3>
-<aside class="notes">
-<p>Entropy of a random variable <span class="math inline">\(X\)</span> (from information theory):</p>
-<p><span class="math display">\[H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) \]</span></p>
-</aside>
+<!--
+
+Entropy of a random variable $X$ (from information theory):
+
+
+$$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
+
+
+-->
 <p>Entropy as a measure of impurity on subset of samples:</p>
 <p><span class="math display">\[ - \sum_{k=1}^K \hat{p}_{mk} \log_2 \hat{p}_{mk}\]</span></p>
 <p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training samples in <span class="math inline">\(R_m\)</span> belonging to class <span class="math inline">\(k\)</span>.</p>
@@ -275,7 +256,7 @@
 <section id="comparison---measures-of-node-impurity" class="slide level3">
 <h3>Comparison - measures of node impurity</h3>
 <figure>
-<img data-src="../images/impurity.png" style="width:50.0%" alt="Measures of node “impurity”." /><figcaption aria-hidden="true">Measures of node “impurity”.</figcaption>
+<img data-src="../images/impurity.png" style="width:30.0%" alt="Measures of node “impurity”." /><figcaption aria-hidden="true">Measures of node “impurity”.</figcaption>
 </figure>
 </section>
 <section id="conditional-entropy" class="slide level3">
@@ -317,6 +298,11 @@
 <li><span class="math inline">\(S_{\text{strong}} = \{3+, 3-\}, |S_{\text{strong}}| = 6\)</span></li>
 <li><span class="math inline">\(\text{Entropy}(S_{\text{strong}}) = 1\)</span></li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-tennis-example.png" style="width:45.0%" alt="Considering the split on Wind." /><figcaption aria-hidden="true">Considering the split on Wind.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="example-should-i-play-tennis-4" class="slide level3">
 <h3>Example: should I play tennis? (4)</h3>
@@ -353,6 +339,11 @@
 <li>If tree is too deep - likely to overfit (high variance)</li>
 <li>If tree is not deep enough - likely to have high bias</li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-tree-bias-variance.png" style="width:60.0%" alt="The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff." /><figcaption aria-hidden="true">The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="stopping-criteria" class="slide level3">
 <h3>Stopping criteria</h3>
@@ -386,6 +377,11 @@
 <li>Merge two adjacent leaf nodes into their parent to obtain <span class="math inline">\(T_1\)</span> by minimizing:</li>
 </ul>
 <p><span class="math display">\[\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}\]</span></p>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-tree-pruning.png" style="width:60.0%" alt="Weakest link pruning." /><figcaption aria-hidden="true">Weakest link pruning.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="weakest-link-pruning-2" class="slide level3">
 <h3>Weakest link pruning (2)</h3>
@@ -393,6 +389,11 @@
 <li>Iterate to produce a sequence of trees <span class="math inline">\(T_0, T_1, \ldots, T_m\)</span> where <span class="math inline">\(T_m\)</span> is a tree of minimum size.</li>
 <li>Select optimal tree by CV</li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-best-pruned-tree.png" style="width:90.0%" alt="Selecting tree from the set of candidate trees." /><figcaption aria-hidden="true">Selecting tree from the set of candidate trees.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="cost-complexity-pruning" class="slide level3">
 <h3>Cost complexity pruning</h3>
