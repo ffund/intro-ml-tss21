@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -18,7 +18,7 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
 <body>
   <div class="reveal">
@@ -32,7 +32,6 @@
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
-<li>Evaluating model cost, interpretability</li>
 <li>Decision trees</li>
 <li>Training decision trees</li>
 <li>Bias and variance of decision trees</li>
@@ -46,6 +45,7 @@
 </section>
 <section id="models-for-regression" class="slide level3">
 <h3>Models for regression</h3>
+<aside class="notes">
 <table>
 <colgroup>
 <col style="width: 12%" />
@@ -84,9 +84,11 @@
 </tr>
 </tbody>
 </table>
+</aside>
 </section>
 <section id="models-for-classification" class="slide level3">
 <h3>Models for classification</h3>
+<aside class="notes">
 <table>
 <colgroup>
 <col style="width: 11%" />
@@ -125,26 +127,12 @@
 </tr>
 </tbody>
 </table>
-</section>
-<section id="evaluating-models-review" class="slide level3">
-<h3>Evaluating models (review)</h3>
-<ul>
-<li>Performance (on different types of data)</li>
-<li>Cost/time for training and prediction</li>
-<li>Interpretability</li>
-</ul>
-</section>
-<section id="demo-digit-classification" class="slide level3">
-<h3>Demo: digit classification</h3>
-<ul>
-<li>Shows how to use “magic commands” to time a line of code</li>
-<li>Interpretability of logistic regression, KNN</li>
-</ul>
+</aside>
 </section>
 <section id="flexible-decisions-with-cheap-prediction" class="slide level3">
 <h3>Flexible decisions with cheap prediction?</h3>
 <p>KNN was very flexible, but prediction is <strong>slow</strong>.</p>
-<p>Next up: flexible decisions, non-parametric approach, fast prediction</p>
+<p>Next: flexible decisions, non-parametric approach, fast prediction</p>
 </section></section>
 <section>
 <section id="decision-tree" class="title-slide slide level2">
@@ -153,9 +141,12 @@
 </section>
 <section id="tree-terminology" class="slide level3">
 <h3>Tree terminology</h3>
+<aside class="notes">
+<p>TODO: add illustration</p>
 <figure>
-<img data-src="images/tree-terminology.png" style="width:50.0%" alt="A binary tree." /><figcaption aria-hidden="true">A binary tree.</figcaption>
+<img data-src="../images/tree-terminology.png" style="width:50.0%" alt="A binary tree." /><figcaption aria-hidden="true">A binary tree.</figcaption>
 </figure>
+</aside>
 </section>
 <section id="note-on-notation" class="slide level3">
 <h3>Note on notation</h3>
@@ -185,29 +176,43 @@
 <section id="tree-representation" class="slide level3">
 <h3>Tree representation</h3>
 <ul>
-<li>Each node of tree that is not a leaf node: test one feature <span class="math inline">\(X_i\)</span></li>
-<li>Each branch from a node: selects one value for <span class="math inline">\(X_i\)</span></li>
+<li>At node that is not a leaf: test one feature <span class="math inline">\(X_i\)</span></li>
+<li>Branch from node depending on value of <span class="math inline">\(X_i\)</span></li>
 <li>Each leaf node: predict <span class="math inline">\(\hat{y}_{R_m}\)</span></li>
 </ul>
-<p>Tree is characterized by * size of tree <span class="math inline">\(|T|\)</span> (number of leaf nodes) * depth (max length from root node to a leaf node)</p>
+</section>
+<section id="tree-characterization" class="slide level3">
+<h3>Tree characterization</h3>
+<ul>
+<li>size of tree <span class="math inline">\(|T|\)</span> (number of leaf nodes)</li>
+<li>depth (max length from root node to a leaf node)</li>
+</ul>
 </section>
 <section id="stratification-of-feature-space---illustration" class="slide level3">
 <h3>Stratification of feature space - illustration</h3>
 <figure>
-<img data-src="images/8.3.svg" style="width:50.0%" alt="ISLR, Fig. 8.3. The stratification on the top left cannot be produced by a decision tree using recursive binary splitting. The other three subfigures represent a single stratification." /><figcaption aria-hidden="true">ISLR, Fig. 8.3. The stratification on the top left cannot be produced by a decision tree using recursive binary splitting. The other three subfigures represent a single stratification.</figcaption>
+<img data-src="../images/8.3.svg" style="width:50.0%" alt="ISLR, Fig. 8.3." /><figcaption aria-hidden="true">ISLR, Fig. 8.3.</figcaption>
 </figure>
+<aside class="notes">
+<p>The stratification on the top left cannot be produced by a decision tree using recursive binary splitting. The other three subfigures represent a single stratification.</p>
+</aside>
 </section></section>
 <section>
 <section id="training-a-decision-tree" class="title-slide slide level2">
 <h2>Training a decision tree</h2>
 
 </section>
-<section id="basic-idea" class="slide level3">
-<h3>Basic idea</h3>
+<section id="basic-idea-1" class="slide level3">
+<h3>Basic idea (1)</h3>
 <ul>
 <li>Goal: find the high-dimensional rectangles that minimize error</li>
 <li>Computationally expensive to consider every possible partition</li>
-<li>Instead: top-down, greedy approach: recursive binary splitting</li>
+</ul>
+</section>
+<section id="basic-idea-2" class="slide level3">
+<h3>Basic idea (2)</h3>
+<ul>
+<li>Instead: recursive binary splitting (top-down, greedy approach)</li>
 <li>Greedy: at each step, make the best decision at that step, without looking ahead and making a decision that might yield better results at future steps</li>
 </ul>
 </section>
@@ -230,13 +235,13 @@
 </section>
 <section id="loss-function-for-regression-tree" class="slide level3">
 <h3>Loss function for regression tree</h3>
-<p>For regression: look for feature <span class="math inline">\(j\)</span> and cutpoint <span class="math inline">\(s\)</span> that leads to the greatest possible reduction in RSS:</p>
+<p>For regression: look for feature <span class="math inline">\(j\)</span> and cutpoint <span class="math inline">\(s\)</span> that leads to the greatest possible reduction in squared error:</p>
 <p><span class="math display">\[\sum_{i: x_i \in R_1(j,s)} (y_i - \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i - \hat{y}_{R_2})^2\]</span></p>
 <p>(where <span class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction for the samples in <span class="math inline">\(R_j\)</span>.)</p>
 </section>
 <section id="loss-function-for-classification-tree" class="slide level3">
 <h3>Loss function for classification tree</h3>
-<p>For classification, the basic idea is to find a split that leads to the greatest reduction in some measure of node <em>impurity</em>:</p>
+<p>For classification, find a split that minimizes some measure of node <em>impurity</em>:</p>
 <ul>
 <li>A node whose samples all belong to the same class - most <em>pure</em></li>
 <li>A node whose samples are evenly distributed among all classes - highly <em>impure</em></li>
@@ -246,31 +251,43 @@
 <h3>Classification error rate</h3>
 <p>For classification: one possible way is to split on <em>0-1 loss</em> or <em>misclassification rate</em>:</p>
 <p><span class="math display">\[\sum_{x_i \in  R_m} 1 (y_i \neq \hat{y}_{R_m})\]</span></p>
-<p>Not a good metric for impurity!</p>
+<p>Not used often.</p>
 </section>
 <section id="gini-index" class="slide level3">
 <h3>GINI index</h3>
-<p>GINI index:</p>
+<p>The GINI index is:</p>
 <p><span class="math display">\[ \sum_{k=1}^K \hat{p}_{mk} (1 - \hat{p}_{mk})\]</span></p>
+<p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training samples in <span class="math inline">\(R_m\)</span> belonging to class <span class="math inline">\(k\)</span>.</p>
+<aside class="notes">
+<p>You can see that this is small when all values of <span class="math inline">\(\hat{p}_{mk}\)</span> are around 0 or 1.</p>
+</aside>
 </section>
-<section id="entropy-1" class="slide level3">
-<h3>Entropy (1)</h3>
+<section id="entropy" class="slide level3">
+<h3>Entropy</h3>
+<aside class="notes">
 <p>Entropy of a random variable <span class="math inline">\(X\)</span> (from information theory):</p>
 <p><span class="math display">\[H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) \]</span></p>
-</section>
-<section id="entropy-2" class="slide level3">
-<h3>Entropy (2)</h3>
+</aside>
 <p>Entropy as a measure of impurity on subset of samples:</p>
 <p><span class="math display">\[ - \sum_{k=1}^K \hat{p}_{mk} \log_2 \hat{p}_{mk}\]</span></p>
 <p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training samples in <span class="math inline">\(R_m\)</span> belonging to class <span class="math inline">\(k\)</span>.</p>
 </section>
-<section id="information-gain" class="slide level3">
-<h3>Information gain</h3>
+<section id="comparison---measures-of-node-impurity" class="slide level3">
+<h3>Comparison - measures of node impurity</h3>
+<figure>
+<img data-src="../images/impurity.png" style="width:50.0%" alt="Measures of node “impurity”." /><figcaption aria-hidden="true">Measures of node “impurity”.</figcaption>
+</figure>
+</section>
+<section id="conditional-entropy" class="slide level3">
+<h3>Conditional entropy</h3>
 <ul>
-<li>Splitting on <span class="math inline">\(X\)</span> creates subsets <span class="math inline">\(S_1\)</span> and <span class="math inline">\(S_2\)</span> with different entropies</li>
+<li>Splitting on feature <span class="math inline">\(X\)</span> creates subsets <span class="math inline">\(S_1\)</span> and <span class="math inline">\(S_2\)</span> with different entropies</li>
 <li>Conditional entropy:</li>
 </ul>
 <p><span class="math display">\[\text{Entropy}(S|X) = \sum_v \frac{|S_v|}{|S|} \text{Entropy}(S_v)\]</span></p>
+</section>
+<section id="information-gain" class="slide level3">
+<h3>Information gain</h3>
 <ul>
 <li>Choose feature to split so as to maximize information gain, the expected reduction in entropy due to splitting on <span class="math inline">\(X\)</span>:</li>
 </ul>
@@ -279,7 +296,7 @@
 <section id="example-should-i-play-tennis-1" class="slide level3">
 <h3>Example: should I play tennis? (1)</h3>
 <figure>
-<img data-src="images/play-tennis-dt.png" alt="Via Tom Mitchell." /><figcaption aria-hidden="true">Via Tom Mitchell.</figcaption>
+<img data-src="../images/play-tennis-dt.png" style="width:60.0%" alt="Via Tom Mitchell." /><figcaption aria-hidden="true">Via Tom Mitchell.</figcaption>
 </figure>
 </section>
 <section id="example-should-i-play-tennis-2" class="slide level3">
@@ -303,11 +320,9 @@
 </section>
 <section id="example-should-i-play-tennis-4" class="slide level3">
 <h3>Example: should I play tennis? (4)</h3>
-<ul>
-<li><span class="math inline">\(\text{Entropy}(S) = -\frac{9}{14}\log_2 \frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94\)</span></li>
-<li><span class="math inline">\(\text{Entropy}(S | \text{Wind}) = \frac{8}{14} \text{Entropy}(S_{\text{weak}}) + \frac{6}{14} \text{Entropy}(S_{\text{strong}}) = 0.89\)</span></li>
-<li><span class="math inline">\(\text{Gain}(S, \text{Wind}) = 0.94-0.89 = 0.05\)</span></li>
-</ul>
+<p><span class="math inline">\(\text{Entropy}(S) = -\frac{9}{14}\log_2 \frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94\)</span></p>
+<p><span class="math inline">\(\text{Entropy}(S | \text{Wind}) = \frac{8}{14} \text{Entropy}(S_{\text{weak}}) + \frac{6}{14} \text{Entropy}(S_{\text{strong}}) = 0.89\)</span></p>
+<p><span class="math inline">\(\text{Gain}(S, \text{Wind}) = 0.94-0.89 = 0.05\)</span></p>
 </section>
 <section id="example-should-i-play-tennis-5" class="slide level3">
 <h3>Example: should I play tennis? (5)</h3>
@@ -323,21 +338,8 @@
 <h3>Feature importance</h3>
 <ul>
 <li>For each feature <span class="math inline">\(X_j\)</span>, find all nodes where the feature was used as the split variable</li>
-<li>Add up information gain due to split (or for GINI index, different in loss weighted by number of samples.)</li>
+<li>Add up information gain due to split (or for GINI index, difference in loss weighted by number of samples.)</li>
 <li>This sum reflects feature importance</li>
-</ul>
-</section>
-<section id="illustration-of-measures-of-impurity" class="slide level3">
-<h3>Illustration of measures of impurity</h3>
-<figure>
-<img data-src="images/impurity.png" style="width:60.0%" alt="Misclassification error, GINI index, scaled entropy." /><figcaption aria-hidden="true">Misclassification error, GINI index, scaled entropy.</figcaption>
-</figure>
-</section>
-<section id="demo-notebooks" class="slide level3">
-<h3>Demo notebooks</h3>
-<ul>
-<li>Demo: classification on mammal vs. non-mammal dataset</li>
-<li>Demo: digits dataset</li>
 </ul>
 </section></section>
 <section>
@@ -351,18 +353,6 @@
 <li>If tree is too deep - likely to overfit (high variance)</li>
 <li>If tree is not deep enough - likely to have high bias</li>
 </ul>
-</section>
-<section id="bias-in-decision-tree" class="slide level3">
-<h3>Bias in decision tree</h3>
-<figure>
-<img data-src="images/tree-bias.svg" alt="A tree that is too shallow has high bias." /><figcaption aria-hidden="true">A tree that is too shallow has high bias.</figcaption>
-</figure>
-</section>
-<section id="variance-in-decision-tree" class="slide level3">
-<h3>Variance in decision tree</h3>
-<figure>
-<img data-src="images/tree-variance.svg" alt="A tree that is too deep has high variance." /><figcaption aria-hidden="true">A tree that is too deep has high variance.</figcaption>
-</figure>
 </section>
 <section id="stopping-criteria" class="slide level3">
 <h3>Stopping criteria</h3>
@@ -387,7 +377,6 @@
 <section id="pruning-classification-trees" class="slide level3">
 <h3>Pruning classification trees</h3>
 <p>We usually prune classification trees using classification error rate as loss function, even if tree was built using GINI or entropy.</p>
-<p>In the next slides - loss function shown is for regression tree.</p>
 </section>
 <section id="weakest-link-pruning-1" class="slide level3">
 <h3>Weakest link pruning (1)</h3>
@@ -396,7 +385,7 @@
 <li>Start with full tree <span class="math inline">\(T_0\)</span></li>
 <li>Merge two adjacent leaf nodes into their parent to obtain <span class="math inline">\(T_1\)</span> by minimizing:</li>
 </ul>
-<p><span class="math display">\[\frac{RSS(T_1)-RSS(T_0)}{|T_0| - |T_1|}\]</span></p>
+<p><span class="math display">\[\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}\]</span></p>
 </section>
 <section id="weakest-link-pruning-2" class="slide level3">
 <h3>Weakest link pruning (2)</h3>
@@ -407,7 +396,7 @@
 </section>
 <section id="cost-complexity-pruning" class="slide level3">
 <h3>Cost complexity pruning</h3>
-<p>Minimize</p>
+<p>Equivalent to: Minimize</p>
 <p><span class="math display">\[ \sum_{m=1}^{|T|} \sum_{x_i}^{R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|\]</span></p>
 <p>Choose <span class="math inline">\(\alpha\)</span> by CV, 1-SE rule (<span class="math inline">\(\uparrow \alpha, \downarrow |T|\)</span>).</p>
 </section></section>
@@ -422,7 +411,7 @@
 <ul>
 <li>Easy to interpret, close to human decision-making</li>
 <li>Can derive feature importance</li>
-<li>Easily handles mixed types of features and different ranges</li>
+<li>Easily handles mixed types, different ranges</li>
 <li>Can find interactions that linear classifiers can’t</li>
 </ul>
 </section>
@@ -438,13 +427,13 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+  <script src="reveal.js-master/dist/reveal.js"></script>
 
   // reveal.js plugins
-  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
 
   <script>
 

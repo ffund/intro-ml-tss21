@@ -3,31 +3,22 @@ title:  'Support vector machines'
 author: 'Fraida Fund'
 ---
 
+<!--
+
 ## In this lecture
 
 * Maximal margin classifier
 * Support vector classifier
 * Solving constrained optimization to find coefficients
-* Support vector machine with non-linear kernel
 
-
-\newpage
-
-
-## Recap
-
-### Classifying data that is not linearly separable
-
-* Decision tree - complex decision boundary, fast prediction, often works best as part of ensemble
-* KNN - complex decision boundary, slow prediction
-* Logistic regression -  only if you use basis function $\phi()$ to transform data before applying model
+-->
 
 ## Maximal margin classifier
 
 ### Binary classification problem 
 
-* $N$ training samples $\mathbf{x}_1, \ldots, \mathbf{x}_N \in \mathbb{R}^p$
-* Class labels $y_1, \ldots, y_N \in \{-1, 1\}$
+* $n$ training samples, each with $p$ features $\mathbf{x}_1, \ldots, \mathbf{x}_n \in \mathbb{R}^p$
+* Class labels $y_1, \ldots, y_n \in \{-1, 1\}$
 
 ### Linear separability
 
@@ -39,18 +30,18 @@ The problem is **perfectly linearly separable** if there exists a **separating h
 
 ### Separating hyperplane (1)
 
-The separating hyperplane has the property that for all $i=1,\ldots,N$, 
+The separating hyperplane has the property that for all $i=1,\ldots,n$, 
 
-$$\beta_0 + \sum_{j=1}^p \beta_j x_{ij} > 0 \text{ if } y_i = 1$$
+$$w_0 + \sum_{j=1}^p w_j x_{ij} > 0 \text{ if } y_i = 1$$
 
-$$\beta_0 + \sum_{j=1}^p \beta_j x_{ij} < 0 \text{ if } y_i = -1$$
+$$w_0 + \sum_{j=1}^p w_j x_{ij} < 0 \text{ if } y_i = -1$$
 
 ### Separating hyperplane (2)
 
 Equivalently:
 
 \begin{equation}
-y_i \left(\beta_0 + \sum_{j=1}^p \beta_j x_{ij} \right) > 0
+y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) > 0
 \label{eq:sep-no-margin}
 \end{equation}
 
@@ -58,36 +49,49 @@ y_i \left(\beta_0 + \sum_{j=1}^p \beta_j x_{ij} \right) > 0
 
 Then, we can classify a new sample $\mathbf{x}$ using the sign of 
 
-$$z = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}$$
+$$z = w_0 + \sum_{j=1}^p w_j x_{ij}$$
 
 and we can use the magnitude of $z$ to determine how confident we are about our classification. (Larger $z$ = farther from hyperplane = more confident about classification.)
 
-### Non-uniqueness
-
-If a separating hyperplane exists, there will be an infinite number of separating hyperplanes.
-
+\newpage
 
 ### Which separating hyperplane is best? 
 
-![Fig. 9.2 from ISLR.](images/9.2.svg){ width=70% }
+![If the data is linearly separable, there are many separating hyperplanes.](../images/6-many-hyperplanes.png){ width=25% }
 
 
+::: notes
+
+Previously, with the logistic regression classifier, we found the maximum likelihood classifier: the hyperplane that maximizes the probability of these particular observations.
+
+:::
 
 ### Margin
 
-* Compute distance from each training sample to the separating hyperplane.
+For any "candidate" hyperplane, 
+
+* Compute perpendicular distance from each sample to separating hyperplane.
 * Smallest distance among all samples is called the **margin**. 
 
+::: notes
+
+![For this hyperplane, bold lines show the smallest distance (tie among several samples).](../images/6-mm-margin.png){ width=25% }
+
+:::
 
 ### Maximal margin classifier
 
-* For classifier to be more robust to noise, we should maximize the margin.
+* Choose the line that maximizes the margin!
 * Find the widest "slab" we can fit between the two classes.
 * Choose the midline of this "slab" as the decision boundary.
 
-### Maximal margin classifier - illustration
+::: notes
 
-![Fig. 9.3 from ISLR.](images/9.3.svg){ width=35% }
+![Maximal margin classifier.](../images/6-mm-classifier.png){ width=25% }
+
+:::
+
+\newpage
 
 ### Support vectors
 
@@ -95,44 +99,65 @@ If a separating hyperplane exists, there will be an infinite number of separatin
 * They "support" the maximal margin hyperplane: if these points move, then the maximal margin hyperplane moves
 * Maximal margin hyperplane is not affected by movement of any other point, as long as it doesn't cross borders!
 
+::: notes
+
+![Maximal margin classifier (left) is not affected by movement of a point that is not a support vector (middle) but the hyperplane and/or margin are affected by movement of a support vector (right).](../images/6-mm.png){ width=80% }
+
+:::
+
+### Constructing the maximal margin classifier
+
+To construct this classifier, we will set up a *constrained optimization* problem with:
+
+* an objective 
+* one or more constraints to satisfy
+
+What should the objective/constraints be in this scenario?
+
+\newpage
 
 ### Constructing the maximal margin classifier (1)
 
 \begin{equation}
-\operatorname*{maximize}_{\mathbf{\beta}, \gamma} \gamma
+\operatorname*{maximize}_{\mathbf{w}, \gamma} \gamma
 \end{equation}
 
 \begin{equation}
-\text{subject to: }\sum_{j=1}^{p} \beta_j^2 = 1 
+\text{subject to: }\sum_{j=1}^{p} w_j^2 = 1 
 \end{equation}
 
 \begin{equation}
-\text{and } y_i \left(\beta_0 + \sum_{j=1}^{p} \beta_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,N
+\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,n
 \end{equation}
 
-### Constructing the maximal margin classifier (2)
+::: notes
+
+---
 
 The constraint 
 
-$$y_i \left(\beta_0 + \sum_{j=1}^{p} \beta_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,N $$
+$$y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,n $$
 
 guarantees that each observation is on the correct side of the hyperplane *and* on the correct side of the margin, if margin $\gamma$ is positive. (This is analogous to Equation \ref{eq:sep-no-margin}, but we have added a margin.)
 
-### Constructing the maximal margin classifier (3)
 
 The constraint 
 
-$$\text{and } \sum_{j=1}^{p} \beta_j^2 = 1$$
+$$\text{and } \sum_{j=1}^{p} w_j^2 = 1$$
 
-is not really a constraint: if a separating hyperplane is defined by $\beta_0 + \sum_{j=1}^{p} \beta_j x_{ij} = 0$, then for any $k \neq 0$, $k\left( \beta_0 + \sum_{j=1}^{p} \beta_j x_{ij}\right) = 0$ is also a separating hyperplane.
+is not really a constraint: if a separating hyperplane is defined by $w_0 + \sum_{j=1}^{p} w_j x_{ij} = 0$, then for any $k \neq 0$, $k\left( w_0 + \sum_{j=1}^{p} w_j x_{ij}\right) = 0$ is also a separating hyperplane.
 
-This "constraint" just scales weights so that distance from $i$th sample to the hyperplane is given by $y_i \left(\beta_0 + \sum_{j=1}^{p} \beta_j x_{ij} \right)$. This is what make the previous constraint meaningful!
+This "constraint" just scales weights so that distance from $i$th sample to the hyperplane is given by $y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right)$. This is what make the previous constraint meaningful!
 
+![Maximal margin classifier.](../images/6-mm-simple.png){ width=30% }
 
+:::
 
-### Constructing the maximal margin classifier (4)
+\newpage
 
-Therefore, the constraints ensure that
+### Constructing the maximal margin classifier (2)
+
+The constraints ensure that
 
 * Each observation is on the correct side of the hyperplane, and
 * at least $\gamma$ away from the hyperplane
@@ -142,13 +167,16 @@ and $\gamma$ is maximized.
 
 ### Problems with MM classifier (1)
 
-![ISLR Fig. 9.4: data may not be separable. Optimization problem has no solution with $\gamma >0$.](images/9.4.svg){ width=35% }
+![When data is not linearly separable, optimization problem has no solution with $\gamma >0$.](../images/6-mm-no-solution.png){ width=25% }
 
-\newpage 
 
 ### Problems with MM classifier (2)
 
-![ISLR Fig. 9.5: MM classifier is not robust.](images/9.5.svg){ width=70% }
+![The classifier is not robust - one new observation can dramatically shift the hyperplane.](../images/6-mm-not-robust.png){ width=60% }
+
+
+\newpage 
+
 
 ## Support vector classifier
 
@@ -161,26 +189,30 @@ and $\gamma$ is maximized.
 ### Constructing the support vector classifier 
 
 \begin{equation}
-\operatorname*{maximize}_{\mathbf{\beta}, \mathbf{\epsilon}, \gamma} \gamma
+\operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \gamma
 \end{equation}
 
 \begin{equation}
-\text{subject to: } \sum_{j=1}^{p} \beta_j^2 = 1
+\text{subject to: } \sum_{j=1}^{p} w_j^2 = 1
 \end{equation}
 
 
 \begin{equation}
-y_i \left(\beta_0 + \sum_{j=1}^{p} \beta_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,N
+y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,n
 \end{equation}
 
 \begin{equation}
-\epsilon_i \geq 0, \sum_{i=1}^N \epsilon_i \leq C
+\epsilon_i \geq 0 \forall i=1,\ldots,n, \quad \sum_{i=1}^n \epsilon_i \leq K
 \end{equation}
 
-$C$ is a non-negative tuning parameter.
+::: notes
+
+![Support vector classifier. Note: the blue arrows show $y_i \gamma \epsilon_i$.](../images/6-svc.png){ width=40% }
+
+$K$ is a non-negative tuning parameter.
 
 
-### Constructing the support vector classifier (3)
+
 
 **Slack variable** $\epsilon_i$ determines where a point lies:
 
@@ -188,18 +220,16 @@ $C$ is a non-negative tuning parameter.
 * If $\epsilon_i > 0$, point has *violated* the margin (wrong side of margin)
 * If $\epsilon_i > 1$, point is on wrong side of hyperplane and is misclassified
 
-### Constructing the support vector classifier (4)
 
-$C$ is the **budget** that determines the number and severity of margin violations we will tolerate.
+$K$ is the **budget** that determines the number and severity of margin violations we will tolerate.
 
-* $C=0 \rightarrow$ same as MM classifier
-* $C > 0$, no more than $C$ observations may be on wrong side of hyperplane
-* As $C$ increases, margin widens; as $C$ decreases, margin narrows.
+* $K=0 \rightarrow$ same as MM classifier
+* $K > 0$, no more than $K$ observations may be on wrong side of hyperplane
+* As $K$ increases, margin widens; as $K$ decreases, margin narrows.
 
+:::
 
-### Illustration of effect of $C$
-
-![ISLR Fig. 9.7: Margin shrinks as $C$ decreases.](images/9.7.svg){ width=50% }
+\newpage
 
 ### Support vector
 
@@ -210,55 +240,47 @@ For a support vector classifier, the only points that affect the classifier are:
 
 These are the *support vectors*.
 
-### $C$ controls bias-variance tradeoff
 
-* When $C$ is large: many support vectors, variance is low, but bias may be high.
-* When $C$ is small: few support vectors, high variance, but low bias.
+### Illustration of effect of $K$
+
+![The margin shrinks as $K$ decreases.](../images/6-svc-c.png){ width=45% }
+
+<!--
+![ISLR Fig. 9.7: Margin shrinks as $C$ decreases.](../images/9.7.svg){ width=50% }
+-->
 
 
-### Important terminology note
+### $K$ controls bias-variance tradeoff
 
-In ISLR and in these notes, meaning of $C$ is opposite its meaning in Python `sklearn`:
+* When $K$ is large: many support vectors, variance is low, but bias may be high.
+* When $K$ is small: few support vectors, high variance, but low bias.
 
-* ISLR and these notes: Large $C$, wide margin.
+::: notes
+
+**Important terminology note**: In ISLR and in the first part of these notes, meaning of constant is opposite its meaning in Python `sklearn`:
+
+* ISLR and these notes: Large $K$, wide margin.
 * Python `sklearn`: Large $C$, small margin.
 
+:::
 
-### Constrained vs. Lagrange forms
+### Loss function
 
-In general, we may see a model expressed in **constrained form**, with tuning parameter $t\in \mathbb{R}$:
+This problem is equivalent to minimizing hinge loss: 
 
-$$\operatorname*{minimize}_{x\in\mathbb{R}^n} f(x) \text{ subject to } h(x) \leq t$$
+$$\operatorname*{minimize}_{\mathbf{w}} \left( \sum_{i=1}^n \text{max} [0, 1-y_i ( w_0 + \sum_{j=1}^p w_j x_{ij})] + \lambda \sum_{j=1}^p w_j^2 \right)$$
 
-and also in **Lagrange form**, with tuning parameter $\lambda \geq 0$:
+where $\lambda$ is non-negative tuning parameter.
 
-$$\operatorname*{minimize}_{x\in\mathbb{R}^n} f(x) + \lambda h(x)$$
+::: notes
 
+Zero loss for observations where
 
-### Loss + penalty expression (1) 
+$$y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) \geq 1$$
 
-Equivalent expression for fitting support vector classifier using *hinge loss*:
+and width of margin depends on $\sum w_j^2$.
 
-$$\operatorname*{minimize}_{\mathbf{\beta}} \left( \sum_{i=1}^N \text{max} [0, 1-y_i f(x_i)] + \lambda \sum_{j=1}^p \beta_j^2 \right)$$
-
-where $\lambda$ is non-negative tuning parameter similar to $C$ (large $\lambda$ means wider margin) and $f(x_i) = \beta_0 + \sum_{j=1}^p \beta_j x_{ij}$.
-
-### Loss + penalty representation (2)
-
-With this representation: Zero loss for observations where
-
-$$y_i \left(\beta_0 + \sum_{j=1}^p \beta_j x_{ij} \right) \geq 1$$
-
-and width of margin depends on $\sum \beta_j^2$.
-
-### Loss + penalty representation (3)
-
-This is in contrast to previous representation, where: Zero loss for observations where
-
-$$y_i \left(\beta_0 + \sum_{j=1}^p \beta_j x_{ij} \right) \geq \gamma$$
-
-
-and $\sum \beta_j^2 = 1$.
+:::
 
 ### Compared to logistic regression
 
@@ -266,22 +288,73 @@ and $\sum \beta_j^2 = 1$.
 * **Logistic regression loss**: small for points that are far from decision boundary.
 
 
+<!--
 ### Hinge loss vs. logistic regression
 
 
-![ISLR 9.12. Hinge loss is zero for points on correct side of margin.](images/9.12.svg){ width=50% }
+![ISLR 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
+-->
+
 
 
 \newpage
 
-## Maximizing the margin
 
-### Optimization review
+## Solution
 
-Reference: Appendix C.3 of Boyd and Vandenberghe, "Introduction to Applied Linear Algebra".
+### Problem formulation - original
 
 
-### Constrained optimization
+$$
+\begin{aligned}
+\operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad &  \gamma \\
+\text{subject to} \quad &\sum_{j=1}^{p} w_j^2 = 1 \\
+& y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,n \\
+&  \epsilon_i \geq 0 \quad \forall i=1,\ldots,n \\
+& \sum_{i=1}^n \epsilon_i \leq K 
+\end{aligned}
+$$
+
+
+
+### Problem formulation - equivalent
+
+::: notes
+
+Remember that any scaled version of the hyperplane is the same line. So let's make $\sum_{j=1}^{p} w_j^2$ inversely proportional to $\gamma$. Then we can formulate the equivalent problem:
+
+:::
+
+$$
+\begin{aligned}
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad & \sum_{j=1}^{p} w_j^2 \\
+\text{subject to} \quad & y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq 1-\epsilon_i, \forall i=1,\ldots,n \\
+& \epsilon_i \geq 0, \quad \forall i=1,\ldots,n \\
+& \sum_{i=1}^n \epsilon_i \leq K \\
+\end{aligned}
+$$
+
+### Problem formulation - equivalent (2)
+
+::: notes
+
+Or, move the "budget" into the objective function:
+
+:::
+
+$$
+\begin{aligned}
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad & \frac{1}{2} \sum_{j=1}^p w_j^2  + C \sum_{i=1}^n \epsilon_i  \\
+\text{subject to} \quad & y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq 1-\epsilon_i, \quad \forall i=1,\ldots,n \\
+& \epsilon_i \geq 0, \quad \forall i=1,\ldots,n
+\end{aligned}
+$$
+
+\newpage
+
+
+
+### Background: constrained optimization
 
 
 Basic formulation of contrained optimization problem:
@@ -289,126 +362,165 @@ Basic formulation of contrained optimization problem:
 * **Objective**: Minimize $f(x)$
 * **Constraint(s)**: subject to $g(x)\leq 0$
 
-Find a point $\hat{x}$ that satisfies $g(\hat{x}) \leq 0$ and, for any other $x$ that satisfies $g(x) \leq 0$, $f(x) \geq f(\hat{x})$.
+::: notes
 
-### Definition of Lagrangian
+Find ${x}^{*}$ that satisfies $g({x}^{*}) \leq 0$ and, for any other $x$ that satisfies $g(x) \leq 0$, $f(x) \geq f({x}^{*})$.
 
-Define the Lagrangian as the weighted sum of all constraints: 
 
-$$L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_p g_p(x)$$
+:::
 
-$$= f(x) + g(x)^T \lambda$$
 
-where $\lambda$ is the *Lagrange multiplier*. $g(x)^T \lambda$ "attracts" toward the feasible set, away from the non-feasible set.
+### Background: Illustration
 
-### Dual problem (with extra details not shown in class)
-
-Expressed in terms of $L(x, \lambda)$, the primal problem is equivalent to
-
-$$\operatorname*{min}_{x} \operatorname*{max}_{\lambda \geq 0} L (x, \lambda)$$
+![Minimizing objective function, without (left) and with (right) a constraint.](../images/6-constrained-optimization.png){ width=80% }
 
 
 
-The dual problem is
 
-$$\operatorname*{max}_{\lambda \geq 0} \operatorname*{min}_{x} L (x, \lambda)$$
+### Background: Solving with Lagrangian (1)
 
+To solve, we form the Lagrangian: 
 
+$$
+L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_m g_m(x) 
+$$
 
-### KKT conditions (1)
+where each $\lambda \geq 0$ is a *Lagrange multiplier*.
 
-Under some technical conditions: if $\hat{x}$ is a local minima, then there is a vector $\hat{\lambda}$ that satisfies:
+::: notes
+ 
+The $\lambda g(x)$ terms "pull" solution toward feasible set, away from non-feasible set.
 
-$$\frac{\partial L}{\partial x_i} (\hat{x}, \hat{\lambda} ) = 0, i=1\ldots,n$$
-
-$$\frac{\partial L}{\partial \lambda_i} (\hat{x}, \hat{\lambda} ) = 0, i=1\ldots,p$$
-
-(produces as many equations as there are unknowns!)
-
-### KKT conditions (2)
-
-$$g_i(x) \leq 0, \quad i = 1,\ldots,p$$
-
-$$\lambda_i \geq 0, \quad i = 1,\ldots,p$$
-
-$$\lambda_i g_i(x) = 0, \quad i = 1,\ldots,p$$
+::: 
 
 
-### Active vs. inactive constraints
+### Background: Solving with Lagrangian (2)
 
-At the optimal point, some constraints will be "binding" and some will be "slack" - either:
+Then, to solve, we use joint optimization over $x$ and $\lambda$:
 
-* $g_i(\hat{x}) < 0$ and $\hat{\lambda_i} = 0$ (optimum is inside feasible set, constraint is inactive)
-* $g_i(\hat{x}) = 0$ and $\hat{\lambda_i} \geq 0$ (optimum is outside feasible set, constraint is active)
+$$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)$$
 
-### Active vs. inactive constraints (illustration)
 
-![Image via Wikipedia](images/Inequality_constraint_diagram.svg){width=60%}
+over $x$ and $\lambda$. If for some $x$,
+
+* $g(x) \leq 0$: the constraint is not active, $\lambda = 0$.
+* $g(x) > 0$: the constraint is active, $\lambda > 0$. Then we need to change $x$ to make $g(x)$ smaller.
+
+::: notes
+
+"Solve" in the usual way if the function is convex: by taking partial derivative of $L(x,\lambda)$ with respect to each argument, and setting it to zero. The solution to the original function will be a saddle point in the Lagrangian.
+
+This "pull" between the $x$ that minimizes $f(x)$ and the $\lambda g(x)$ ends up making the constraint "tight": if $\lambda > 0$ then we'll make $g(x) = 0$. 
+
+This is called the KKT complementary slackness condition: for every constraint, $\lambda g(x) = 0$, either because $\lambda = 0$ (inactive constraint) or $g(x) = 0$ (active constraint).
+
+:::
+
+### Background: Active/inactive constraint
+
+![Optimization with inactive, active constraint.](../images/6-active-inactive.png){ width=80% }
+
+### Background: Primal and dual formulation
+
+Under the right conditions, the solution to the *primal* problem:
+
+
+$$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } L(x, \lambda) $$
+
+is the same as the solution to the *dual* problem:
+
+$$\operatorname*{maximize}_{\lambda \geq 0 } \operatorname*{minimize}_{x} L(x, \lambda) $$
+
 
 \newpage
 
-### Comment on notation
+### Problem formulation - Lagrangian primal
 
-For the following section, we use `sklearn` notation, with opposite meaning of $C$ - 
+::: notes
 
-* in the previous formulation we had a tuning parameter $\lambda$ that multiplied the penalty term, and increasing this parameter widens the margin
-* now $C$ multiplies the loss term, and increasing this parameter narrows the margin.
+Back to our SVC problem - let's form the Lagrangian and optimize:
 
-### Support vector classifier as constrained optimization (1)
+:::
 
-The support vector classifier problem is:
+$$
+\begin{aligned}
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \operatorname*{maximize}_{\alpha_i \geq 0, \mu_i \geq 0, \forall i } \quad & \frac{1}{2} \sum_{j=1}^p w_j^2   \\
+& + C \sum_{i=1}^n \epsilon_i \\
+& - \sum_{i=1}^n  \alpha_i \left[ y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) - (1-\epsilon_i) \right]  \\
+& - \sum_{i=1}^n \mu_i \epsilon_i
+\end{aligned}
+$$
 
-$$\operatorname*{minimize}_{\mathbf{\beta}} \left( C \sum_{i=1}^N \epsilon_i + \frac{1}{2} \sum_{j=1}^p \beta_j^2 \right)$$
+::: notes
+
+This is the *primal* problem. 
+
+:::
+
+### Problem formulation - Lagrangian dual
+
+::: notes
+
+The equivalent *dual* problem:
+
+:::
+
+$$
+\begin{aligned}
+\operatorname*{maximize}_{\alpha_i \geq 0, \mu_i \geq 0, \forall i } \operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}}  \quad & \frac{1}{2} \sum_{j=1}^p w_j^2   \\
+& + C \sum_{i=1}^n \epsilon_i \\
+& - \sum_{i=1}^n  \alpha_i \left[ y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) - (1-\epsilon_i) \right]  \\
+& - \sum_{i=1}^n \mu_i \epsilon_i
+\end{aligned}
+$$
+
+::: notes
+
+We solve this by taking the derivatives with respect to $\mathbf{w}, \mathbf{\epsilon}$ and setting them to zero. Then, we plug those values back into the dual equation...
+
+:::
+
+### Problem formulation - Lagrangian dual (2)
 
 
-subject to:
+$$
+\begin{aligned}
+\operatorname*{maximize}_{\alpha_i \geq 0, \forall i }  \quad &  \sum_{i=1}^n \alpha_i  - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j \mathbf{x}_i^T \mathbf{x}_j \\
+\text{subject to} \quad & \sum_{i=1}^n \alpha_i y_i  = 0 \\
+& 0 \leq \alpha_i \leq C, \quad \forall i
+\end{aligned}
+$$
 
-$$y_i(\beta_0 + \sum_{j=1}^p \beta_j x_{ij}) \geq 1-\epsilon_i \text{ and } \epsilon_i \geq 0, \quad \forall i=1,\ldots,N$$
+::: notes
 
-### Support vector classifier as constrained optimization (extra details)
+This turns out to be not too terrible to solve.
 
-Construct Lagrange function $L(\beta, \alpha, \mu)$ where
+:::
 
-* $\alpha$ is the vector of Lagrange multipliers for the set of constraints $y_i(\beta_0 + \sum_{j=1}^p \beta_j x_{ij}) \geq 1-\epsilon_i$
-* $\mu$ is the vector of Lagrange multipliers for the set of constraints $\epsilon_i \geq 0$
-
-Then the dual problem is:
-
-$$\operatorname*{max}_{\alpha, \mu} \operatorname*{min}_{\beta}  L(\beta, \alpha, \mu)$$
-
-subject to
-
-$$\alpha_i \geq 0, \quad \mu_i \geq 0, \quad \forall i$$
-
-which becomes:
-
-$$\operatorname*{maximize}_{\alpha} \sum_i \alpha_i - \frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i y_j \mathbf{x}_i \mathbf{x}_j$$
+\newpage
 
 
-subject to:
 
-$$\sum_i \alpha_i y_i =0, \quad C \geq \alpha_i \geq 0, \quad \forall i$$
-
-
-### Support vector classifier as constrained optimization (2)
+### Solution (1)
 
 Optimal coefficients for $j=1,\ldots,p$ are:
 
-$$\beta_j = \sum_{i=1}^N \alpha_i y_i x_{ij}$$
+$${w_j^*} = \sum_{i=1}^n {\alpha_i^*} y_i \mathbf{x}_{i}$$
 
-where $\alpha_i$ come from the solution to the dual problem.
+where ${\alpha_i^*}$ come from the solution to the dual problem.
 
-### Support vector classifier as constrained optimization (3)
+### Solution (2)
 
-* $\alpha_i > 0$ only when $x_i$ is a support vector (active constraint).
-* Otherwise, $\alpha_i = 0$ (inactive constraint).
+* ${\alpha_i^*} > 0$ only when $x_i$ is a support vector (active constraint).
+* Otherwise, ${\alpha_i^*} = 0$ (inactive constraint).
 
-### Support vector classifier as constrained optimization (4)
+### Solution (3)
 
-That leaves $\beta_0$ - for any $i$ where $\alpha_i > 0$, we can find $\beta_0$ from
+That leaves $w_0^*$ - we can solve
 
-$$\beta_0 = y_i - \sum_{j=1}^p \beta_j x_{ij}$$
+$$w_0^* = y_i - \sum_{j=1}^p w_j \mathbf{x}_{i}$$
 
+using any sample $i$ where $\alpha_i^* > 0$, i.e. any support vector.
 
 ### Why solve dual problem?
 
@@ -417,12 +529,14 @@ For high-dimension problems (many features), dual problem can be much faster to 
 * Primal problem: optimize over $p+1$ coefficients.
 * Dual problem: optimize over $n$ dual variables, but there are only as many non-zero ones as there are support vectors.
 
+Also: the kernel trick, which we'll discuss next...
+
 
 ### Correlation interpretation (1)
 
 Given a new sample $\mathbf{x}$ to classify, compute
 
-$$\hat{z}(\mathbf{x}) = \beta_0 + \sum_{j=1}^p \beta_j x_{j} = \beta_0 + \sum_{i=1}^N \alpha_i y_i \sum_{j=1}^p  x_{ij} x_{j}$$
+$$\hat{z}(\mathbf{x}) = w_0 + \sum_{j=1}^p w_j x_{j} = w_0 + \sum_{i=1}^n \alpha_i y_i \sum_{j=1}^p  x_{ij} x_{j}$$
 
 Measures inner product (a kind of "correlation") between new sample and each support vector.
 
@@ -433,197 +547,3 @@ Classifier output (assuming -1,1 labels):
 $$\hat{y}(\mathbf{x}) = \text{sign} (\hat{z}(\mathbf{x}))$$
 
 Predicted label is weighted average of labels for support vectors, with weights proportional to "correlation" of test sample and support vector.
-
-## Support vector machines
-
-### Extension to non-linear decision boundary
-
-* For logistic regression: we used functions of $\mathbf{x}$ to increase the feature space to classify data that is not linearly separable.
-* Could use similar approach here.
-
-
-### SVM in transformed form (1)
-
-Coefficients:
-
-$$\beta_j = \sum_{i=1}^N \alpha_i y_i \phi(\mathbf{x}_{ij})$$
-
-Classifier discriminant:
-
-$$z = \beta_0 + \sum_{i=1}^N \alpha_i y_i 
-\phi(\mathbf{x}_i) \phi(\mathbf{x})$$
-
-### SVM in transformed form (2)
-
-Classifier output:
-
-$$\hat{y} = \text{sign}(z)$$
-
-**Important**: solution uses inner product of transformed samples, not necessarily transformed samples themselves.
-
-\newpage
-
-### Kernel trick
-
-$K(\mathbf{x}_i, \mathbf{x}) = \phi(\mathbf{x}_i)\phi(\mathbf{x})$ is a "kernel".
-
-Classifier discriminant with kernel:
-
-$$z = \beta_0 + \sum_{i=1}^N \alpha_i y_i 
-K(\mathbf{x}_i, \mathbf{x})$$
-
-Can directly compute $K(\mathbf{x}_i, \mathbf{x})$ **without explicitly computing** $\phi(\mathbf{x})$! 
-
-(For more details: Mercer's theorem)
-
-
-### Kernel trick example 
-
-Kernel can be inexpensive to compute, even if basis function itself is expensive. For example, consider:
-
-$$\mathbf{x} =
-\begin{bmatrix}
-x_1 \\
-x_2
-\end{bmatrix}, 
-\phi(\mathbf{x}) = 
-\begin{bmatrix}
-x_1^2 \\
-x_2^2 \\
-\sqrt{2}x_1 x_2
-\end{bmatrix}
-$$
-
-### Kernel trick example - direct computation
-
-Direct computation of $\phi(\mathbf{x}_n) \phi(\mathbf{x}_m)$: square or multiply 3 components of two vectors (6 operations), then compute inner product in $\mathbb{R}^3$ (3 multiplications, 1 sum). 
-
-\begin{align*}
-\phi(\mathbf{x}_n)^{\top} \phi(\mathbf{x}_m)
-&= \begin{bmatrix} x_{n,1}^2 & x_{n,2}^2 & \sqrt{2} x_{n,1} x_{n,2} \end{bmatrix} \cdot \begin{bmatrix} x_{m,1}^2 \\ x_{m,2}^2 \\ \sqrt{2} x_{m,1} x_{m,2} \end{bmatrix}
-\\
-&= x_{n,1}^2 x_{m,1}^2 +  x_{n,2}^2 x_{m,2}^2 + 2 x_{n,1} x_{n,2} x_{m,1} x_{m,2}.
-\end{align*}
-
-### Kernel trick example - computation using kernel
-
-Using kernel $K(x_n, x_m) = (x_n^T x_m)^2$: compute inner product in $\mathbb{R}^2$ (2 multiplications, 1 sum) and then square of scalar (1 square).
-
-\begin{align*}
-(\mathbf{x}_m^{\top} \mathbf{x}_m)^2
-&= \Big( \begin{bmatrix} x_{n,1} & x_{n,2} \end{bmatrix} \cdot \begin{bmatrix} x_{m,1} \\ x_{m,2} \end{bmatrix} \Big)^2
-\\
-&= (x_{n,1} x_{m,1} + x_{n,2} x_{m,2})^2
-\\
-&= (x_{n,1} x_{m,1})^2 + (x_{n,2} x_{m,2})^2 + 2(x_{n,1} x_{m,1})(x_{n,2} x_{m,2})
-\\
-&= \phi(\mathbf{x}_n)^{\top} \phi(\mathbf{x}_m).
-\end{align*}
-
-
-### Kernel intution
-
-$K(\mathbf{x}_i, \mathbf{x})$ measures "similarity" between training sample $\mathbf{x}_i$ and new sample $\mathbf{x}$.
-
-* Large $K$, more similarity
-* $K$ close to zero, not much similarity
-
-$z = \beta_0 + \sum_{i=1}^N \alpha_i y_i 
-K(\mathbf{x}_i, \mathbf{x})$ gives higher weight to training samples that are close to new sample.
-
-
-### Linear kernel
-
-![Linear kernel: $K(x,y) = x^Ty$](images/kernel-linear.png){ width=40% }
-
-### Polynomial kernel
-
-![Polynomial kernel: $K(x,y) = (\gamma x^Ty + c_0)^d$](images/kernel-poly.png){ width=40% }
-
-\newpage
-
-### Radial basis function kernel
-
-![Radial basis function: $K(x,y) = \text{exp}(-\gamma || x-y ||^2)$. If $\gamma = \frac{1}{\sigma^{2}}$, this is known as the Gaussian kernel with variance $\sigma^2$.](images/kernel-rbf.png){ width=40% }
-
-### Infinite-dimensional feature space 
-
-With kernel method, can operate in infinite-dimensional feature space! Take for example the RBF kernel:
-
-$$K_{\texttt{RBF}}(\mathbf{x}, \mathbf{y}) = \exp\Big(-\gamma\lVert\mathbf{x}-\mathbf{y}\rVert^2\Big)$$
-
-
-Let $\gamma=\frac{1}{2}$ and let $K_{\texttt{poly}(r)}$ be the polynimal kernel of degree $r$. Then
-
-### Infinite-dimensional feature space (extra steps not shown in class)
-
-
-\begin{align*}
-K_{\texttt{RBF}}(\mathbf{x}, \mathbf{y})
-&= \exp\Big(-\frac{1}{2} \lVert\mathbf{x}-\mathbf{y}\rVert^2\Big)
-\\
-&= \exp\Big(-\frac{1}{2} \langle \mathbf{x}-\mathbf{y}, \mathbf{x}-\mathbf{y} \rangle \Big)
-\\
-&\stackrel{\star}{=} \exp\Big(-\frac{1}{2} \langle \mathbf{x}, \mathbf{x}-\mathbf{y} \rangle - \langle \mathbf{y}, \mathbf{x}-\mathbf{y} \rangle \Big)
-\\
-&\stackrel{\star}{=} \exp\Big(-\frac{1}{2} \langle \mathbf{x}, \mathbf{x} \rangle - \langle \mathbf{x}, \mathbf{y} \rangle - \big[ \langle \mathbf{y}, \mathbf{x} \rangle - \langle \mathbf{y}, \mathbf{y} \rangle \big] \rangle \Big)
-\\
-&= \exp\Big(-\frac{1}{2} \langle \mathbf{x}, \mathbf{x} \rangle + \langle \mathbf{y}, \mathbf{y} \rangle - 2 \langle \mathbf{x}, \mathbf{y} \rangle \Big)
-\\
-&= \exp\Big(-\frac{1}{2} \rVert \mathbf{x} \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{y} \lVert^2 \Big) \exp\Big(- 2 \langle \mathbf{x}, \mathbf{y} \rangle \Big)
-\end{align*}
-
-where the steps marked with a star use the fact that for inner products, $\langle \mathbf{u} + \mathbf{v}, \mathbf{w} \rangle = \langle \mathbf{u}, \mathbf{w} \rangle + \langle \mathbf{v}, \mathbf{w} \rangle$.
-
-
-\newpage 
-
-### Infinite-dimensional feature space (2)
-
-Let $C$ be a constant
-
-$$C \equiv \exp\Big(-\frac{1}{2} \rVert \mathbf{x} \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{y} \lVert^2 \Big)$$
-
-
-And note that the Taylor expansion of $e^{f(x)}$ is:
-
-$$e^{f(x)} = \sum_{r=0}^{\infty} \frac{[f(x)]^r}{r!}$$
-
-
-Finally, the RBF kernel can be viewed as an infinite sum over polynomial kernels:
-
-\begin{align*}
-K_{\texttt{RBF}}(\mathbf{x}, \mathbf{y})
-&= C \exp\big(- 2 \langle \mathbf{x}, \mathbf{y} \rangle \big)
-\\
-&= C \sum_{r=0}^{\infty} \frac{ \langle \mathbf{x}, \mathbf{y} \rangle^r}{r!}
-\\
-&= C \sum_{r}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}, \mathbf{y})}{r!}
-\end{align*} 
-
-
-## Extension to regression
-
-* Similar idea
-* Only points outside the margin contribute to final cost
- 
-### SVR illustration
-
-![Support vector regression.](images/support-vector-regression.png){width=50%}
-
-## Summary: SVM
-
-
-### Key expression
-
-Discriminant can be computed using an inexpensive kernel function on a small number of support vector points ($i\in S$ are the subset of training samples that are support vectors):
-
-$$z = \beta_0 + \sum_{i \in S} \alpha_i y_i 
-K(\mathbf{x}_i, \mathbf{x})$$
-
-
-### Key ideas
-
-* Defines boundary with greatest separation between classes
-* Tuning parameter controls complexity (which direction depends on notation/"meaning" of $C$)
-* Kernel trick allows efficient extension to higher-dimension space: non-linear decision boundary through transformation of features, but without explicitly computing high-dimensional features.

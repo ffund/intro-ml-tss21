@@ -10,6 +10,7 @@ SOURCES += 4-logistic-regression.md
 SOURCES += 5-knn.md
 SOURCES += 5-tree.md
 SOURCES += 5-ensemble.md
+SOURCES += 6-svm.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
