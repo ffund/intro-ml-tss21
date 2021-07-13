@@ -127,7 +127,7 @@ What should the objective/constraints be in this scenario?
 \end{equation}
 
 \begin{equation}
-\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,n
+\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i
 \end{equation}
 
 ::: notes
@@ -136,7 +136,7 @@ What should the objective/constraints be in this scenario?
 
 The constraint 
 
-$$y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,n $$
+$$y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i $$
 
 guarantees that each observation is on the correct side of the hyperplane *and* on the correct side of the margin, if margin $\gamma$ is positive. (This is analogous to Equation \ref{eq:sep-no-margin}, but we have added a margin.)
 
@@ -198,11 +198,11 @@ and $\gamma$ is maximized.
 
 
 \begin{equation}
-y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,n
+y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i
 \end{equation}
 
 \begin{equation}
-\epsilon_i \geq 0 \forall i=1,\ldots,n, \quad \sum_{i=1}^n \epsilon_i \leq K
+\epsilon_i \geq 0 \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
 \end{equation}
 
 ::: notes
@@ -309,8 +309,8 @@ $$
 \begin{aligned}
 \operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad &  \gamma \\
 \text{subject to} \quad &\sum_{j=1}^{p} w_j^2 = 1 \\
-& y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,n \\
-&  \epsilon_i \geq 0 \quad \forall i=1,\ldots,n \\
+& y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i \\
+&  \epsilon_i \geq 0 \quad \forall i \\
 & \sum_{i=1}^n \epsilon_i \leq K 
 \end{aligned}
 $$
@@ -328,8 +328,8 @@ Remember that any scaled version of the hyperplane is the same line. So let's ma
 $$
 \begin{aligned}
 \operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad & \sum_{j=1}^{p} w_j^2 \\
-\text{subject to} \quad & y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq 1-\epsilon_i, \forall i=1,\ldots,n \\
-& \epsilon_i \geq 0, \quad \forall i=1,\ldots,n \\
+\text{subject to} \quad & y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq 1-\epsilon_i, \forall i \\
+& \epsilon_i \geq 0, \quad \forall i \\
 & \sum_{i=1}^n \epsilon_i \leq K \\
 \end{aligned}
 $$
@@ -345,8 +345,8 @@ Or, move the "budget" into the objective function:
 $$
 \begin{aligned}
 \operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad & \frac{1}{2} \sum_{j=1}^p w_j^2  + C \sum_{i=1}^n \epsilon_i  \\
-\text{subject to} \quad & y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq 1-\epsilon_i, \quad \forall i=1,\ldots,n \\
-& \epsilon_i \geq 0, \quad \forall i=1,\ldots,n
+\text{subject to} \quad & y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq 1-\epsilon_i, \quad \forall i \\
+& \epsilon_i \geq 0, \quad \forall i
 \end{aligned}
 $$
 

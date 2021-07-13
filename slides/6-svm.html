@@ -147,12 +147,12 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 \text{subject to: }\sum_{j=1}^{p} w_j^2 = 1 
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,n
+\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i
 \end{equation}\]</span></p>
 <aside class="notes">
 <hr />
 <p>The constraint</p>
-<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i=1,\ldots,n \]</span></p>
+<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i \]</span></p>
 <p>guarantees that each observation is on the correct side of the hyperplane <em>and</em> on the correct side of the margin, if margin <span class="math inline">\(\gamma\)</span> is positive. (This is analogous to Equation , but we have added a margin.)</p>
 <p>The constraint</p>
 <p><span class="math display">\[\text{and } \sum_{j=1}^{p} w_j^2 = 1\]</span></p>
@@ -206,10 +206,10 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 \text{subject to: } \sum_{j=1}^{p} w_j^2 = 1
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,n
+y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-\epsilon_i \geq 0 \forall i=1,\ldots,n, \quad \sum_{i=1}^n \epsilon_i \leq K
+\epsilon_i \geq 0 \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
 \end{equation}\]</span></p>
 <aside class="notes">
 <figure>
@@ -297,8 +297,8 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 \begin{aligned}
 \operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad &amp;  \gamma \\
 \text{subject to} \quad &amp;\sum_{j=1}^{p} w_j^2 = 1 \\
-&amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i=1,\ldots,n \\
-&amp;  \epsilon_i \geq 0 \quad \forall i=1,\ldots,n \\
+&amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i \\
+&amp;  \epsilon_i \geq 0 \quad \forall i \\
 &amp; \sum_{i=1}^n \epsilon_i \leq K 
 \end{aligned}
 \]</span></p>
@@ -311,8 +311,8 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 <p><span class="math display">\[
 \begin{aligned}
 \operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad &amp; \sum_{j=1}^{p} w_j^2 \\
-\text{subject to} \quad &amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq 1-\epsilon_i, \forall i=1,\ldots,n \\
-&amp; \epsilon_i \geq 0, \quad \forall i=1,\ldots,n \\
+\text{subject to} \quad &amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq 1-\epsilon_i, \forall i \\
+&amp; \epsilon_i \geq 0, \quad \forall i \\
 &amp; \sum_{i=1}^n \epsilon_i \leq K \\
 \end{aligned}
 \]</span></p>
@@ -325,8 +325,8 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 <p><span class="math display">\[
 \begin{aligned}
 \operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad &amp; \frac{1}{2} \sum_{j=1}^p w_j^2  + C \sum_{i=1}^n \epsilon_i  \\
-\text{subject to} \quad &amp; y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq 1-\epsilon_i, \quad \forall i=1,\ldots,n \\
-&amp; \epsilon_i \geq 0, \quad \forall i=1,\ldots,n
+\text{subject to} \quad &amp; y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq 1-\epsilon_i, \quad \forall i \\
+&amp; \epsilon_i \geq 0, \quad \forall i
 \end{aligned}
 \]</span></p>
 </section>
