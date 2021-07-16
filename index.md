@@ -65,6 +65,7 @@
 * Handout: Ensemble methods <a href="slides/5-ensemble.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Decision trees and ensembles <a href="notebooks/notebooks/5-trees-ensembles-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-trees-ensembles-in-depth.ipynb)
 * Notebook: AdaBoost <a href="notebooks/notebooks/5-demo-adaboost.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-demo-adaboost.ipynb)
+* Notebook: Bias and variance of KNN and decision tree models [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-knn-tree-bias-variance.ipynb)
 * Notebook: Voter classification with K nearest neighbor (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1i9pHIL96xXAn_FCc5TrD_z42PTcIR5u0?usp=sharing)
 
 
@@ -72,6 +73,7 @@
 
 * Handout: Support vector classifier <a href="slides/6-svm.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Support vector machines <a href="notebooks/notebooks/6-svm-pre-kernel.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-svm-pre-kernel.ipynb)
+* Notebook: Handwritten digits classification <a href="notebooks/notebooks/6-demo-digits-classifiers.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-demo-digits-classifiers.ipynb)
 
 ## Week 7: Neural networks
 
