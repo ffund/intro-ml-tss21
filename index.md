@@ -63,12 +63,15 @@
 * Notebook: K nearest neighbor in depth <a href="notebooks/notebooks/5-k-nearest-neighbors-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-k-nearest-neighbors-in-depth.ipynb)
 * Handout: Decision tree <a href="slides/5-tree.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Ensemble methods <a href="slides/5-ensemble.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Decision trees and ensembles <a href="notebooks/notebooks/5-trees-ensembles-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-trees-ensembles-in-depth.ipynb)
+* Notebook: AdaBoost <a href="notebooks/notebooks/5-demo-adaboost.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-demo-adaboost.ipynb)
 * Notebook: Voter classification with K nearest neighbor (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1i9pHIL96xXAn_FCc5TrD_z42PTcIR5u0?usp=sharing)
 
 
 ## Week 6: Support vector machine and kernel methods
 
 * Handout: Support vector classifier <a href="slides/6-svm.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Support vector machines <a href="notebooks/notebooks/6-svm-pre-kernel.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-svm-pre-kernel.ipynb)
 
 ## Week 7: Neural networks
 
