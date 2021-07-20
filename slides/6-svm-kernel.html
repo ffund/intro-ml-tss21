@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Support vector machines with non-linear kernels</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Support vector machines with non-linear kernels</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="kernel-svms" class="title-slide slide level2">
+<h2>Kernel SVMs</h2>
+
+</section>
+<section id="review-solution-to-svm-dual-problem" class="slide level3">
+<h3>Review: Solution to SVM dual problem</h3>
+<p>Given a set of support vectors <span class="math inline">\(S\)</span> and associated <span class="math inline">\(\alpha\)</span> for each,</p>
+<p><span class="math display">\[z =   w_0 + \sum_{i \in S} \alpha_i y_i \langle \mathbf{x}_i, \mathbf{x}_{t} \rangle  \]</span> <span class="math display">\[\hat{y} = \text{sign}(z)\]</span></p>
+<p>Measures inner product (a kind of “correlation”) between new sample and each support vector.</p>
+<aside class="notes">
+<p>This assumes a linear decision boundary. (The expression for <span class="math inline">\(z\)</span> gives the equation of the hyperplane that separates the classes.)</p>
+</aside>
+</section>
+<section id="extension-to-non-linear-decision-boundary" class="slide level3">
+<h3>Extension to non-linear decision boundary</h3>
+<ul>
+<li>For logistic regression: we used basis functions of <span class="math inline">\(\mathbf{x}\)</span> to transform the feature space and classify data with non-linear decision boundary.</li>
+<li>Could use similar approach here?</li>
+</ul>
+</section>
+<section id="svm-with-basis-function-transformation" class="slide level3">
+<h3>SVM with basis function transformation</h3>
+<p>Given a set of support vectors <span class="math inline">\(S\)</span> and associated <span class="math inline">\(\alpha\)</span> for each,</p>
+<p><span class="math display">\[z =   w_0 + \sum_{i \in S} \alpha_i y_i \langle \mathbf{\phi}(\mathbf{x}_i), \mathbf{\phi}(\mathbf{x}_{t})  \rangle  \]</span> <span class="math display">\[\hat{y} = \text{sign}(z)\]</span></p>
+<aside class="notes">
+<p>Note: the output of <span class="math inline">\(\mathbf{\phi}(\mathbf{x})\)</span> is a vector that may or may not have the same dimensions as <span class="math inline">\(\mathbf{x}\)</span>.</p>
+</aside>
+</section>
+<section id="example-from-svm-hw-1" class="slide level3">
+<h3>Example (from SVM HW) (1)</h3>
+<p>Suppose we are given a dataset of feature-label pairs in <span class="math inline">\(\mathbb{R}^1\)</span>:</p>
+<p><span class="math display">\[(-1, -1), (0, -1), (1, -1), (-3, +1), (-2, +1), (3, +1)\]</span></p>
+<p>This data is not linearly separable.</p>
+<aside class="notes">
+<p>TODO: add illustration</p>
+</aside>
+</section>
+<section id="example-from-svm-hw-2" class="slide level3">
+<h3>Example (from SVM HW) (2)</h3>
+<p>Now suppose we map from <span class="math inline">\(\mathbb{R}^1\)</span> to <span class="math inline">\(\mathbb{R}^2\)</span> using <span class="math inline">\(\mathbf{\phi}(x)=(x,x^2)\)</span>:</p>
+<p><span class="math display">\[((-1, 1) -1), ((0, 0), -1), ((1, 1), -1), \]</span> <span class="math display">\[((-3, 9) +1), ((-2, 4) +1), ((3, 9) +1)\]</span></p>
+<p>This data  linearly separable in <span class="math inline">\(\mathbb{R}^2\)</span>.</p>
+<aside class="notes">
+<p>TODO: add illustration</p>
+</aside>
+</section>
+<section id="example-from-svm-hw-3" class="slide level3">
+<h3>Example (from SVM HW) (3)</h3>
+<p>Suppose we compute <span class="math inline">\(\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle\)</span> directly:</p>
+<ul>
+<li>compute <span class="math inline">\(\mathbf{\phi}(x_i)\)</span></li>
+<li>compute <span class="math inline">\(\mathbf{\phi}(x_t)\)</span></li>
+<li>take inner product</li>
+</ul>
+<p>How many operations (exponentiation, multiplication, division, addition, subtraction) are needed?</p>
+<aside class="notes">
+<p>For each computation of <span class="math inline">\(\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle\)</span>, we need five operations:</p>
+<ul>
+<li>(one square) find <span class="math inline">\(\phi(x_i) = (x_i, x_i^2)\)</span></li>
+<li>(one square) find <span class="math inline">\(\phi(x_t) = (x_t, x_t^2)\)</span></li>
+<li>(two multiplications, one sum) find <span class="math inline">\(\langle \phi(x_i), \phi(x_t) \rangle = x_i x_t + x_i^2 x_t^2)\)</span></li>
+</ul>
+</aside>
+</section>
+<section id="example-from-svm-hw-4" class="slide level3">
+<h3>Example (from SVM HW) (4)</h3>
+<p>What if we express <span class="math inline">\(\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle\)</span> as</p>
+<p><span class="math display">\[K(x_i, x_t) = x_i x_t (1+ x_i x_t)\]</span></p>
+<p>How many operations (exponentiation, multiplication, division, addition, subtraction) are needed to compute this equivalent expression?</p>
+<aside class="notes">
+<p>Each computation of <span class="math inline">\(K(x_i, x_t)\)</span> requires three operations:</p>
+<ul>
+<li>(one multiplication) compute <span class="math inline">\(x_i x_t\)</span>)</li>
+<li>(one sum) compute <span class="math inline">\(1+x_i x_t\)</span></li>
+<li>(one multiplication) compute <span class="math inline">\(x_i x_t (1+x_i x_t)\)</span></li>
+</ul>
+</aside>
+</section>
+<section id="kernel-trick" class="slide level3">
+<h3>Kernel trick</h3>
+<ul>
+<li><p>Suppose kernel <span class="math inline">\(K(\mathbf{x}_i, \mathbf{x}_t)\)</span> computes inner product in transformed feature space <span class="math inline">\(\langle \mathbf{\phi}(\mathbf{x}_i), \mathbf{\phi}(\mathbf{x}_{t}) \rangle\)</span></p></li>
+<li><p>For the SVM:</p></li>
+</ul>
+<p><span class="math display">\[z =   w_0 + \sum_{i \in S} \alpha_i y_i K(\mathbf{x}_i, \mathbf{x}_t) \]</span></p>
+<ul>
+<li>We don’t need to explicitly compute <span class="math inline">\(\mathbf{\phi}(\mathbf{x})\)</span> if computing <span class="math inline">\(K(\mathbf{x}_i, \mathbf{x}_t)\)</span> is more efficient</li>
+</ul>
+<aside class="notes">
+<p>Note that the expression we use to find the <span class="math inline">\(\alpha_i\)</span> values also only depends on the inner product, so the kernel works there as well.</p>
+</aside>
+<!--
+
+### Kernel trick example 
+
+Kernel can be inexpensive to compute, even if basis function itself is expensive. For example, consider:
+
+$$\mathbf{x} =
+\begin{bmatrix}
+x_1 \\
+x_2
+\end{bmatrix}, 
+\phi(\mathbf{x}) = 
+\begin{bmatrix}
+x_1^2 \\
+x_2^2 \\
+\sqrt{2}x_1 x_2
+\end{bmatrix}
+$$
+
+### Kernel trick example - direct computation
+
+Direct computation of $\phi(\mathbf{x}_n) \phi(\mathbf{x}_m)$: square or multiply 3 components of two vectors (6 operations), then compute inner product in $\mathbb{R}^3$ (3 multiplications, 1 sum). 
+
+\begin{align*}
+\phi(\mathbf{x}_n)^{\top} \phi(\mathbf{x}_m)
+&= \begin{bmatrix} x_{n,1}^2 & x_{n,2}^2 & \sqrt{2} x_{n,1} x_{n,2} \end{bmatrix} \cdot \begin{bmatrix} x_{m,1}^2 \\ x_{m,2}^2 \\ \sqrt{2} x_{m,1} x_{m,2} \end{bmatrix}
+\\
+&= x_{n,1}^2 x_{m,1}^2 +  x_{n,2}^2 x_{m,2}^2 + 2 x_{n,1} x_{n,2} x_{m,1} x_{m,2}.
+\end{align*}
+
+### Kernel trick example - computation using kernel
+
+Using kernel $K(x_n, x_m) = (x_n^T x_m)^2$: compute inner product in $\mathbb{R}^2$ (2 multiplications, 1 sum) and then square of scalar (1 square).
+
+\begin{align*}
+(\mathbf{x}_m^{\top} \mathbf{x}_m)^2
+&= \Big( \begin{bmatrix} x_{n,1} & x_{n,2} \end{bmatrix} \cdot \begin{bmatrix} x_{m,1} \\ x_{m,2} \end{bmatrix} \Big)^2
+\\
+&= (x_{n,1} x_{m,1} + x_{n,2} x_{m,2})^2
+\\
+&= (x_{n,1} x_{m,1})^2 + (x_{n,2} x_{m,2})^2 + 2(x_{n,1} x_{m,1})(x_{n,2} x_{m,2})
+\\
+&= \phi(\mathbf{x}_n)^{\top} \phi(\mathbf{x}_m).
+\end{align*}
+
+-->
+</section>
+<section id="kernel-as-a-similarity-measure" class="slide level3">
+<h3>Kernel as a similarity measure</h3>
+<ul>
+<li><span class="math inline">\(K(\mathbf{x}_i, \mathbf{x}_t)\)</span> measures “similarity” between training sample <span class="math inline">\(\mathbf{x}_i\)</span> and new sample <span class="math inline">\(\mathbf{x}_t\)</span></li>
+<li>Large <span class="math inline">\(K\)</span>, more similarity; <span class="math inline">\(K\)</span> close to zero, not much similarity</li>
+<li><span class="math inline">\(z = w_0 + \sum_{i=1}^N \alpha_i y_i K(\mathbf{x}_i, \mathbf{x}_t)\)</span> gives more weight to support vectors that are similar to new sample - those support vectors’ labels “count” more toward the label of the new sample.</li>
+</ul>
+</section>
+<section id="linear-kernel" class="slide level3">
+<h3>Linear kernel</h3>
+<figure>
+<img data-src="../images/kernel-linear.png" style="width:40.0%" alt="Linear kernel: K(x_i, x_t) = x_i^T x_t" /><figcaption aria-hidden="true">Linear kernel: <span class="math inline">\(K(x_i, x_t) = x_i^T x_t\)</span></figcaption>
+</figure>
+</section>
+<section id="polynomial-kernel" class="slide level3">
+<h3>Polynomial kernel</h3>
+<figure>
+<img data-src="../images/kernel-poly.png" style="width:40.0%" alt="Polynomial kernel: K(x_i, x_t) = (\gamma x_i^T x_t + c_0)^d" /><figcaption aria-hidden="true">Polynomial kernel: <span class="math inline">\(K(x_i, x_t) = (\gamma x_i^T x_t + c_0)^d\)</span></figcaption>
+</figure>
+</section></section>
+<section>
+<section id="using-infinite-dimension-feature-space" class="title-slide slide level2">
+<h2>Using infinite-dimension feature space</h2>
+
+</section>
+<section id="radial-basis-function-kernel" class="slide level3">
+<h3>Radial basis function kernel</h3>
+<figure>
+<img data-src="../images/kernel-rbf.png" style="width:40.0%" alt="Radial basis function: K(x_i,x_t) = \text{exp}(-\gamma || x_i-x_t ||^2). If \gamma = \frac{1}{\sigma^{2}}, this is known as the Gaussian kernel with variance \sigma^2." /><figcaption aria-hidden="true">Radial basis function: <span class="math inline">\(K(x_i,x_t) = \text{exp}(-\gamma || x_i-x_t ||^2)\)</span>. If <span class="math inline">\(\gamma = \frac{1}{\sigma^{2}}\)</span>, this is known as the Gaussian kernel with variance <span class="math inline">\(\sigma^2\)</span>.</figcaption>
+</figure>
+</section>
+<section id="infinite-dimensional-feature-space" class="slide level3">
+<h3>Infinite-dimensional feature space</h3>
+<p>With kernel method, can operate in infinite-dimensional feature space! Take for example the RBF kernel:</p>
+<p><span class="math display">\[K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t) = \exp\Big(-\gamma\lVert\mathbf{x}_i-\mathbf{x}_t\rVert^2\Big)\]</span></p>
+<p>Let <span class="math inline">\(\gamma=\frac{1}{2}\)</span> and let <span class="math inline">\(K_{\texttt{poly}(r)}\)</span> be the polynimal kernel of degree <span class="math inline">\(r\)</span>. Then</p>
+</section>
+<section id="infinite-dimensional-feature-space-extra-steps-not-shown-in-class" class="slide level3">
+<h3>Infinite-dimensional feature space (extra steps not shown in class)</h3>
+<p><span class="math display">\[\begin{align*}
+K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
+&amp;= \exp\Big(-\frac{1}{2} \lVert\mathbf{x}_i-\mathbf{x}_t\rVert^2\Big)
+\\
+&amp;= \exp\Big(-\frac{1}{2} \langle \mathbf{x}_i-\mathbf{x}_t, \mathbf{x}_i-\mathbf{x}_t \rangle \Big)
+\\
+&amp;\stackrel{\star}{=} \exp\Big(-\frac{1}{2}( \langle \mathbf{x}_i, \mathbf{x}_i-\mathbf{x}_t \rangle - \langle \mathbf{x}_t, \mathbf{x}_i-\mathbf{x}_t \rangle ) \Big)
+\\
+&amp;\stackrel{\star}{=} \exp\Big(-\frac{1}{2} (\langle \mathbf{x}_i, \mathbf{x}_i \rangle - \langle \mathbf{x}_i, \mathbf{x}_t \rangle - \big[ \langle \mathbf{x}_t, \mathbf{x}_i \rangle - \langle \mathbf{x}_t, \mathbf{x}_t \rangle \big] \rangle )\Big)
+\\
+&amp;= \exp\Big(-\frac{1}{2} (\langle \mathbf{x}_i, \mathbf{x}_i \rangle + \langle \mathbf{x}_t, \mathbf{x}_t \rangle - 2 \langle \mathbf{x}_i, \mathbf{x}_t \rangle ) \Big)
+\\
+&amp;= \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big) \exp\Big( \langle \mathbf{x}_i, \mathbf{x}_t \rangle \Big)
+\end{align*}\]</span></p>
+<p>where the steps marked with a star use the fact that for inner products, <span class="math inline">\(\langle \mathbf{u} + \mathbf{v}, \mathbf{w} \rangle = \langle \mathbf{u}, \mathbf{w} \rangle + \langle \mathbf{v}, \mathbf{w} \rangle\)</span>.</p>
+<p>Also recall that <span class="math inline">\(\langle x, x \rangle = \rVert x \lVert ^2\)</span>.</p>
+</section>
+<section id="infinite-dimensional-feature-space-2" class="slide level3">
+<h3>Infinite-dimensional feature space (2)</h3>
+<p>Let <span class="math inline">\(C\)</span> be a constant</p>
+<p><span class="math display">\[C \equiv \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big)\]</span></p>
+<p>And note that the Taylor expansion of <span class="math inline">\(e^{f(x)}\)</span> is:</p>
+<p><span class="math display">\[e^{f(x)} = \sum_{r=0}^{\infty} \frac{[f(x)]^r}{r!}\]</span></p>
+<p>Finally, the RBF kernel can be viewed as an infinite sum over polynomial kernels:</p>
+<p><span class="math display">\[\begin{align*}
+K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
+&amp;= C e^{ \langle \mathbf{x}_i, \mathbf{x}_t \rangle}
+\\
+&amp;= C \sum_{r=0}^{\infty} \frac{ \langle \mathbf{x}_i, \mathbf{x}_t \rangle^r}{r!}
+\\
+&amp;= C \sum_{r}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i, \mathbf{x}_t)}{r!}
+\end{align*}\]</span></p>
+<aside class="notes">
+<p>TODO: fix this - doesn’t multiply the factor correctly.</p>
+<!-- http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf -->
+</aside>
+</section></section>
+<section>
+<section id="summary-svm" class="title-slide slide level2">
+<h2>Summary: SVM</h2>
+
+</section>
+<section id="key-expression" class="slide level3">
+<h3>Key expression</h3>
+<p>Decision boundary can be computed using an inexpensive kernel function on a small number of support vectors:</p>
+<p><span class="math display">\[z = w_0 + \sum_{i \in S} \alpha_i y_i 
+K(\mathbf{x}_i, \mathbf{x}_t)\]</span></p>
+<p>(<span class="math inline">\(i\in S\)</span> are the subset of training samples that are support vectors)</p>
+</section>
+<section id="key-ideas" class="slide level3">
+<h3>Key ideas</h3>
+<ul>
+<li>Boundary with max separation between classes</li>
+<li>Tuning hyperparameters controls complexity
+<ul>
+<li><span class="math inline">\(C\)</span> for width of margin/number of support vectors</li>
+<li>also kernel-specific hyperparameters</li>
+</ul></li>
+<li>Kernel trick allows efficient extension to higher-dimension space: non-linear decision boundary through transformation of features, but without explicitly computing high-dimensional features.</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js-master/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>

@@ -11,6 +11,8 @@ SOURCES += 5-knn.md
 SOURCES += 5-tree.md
 SOURCES += 5-ensemble.md
 SOURCES += 6-svm.md
+SOURCES += 6-svm-kernel.md
+SOURCES += 7-neural.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
