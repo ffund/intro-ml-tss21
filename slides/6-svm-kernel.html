@@ -63,18 +63,12 @@
 <p>Suppose we are given a dataset of feature-label pairs in <span class="math inline">\(\mathbb{R}^1\)</span>:</p>
 <p><span class="math display">\[(-1, -1), (0, -1), (1, -1), (-3, +1), (-2, +1), (3, +1)\]</span></p>
 <p>This data is not linearly separable.</p>
-<aside class="notes">
-<p>TODO: add illustration</p>
-</aside>
 </section>
 <section id="example-from-svm-hw-2" class="slide level3">
 <h3>Example (from SVM HW) (2)</h3>
 <p>Now suppose we map from <span class="math inline">\(\mathbb{R}^1\)</span> to <span class="math inline">\(\mathbb{R}^2\)</span> using <span class="math inline">\(\mathbf{\phi}(x)=(x,x^2)\)</span>:</p>
 <p><span class="math display">\[((-1, 1) -1), ((0, 0), -1), ((1, 1), -1), \]</span> <span class="math display">\[((-3, 9) +1), ((-2, 4) +1), ((3, 9) +1)\]</span></p>
-<p>This data  linearly separable in <span class="math inline">\(\mathbb{R}^2\)</span>.</p>
-<aside class="notes">
-<p>TODO: add illustration</p>
-</aside>
+<p>This data <em>is</em> linearly separable in <span class="math inline">\(\mathbb{R}^2\)</span>.</p>
 </section>
 <section id="example-from-svm-hw-3" class="slide level3">
 <h3>Example (from SVM HW) (3)</h3>
@@ -203,7 +197,7 @@ Using kernel $K(x_n, x_m) = (x_n^T x_m)^2$: compute inner product in $\mathbb{R}
 <h3>Infinite-dimensional feature space</h3>
 <p>With kernel method, can operate in infinite-dimensional feature space! Take for example the RBF kernel:</p>
 <p><span class="math display">\[K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t) = \exp\Big(-\gamma\lVert\mathbf{x}_i-\mathbf{x}_t\rVert^2\Big)\]</span></p>
-<p>Let <span class="math inline">\(\gamma=\frac{1}{2}\)</span> and let <span class="math inline">\(K_{\texttt{poly}(r)}\)</span> be the polynimal kernel of degree <span class="math inline">\(r\)</span>. Then</p>
+<p>Let <span class="math inline">\(\gamma=\frac{1}{2}\)</span> and let <span class="math inline">\(K_{\texttt{poly}(r)}\)</span> be the polynomial kernel of degree <span class="math inline">\(r\)</span>. Then</p>
 </section>
 <section id="infinite-dimensional-feature-space-extra-steps-not-shown-in-class" class="slide level3">
 <h3>Infinite-dimensional feature space (extra steps not shown in class)</h3>
@@ -226,10 +220,16 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 </section>
 <section id="infinite-dimensional-feature-space-2" class="slide level3">
 <h3>Infinite-dimensional feature space (2)</h3>
-<p>Let <span class="math inline">\(C\)</span> be a constant</p>
-<p><span class="math display">\[C \equiv \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big)\]</span></p>
+<p>Eventually, <span class="math inline">\(K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t) = e^{-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 } e^{-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 } e^{\langle \mathbf{x}_i, \mathbf{x}_t \rangle }\)</span></p>
+<p>Let <span class="math inline">\(C \equiv \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big)\)</span></p>
 <p>And note that the Taylor expansion of <span class="math inline">\(e^{f(x)}\)</span> is:</p>
 <p><span class="math display">\[e^{f(x)} = \sum_{r=0}^{\infty} \frac{[f(x)]^r}{r!}\]</span></p>
+<aside class="notes">
+<p><span class="math inline">\(C\)</span> is a constant - it can be computed in advance for every <span class="math inline">\(x\)</span> individually.</p>
+</aside>
+</section>
+<section id="infinite-dimensional-feature-space-3" class="slide level3">
+<h3>Infinite-dimensional feature space (3)</h3>
 <p>Finally, the RBF kernel can be viewed as an infinite sum over polynomial kernels:</p>
 <p><span class="math display">\[\begin{align*}
 K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
@@ -239,10 +239,7 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 \\
 &amp;= C \sum_{r}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i, \mathbf{x}_t)}{r!}
 \end{align*}\]</span></p>
-<aside class="notes">
-<p>TODO: fix this - doesn’t multiply the factor correctly.</p>
 <!-- http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf -->
-</aside>
 </section></section>
 <section>
 <section id="summary-svm" class="title-slide slide level2">

@@ -51,11 +51,6 @@ $$(-1, -1), (0, -1), (1, -1), (-3, +1), (-2, +1), (3, +1)$$
 
 This data is not linearly separable.
 
-::: notes
-
-TODO: add illustration
-
-:::
 
 ### Example (from SVM HW) (2)
 
@@ -64,13 +59,8 @@ Now suppose we map from $\mathbb{R}^1$ to $\mathbb{R}^2$ using $\mathbf{\phi}(x)
 $$((-1, 1) -1), ((0, 0), -1), ((1, 1), -1), $$
 $$((-3, 9) +1), ((-2, 4) +1), ((3, 9) +1)$$
 
-This data \emph{is} linearly separable in $\mathbb{R}^2$.
+This data *is* linearly separable in $\mathbb{R}^2$.
 
-::: notes
-
-TODO: add illustration
-
-:::
 
 ### Example (from SVM HW) (3)
 
@@ -206,7 +196,8 @@ With kernel method, can operate in infinite-dimensional feature space! Take for 
 $$K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t) = \exp\Big(-\gamma\lVert\mathbf{x}_i-\mathbf{x}_t\rVert^2\Big)$$
 
 
-Let $\gamma=\frac{1}{2}$ and let $K_{\texttt{poly}(r)}$ be the polynimal kernel of degree $r$. Then
+Let $\gamma=\frac{1}{2}$ and let $K_{\texttt{poly}(r)}$ be the polynomial kernel of degree $r$. Then
+
 
 ### Infinite-dimensional feature space (extra steps not shown in class)
 
@@ -236,15 +227,23 @@ Also recall that $\langle x, x \rangle = \rVert x \lVert ^2$.
 
 ### Infinite-dimensional feature space (2)
 
-Let $C$ be a constant
-
-$$C \equiv \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big)$$
+Eventually, $K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t) = e^{-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 } e^{-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 } e^{\langle \mathbf{x}_i, \mathbf{x}_t \rangle }$
 
 
-And note that the Taylor expansion of $e^{f(x)}$ is:
+Let $C \equiv \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big)$
+
+
+And note that the Taylor expansion of $e^{f(x)}$ is: 
 
 $$e^{f(x)} = \sum_{r=0}^{\infty} \frac{[f(x)]^r}{r!}$$
 
+::: notes
+
+$C$ is a constant - it can be computed in advance for every $x$ individually.
+
+:::
+
+### Infinite-dimensional feature space (3)
 
 Finally, the RBF kernel can be viewed as an infinite sum over polynomial kernels:
 
@@ -257,13 +256,8 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 &= C \sum_{r}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i, \mathbf{x}_t)}{r!}
 \end{align*} 
 
-::: notes
-
-TODO: fix this - doesn't multiply the factor correctly.
-
 <!-- http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf -->
 
-:::
 
 ## Summary: SVM
 
