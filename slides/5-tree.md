@@ -391,7 +391,7 @@ $$\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}$$
 
 Equivalent to: Minimize
 
-$$ \sum_{m=1}^{|T|} \sum_{x_i}^{R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|$$
+$$ \sum_{m=1}^{|T|} \sum_{x_i \in R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|$$
 
 Choose $\alpha$ by CV, 1-SE rule ($\uparrow \alpha, \downarrow |T|$).
 

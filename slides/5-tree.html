@@ -398,7 +398,7 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 <section id="cost-complexity-pruning" class="slide level3">
 <h3>Cost complexity pruning</h3>
 <p>Equivalent to: Minimize</p>
-<p><span class="math display">\[ \sum_{m=1}^{|T|} \sum_{x_i}^{R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|\]</span></p>
+<p><span class="math display">\[ \sum_{m=1}^{|T|} \sum_{x_i \in R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|\]</span></p>
 <p>Choose <span class="math inline">\(\alpha\)</span> by CV, 1-SE rule (<span class="math inline">\(\uparrow \alpha, \downarrow |T|\)</span>).</p>
 </section></section>
 <section>
