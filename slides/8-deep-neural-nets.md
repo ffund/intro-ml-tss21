@@ -227,13 +227,13 @@ Xavier scales variance by $\frac{1}{N_{in}}$, He by $\frac{2}{N_{in}}$ where $N_
 
 ### Desirable properties - illustration (1)
 
-![Activation function outputs with normal initialization of weights. Image source: Justin Johnson.](../images/8-init-collapse.png){ width=60% }
+![Activation function outputs with normal initialization of weights. Image source: Justin Johnson.](../images/8-init-collapse.png){ width=70% }
 
 
 
 ### Desirable properties - illustration (2)
 
-![Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson.](../images/8-init-xavier.png){ width=60% }
+![Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson.](../images/8-init-xavier.png){ width=70% }
 
 
 \newpage
