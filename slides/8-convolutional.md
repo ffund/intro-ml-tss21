@@ -8,18 +8,23 @@ author: 'Fraida Fund'
 
 ## Motivation
 
+::: notes
+
 People are good at recognizing objects in images.
 
 Computers are bad at it! Why?
 
+
+:::
+
 ### Scene conditions
 
-![Difficult scene conditions:  background clutter, occlusion...](images/scene-conditions.png){ width=60% }
+![Difficult scene conditions:  background clutter, occlusion...](../images/scene-conditions.png){ width=50% }
 
 
 ### Similarity and variability
 
-![Must identify inter-class similarity, while accommodating intra-class variability.](images/chairs.png){ width=60% }
+![Must identify inter-class similarity, while accommodating intra-class variability.](../images/chairs.png){ width=50% }
 
 ### Dimension
 
@@ -28,9 +33,11 @@ Computers are bad at it! Why?
 
 For example, CIFAR-10: tiny images of size 32x32x3. One *fully-connected* neuron in a first hidden layer of a regular NN would have 3072 weights!
 
+\newpage
+
 ### Object can be anywhere within image
 
-![MNIST sample. Find the "3" in the form?](images/mnist-sample.jpg){width=60%}
+![MNIST sample. Find the "3" in the form?](../images/mnist-sample.jpg){width=70%}
 
 
 \newpage
@@ -46,19 +53,18 @@ For example, CIFAR-10: tiny images of size 32x32x3. One *fully-connected* neuron
 ### Locally connected neurons: illustration
 
 
-![Example: 200x200 image. Fully connected network with 400,000 hidden units, 16 billion parameters. Locally connected network with 400,000 hidden units in 10x10 fields, 40 million parameters.](images/local-einstein.png){ width=60%}
-
-\newpage
+![Example: 200x200 image. Fully connected network with 400,000 hidden units, 16 billion parameters. Locally connected network with 400,000 hidden units in 10x10 fields, 40 million parameters.](../images/local-einstein.png){ width=60%}
 
 ### Spatial arrangement: conventional networks
 
 
-![Conventional neural network: neurons don't have spatial arrangement.](images/neural_net2.jpeg){ width=50% }
+![Conventional neural network: neurons don't have spatial arrangement.](../images/neural_net2.jpeg){ width=50% }
 
 ### Spatial arrangement: convolutional networks
 
-![CNN: input and output of each layer is a *tensor*, a multidimensional array with width, height, and depth.](images/cnn.jpeg){ width=50% }
+![CNN: input and output of each layer is a *tensor*, a multidimensional array with width, height, and depth. Preserves spatial relationships.](../images/cnn.jpeg){ width=50% }
 
+\newpage
 
 ## Layers in CNN
 
@@ -70,7 +76,7 @@ For example, CIFAR-10: tiny images of size 32x32x3. One *fully-connected* neuron
 * Pooling Layer
 * Fully-Connected Layer
 
-Each layer accepts an input 3D volume and transforms it to an output 3D volume through a differentiable function.
+Each layer accepts an input 3D volume, transforms it to an output 3D volume.
 
 
 ### Convolutional layer
@@ -82,9 +88,9 @@ Each layer accepts an input 3D volume and transforms it to an output 3D volume t
 
 ### Convolution example
 
-![Animated demo at [https://cs231n.github.io/assets/conv-demo/index.html](https://cs231n.github.io/assets/conv-demo/index.html)](images/convolution-example.png){ width=60%}
+![Animated demo at [https://cs231n.github.io/assets/conv-demo/index.html](https://cs231n.github.io/assets/conv-demo/index.html)](../images/convolution-example.png){ width=60%}
 
-### Feature localization via convolution
+### Feature localization via "convolution"
 
  
 * Given large image $X$ with dimensions $N_1 \times N_2$,
@@ -98,7 +104,7 @@ which is large if "matching" feature is present.
 
 ### Feature localization via convolution (illustration)
 
-![Finding features with convolution.](images/convolution-as-localization.png){width=60%}
+![Finding features with convolution.](../images/convolution-as-localization.png){width=60%}
 
 
 ### Local connectivity
@@ -107,7 +113,7 @@ which is large if "matching" feature is present.
 
 * Example: For CIFAR-10 (32x32x3), a 5x5 filter will have weights to a (5x5x3) region in input volume.
 
-* Parameter dimensions: 75 weights and 1 bias.
+* Parameter dimensions: 75 weights and 1 bias. (much smaller!)
 
 ### Size of output volume
 
@@ -123,14 +129,14 @@ Size of output volume is determined by
 
 Output depth is a hyperparameter: corresponds to number of filters that should "look" at the same region of input at a time.
 
-![Output depth is 5.](images/depthcol.jpeg){width=20%}
+![Example: this output depth is 5.](../images/depthcol.jpeg){width=20%}
 
 
 ### Size of output volume: stride
 
 How many pixels do we slide the filter each time? This is called the *stride*.
 
-![In this example there is one spatial dimension (x-axis), one neuron with F = 3, W = 5, and P = 1. Left: S=1. Right: S=2. ](images/stride.jpeg){ width=50%}
+![In this example there is one spatial dimension (x-axis), one neuron with F = 3, W = 5, and P = 1. Left: S=1. Right: S=2. ](../images/stride.jpeg){ width=50%}
 
 ### Size of output volume: zero-padding
 
@@ -141,12 +147,23 @@ Use zero padding on border-
 
 To have output width and height the same as input, use $P=\frac{F-1}{2}$.
 
-### Total size of output volume
+### Summary of convolutional layer
 
-When $W$ is input volume size, $F$ is filter size, $S$ is stride, $P$ is the amount of zero padding on the border, the size of the output volume is:
+* Accepts input volume $W_1 \times H_1 \times D_1$
+* Four hyperparameters: number of filters $K$, filter size $F$, stride $S$, amount of zero padding $P$
+* Produces volume of size 
 
-$$\frac{W - F + 2P}{S}+1$$
+$$W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 $$
+$$D_2 = K $$
 
+* With parameter sharing: $F \cdot F \cdot D_1$ weights per filter, for $F \cdot F \cdot D_1 \cdot K$ weights and $K$ biases
+
+::: notes
+
+* Common setting: $F=3, S=1, P=1$.
+
+
+:::
 
 ### Parameter sharing
 
@@ -156,27 +173,23 @@ Basic insight:
 * If it is useful to look for a feature at position $x,y$, it is probably useful to look for the same feature at $x',y'$
 * "Depth slice" = all the shifted versions of a filter. All neurons within a depth slice can share the same weights.
 
+::: notes
+
 Greatly reduces number of parameters.
+
+
+:::
+
+\newpage
 
 ### Example: AlexNet filters
 
-![Each of the 96 filters shown here is of size 11x11x3, and each one is shared by the 55x55 neurons in one depth slice. ](images/weights.jpeg){ width=60% }
+![Each of the 96 filters shown here is of size 11x11x3, and each one is shared by the 55x55 neurons in one depth slice. ](../images/weights.jpeg){ width=40% }
 
-### Summary of convolutional layer
-
-* Accepts input volume $W_1 \times H_1 \times D_1$
-* Four hyperparameters: number of filters $K$, filter size $F$, stride $S$, amount of zero padding $P$
-* Produces volume of size 
-
-$$W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 , D_2 = K $$
-
-* With parameter sharing: $F \cdot F \cdot D_1$ weights per filter, for $F \cdot F \cdot D_1 \cdot K$ weights and $K$ biases
-* Common setting: $F=3, S=1, P=1$.
 
 ### ReLU activation
 
 * Convolutional typically followed by ReLU activation function
-* Addresses vanishing gradient problem
 
 ### Pooling layer
 
@@ -188,13 +201,14 @@ $$W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 , D_2 = K
 
 ### Pooling: illustration
 
-![Input volume of size 224x224x64 is pooled with filter size 2, stride 2 into output volume of size 112x112x64 (with same depth).](images/pool.jpeg){ width=50% }
+![Input volume of size 224x224x64 is pooled with filter size 2, stride 2 into output volume of size 112x112x64 (with same depth).](../images/pool.jpeg){ width=30% }
 
 ### Pooling: illustration of max operation
 
-![Each max is taken over a 2x2 square.](images/maxpool.jpeg){ width=50% }
+![Each max is taken over a 2x2 square.](../images/maxpool.jpeg){ width=30% }
 
 
+\newpage
 
 ### Summary of pooling layer
 
@@ -223,8 +237,18 @@ $$Z[i,k] = \sum_j W[j,k]U[i,j] + b[k], \quad k=0,\ldots,N_O$$
 
 ### Example
 
-![Example of a convolutional network architecture. [Live demo link.](http://cs231n.stanford.edu/)](images/convnet.jpeg)
+![Example of a convolutional network architecture. [Live demo link.](http://cs231n.stanford.edu/)](../images/convnet.jpeg){width=80%}
 
+
+
+### Reference
+
+Source of most images here, and excellent set of notes on convolutional neural networks:
+
+[https://cs231n.github.io/convolutional-networks/](https://cs231n.github.io/convolutional-networks/)
+
+
+\newpage
 
 ## Transfer learning
 
@@ -243,13 +267,23 @@ Use pre-trained network for a different task
 * Use early layers from pre-trained network, freeze their parameters
 * Only train small number of parameters at the end
 
-### Transfer learning illustration
+### Transfer learning illustration (1)
 
-![Transfer learning](images/transfer.png){ width=40% }
+![When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head.](../images/8-transfer-similar.png){ width=60% }
+
+### Transfer learning illustration (2)
+
+![If the original network is not as relevant, may fine-tune more layers.](../images/8-transfer-less.png){ width=60% }
 
 
-### Reference
 
-Source of most images here, and excellent notes on convolutional neural networks:
 
-[https://cs231n.github.io/convolutional-networks/](https://cs231n.github.io/convolutional-networks/)
+
+<!--
+
+More stuff:
+
+https://colab.research.google.com/gist/artificialsoph/b71c1c25b5ea86cb7ad3ab38afcbfb55/conv-data-generator.ipynb
+https://soph.info/slash-data
+
+-->

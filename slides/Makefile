@@ -13,6 +13,8 @@ SOURCES += 5-ensemble.md
 SOURCES += 6-svm.md
 SOURCES += 6-svm-kernel.md
 SOURCES += 7-neural.md
+SOURCES += 8-deep-neural-nets.md
+SOURCES += 8-convolutional.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files

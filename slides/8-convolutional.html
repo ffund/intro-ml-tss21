@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -18,7 +18,7 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
 <body>
   <div class="reveal">
@@ -32,19 +32,21 @@
 <section>
 <section id="motivation" class="title-slide slide level2">
 <h2>Motivation</h2>
+<aside class="notes">
 <p>People are good at recognizing objects in images.</p>
 <p>Computers are bad at it! Why?</p>
+</aside>
 </section>
 <section id="scene-conditions" class="slide level3">
 <h3>Scene conditions</h3>
 <figure>
-<img data-src="images/scene-conditions.png" style="width:60.0%" alt="Difficult scene conditions: background clutter, occlusion…" /><figcaption aria-hidden="true">Difficult scene conditions: background clutter, occlusion…</figcaption>
+<img data-src="../images/scene-conditions.png" style="width:50.0%" alt="Difficult scene conditions: background clutter, occlusion…" /><figcaption aria-hidden="true">Difficult scene conditions: background clutter, occlusion…</figcaption>
 </figure>
 </section>
 <section id="similarity-and-variability" class="slide level3">
 <h3>Similarity and variability</h3>
 <figure>
-<img data-src="images/chairs.png" style="width:60.0%" alt="Must identify inter-class similarity, while accommodating intra-class variability." /><figcaption aria-hidden="true">Must identify inter-class similarity, while accommodating intra-class variability.</figcaption>
+<img data-src="../images/chairs.png" style="width:50.0%" alt="Must identify inter-class similarity, while accommodating intra-class variability." /><figcaption aria-hidden="true">Must identify inter-class similarity, while accommodating intra-class variability.</figcaption>
 </figure>
 </section>
 <section id="dimension" class="slide level3">
@@ -58,7 +60,7 @@
 <section id="object-can-be-anywhere-within-image" class="slide level3">
 <h3>Object can be anywhere within image</h3>
 <figure>
-<img data-src="images/mnist-sample.jpg" style="width:60.0%" alt="MNIST sample. Find the “3” in the form?" /><figcaption aria-hidden="true">MNIST sample. Find the “3” in the form?</figcaption>
+<img data-src="../images/mnist-sample.jpg" style="width:70.0%" alt="MNIST sample. Find the “3” in the form?" /><figcaption aria-hidden="true">MNIST sample. Find the “3” in the form?</figcaption>
 </figure>
 </section></section>
 <section>
@@ -76,19 +78,19 @@
 <section id="locally-connected-neurons-illustration" class="slide level3">
 <h3>Locally connected neurons: illustration</h3>
 <figure>
-<img data-src="images/local-einstein.png" style="width:60.0%" alt="Example: 200x200 image. Fully connected network with 400,000 hidden units, 16 billion parameters. Locally connected network with 400,000 hidden units in 10x10 fields, 40 million parameters." /><figcaption aria-hidden="true">Example: 200x200 image. Fully connected network with 400,000 hidden units, 16 billion parameters. Locally connected network with 400,000 hidden units in 10x10 fields, 40 million parameters.</figcaption>
+<img data-src="../images/local-einstein.png" style="width:60.0%" alt="Example: 200x200 image. Fully connected network with 400,000 hidden units, 16 billion parameters. Locally connected network with 400,000 hidden units in 10x10 fields, 40 million parameters." /><figcaption aria-hidden="true">Example: 200x200 image. Fully connected network with 400,000 hidden units, 16 billion parameters. Locally connected network with 400,000 hidden units in 10x10 fields, 40 million parameters.</figcaption>
 </figure>
 </section>
 <section id="spatial-arrangement-conventional-networks" class="slide level3">
 <h3>Spatial arrangement: conventional networks</h3>
 <figure>
-<img data-src="images/neural_net2.jpeg" style="width:50.0%" alt="Conventional neural network: neurons don’t have spatial arrangement." /><figcaption aria-hidden="true">Conventional neural network: neurons don’t have spatial arrangement.</figcaption>
+<img data-src="../images/neural_net2.jpeg" style="width:50.0%" alt="Conventional neural network: neurons don’t have spatial arrangement." /><figcaption aria-hidden="true">Conventional neural network: neurons don’t have spatial arrangement.</figcaption>
 </figure>
 </section>
 <section id="spatial-arrangement-convolutional-networks" class="slide level3">
 <h3>Spatial arrangement: convolutional networks</h3>
 <figure>
-<img data-src="images/cnn.jpeg" style="width:50.0%" alt="CNN: input and output of each layer is a tensor, a multidimensional array with width, height, and depth." /><figcaption aria-hidden="true">CNN: input and output of each layer is a <em>tensor</em>, a multidimensional array with width, height, and depth.</figcaption>
+<img data-src="../images/cnn.jpeg" style="width:50.0%" alt="CNN: input and output of each layer is a tensor, a multidimensional array with width, height, and depth. Preserves spatial relationships." /><figcaption aria-hidden="true">CNN: input and output of each layer is a <em>tensor</em>, a multidimensional array with width, height, and depth. Preserves spatial relationships.</figcaption>
 </figure>
 </section></section>
 <section>
@@ -103,7 +105,7 @@
 <li>Pooling Layer</li>
 <li>Fully-Connected Layer</li>
 </ul>
-<p>Each layer accepts an input 3D volume and transforms it to an output 3D volume through a differentiable function.</p>
+<p>Each layer accepts an input 3D volume, transforms it to an output 3D volume.</p>
 </section>
 <section id="convolutional-layer" class="slide level3">
 <h3>Convolutional layer</h3>
@@ -117,11 +119,11 @@
 <section id="convolution-example" class="slide level3">
 <h3>Convolution example</h3>
 <figure>
-<img data-src="images/convolution-example.png" style="width:60.0%" alt="Animated demo at https://cs231n.github.io/assets/conv-demo/index.html" /><figcaption aria-hidden="true">Animated demo at <a href="https://cs231n.github.io/assets/conv-demo/index.html">https://cs231n.github.io/assets/conv-demo/index.html</a></figcaption>
+<img data-src="../images/convolution-example.png" style="width:60.0%" alt="Animated demo at https://cs231n.github.io/assets/conv-demo/index.html" /><figcaption aria-hidden="true">Animated demo at <a href="https://cs231n.github.io/assets/conv-demo/index.html">https://cs231n.github.io/assets/conv-demo/index.html</a></figcaption>
 </figure>
 </section>
 <section id="feature-localization-via-convolution" class="slide level3">
-<h3>Feature localization via convolution</h3>
+<h3>Feature localization via “convolution”</h3>
 <ul>
 <li>Given large image <span class="math inline">\(X\)</span> with dimensions <span class="math inline">\(N_1 \times N_2\)</span>,</li>
 <li>small filter <span class="math inline">\(W\)</span> with dimensions <span class="math inline">\(K_1 \times K_2\)</span></li>
@@ -133,7 +135,7 @@
 <section id="feature-localization-via-convolution-illustration" class="slide level3">
 <h3>Feature localization via convolution (illustration)</h3>
 <figure>
-<img data-src="images/convolution-as-localization.png" style="width:60.0%" alt="Finding features with convolution." /><figcaption aria-hidden="true">Finding features with convolution.</figcaption>
+<img data-src="../images/convolution-as-localization.png" style="width:60.0%" alt="Finding features with convolution." /><figcaption aria-hidden="true">Finding features with convolution.</figcaption>
 </figure>
 </section>
 <section id="local-connectivity" class="slide level3">
@@ -141,7 +143,7 @@
 <ul>
 <li><p>Each filter is fully connected along depth axis, but only locally connected along width and height.</p></li>
 <li><p>Example: For CIFAR-10 (32x32x3), a 5x5 filter will have weights to a (5x5x3) region in input volume.</p></li>
-<li><p>Parameter dimensions: 75 weights and 1 bias.</p></li>
+<li><p>Parameter dimensions: 75 weights and 1 bias. (much smaller!)</p></li>
 </ul>
 </section>
 <section id="size-of-output-volume" class="slide level3">
@@ -159,14 +161,14 @@
 <h3>Size of output volume: depth</h3>
 <p>Output depth is a hyperparameter: corresponds to number of filters that should “look” at the same region of input at a time.</p>
 <figure>
-<img data-src="images/depthcol.jpeg" style="width:20.0%" alt="Output depth is 5." /><figcaption aria-hidden="true">Output depth is 5.</figcaption>
+<img data-src="../images/depthcol.jpeg" style="width:20.0%" alt="Example: this output depth is 5." /><figcaption aria-hidden="true">Example: this output depth is 5.</figcaption>
 </figure>
 </section>
 <section id="size-of-output-volume-stride" class="slide level3">
 <h3>Size of output volume: stride</h3>
 <p>How many pixels do we slide the filter each time? This is called the <em>stride</em>.</p>
 <figure>
-<img data-src="images/stride.jpeg" style="width:50.0%" alt="In this example there is one spatial dimension (x-axis), one neuron with F = 3, W = 5, and P = 1. Left: S=1. Right: S=2." /><figcaption aria-hidden="true">In this example there is one spatial dimension (x-axis), one neuron with F = 3, W = 5, and P = 1. Left: S=1. Right: S=2.</figcaption>
+<img data-src="../images/stride.jpeg" style="width:50.0%" alt="In this example there is one spatial dimension (x-axis), one neuron with F = 3, W = 5, and P = 1. Left: S=1. Right: S=2." /><figcaption aria-hidden="true">In this example there is one spatial dimension (x-axis), one neuron with F = 3, W = 5, and P = 1. Left: S=1. Right: S=2.</figcaption>
 </figure>
 </section>
 <section id="size-of-output-volume-zero-padding" class="slide level3">
@@ -178,10 +180,22 @@
 </ul>
 <p>To have output width and height the same as input, use <span class="math inline">\(P=\frac{F-1}{2}\)</span>.</p>
 </section>
-<section id="total-size-of-output-volume" class="slide level3">
-<h3>Total size of output volume</h3>
-<p>When <span class="math inline">\(W\)</span> is input volume size, <span class="math inline">\(F\)</span> is filter size, <span class="math inline">\(S\)</span> is stride, <span class="math inline">\(P\)</span> is the amount of zero padding on the border, the size of the output volume is:</p>
-<p><span class="math display">\[\frac{W - F + 2P}{S}+1\]</span></p>
+<section id="summary-of-convolutional-layer" class="slide level3">
+<h3>Summary of convolutional layer</h3>
+<ul>
+<li>Accepts input volume <span class="math inline">\(W_1 \times H_1 \times D_1\)</span></li>
+<li>Four hyperparameters: number of filters <span class="math inline">\(K\)</span>, filter size <span class="math inline">\(F\)</span>, stride <span class="math inline">\(S\)</span>, amount of zero padding <span class="math inline">\(P\)</span></li>
+<li>Produces volume of size</li>
+</ul>
+<p><span class="math display">\[W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 \]</span> <span class="math display">\[D_2 = K \]</span></p>
+<ul>
+<li>With parameter sharing: <span class="math inline">\(F \cdot F \cdot D_1\)</span> weights per filter, for <span class="math inline">\(F \cdot F \cdot D_1 \cdot K\)</span> weights and <span class="math inline">\(K\)</span> biases</li>
+</ul>
+<aside class="notes">
+<ul>
+<li>Common setting: <span class="math inline">\(F=3, S=1, P=1\)</span>.</li>
+</ul>
+</aside>
 </section>
 <section id="parameter-sharing" class="slide level3">
 <h3>Parameter sharing</h3>
@@ -191,32 +205,20 @@
 <li>If it is useful to look for a feature at position <span class="math inline">\(x,y\)</span>, it is probably useful to look for the same feature at <span class="math inline">\(x&#39;,y&#39;\)</span></li>
 <li>“Depth slice” = all the shifted versions of a filter. All neurons within a depth slice can share the same weights.</li>
 </ul>
+<aside class="notes">
 <p>Greatly reduces number of parameters.</p>
+</aside>
 </section>
 <section id="example-alexnet-filters" class="slide level3">
 <h3>Example: AlexNet filters</h3>
 <figure>
-<img data-src="images/weights.jpeg" style="width:60.0%" alt="Each of the 96 filters shown here is of size 11x11x3, and each one is shared by the 55x55 neurons in one depth slice." /><figcaption aria-hidden="true">Each of the 96 filters shown here is of size 11x11x3, and each one is shared by the 55x55 neurons in one depth slice.</figcaption>
+<img data-src="../images/weights.jpeg" style="width:40.0%" alt="Each of the 96 filters shown here is of size 11x11x3, and each one is shared by the 55x55 neurons in one depth slice." /><figcaption aria-hidden="true">Each of the 96 filters shown here is of size 11x11x3, and each one is shared by the 55x55 neurons in one depth slice.</figcaption>
 </figure>
-</section>
-<section id="summary-of-convolutional-layer" class="slide level3">
-<h3>Summary of convolutional layer</h3>
-<ul>
-<li>Accepts input volume <span class="math inline">\(W_1 \times H_1 \times D_1\)</span></li>
-<li>Four hyperparameters: number of filters <span class="math inline">\(K\)</span>, filter size <span class="math inline">\(F\)</span>, stride <span class="math inline">\(S\)</span>, amount of zero padding <span class="math inline">\(P\)</span></li>
-<li>Produces volume of size</li>
-</ul>
-<p><span class="math display">\[W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 , D_2 = K \]</span></p>
-<ul>
-<li>With parameter sharing: <span class="math inline">\(F \cdot F \cdot D_1\)</span> weights per filter, for <span class="math inline">\(F \cdot F \cdot D_1 \cdot K\)</span> weights and <span class="math inline">\(K\)</span> biases</li>
-<li>Common setting: <span class="math inline">\(F=3, S=1, P=1\)</span>.</li>
-</ul>
 </section>
 <section id="relu-activation" class="slide level3">
 <h3>ReLU activation</h3>
 <ul>
 <li>Convolutional typically followed by ReLU activation function</li>
-<li>Addresses vanishing gradient problem</li>
 </ul>
 </section>
 <section id="pooling-layer" class="slide level3">
@@ -231,13 +233,13 @@
 <section id="pooling-illustration" class="slide level3">
 <h3>Pooling: illustration</h3>
 <figure>
-<img data-src="images/pool.jpeg" style="width:50.0%" alt="Input volume of size 224x224x64 is pooled with filter size 2, stride 2 into output volume of size 112x112x64 (with same depth)." /><figcaption aria-hidden="true">Input volume of size 224x224x64 is pooled with filter size 2, stride 2 into output volume of size 112x112x64 (with same depth).</figcaption>
+<img data-src="../images/pool.jpeg" style="width:30.0%" alt="Input volume of size 224x224x64 is pooled with filter size 2, stride 2 into output volume of size 112x112x64 (with same depth)." /><figcaption aria-hidden="true">Input volume of size 224x224x64 is pooled with filter size 2, stride 2 into output volume of size 112x112x64 (with same depth).</figcaption>
 </figure>
 </section>
 <section id="pooling-illustration-of-max-operation" class="slide level3">
 <h3>Pooling: illustration of max operation</h3>
 <figure>
-<img data-src="images/maxpool.jpeg" style="width:50.0%" alt="Each max is taken over a 2x2 square." /><figcaption aria-hidden="true">Each max is taken over a 2x2 square.</figcaption>
+<img data-src="../images/maxpool.jpeg" style="width:30.0%" alt="Each max is taken over a 2x2 square." /><figcaption aria-hidden="true">Each max is taken over a 2x2 square.</figcaption>
 </figure>
 </section>
 <section id="summary-of-pooling-layer" class="slide level3">
@@ -273,8 +275,13 @@
 <section id="example" class="slide level3">
 <h3>Example</h3>
 <figure>
-<img data-src="images/convnet.jpeg" alt="Example of a convolutional network architecture. Live demo link." /><figcaption aria-hidden="true">Example of a convolutional network architecture. <a href="http://cs231n.stanford.edu/">Live demo link.</a></figcaption>
+<img data-src="../images/convnet.jpeg" style="width:80.0%" alt="Example of a convolutional network architecture. Live demo link." /><figcaption aria-hidden="true">Example of a convolutional network architecture. <a href="http://cs231n.stanford.edu/">Live demo link.</a></figcaption>
 </figure>
+</section>
+<section id="reference" class="slide level3">
+<h3>Reference</h3>
+<p>Source of most images here, and excellent set of notes on convolutional neural networks:</p>
+<p><a href="https://cs231n.github.io/convolutional-networks/">https://cs231n.github.io/convolutional-networks/</a></p>
 </section></section>
 <section>
 <section id="transfer-learning" class="title-slide slide level2">
@@ -298,27 +305,36 @@
 <li>Only train small number of parameters at the end</li>
 </ul>
 </section>
-<section id="transfer-learning-illustration" class="slide level3">
-<h3>Transfer learning illustration</h3>
+<section id="transfer-learning-illustration-1" class="slide level3">
+<h3>Transfer learning illustration (1)</h3>
 <figure>
-<img data-src="images/transfer.png" style="width:40.0%" alt="Transfer learning" /><figcaption aria-hidden="true">Transfer learning</figcaption>
+<img data-src="../images/8-transfer-similar.png" style="width:60.0%" alt="When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head." /><figcaption aria-hidden="true">When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head.</figcaption>
 </figure>
 </section>
-<section id="reference" class="slide level3">
-<h3>Reference</h3>
-<p>Source of most images here, and excellent notes on convolutional neural networks:</p>
-<p><a href="https://cs231n.github.io/convolutional-networks/">https://cs231n.github.io/convolutional-networks/</a></p>
+<section id="transfer-learning-illustration-2" class="slide level3">
+<h3>Transfer learning illustration (2)</h3>
+<figure>
+<img data-src="../images/8-transfer-less.png" style="width:60.0%" alt="If the original network is not as relevant, may fine-tune more layers." /><figcaption aria-hidden="true">If the original network is not as relevant, may fine-tune more layers.</figcaption>
+</figure>
+<!--
+
+More stuff:
+
+https://colab.research.google.com/gist/artificialsoph/b71c1c25b5ea86cb7ad3ab38afcbfb55/conv-data-generator.ipynb
+https://soph.info/slash-data
+
+-->
 </section></section>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+  <script src="reveal.js-master/dist/reveal.js"></script>
 
   // reveal.js plugins
-  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
 
   <script>
 
