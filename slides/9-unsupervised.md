@@ -580,8 +580,8 @@ Left side is for "true" samples and the right side is for "fake" samples...
 
 Replace sums with expectations, then discriminator wants to *maximize*
 
-$$\mathbb{E}_{{x} \sim {p}_{\textrm{data}}}[\log D_\phi({x})] + 
-\mathbb{E}_{{z} \sim p_{z}}[\log (1-D_\phi(G_\theta({z})))]$$
+$$\mathbb{E}_{x \sim {p}_{\textrm{data}}} [\log D_\phi({x})] + 
+\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]$$
 
 ### Generator objective (1)
 
@@ -589,13 +589,13 @@ $$\mathbb{E}_{{x} \sim {p}_{\textrm{data}}}[\log D_\phi({x})] +
 Generator wants to update its parameters $\theta$ so that:
 
 * $D_\phi(G_\theta({z}))$ (output for generated data) is close to 1
-* Minimize $\mathbb{E}_{{z} \sim p_{z}}[\log (1-D_\phi(G_\theta({z})))]$
+* Minimize $\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]$
 
 
 ### Overall objective
 
-$$\min_{\theta} \max_{\phi}  \mathbb{E}_{{x} \sim {p}_{\textrm{data}}}[\log D_\phi({x})] + 
-\mathbb{E}_{{z} \sim p_{z}}[\log (1-D_\phi(G_\theta({z})))]$$
+$$\min_{\theta} \max_{\phi}  \mathbb{E}_{x \sim {p}_{\textrm{data}}} [\log D_\phi({x})] + 
+\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]$$
 
 
 ### Problem: gradient of cross-entropy loss

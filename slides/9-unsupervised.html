@@ -531,21 +531,21 @@ Given a set of data instances $X$ and a set of labels $y$,
 <section id="discriminator-objective" class="slide level3">
 <h3>Discriminator objective</h3>
 <p>Replace sums with expectations, then discriminator wants to <em>maximize</em></p>
-<p><span class="math display">\[\mathbb{E}_{{x} \sim {p}_{\textrm{data}}}[\log D_\phi({x})] + 
-\mathbb{E}_{{z} \sim p_{z}}[\log (1-D_\phi(G_\theta({z})))]\]</span></p>
+<p><span class="math display">\[\mathbb{E}_{x \sim {p}_{\textrm{data}}} [\log D_\phi({x})] + 
+\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]\]</span></p>
 </section>
 <section id="generator-objective-1" class="slide level3">
 <h3>Generator objective (1)</h3>
 <p>Generator wants to update its parameters <span class="math inline">\(\theta\)</span> so that:</p>
 <ul>
 <li><span class="math inline">\(D_\phi(G_\theta({z}))\)</span> (output for generated data) is close to 1</li>
-<li>Minimize <span class="math inline">\(\mathbb{E}_{{z} \sim p_{z}}[\log (1-D_\phi(G_\theta({z})))]\)</span></li>
+<li>Minimize <span class="math inline">\(\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]\)</span></li>
 </ul>
 </section>
 <section id="overall-objective" class="slide level3">
 <h3>Overall objective</h3>
-<p><span class="math display">\[\min_{\theta} \max_{\phi}  \mathbb{E}_{{x} \sim {p}_{\textrm{data}}}[\log D_\phi({x})] + 
-\mathbb{E}_{{z} \sim p_{z}}[\log (1-D_\phi(G_\theta({z})))]\]</span></p>
+<p><span class="math display">\[\min_{\theta} \max_{\phi}  \mathbb{E}_{x \sim {p}_{\textrm{data}}} [\log D_\phi({x})] + 
+\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]\]</span></p>
 </section>
 <section id="problem-gradient-of-cross-entropy-loss" class="slide level3">
 <h3>Problem: gradient of cross-entropy loss</h3>
