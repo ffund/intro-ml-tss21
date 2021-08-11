@@ -86,7 +86,23 @@
 * Notebook: Neural network for musical instrument classification (homework)  [![Open In Colab](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-lab-neural-net-music-classification.ipynb)
 
 
-## Week 8: Deep neural networks, Convolutional neural networks
+## Week 8: Deep neural networks, convolutional neural networks
+
+* Handout: Deep neural networks <a href="slides/8-deep-neural-nets"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Convolutional neural networks <a href="slides/8-convolutional.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: the Slash dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-slash-dataset.ipynb)
+* Notebook: Convolutional neural networks [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-convolutional-neural-networks.ipynb)
+* Notebook: Transfer learning on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-fine-tune-rock-paper-scissors.ipynb)
+* Notebook: Transfer learning on food photos (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/16w-mLZ4tSxwH7bZof-1Baota-TIYv19B?usp=sharing)
+
 
 ## Week 9: Unsupervised learning
 
+* Handout: Unsupervised learning <a href="slides/9-unsupervised.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Clustering [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1bYGtfCpb3UCqfVHo_x06oKlwgjjhN7zl)
+* Notebook: PCA on handwritten digits [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EU3YyE94ghKyxmmmuRNygZLAfTQ-6jwb)
+* Notebook: PCA on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xOppWFpoaQbbU9mE5KuxNFPSiuxfMoRB)
+* Notebook: understanding the state of machine learning and data science (homework) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1X4P8tdijqCebWpgPhhT2faG3VeRaU8Q8)
+
+
+## Week 10: Reinforcement learning
