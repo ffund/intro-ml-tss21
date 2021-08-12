@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <title>10-rl.md</title>
+  <meta name="author" content="Fraida Fund">
+  <title>Reinforcement learning</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reset.css">
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/reveal.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -17,26 +18,217 @@
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/reveal.js@^4//dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
+<section id="title-slide">
+  <h1 class="title">Reinforcement learning</h1>
+  <p class="author">Fraida Fund</p>
+</section>
 
-<section class="slide level3">
+<section>
+<section id="reinforcement-learning" class="title-slide slide level2">
+<h2>Reinforcement learning</h2>
 
 </section>
+<section id="elements-of-rl-1" class="slide level3">
+<h3>Elements of RL (1)</h3>
+<ul>
+<li>An <em>agent</em> acts in an <em>environment</em></li>
+<li>The agent sees a sequence of <em>observations</em> about the environment</li>
+<li>The agent wants to achieve a <em>goal</em>, in spite of some <em>uncertainty</em> about the environment.</li>
+</ul>
+<aside class="notes">
+<p>May need to consider indirect, delayed result of actions.</p>
+</aside>
+</section>
+<section id="elements-of-rl-2" class="slide level3">
+<h3>Elements of RL (2)</h3>
+<ul>
+<li>The <em>state</em> of the agent at time <span class="math inline">\(t\)</span> is <span class="math inline">\(S_t\)</span> (from <span class="math inline">\(s \in \mathcal{S}\)</span>)</li>
+<li>The agent chooses action <span class="math inline">\(A_t\)</span> at time <span class="math inline">\(t\)</span> (from <span class="math inline">\(a \in \mathcal{A}\)</span>)</li>
+<li>The agent earns a reward <span class="math inline">\(R_t\)</span> for its actions</li>
+<li>The next state is determine by current state and current action, using a (possibly stochastic) state transition function <span class="math inline">\(\delta(s,a)\)</span>:</li>
+</ul>
+<p><span class="math display">\[P(s&#39;, r \vert s, a)  = \mathbb{P} [S_{t+1} = s&#39;, R_{t+1} = r \vert S_t = s, A_t = a]\]</span></p>
+</section>
+<section id="elements-of-rl-3" class="slide level3">
+<h3>Elements of RL (3)</h3>
+<p>Over interactions in <span class="math inline">\(T\)</span> time steps, the agent takes a sequence of actions and observes next states and rewards.</p>
+<p>This sequence of interactions is called a <em>trajectory</em>:</p>
+<p><span class="math display">\[S_1, A_1, R_2, S_2, A_2, \dots, S_T\]</span></p>
+<aside class="notes">
+<p>What are all the things an agent might try to learn?</p>
+</aside>
+</section>
+<section id="elements-of-rl-4" class="slide level3">
+<h3>Elements of RL (4)</h3>
+<ul>
+<li>the <em>policy</em> <span class="math inline">\(\pi\)</span> is the agent’s mapping from state to action (or probabilities of action)</li>
+<li>the environment sends a <em>reward</em> back to the agent, depending on its state and action (may be stochastic), and a <em>value function</em> describes expected total <strong>future</strong> reward from a state</li>
+<li>we may sometimes have/learn a <em>model</em> of the environment, which we can use to <strong>plan</strong> before or during interactions with the environment</li>
+</ul>
+</section>
+<section id="taxonomy-of-rl-agents" class="slide level3">
+<h3>Taxonomy of RL agents</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/10-taxnomy-rl.png" style="width:40.0%" alt="Taxonomy of RL agents." /><figcaption aria-hidden="true">Taxonomy of RL agents.</figcaption>
+</figure>
+<!-- Via [this blog post](https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html#exploration-exploitation-dilemma) -->
+<ul>
+<li>Policy-based: build an explicit representation of policy <span class="math inline">\(\pi: S \rightarrow A\)</span></li>
+<li>Value-based: try to learn what is the expected total reward for each state or state-action pair. Then there is an <em>implicit</em> policy: select the action that maximizes that.</li>
+<li>Actor-critic methods use both policy and value function learning.</li>
+<li>Model-based: uses either a known or learned model of the environment.</li>
+<li>Model-free: does not know or try to learn the model.</li>
+<li>(Model-free methods interact with the environment by trial-and-error, where model-based methods can plan for future situations by computation on the model.)</li>
+</ul>
+<!--
+* On-policy: Use the deterministic outcomes or samples from the target policy to train the algorithm.
+* Off-policy: Training on a distribution of transitions or episodes produced by a different behavior policy rather than that produced by the target policy.
+-->
+</aside>
+</section></section>
+<section>
+<section id="the-optimization-problem" class="title-slide slide level2">
+<h2>The optimization problem</h2>
+
+</section>
+<section id="reward" class="slide level3">
+<h3>Reward</h3>
+<p>Suppose the state transition function is</p>
+<p><span class="math display">\[P(s&#39;, r \vert s, a)  = \mathbb{P} [S_{t+1} = s&#39;, R_{t+1} = r \vert S_t = s, A_t = a]\]</span></p>
+<p>the reward for a state-action will be</p>
+<p><span class="math display">\[ R(s, a) = \mathbb{E} [R_{t+1} \vert S_t = s, A_t = a] = \sum_{r\in\mathcal{R}} r \sum_{s&#39; \in \mathcal{S}} P(s&#39;, r \vert s, a) \]</span></p>
+<aside class="notes">
+<p>The state transition function gives the probability of transitioning from state <span class="math inline">\(s\)</span> to <span class="math inline">\(s&#39;\)</span> after taking action <span class="math inline">\(a\)</span>, while obtaining reward <span class="math inline">\(r\)</span>.</p>
+</aside>
+</section>
+<section id="policy" class="slide level3">
+<h3>Policy</h3>
+<p>We want to find a <em>policy</em>, or a probability distribution over actions for a given state:</p>
+<p><span class="math display">\[\pi(a \vert s) = \mathbb{P}_\pi [A=a \vert S=s]\]</span></p>
+</section>
+<section id="value-function" class="slide level3">
+<h3>Value function</h3>
+<p>Let future reward (<strong>return</strong>) from time <span class="math inline">\(t\)</span> on be</p>
+<p><span class="math display">\[G_t = R_{t+1} + \gamma R_{t+2} + \dots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}\]</span></p>
+<p>where the discount factor <span class="math inline">\(0 &lt; \gamma &lt; 1\)</span> penalizes future reward.</p>
+</section>
+<section id="state-value" class="slide level3">
+<h3>State-value</h3>
+<p>The state-value of a state <span class="math inline">\(s\)</span> is the expected return if we are in the state at time t:</p>
+<p><span class="math display">\[V_{\pi}(s) = \mathbb{E}_{\pi}[G_t \vert S_t = s]\]</span></p>
+</section>
+<section id="action-value" class="slide level3">
+<h3>Action-value</h3>
+<p>The action value of a state-action pair is</p>
+<p><span class="math display">\[Q_{\pi}(s, a) = \mathbb{E}_{\pi}[G_t \vert S_t = s, A_t = a]\]</span></p>
+</section>
+<section id="relationship-between-q-and-v" class="slide level3">
+<h3>Relationship between Q and V</h3>
+<p>For a policy <span class="math inline">\(\pi\)</span>, we can sum the action values weighted by the probability of that action to get:</p>
+<p><span class="math display">\[V_{\pi}(s) = \sum_{a \in \mathcal{A}} Q_{\pi}(s, a) \pi(a \vert s)\]</span></p>
+</section>
+<section id="action-advantage-function" class="slide level3">
+<h3>Action advantage function</h3>
+<p>The difference between them is the action advantage:</p>
+<p><span class="math display">\[A_{\pi}(s, a) = Q_{\pi}(s, a) - V_{\pi}(s)\]</span></p>
+<aside class="notes">
+<p>“Taking this action in this state” vs. “getting to this state.”</p>
+</aside>
+</section>
+<section id="optimal-value-function" class="slide level3">
+<h3>Optimal value function</h3>
+<p>The optimal value function maximizes the return (future expected reward):</p>
+<p><span class="math display">\[V_{*}(s) = \max_{\pi} V_{\pi}(s)\]</span> <span class="math display">\[Q_{*}(s, a) = \max_{\pi} Q_{\pi}(s, a)\]</span></p>
+</section>
+<section id="optimal-policy" class="slide level3">
+<h3>Optimal policy</h3>
+<p>The optimal policy achieves the optimal value functions:</p>
+<p><span class="math display">\[\pi_{*} = \arg\max_{\pi} V_{\pi}(s)\]</span> <span class="math display">\[\pi_{*} = \arg\max_{\pi} Q_{\pi}(s, a)\]</span></p>
+<p>i.e. <span class="math inline">\(V_{\pi_{*}}(s)=V_{*}(s)\)</span> and <span class="math inline">\(Q_{\pi_{*}}(s, a) = Q_{*}(s, a)\)</span>.</p>
+</section>
+<section id="optimal-policy-breakdown" class="slide level3">
+<h3>Optimal policy breakdown</h3>
+<p>We can also think of it as the policy that maximizes current reward + discounted value of next state:</p>
+<p><span class="math display">\[\pi_{*} = \arg\max_{\pi} r(s,a) + \gamma V^*_{\pi}(\delta(s,a))\]</span></p>
+<aside class="notes">
+<p>How do we learn this policy?</p>
+<ul>
+<li>what is the loss function?</li>
+<li>what are the training samples?</li>
+</ul>
+</aside>
+</section></section>
+<section>
+<section id="q-learning" class="title-slide slide level2">
+<h2>Q learning</h2>
+
+</section>
+<section id="q-table" class="slide level3">
+<h3>Q table</h3>
+<ul>
+<li>Each row is an action</li>
+<li>Each column is a state</li>
+<li><span class="math inline">\(Q(s,a) = r(s,a) + \gamma V^*(\delta(s,a))\)</span></li>
+<li>Table stores current estimate <span class="math inline">\(\hat{Q}(s,a)\)</span></li>
+</ul>
+</section>
+<section id="iterative-approximation" class="slide level3">
+<h3>Iterative approximation</h3>
+<ul>
+<li><p>start with random values</p></li>
+<li><p>observe state, then iteratively:</p>
+<ul>
+<li>choose action <span class="math inline">\(a\)</span> and execute,</li>
+<li>observe immediate reward <span class="math inline">\(r\)</span> and new state <span class="math inline">\(s&#39;\)</span></li>
+<li>update <span class="math inline">\(\hat{Q}(s,a)\)</span> using <span class="math inline">\(r + \gamma \max_{a&#39;} \hat{Q}(s&#39;,a&#39;)\)</span></li>
+<li><span class="math inline">\(s \leftarrow s&#39;\)</span></li>
+</ul></li>
+</ul>
+<!--
+
+### Loss function
+
+Bellman error: MSE between current $\hat{Q}$ and next one:
+
+$$L = \frac{1}{2} (r_t + \gamma \max_{a'} \hat{Q}(s,a') - \hat{Q}(s,a))^2$$ 
+
+### Gradient descent rule
+
+$$Q(s,a) \leftarrow Q(s,a) + \eta \left[ r + \gamma \max_{a'} Q(s',a') - Q(s,a) \right]$$
+-->
+</section>
+<section id="exploration-and-exploitation" class="slide level3">
+<h3>Exploration and exploitation</h3>
+<p>If we only take the best actions we know about, we might miss out on learning about other, better actions!</p>
+<ul>
+<li><strong>exploration</strong>: take some action to find out about environment, even if you may miss out on some reward</li>
+<li><strong>exploitation</strong>: take the action that maximizes reward, based on what you know about the environment.</li>
+</ul>
+</section>
+<section id="epsilon-greedy-policy" class="slide level3">
+<h3><span class="math inline">\(\epsilon\)</span>-greedy policy</h3>
+<ul>
+<li>With probability <span class="math inline">\(\epsilon\)</span>, choose random action</li>
+<li>With probability <span class="math inline">\(1-\epsilon\)</span>, choose optimal action</li>
+</ul>
+</section></section>
     </div>
   </div>
 
-  <script src="https://unpkg.com/reveal.js@^4//dist/reveal.js"></script>
+  <script src="reveal.js-master/dist/reveal.js"></script>
 
   // reveal.js plugins
-  <script src="https://unpkg.com/reveal.js@^4//plugin/notes/notes.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/search/search.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/zoom/zoom.js"></script>
-  <script src="https://unpkg.com/reveal.js@^4//plugin/math/math.js"></script>
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
 
   <script>
 
