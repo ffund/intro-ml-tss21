@@ -108,5 +108,5 @@
 ## Week 10: Reinforcement learning
 
 * Handout: Reinforcement learning <a href="slides/10-rl.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Notebook: Reinforcement learning [![Open In Colab](https://colab.research.google.com/drive/1MnFeOnv3AlTRX_fAxVz-M2ZckOHp_C_T?usp=sharing)
+* Notebook: Reinforcement learning [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1MnFeOnv3AlTRX_fAxVz-M2ZckOHp_C_T?usp=sharing)
 
