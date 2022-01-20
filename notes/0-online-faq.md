@@ -6,7 +6,7 @@ author: Fraida Fund
 ### Will we have live meetings? Is this course synchronous or asynchronous? 
 
 This course includes both synchronous and asynchronous content. 
-We will a weekly live meeting on Zoom for a "chalk talk", and you 
+We will have a weekly live meeting on Zoom for a "chalk talk", and you 
 will also have to watch a weekly pre-recorded video of a 
 programming/demo session. 
 
