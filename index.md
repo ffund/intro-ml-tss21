@@ -1,4 +1,4 @@
-# Intro Machine Learning - Summer 2021
+# Intro Machine Learning - Summer 2022
 
 
 ## Week 0: Course Intro
