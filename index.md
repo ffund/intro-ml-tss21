@@ -84,7 +84,7 @@
 * Handout: Neural networks <a href="slides/7-neural.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Backpropagation <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/7-demo-backprop.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-demo-backprop.ipynb)
 * Notebook: Draw your own classification problem for a neural network [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-neural-net-demo-draw.ipynb)
-* Notebook: Neural network for musical instrument classification (homework)  [![Open In Colab](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-lab-neural-net-music-classification.ipynb)
+* Notebook: Neural network for musical instrument classification (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-lab-neural-net-music-classification.ipynb)
 
 
 ## Week 8: Deep neural networks, convolutional neural networks
