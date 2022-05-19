@@ -105,13 +105,13 @@ Another metric, known as F1 score, combines precision ($\frac{TP}{TP + FP}$) and
 
 $$F_1 =  2  \left( \frac{ \textrm{precision} \times  \textrm{recall}}{\textrm{precision} + \textrm{recall}} \right)$$
 
-The most appropriate choice of metric for evaluating a classifier depends on the context - for example, whether there is class imbalance, and what the relative cost of each type of error is.
+The most appropriate choice of metric for evaluating a classifier depends on the context - for example, whether there is class imbalance, and what the relative cost of each type of error is. 
 
 ### Tradeoff between FPR and TPR using thresholds
 
 It is trivial to build a classifier with no Type 1 error (no false positives) - if the classifier predicts a negative value for all samples, it will not produce any false positives. However, it also won't produce any true positives! (Similarly, it is trivial to build a classifier with no Type 2 error, by predicting a positive value for all samples. This model will have no false negatives, but also no true negatives.)
 
-We can often adjust the tradeoff between the FPR and TPR. Many classifiers are actually **soft decision** classifiers, which means that their output is a probability, $P(y=1|\mathbf{x})$. 
+We can often adjust the tradeoff between the FPR and TPR, depending on the *cost* of each type of error. Many classifiers are actually **soft decision** classifiers, which means that their output is a probability, $P(y=1|\mathbf{x})$. 
 
 (This is in contrast to **hard decision** classifiers, whose output is a label, e.g. $0$ or $1$.) 
 
@@ -147,7 +147,7 @@ The label applied by the classifier depends on where we set the threshold, the e
 
 This plot is know as the **ROC curve** (receiver operating characteristic). The shaded area underneath the ROC curve is known as the **AUC** (area under the curve), and it is a classification-threshold-invariant way of evaluating the classifier performance.
 
-A random classifier that doesn't use any information about the problem will have an AUC of 0.5. A perfect classifier will have an AUC of 1. A typical machine learning model will have an AUC somewhere between the two, with a number closer to 1 being a better score.
+A random classifier that doesn't use any information about the problem will have an AUC of 0.5 (if both classes are equally prevalent in the data). A perfect classifier will have an AUC of 1. A typical machine learning model will have an AUC somewhere between the two, with a number closer to 1 being a better score.
 
 ![Plot of TPR vs. FPR for the cat photo classifier.](../images/4-roc-curve.png){width=50%}
 
@@ -249,6 +249,16 @@ $$P(y = 0 | \hat{y} = 0, G = a) = P(y = 0 | \hat{y} = 0, G = b)$$
 $$P(\hat{y} = y | G = a) = P((\hat{y} = y | G = b)$$
 
 * **Treatment equality** says that the groups have equal ratio of FN to FP, $\frac{FN}{FP}$
+
+
+### Evaluating a classifier - some heuristics
+
+To decide whether a machine learning classifier is doing a "good job", here are some helpful questions to ask yourself:
+
+* Does the model have better performance than a "simple" model that *always* predicts the more common class (i.e. "prediction by mode")?
+* Are all types of error equally "expensive" in context, or are some types (e.g. false positive, false negative) more costly? Is the rate of the "expensive" error small?
+
+\newpage
 
 ## Questions
 

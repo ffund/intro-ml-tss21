@@ -118,7 +118,7 @@
 <p>The most appropriate choice of metric for evaluating a classifier depends on the context - for example, whether there is class imbalance, and what the relative cost of each type of error is.</p>
 <h3 id="tradeoff-between-fpr-and-tpr-using-thresholds">Tradeoff between FPR and TPR using thresholds</h3>
 <p>It is trivial to build a classifier with no Type 1 error (no false positives) - if the classifier predicts a negative value for all samples, it will not produce any false positives. However, it also won’t produce any true positives! (Similarly, it is trivial to build a classifier with no Type 2 error, by predicting a positive value for all samples. This model will have no false negatives, but also no true negatives.)</p>
-<p>We can often adjust the tradeoff between the FPR and TPR. Many classifiers are actually <strong>soft decision</strong> classifiers, which means that their output is a probability, <span class="math inline">\(P(y=1|\mathbf{x})\)</span>.</p>
+<p>We can often adjust the tradeoff between the FPR and TPR, depending on the <em>cost</em> of each type of error. Many classifiers are actually <strong>soft decision</strong> classifiers, which means that their output is a probability, <span class="math inline">\(P(y=1|\mathbf{x})\)</span>.</p>
 <p>(This is in contrast to <strong>hard decision</strong> classifiers, whose output is a label, e.g. <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>.)</p>
 <p>We get a “hard” label from a “soft” classifier by setting a threshold <span class="math inline">\(t\)</span>, so that:</p>
 <p><span class="math display">\[
@@ -144,7 +144,7 @@
 <img src="../images/4-soft-decision-roc.png" style="width:50.0%" alt="Plot of TPR vs. FPR for the cat photo classifier." /><figcaption aria-hidden="true">Plot of TPR vs. FPR for the cat photo classifier.</figcaption>
 </figure>
 <p>This plot is know as the <strong>ROC curve</strong> (receiver operating characteristic). The shaded area underneath the ROC curve is known as the <strong>AUC</strong> (area under the curve), and it is a classification-threshold-invariant way of evaluating the classifier performance.</p>
-<p>A random classifier that doesn’t use any information about the problem will have an AUC of 0.5. A perfect classifier will have an AUC of 1. A typical machine learning model will have an AUC somewhere between the two, with a number closer to 1 being a better score.</p>
+<p>A random classifier that doesn’t use any information about the problem will have an AUC of 0.5 (if both classes are equally prevalent in the data). A perfect classifier will have an AUC of 1. A typical machine learning model will have an AUC somewhere between the two, with a number closer to 1 being a better score.</p>
 <figure>
 <img src="../images/4-roc-curve.png" style="width:50.0%" alt="Plot of TPR vs. FPR for the cat photo classifier." /><figcaption aria-hidden="true">Plot of TPR vs. FPR for the cat photo classifier.</figcaption>
 </figure>
@@ -231,6 +231,12 @@
 <p><span class="math display">\[P(\hat{y} = y | G = a) = P((\hat{y} = y | G = b)\]</span></p>
 <ul>
 <li><strong>Treatment equality</strong> says that the groups have equal ratio of FN to FP, <span class="math inline">\(\frac{FN}{FP}\)</span></li>
+</ul>
+<h3 id="evaluating-a-classifier---some-heuristics">Evaluating a classifier - some heuristics</h3>
+<p>To decide whether a machine learning classifier is doing a “good job”, here are some helpful questions to ask yourself:</p>
+<ul>
+<li>Does the model have better performance than a “simple” model that <em>always</em> predicts the more common class (i.e. “prediction by mode”)?</li>
+<li>Are all types of error equally “expensive” in context, or are some types (e.g. false positive, false negative) more costly? Is the rate of the “expensive” error small?</li>
 </ul>
 <h2 id="questions">Questions</h2>
 <p>(You can check your answers to the first four questions <a href="https://developers.google.com/machine-learning/crash-course/classification/check-your-understanding-accuracy-precision-recall">here</a>.)</p>

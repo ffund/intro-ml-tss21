@@ -3,7 +3,7 @@ title: Beauty in the Classroom
 author: Fraida Fund
 ---
 
-Last week, we considered a very simple machine learning model: a model that outputs the sample mean of the target variable in the training data set. This "prediction by mean" model is widely used as a baseline for comparison. When we train a machine learning model for regression, we check whether its performance is better or worth than "prediction by mean". If the machine learning model is better than the model that always predicts the sample mean (even if its performance is not very good overall), then it may have *some* value.
+Last week, we considered a very simple machine learning model: a model that outputs the sample mean of the target variable in the training data set. This "prediction by mean" model is widely used as a baseline for comparison. When we train a machine learning model for regression, we check whether its performance is better or worse than "prediction by mean". If the machine learning model is better than the model that always predicts the sample mean (even if its performance is not very good overall), then it may have *some* value.
 
 (For a machine learning classification model, we use "prediction by mode" in a similar way. Does a model do better than a very simple model that just outputs the most common label for all samples? If so, then it may have some value.)
 
