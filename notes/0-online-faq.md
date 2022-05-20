@@ -11,10 +11,26 @@ will also have to watch a weekly pre-recorded video of a
 programming/demo session.  Some weeks may also have asynchronous 
 pre-lecture content that you should watch or read *before* the live meeting.
 
+
+### Am I required to attend the live meetings, or can I watch a recording later?
+
+The live meetings will be recorded. However, you will be required to attend the final 
+exam session at the live meeting time.
+
+
+### How can I get help or ask questions about the course material?
+
+There are two ways to get help:
+
+* Post a question on the Q&A forum for this course.
+* Attend a Zoom office hours session with the instructor.
+
+Note that you can ask questions **anonymously** on the Q&A forum, if you feel more comfortable that way.
+
 ### What are the prerequisites for this course? 
 
 This course is mathematically oriented, and undergraduate-level
-knowledge of probability and linear algebra is required. 
+knowledge of probability and linear algebra is required.
 
 If you want to brush up, you can review:
 
@@ -81,3 +97,21 @@ choose from, in various areas of ML:
 -   ML and society: Fairness, privacy, explainability
 
 You'll choose your project from that list of papers.
+
+
+### What should I do if I need extra time on an assignment because of illness, religious practice, or a death in the immediate family?
+
+If you need extra time on an assignment because of illness (including COVID-19), religious practice, or a death in the immediate family, please contact the student advocate. 
+
+The student advocate will reach out to your professors directly to recommend excused absences or extended deadlines, so you do not need to share any details of your personal circumstance with me.
+
+
+
+### What should I do if I need extra time on an assignment or exam because of a disability?
+
+If you need extra time on an assignment or exam because of a disability (for example: you need to take frequent breaks from a computer screen because of a vision problem, or you have an executive function disorder), you will need to work with the Moses Center to request accommodations beyond the “48 free late hours”. Please refer to the “Moses Center Statement of Disability” section.
+
+(Note that disability accommodations are not retroactive, so you should begin this process at the beginning of the semester if you think you may need it, rather than waiting until you are already struggling.)
+
+The Moses Center will reach out to your professors directly if your accommodations are approved, so you do not need to share any details of your disability with me.
+
