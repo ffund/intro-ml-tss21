@@ -8,7 +8,8 @@ author: Fraida Fund
 This course includes both synchronous and asynchronous content. 
 We will have a weekly live meeting on Zoom for a "chalk talk", and you 
 will also have to watch a weekly pre-recorded video of a 
-programming/demo session. 
+programming/demo session.  Some weeks may also have asynchronous 
+pre-lecture content that you should watch or read *before* the live meeting.
 
 ### What are the prerequisites for this course? 
 
@@ -62,17 +63,7 @@ to use Colab - you'll just need a browser.
 You won't need to buy a textbook - all of the materials you'll need
 will be posted on the course site.
 
-
-### How will my work in this course be graded? 
-
-Your course grade will be based on the following graded assessments:
-
--   weekly homework assignments during the summer (50% of course
-    grade), 
--   a take-home open-notes exam in August (30% of course grade), and 
--   a project (20% of course grade)
-
-### Can I do the project on whatever topic I want? 
+### The course includes a project. Can I do the project on whatever topic I want? 
 
 Not exactly. For your project, I'm going to ask you to replicate and
 then build on a recently published result from a top machine learning
