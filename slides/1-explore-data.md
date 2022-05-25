@@ -14,19 +14,10 @@ If you use "garbage" to train a machine learning model, you will only ever get "
 
 :::
 
-### Recall: ML as a "leaky pipeline"
-
-![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/1-wot-leaky-pipelines.png){ width=40% }
-
-::: notes
-
-"Garbage" affects the pipeline in several places.
-
-:::
 
 \newpage
 
-### Example: a data problem (1)
+### Example: author citation data (1)
 
 Data analysis: use PubMed, and identify the year of first publication for the 100,000 most cited authors.
 
@@ -36,7 +27,7 @@ What are our expectations about what this should look like?
 
 :::
 
-### Example: a data problem (2)
+### Example: author citation data (2)
 
 ![Does this look reasonable?](../images/1-pubmed-authors.png){ width=50% }
 
@@ -48,14 +39,14 @@ The true explanation: in 2002, PubMed started using full first names in authors 
 
 :::
 
-### Example: a data problem (3)
+### Example: author citation data (3)
 
 ![The real distribution, after name unification. Example via [Steven Skiena @ SBU](https://www3.cs.stonybrook.edu/~skiena/519/).](../images/1-pubmed-authors2.png){ width=50% }
 
 \newpage
 
 
-### Example: another data problem (1)
+### Example: anomalous voting data (1)
 
 ![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
 
@@ -69,7 +60,7 @@ What are possible explanations?
 
 :::
 
-### Example: another data problem (2)
+### Example: anomalous voting data (2)
 
 ![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=75% }
 
@@ -107,10 +98,9 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
 How should you handle little bits of missing data? It always depends on the data and the circumstances. Some possibilities include:
 
 * omit the row
-* fill with mean
+* fill with mean or mode
 * fill back/forward (ordered rows)
 * train a model on the rest of the data to "predict" the missing value
-* what **not** to do: fill with zero
 
 How should you handle unreasonable values or outliers?
 
@@ -126,6 +116,7 @@ How should you handle unreasonable values or outliers?
 * Data is not sampled evenly
 * Data or labels reflect human bias
 * Data is not representative of your target situation
+* Data or situation changes over time
 
 ::: notes
 
@@ -135,6 +126,8 @@ Examples:
 * Many social media datasets used for "offensive post" classification have biased labels (especially if they were produced without adequate training procedures in place). For example, they may label posts containing African-American dialects of English as "offensive" much more often. [Source](https://www.aclweb.org/anthology/P19-1163.pdf), [User-friendly article](https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter)
 * A dataset of Tweets following Hurricane Sandy makes it looks like Manhattan was the hub of the disaster, because of power blackouts and limited cell service in the most affected areas. [Source](https://hbr.org/2013/04/the-hidden-biases-in-big-data)
 * The City of Boston released a smartphone app that uses accelerometer and GPS data to detect potholes and report them automatically. But, low income and older residents are less likely to have smartphones, so this dataset presents a skewed view of where potholes are. [Source](https://hbr.org/2013/04/the-hidden-biases-in-big-data)
+
+Change over time: Imagine you train a machine learning model to classify loan applications. However, if the economy changes, applicants that were previously considered credit-worthy might not be anymore despite having the same income, as the lender becomes more risk-averse. Similarly, if wages increase across the board, the income standard for a loan would increase.
 
 :::
 
@@ -178,7 +171,7 @@ Or, information from the target variable (which should not be available during i
 * Learning from adjacent temporal data
 * Learning from duplicate data
 * Learning from features that are not available at prediction time (e.g. data from the future)
-* Learning from a feature that is a proxy for target variable
+* Learning from a feature that is a proxy for target variable, but that doesn't generalize
 
 
 ### COVID-19 chest radiography (1)
@@ -194,7 +187,7 @@ Or, information from the target variable (which should not be available during i
 
 ::: notes
 
-In Spring 2020, many papers were published that claimed to use machine learning to diagnose COVID-19 patients based on chest X-rays or other radiography.
+Between January and October 2020, more than 2000 papers were published that claimed to use machine learning to diagnose COVID-19 patients based on chest X-rays or other radiography. But a later [review](https://www.nature.com/articles/s42256-021-00307-0) found that "none of the models identified are of potential clinical use due to methodological flaws and/or underlying biases".
 
 To train these models, people used an emerging COVID-19 chest X-ray dataset, along with one or more existing chest X-ray dataset, for example a pre-existing dataset used to try and classify viral vs. bacterial pneumonia.
 

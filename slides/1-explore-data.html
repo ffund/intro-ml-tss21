@@ -37,24 +37,15 @@
 <p>If you use “garbage” to train a machine learning model, you will only ever get “garbage” out. Also, since you are testing on the same data, you might not even realize it is “garbage” until the model is in production!</p>
 </aside>
 </section>
-<section id="recall-ml-as-a-leaky-pipeline" class="slide level3">
-<h3>Recall: ML as a “leaky pipeline”</h3>
-<figure>
-<img data-src="../images/1-wot-leaky-pipelines.png" style="width:40.0%" alt="Source: Boaz Barak." /><figcaption aria-hidden="true">Source: <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak</a>.</figcaption>
-</figure>
-<aside class="notes">
-<p>“Garbage” affects the pipeline in several places.</p>
-</aside>
-</section>
-<section id="example-a-data-problem-1" class="slide level3">
-<h3>Example: a data problem (1)</h3>
+<section id="example-author-citation-data-1" class="slide level3">
+<h3>Example: author citation data (1)</h3>
 <p>Data analysis: use PubMed, and identify the year of first publication for the 100,000 most cited authors.</p>
 <aside class="notes">
 <p>What are our expectations about what this should look like?</p>
 </aside>
 </section>
-<section id="example-a-data-problem-2" class="slide level3">
-<h3>Example: a data problem (2)</h3>
+<section id="example-author-citation-data-2" class="slide level3">
+<h3>Example: author citation data (2)</h3>
 <figure>
 <img data-src="../images/1-pubmed-authors.png" style="width:50.0%" alt="Does this look reasonable?" /><figcaption aria-hidden="true">Does this look reasonable?</figcaption>
 </figure>
@@ -63,14 +54,14 @@
 <p>The true explanation: in 2002, PubMed started using full first names in authors instead of just initials. The same author is represented in the dataset as a “new” author with a first date of publication in 2002.</p>
 </aside>
 </section>
-<section id="example-a-data-problem-3" class="slide level3">
-<h3>Example: a data problem (3)</h3>
+<section id="example-author-citation-data-3" class="slide level3">
+<h3>Example: author citation data (3)</h3>
 <figure>
 <img data-src="../images/1-pubmed-authors2.png" style="width:50.0%" alt="The real distribution, after name unification. Example via Steven Skiena @ SBU." /><figcaption aria-hidden="true">The real distribution, after name unification. Example via <a href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @ SBU</a>.</figcaption>
 </figure>
 </section>
-<section id="example-another-data-problem-1" class="slide level3">
-<h3>Example: another data problem (1)</h3>
+<section id="example-anomalous-voting-data-1" class="slide level3">
+<h3>Example: anomalous voting data (1)</h3>
 <figure>
 <img data-src="../images/1-election2020.png" style="width:30.0%" alt="Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election." /><figcaption aria-hidden="true">Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.</figcaption>
 </figure>
@@ -80,8 +71,8 @@
 <p>What are possible explanations?</p>
 </aside>
 </section>
-<section id="example-another-data-problem-2" class="slide level3">
-<h3>Example: another data problem (2)</h3>
+<section id="example-anomalous-voting-data-2" class="slide level3">
+<h3>Example: anomalous voting data (2)</h3>
 <figure>
 <img data-src="../images/1-election2020-process.png" style="width:75.0%" alt="Process by which data is collected by Edison and AP." /><figcaption aria-hidden="true">Process by which data is collected by Edison and AP.</figcaption>
 </figure>
@@ -115,10 +106,9 @@
 <p>How should you handle little bits of missing data? It always depends on the data and the circumstances. Some possibilities include:</p>
 <ul>
 <li>omit the row</li>
-<li>fill with mean</li>
+<li>fill with mean or mode</li>
 <li>fill back/forward (ordered rows)</li>
 <li>train a model on the rest of the data to “predict” the missing value</li>
-<li>what <strong>not</strong> to do: fill with zero</li>
 </ul>
 <p>How should you handle unreasonable values or outliers?</p>
 <ul>
@@ -135,6 +125,7 @@
 <li>Data is not sampled evenly</li>
 <li>Data or labels reflect human bias</li>
 <li>Data is not representative of your target situation</li>
+<li>Data or situation changes over time</li>
 </ul>
 <aside class="notes">
 <p>Examples:</p>
@@ -144,6 +135,7 @@
 <li>A dataset of Tweets following Hurricane Sandy makes it looks like Manhattan was the hub of the disaster, because of power blackouts and limited cell service in the most affected areas. <a href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
 <li>The City of Boston released a smartphone app that uses accelerometer and GPS data to detect potholes and report them automatically. But, low income and older residents are less likely to have smartphones, so this dataset presents a skewed view of where potholes are. <a href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
 </ul>
+<p>Change over time: Imagine you train a machine learning model to classify loan applications. However, if the economy changes, applicants that were previously considered credit-worthy might not be anymore despite having the same income, as the lender becomes more risk-averse. Similarly, if wages increase across the board, the income standard for a loan would increase.</p>
 </aside>
 </section>
 <section id="what-kind-of-problems-might-you-encounter-3" class="slide level3">
@@ -176,7 +168,7 @@
 <li>Learning from adjacent temporal data</li>
 <li>Learning from duplicate data</li>
 <li>Learning from features that are not available at prediction time (e.g. data from the future)</li>
-<li>Learning from a feature that is a proxy for target variable</li>
+<li>Learning from a feature that is a proxy for target variable, but that doesn’t generalize</li>
 </ul>
 </section>
 <section id="covid-19-chest-radiography-1" class="slide level3">
@@ -193,7 +185,7 @@
 <img data-src="../images/1-covid-xrays.png" style="width:60.0%" alt="Neural networks can classify the source dataset of these chest X-ray images, even without lungs! Source" /><figcaption aria-hidden="true">Neural networks can classify the source dataset of these chest X-ray images, even <em>without lungs</em>! <a href="https://arxiv.org/abs/2004.12823">Source</a></figcaption>
 </figure>
 <aside class="notes">
-<p>In Spring 2020, many papers were published that claimed to use machine learning to diagnose COVID-19 patients based on chest X-rays or other radiography.</p>
+<p>Between January and October 2020, more than 2000 papers were published that claimed to use machine learning to diagnose COVID-19 patients based on chest X-rays or other radiography. But a later <a href="https://www.nature.com/articles/s42256-021-00307-0">review</a> found that “none of the models identified are of potential clinical use due to methodological flaws and/or underlying biases”.</p>
 <p>To train these models, people used an emerging COVID-19 chest X-ray dataset, along with one or more existing chest X-ray dataset, for example a pre-existing dataset used to try and classify viral vs. bacterial pneumonia.</p>
 <p>The problem is that the chest X-rays for each dataset were so “distinctive” to that dataset, that a neural network could be trained with high accuracy to classify an image into its source dataset, even without the lungs showing!</p>
 </aside>

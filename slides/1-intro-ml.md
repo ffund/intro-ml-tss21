@@ -16,15 +16,6 @@ author: 'Fraida Fund'
 
 :::
 
-::: {.cell .markdown}
-
-## ML via XKCD
-
-![Image via XKCD](../images/xkcd.png){ width=40% }
-
-:::
-
-
 
 ::: {.cell .markdown}
 
@@ -207,8 +198,15 @@ Is this ML?
 ### Problem solving with machine learning
 
 1. Collect and prepare data.
-2. Build and train a model using the prepared data.
+2. Build and train a model using the prepared data. 
 3. Use the model on new inputs to produce a result as output.
+
+
+::: notes
+
+("Rules" are inferred automatically from data!)
+
+:::
 
 :::
 
@@ -225,15 +223,18 @@ Is this ML?
 
 What are some benefits of predicting course grade using the data-driven approach?
 
+* if the "rules" are complicated, may be difficult/error-prone to encode them as a computer program.
 * it's easy to update with more experience or if the "world" changes. For example: 
   * if over time the quality of admitted students goes up and I give higher grades, the system that predicts the mean of last semester's scores will "track" with that.
-  * if I didn't have many students with poor programming background the first semester, but I do the second semester, I will be able to predict their performance better in subsequent semesters.
+  * if I didn't have many students with poor programming background the first semester, but I do the second semester, I will be able to predict their performance better next time.
 :::
 
 :::
 
 
 ::: {.cell .markdown}
+
+
 
 ## Machine learning problems
 
@@ -250,7 +251,8 @@ Now that we understand the difference between rule-based problem solving and ML-
 
 ### Recognize handwritten digits 
 
-![Handwritten digits in MNIST dataset](../images/digits.png){ width=50% }
+
+![Example of a handwritten 5 that the 1964 system would struggle with.](../images/1-bad-five.svg){ width=15% }
 
 ::: notes
 
@@ -276,6 +278,7 @@ What makes this problem a good/bad candidate for ML? Are there reasons *not* to 
 
 * Much too complex to program a rule-based system for autonomous driving.
 * ML may not generalize to "weird" situations as well as a *human* driver would. See e.g. [Autonomous Vehicles vs. Kangaroos: the Long Furry Tail of Unlikely Events](https://spectrum.ieee.org/cars-that-think/transportation/self-driving/autonomous-cars-vs-kangaroos-the-long-furry-tail-of-unlikely-events) in IEEE Spectrum.
+* But, ML will not be tired or otherwise impaired the way a human driver might be.
 * ML may be "tricked" by certain attacks that wouldn't affect *human* drivers. See e.g. [Slight Street Sign Modifications Can Completely Fool Machine Learning Algorithms](https://spectrum.ieee.org/cars-that-think/transportation/sensors/slight-street-sign-modifications-can-fool-machine-learning-algorithms) and [Three Small Stickers in Intersection Can Cause Tesla Autopilot to Swerve Into Wrong Lane
 ](https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane) in IEEE Spectrum.
 
@@ -316,6 +319,7 @@ Are there reasons not to use ML here?
 ::: {.cell .markdown}
 
 ### Grading students' essays (2)
+
 ![The essay was scored by ML as a 6/6.](../images/1-essay-score2.png){width=70%}
 
 
@@ -410,11 +414,22 @@ Are there reasons not to use ML here?
 
 ### Problems that are often good candidates for ML
 
+* There is "good" data available to train the model
+* The thing we want to predict is measurable and observable 
 * Human expertise does not exist or is insufficient
 * Humans cannot easily explain their expertise 
-* The solution is very specific to particular cases
-* It is useful to know answer *and* degree of certainty
 * We will get more data during operation + can improve with experience
+
+
+
+:::
+
+
+::: {.cell .markdown}
+
+### Quick, Draw
+
+[https://quickdraw.withgoogle.com/](https://quickdraw.withgoogle.com/)
 
 :::
 
@@ -446,14 +461,18 @@ Are there reasons not to use ML here?
 ### Goal of a machine learning system
 
 
-
 Seeks to estimate a "true" value $y$ (known as the target variable) for some input $x$.
 
 
 ::: notes
 
 
-![A basic ML system.](../images/1-basics-0.png){width=60%}
+![A basic ML system.](../images/1-basics-0.png){width=55%}
+
+
+If the exact thing we want to predict is measurable and available to us in the data, it will be a *direct* target variable. Sometimes, however, the thing we want to predict is not measurable or available. 
+
+In this case, we may need to use a *proxy* variable that *is* measurable and available, and is closely related to the thing we want to predict. (The results will only be as good as the relationship between the thing we want to predict, and the proxy!)
 
 
 :::
@@ -472,7 +491,7 @@ Seeks to estimate a "true" value $y$ (known as the target variable) for some inp
 
 ::: notes
 
-![Supervised learning.](../images/1-basics-supervised.png){ width=60% }
+![Supervised learning.](../images/1-basics-supervised.png){ width=55% }
 
 :::
 
@@ -491,7 +510,7 @@ Seeks to estimate a "true" value $y$ (known as the target variable) for some inp
 
 ::: notes
 
-![Unsupervised learning.](../images/1-basics-unsupervised.png){ width=60% }
+![Unsupervised learning.](../images/1-basics-unsupervised.png){ width=55% }
 
 :::
 
@@ -505,7 +524,7 @@ Seeks to estimate a "true" value $y$ (known as the target variable) for some inp
 
 ::: notes
 
-![Reinforcement learning.](../images/1-basics-reinforcement.png){ width=60% }
+![Reinforcement learning.](../images/1-basics-reinforcement.png){ width=55% }
 
 :::
 
@@ -593,6 +612,102 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 
 :::
+
+
+::: {.cell .markdown}
+
+### ML finds patterns
+
+
+:::
+
+
+::: {.cell .markdown}
+
+### Pattern finding (1)
+
+
+![ML model sees imaginary sheep on this grassy hillside. Source:  [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-hillside-sheep.jpg){ width=55% }
+
+
+:::
+
+::: {.cell .markdown}
+
+### Pattern finding (2)
+
+![Goats in arms are assumed to be dogs. Source:  [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-goats-arms.jpg){ width=45% }
+
+
+:::
+
+
+\newpage
+
+
+::: {.cell .markdown}
+
+### Pattern finding (3)
+
+![Goats in trees are assumed to be birds. Source: [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-goats-trees.jpg){ width=55% }
+
+
+:::
+
+
+
+::: {.cell .markdown}
+
+### Pattern finding (4)
+
+![Generating data sets for visual dialog task. [Source](https://github.com/batra-mlp-lab/visdial-amt-chat)](../images/1-chatbot-training.png){ width=75% }
+
+:::
+
+::: {.cell .markdown}
+
+### Pattern finding (5)
+
+[http://demo-visualdialog.cloudcv.org/](http://demo-visualdialog.cloudcv.org/)
+
+
+:::
+
+
+\newpage
+
+::: {.cell .markdown}
+
+### Example: grad school admissions
+
+Suppose we want to train an admissions model to improve the quality of our graduate students, thereby enhancing the reputation of ECE at NYU Tandon among employers and doctoral programs. 
+
+::: notes
+
+Our ultimate ML system will be many steps disconnected from this task:
+
+1. Our **real-world goal** is to improve the reputation of the department.
+2. Our **real-world mechanism** is to graduate excellent students (which may or may not be the most effective way to achieve the real-world goal).
+3. Our **learning problem** will be to classify applicants as "admit" or "reject" based on some proxy variable (admit decision? GPA at Tandon?) that is available to us. This is obviously several steps removed from graduating excellent students; for example, if we admit strong students but do not educate them well, our graduates won't be at that high standard. 
+4. Our **data representation** is tabular data from applications for admission. The data is probably **noisy**, i.e. the features available do not include all of the factors that go into student success. It also includes elements that are not relevant to student excellence, but our ML model may find patterns in these irrelevant elements, regardless.
+5. Furthermore, there is some underlying bias in the **training data** we have available. 
+  * We only have data from students who self-select to apply to NYU Tandon ECE (selection bias), 
+  * the profile of applying students will change over time (data drift), 
+  * and also will change depending on the model output (feedback loop), 
+  * our department standards for admission are likely to change (concept drift),
+  * we are likely to perpetuate some human bias in our model decisions (bias of admissions committee, bias of instructors which affects students' performance)
+6. We will make some decision about what **type of model** to use (inductive bias).
+7. Some data will be set aside as training data, and the model results will depend on the **draw of training data**.
+8. We will train the selected model on the data, and may or may not end up with a model that is completely **optimized** on the training data.
+9. We will evaluate our model using some **loss function** that may or many not represent what we really care about.
+10. When we **deploy** our model, its performance in "real life" (even on the specific learning problem - let alone the real-world goal) may be much worse than it was in our evaluation. (This often signals that the training data and "real" data are too dissimilar.)
+
+:::
+
+:::
+
+\newpage
+
 
 
 ::: {.cell .markdown}

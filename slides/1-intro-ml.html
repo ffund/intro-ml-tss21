@@ -39,13 +39,6 @@
 </ul>
 </section>
 
-<section id="ml-via-xkcd" class="title-slide slide level2 cell markdown">
-<h2>ML via XKCD</h2>
-<figure>
-<img data-src="../images/xkcd.png" style="width:40.0%" alt="Image via XKCD" /><figcaption aria-hidden="true">Image via XKCD</figcaption>
-</figure>
-</section>
-
 <section id="what-is-machine-learning" class="title-slide slide level2 cell markdown">
 <h2>What is machine learning?</h2>
 <aside class="notes">
@@ -155,6 +148,9 @@
 <li>Build and train a model using the prepared data.</li>
 <li>Use the model on new inputs to produce a result as output.</li>
 </ol>
+<aside class="notes">
+<p>(“Rules” are inferred automatically from data!)</p>
+</aside>
 </section>
 <section id="rule-based-vs.-data-driven-problem-solving" class="slide level3 cell markdown">
 <h3>Rule-based vs. data driven problem solving</h3>
@@ -165,10 +161,11 @@
 </ul>
 <p>What are some benefits of predicting course grade using the data-driven approach?</p>
 <ul>
+<li>if the “rules” are complicated, may be difficult/error-prone to encode them as a computer program.</li>
 <li>it’s easy to update with more experience or if the “world” changes. For example:
 <ul>
 <li>if over time the quality of admitted students goes up and I give higher grades, the system that predicts the mean of last semester’s scores will “track” with that.</li>
-<li>if I didn’t have many students with poor programming background the first semester, but I do the second semester, I will be able to predict their performance better in subsequent semesters.</li>
+<li>if I didn’t have many students with poor programming background the first semester, but I do the second semester, I will be able to predict their performance better next time.</li>
 </ul></li>
 </ul>
 </aside>
@@ -183,7 +180,7 @@
 <section id="recognize-handwritten-digits" class="slide level3 cell markdown">
 <h3>Recognize handwritten digits</h3>
 <figure>
-<img data-src="../images/digits.png" style="width:50.0%" alt="Handwritten digits in MNIST dataset" /><figcaption aria-hidden="true">Handwritten digits in MNIST dataset</figcaption>
+<img data-src="../images/1-bad-five.svg" style="width:15.0%" alt="Example of a handwritten 5 that the 1964 system would struggle with." /><figcaption aria-hidden="true">Example of a handwritten 5 that the 1964 system would struggle with.</figcaption>
 </figure>
 <aside class="notes">
 <p>You read or will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?</p>
@@ -200,6 +197,7 @@
 <ul>
 <li>Much too complex to program a rule-based system for autonomous driving.</li>
 <li>ML may not generalize to “weird” situations as well as a <em>human</em> driver would. See e.g. <a href="https://spectrum.ieee.org/cars-that-think/transportation/self-driving/autonomous-cars-vs-kangaroos-the-long-furry-tail-of-unlikely-events">Autonomous Vehicles vs. Kangaroos: the Long Furry Tail of Unlikely Events</a> in IEEE Spectrum.</li>
+<li>But, ML will not be tired or otherwise impaired the way a human driver might be.</li>
 <li>ML may be “tricked” by certain attacks that wouldn’t affect <em>human</em> drivers. See e.g. <a href="https://spectrum.ieee.org/cars-that-think/transportation/sensors/slight-street-sign-modifications-can-fool-machine-learning-algorithms">Slight Street Sign Modifications Can Completely Fool Machine Learning Algorithms</a> and <a href="https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane">Three Small Stickers in Intersection Can Cause Tesla Autopilot to Swerve Into Wrong Lane</a> in IEEE Spectrum.</li>
 </ul>
 </aside>
@@ -290,12 +288,16 @@
 <section id="problems-that-are-often-good-candidates-for-ml" class="slide level3 cell markdown">
 <h3>Problems that are often good candidates for ML</h3>
 <ul>
+<li>There is “good” data available to train the model</li>
+<li>The thing we want to predict is measurable and observable</li>
 <li>Human expertise does not exist or is insufficient</li>
 <li>Humans cannot easily explain their expertise</li>
-<li>The solution is very specific to particular cases</li>
-<li>It is useful to know answer <em>and</em> degree of certainty</li>
 <li>We will get more data during operation + can improve with experience</li>
 </ul>
+</section>
+<section id="quick-draw" class="slide level3 cell markdown">
+<h3>Quick, Draw</h3>
+<p><a href="https://quickdraw.withgoogle.com/">https://quickdraw.withgoogle.com/</a></p>
 </section>
 <section id="why-now" class="slide level3 cell markdown">
 <h3>Why now?</h3>
@@ -318,8 +320,10 @@
 <p>Seeks to estimate a “true” value <span class="math inline">\(y\)</span> (known as the target variable) for some input <span class="math inline">\(x\)</span>.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/1-basics-0.png" style="width:60.0%" alt="A basic ML system." /><figcaption aria-hidden="true">A basic ML system.</figcaption>
+<img data-src="../images/1-basics-0.png" style="width:55.0%" alt="A basic ML system." /><figcaption aria-hidden="true">A basic ML system.</figcaption>
 </figure>
+<p>If the exact thing we want to predict is measurable and available to us in the data, it will be a <em>direct</em> target variable. Sometimes, however, the thing we want to predict is not measurable or available.</p>
+<p>In this case, we may need to use a <em>proxy</em> variable that <em>is</em> measurable and available, and is closely related to the thing we want to predict. (The results will only be as good as the relationship between the thing we want to predict, and the proxy!)</p>
 </aside>
 </section>
 <section id="machine-learning-paradigms-1" class="slide level3 cell markdown">
@@ -331,7 +335,7 @@
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/1-basics-supervised.png" style="width:60.0%" alt="Supervised learning." /><figcaption aria-hidden="true">Supervised learning.</figcaption>
+<img data-src="../images/1-basics-supervised.png" style="width:55.0%" alt="Supervised learning." /><figcaption aria-hidden="true">Supervised learning.</figcaption>
 </figure>
 </aside>
 </section>
@@ -344,7 +348,7 @@
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/1-basics-unsupervised.png" style="width:60.0%" alt="Unsupervised learning." /><figcaption aria-hidden="true">Unsupervised learning.</figcaption>
+<img data-src="../images/1-basics-unsupervised.png" style="width:55.0%" alt="Unsupervised learning." /><figcaption aria-hidden="true">Unsupervised learning.</figcaption>
 </figure>
 </aside>
 </section>
@@ -353,7 +357,7 @@
 <p><strong>Reinforcement learning</strong>: learn from how the environment responds to your actions, solve interactive problems.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/1-basics-reinforcement.png" style="width:60.0%" alt="Reinforcement learning." /><figcaption aria-hidden="true">Reinforcement learning.</figcaption>
+<img data-src="../images/1-basics-reinforcement.png" style="width:55.0%" alt="Reinforcement learning." /><figcaption aria-hidden="true">Reinforcement learning.</figcaption>
 </figure>
 </aside>
 </section>
@@ -403,6 +407,65 @@
 
 </section>
 
+<section id="ml-finds-patterns" class="slide level3 cell markdown">
+<h3>ML finds patterns</h3>
+</section>
+<section id="pattern-finding-1" class="slide level3 cell markdown">
+<h3>Pattern finding (1)</h3>
+<figure>
+<img data-src="../images/1-hillside-sheep.jpg" style="width:55.0%" alt="ML model sees imaginary sheep on this grassy hillside. Source: Janelle Shane" /><figcaption aria-hidden="true">ML model sees imaginary sheep on this grassy hillside. Source: <a href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle Shane</a></figcaption>
+</figure>
+</section>
+<section id="pattern-finding-2" class="slide level3 cell markdown">
+<h3>Pattern finding (2)</h3>
+<figure>
+<img data-src="../images/1-goats-arms.jpg" style="width:45.0%" alt="Goats in arms are assumed to be dogs. Source: Janelle Shane" /><figcaption aria-hidden="true">Goats in arms are assumed to be dogs. Source: <a href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle Shane</a></figcaption>
+</figure>
+</section>
+<section id="pattern-finding-3" class="slide level3 cell markdown">
+<h3>Pattern finding (3)</h3>
+<figure>
+<img data-src="../images/1-goats-trees.jpg" style="width:55.0%" alt="Goats in trees are assumed to be birds. Source: Janelle Shane" /><figcaption aria-hidden="true">Goats in trees are assumed to be birds. Source: <a href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle Shane</a></figcaption>
+</figure>
+</section>
+<section id="pattern-finding-4" class="slide level3 cell markdown">
+<h3>Pattern finding (4)</h3>
+<figure>
+<img data-src="../images/1-chatbot-training.png" style="width:75.0%" alt="Generating data sets for visual dialog task. Source" /><figcaption aria-hidden="true">Generating data sets for visual dialog task. <a href="https://github.com/batra-mlp-lab/visdial-amt-chat">Source</a></figcaption>
+</figure>
+</section>
+<section id="pattern-finding-5" class="slide level3 cell markdown">
+<h3>Pattern finding (5)</h3>
+<p><a href="http://demo-visualdialog.cloudcv.org/">http://demo-visualdialog.cloudcv.org/</a></p>
+</section>
+<section id="example-grad-school-admissions" class="slide level3 cell markdown">
+<h3>Example: grad school admissions</h3>
+<p>Suppose we want to train an admissions model to improve the quality of our graduate students, thereby enhancing the reputation of ECE at NYU Tandon among employers and doctoral programs.</p>
+<aside class="notes">
+<p>Our ultimate ML system will be many steps disconnected from this task:</p>
+<ol type="1">
+<li>Our <strong>real-world goal</strong> is to improve the reputation of the department.</li>
+<li>Our <strong>real-world mechanism</strong> is to graduate excellent students (which may or may not be the most effective way to achieve the real-world goal).</li>
+<li>Our <strong>learning problem</strong> will be to classify applicants as “admit” or “reject” based on some proxy variable (admit decision? GPA at Tandon?) that is available to us. This is obviously several steps removed from graduating excellent students; for example, if we admit strong students but do not educate them well, our graduates won’t be at that high standard.</li>
+<li>Our <strong>data representation</strong> is tabular data from applications for admission. The data is probably <strong>noisy</strong>, i.e. the features available do not include all of the factors that go into student success. It also includes elements that are not relevant to student excellence, but our ML model may find patterns in these irrelevant elements, regardless.</li>
+<li>Furthermore, there is some underlying bias in the <strong>training data</strong> we have available.</li>
+</ol>
+<ul>
+<li>We only have data from students who self-select to apply to NYU Tandon ECE (selection bias),</li>
+<li>the profile of applying students will change over time (data drift),</li>
+<li>and also will change depending on the model output (feedback loop),</li>
+<li>our department standards for admission are likely to change (concept drift),</li>
+<li>we are likely to perpetuate some human bias in our model decisions (bias of admissions committee, bias of instructors which affects students’ performance)</li>
+</ul>
+<ol start="6" type="1">
+<li>We will make some decision about what <strong>type of model</strong> to use (inductive bias).</li>
+<li>Some data will be set aside as training data, and the model results will depend on the <strong>draw of training data</strong>.</li>
+<li>We will train the selected model on the data, and may or may not end up with a model that is completely <strong>optimized</strong> on the training data.</li>
+<li>We will evaluate our model using some <strong>loss function</strong> that may or many not represent what we really care about.</li>
+<li>When we <strong>deploy</strong> our model, its performance in “real life” (even on the specific learning problem - let alone the real-world goal) may be much worse than it was in our evaluation. (This often signals that the training data and “real” data are too dissimilar.)</li>
+</ol>
+</aside>
+</section>
 <section id="ml-as-a-leaky-pipeline" class="slide level3 cell markdown">
 <h3>ML as a “leaky pipeline”</h3>
 <figure>
