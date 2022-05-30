@@ -15,3 +15,10 @@
 * Handout: Problems with data <a href="slides/1-explore-data.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Python + numpy tutorial <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/1-python-numpy-tutorial.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-python-numpy-tutorial.ipynb)
 * Notebook: Colab tutorial [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-colab-tour.ipynb)
+* Notebook: Exploratory data analysis <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/1-exploratory-data-analysis.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-exploratory-data-analysis.ipynb)
+
+
+## Week 2: Linear regression
+
+* [Notes: "Beauty in the Classroom" preview](notes/2-beauty-classroom-case-study) <a href="notes/2-beauty-classroom-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+
