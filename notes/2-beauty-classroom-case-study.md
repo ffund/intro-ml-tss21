@@ -22,9 +22,9 @@ One year, members of the department complain to the department head:
 
 > But it is well known that student evaluations of faculty are affected by many factors unrelated to their teaching quality. For example, students may rate instructors differently based on their personal characteristics - gender, race, age, physical attractiveness - or based on the characteristics of the course itself - whether it was a lab or a lecture, large class or small class, upper division or lower division. So, it is unfair to compare every evaluation to the same department average!
 
-As a department head who is also a machine learning expert, you understand that you are essentially using "prediction by mean" to "predict" an expected course evaluation score for each instructor, then judging whether they exceeded that expected score or not. 
+As a department head who is also a machine learning expert, you understand that in the current system, you are essentially using "prediction by mean" to "predict" an "expected" course evaluation score for each instructor, then judging whether they exceeded that "expected" score or not. You agree that this seems unfair - an instructor who has to teach a large 300-student lecture shouldn't necessarily be judged against the same mean teaching evaluation score as an instructor who gets to teach a small 10-student lab.
 
-You wonder if you can use a data-driven approach to somehow improve the situation. After all, you know that machine learning can exacerbate bias, but can also correct an existing bias, if used carefully. You think: Maybe instead of comparing all instructors to the same average baseline score, you can use data from previous semesters to train a machine learning model to "predict" a baseline score for each course, based on non-teaching characteristics. Then, an instructor will be considered to have done well if they score higher than the model prediction.
+You wonder if you can use a data-driven approach to somehow improve the situation. After all, you know that machine learning can exacerbate bias, but can also correct an existing bias, if used carefully. You think: Maybe instead of comparing all instructors to the same average baseline score, you can use data from previous semesters to train a machine learning model to "predict" a baseline score for each course, based on *non-teaching characteristics*. Then, an instructor will be considered to have done well if they score higher than the model prediction.
 
 For example, consider the instructor who had a 3.5 teaching score, which is below the department average (4). If the model says that for an instructor who is 
 
@@ -33,7 +33,7 @@ For example, consider the instructor who had a 3.5 teaching score, which is belo
 * female, 
 * and more attractive than usual, 
 
-the predicted teaching score is 3, then perhaps we might conclude that this instructor with a 3.5 score actually earned *higher* than expected evaluation scores.
+the predicted teaching score is 3 (not taking into account any factors related to actual teaching effectiveness), then perhaps we might conclude that this instructor with a 3.5 score actually earned *higher* than expected evaluation scores, and is an excellent instructor.
 
 
 ![A machine learning model might be able to predict more specific "expected" scores.](../images/2-case-study-model.png){ width=60% }
