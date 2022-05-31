@@ -14,7 +14,6 @@ author: 'Fraida Fund'
 * OLS solution for simple regression
 * Interpretation 
 * OLS solution for multiple/LBF regression
-* Solution using gradient descent 
 
 
 ## Regression
@@ -35,9 +34,9 @@ where (we hope!) $\hat{y_i} \approx y_i$.
 
 Last week, we imagined a simple model that predicts the mean of target variable in training data:
 
-$$\hat{y} = w_0$$
+$$\hat{y_i} = w_0$$
 
-where $w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}$.
+$\forall i$, where $w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}$.
 
 
 ### Prediction by mean, illustration
@@ -89,7 +88,7 @@ $$(x_i, y_i), i=1,2,\cdots,n$$
 
 Assume a linear relationship:
 
-$$ \hat{y} = w_0 + w_1 x$$
+$$ \hat{y_i} = w_0 + w_1 x_i$$
 
 where $\mathbf{w} = [w_0, w_1]$, the intercept and slope, are model **parameters** that we *fit* in training.
 
@@ -111,17 +110,67 @@ Maybe $y$ varies with some other function of $x$, maybe part of the variance in 
 :::
 
 
-
 ### Residual term (2)
-
 
 The *residual* term captures everything that isn't in the model:
 
-$$y = w_0 + w_1 x + e$$
+$$y_i = w_0 + w_1 x_i + e_i$$
 
-where $e = y - \hat{y}$.
+where $e_i = y_i - \hat{y_i}$.
 
 
+### Example:  Intro ML grades (1)
+
+![Histogram of previous students' grades in Intro ML.](../images/2-example-hist.svg){ width=40% }
+
+::: notes
+
+Note: this is a fictional example with completely invented numbers.
+
+Suppose students in Intro ML have the following distribution of course grades. We want to develop a model that can predict whether you will be a student in the "95-100" bin or a student in the "75-80" bin.
+
+:::
+
+\newpage
+
+
+### Example:  Intro ML grades (2)
+
+![Predicting students' grades in Intro ML using regression on previous coursework.](../images/2-example-regression.svg){ width=40% }
+
+
+::: notes
+
+To some extent, a student's average grades on previous coursework "explains" their grade in Intro ML. 
+
+* The predicted value for each student, $\hat{y}$, is along the diagonal line. Draw a vertical line from each student's point ($y$) to the corresponding point on the line ($\hat{y}$). This is the residual $e = y - \hat{y}$.
+* Some students fall right on the line - these are examples that are explained "well" by the model. 
+* Some students are far from the line. The magnitude of the *residual* is greater for these examples.
+* The difference between the "true" value $y$ and the predicted value $\hat{y}$ may be due to all kinds of differences between the "well-explained example" and the "not-well-explained-example" - not everything about Intro ML course grade can be explained by performance in previous coursework! This is what the residual captures.
+
+
+Interpreting the linear regression: If slope $w_1$ is 0.8 points in Intro ML per point average in previous coursework, we can say that 
+
+* a 1-point increase in score on previous coursework is, on average, associated with a 0.8 point increase in Intro ML course rgade.
+
+
+What can we say about possible explanations? We can't say much using this method - anything is possible:
+
+* statistical fluke (we haven't done any test for significance)
+* causal - students who did well in previous coursework are better prepared
+* confounding variable - students who did well in previous coursework might have more time to study because they don't have any other jobs or obligations, and they are likely to do well in Intro ML for the same reason.
+
+This method doesn't tell us *why* this association is observed, only that it is. (There are other methods in statistics for determining whether it is a statistical fluke, or for determining whether it is a causal relationship.)
+
+(Also note that the 0.8 point increase according to the regression model is only an *estimate* of the "true" relationship.)
+
+
+:::
+
+
+<!-- images via https://colab.research.google.com/drive/1I_Ca2TKVNQhO_bRAHvP1D8Zcv-opssWf -->
+
+<!--
 ### Example: TX vaccination levels
 
 ![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=45% }
@@ -154,6 +203,8 @@ This method doesn't tell us *why* this association is observed, only that it is.
 
 :::
 
+-->
+
 
 \newpage
 
@@ -166,13 +217,13 @@ This method doesn't tell us *why* this association is observed, only that it is.
 Represent data as a **matrix**, with $n$ samples and $d$ features;
 one sample per row and one feature per column:
 
-$$ X = 
+$$ \mathbf{X} = 
 \begin{bmatrix}
 x_{1,1} & \cdots & x_{1,d} \\
 \vdots  & \ddots & \vdots  \\
 x_{n,1} & \cdots & x_{n,d} 
 \end{bmatrix},
-y = 
+\mathbf{y} = 
 \begin{bmatrix}
 y_{1}  \\
 \vdots \\
@@ -181,6 +232,13 @@ y_{n}
 $$
 
 $x_{i,j}$ is $j$th feature of $i$th sample.
+
+
+::: notes
+
+Note: by convention, we use capital letter for matrix, bold lowercase letter for vector.
+
+:::
 
 
 ### Linear model
@@ -211,7 +269,7 @@ It's a little awkward to carry around that $w_0$ separately, if we roll it in to
 
 Define a new **design matrix** and **weight vector**:
 
-$$ A = 
+$$ \mathbf{A} = 
 \begin{bmatrix}
 1 & x_{1,1} & \cdots & x_{1,d} \\
 \vdots & \vdots  & \ddots & \vdots  \\
@@ -228,9 +286,9 @@ $$
 
 ### Matrix representation of linear regression (2)
 
-Then, $\hat{\mathbf{y}} = A\mathbf{w}$.
+Then, $\hat{\mathbf{y}} = \mathbf{A}\mathbf{w}$.
 
-And given a new sample with feature vector $\mathbf{x}$, predicted value is $\hat{y} = [1, \mathbf{x}^T] \mathbf{w}$.
+And given a new sample with feature vector $\mathbf{x_i}$, predicted value is $\hat{y_i} = [1, \mathbf{x_i}^T] \mathbf{w}$.
 
 
 \newpage
@@ -249,9 +307,8 @@ What does the residual look like in the multivariate case?
 ### Illustration - residual with two features
 
 
-![In 2D, the least squares regression is now a plane. In higher $d$, it's a hyperplane.](../images/3.4.svg){ width=50% }
+![In 2D, the least squares regression is now a plane. In higher $d$, it's a hyperplane. (ISLR)](../images/3.4.svg){ width=50% }
 
-\newpage
 
 ## Linear basis function regression
 
@@ -286,8 +343,8 @@ $$ \hat{y_i} =  w_0 \phi_0(\mathbf{x_i}) + \cdots + w_p \phi_p(\mathbf{x_i}) $$
 
 Some notes:
 
-* The 1s column we added to the design matrix is easily represented as a basis function.
-* There is not necessarily a one-to-one correspondence between the columns of $X$ and the basis functions ($p \neq d$ is OK!). You can have more basis functions than columns of $X$.
+* The 1s column we added to the design matrix is easily represented as a basis function ($\phi_0(\mathbf{x}) = 1$).
+* There is not necessarily a one-to-one correspondence between the columns of $X$ and the basis functions ($p \neq d$ is OK!). You can have more/fewer basis functions than columns of $X$.
 * Each basis function can accept as input the entire vector $\mathbf{x_i}$.
 * The model has $p + 1$ parameters.
 
@@ -298,7 +355,7 @@ Some notes:
 
 The prediction of this model expressed in vector form is:
 
-$$\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle $$
+$$\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle = \mathbf{w}^T \mathbf{\phi (x_i)} $$
 
 where
 
@@ -308,7 +365,16 @@ $$
 
 ::: notes
 
-Note: the angle brackets denote a dot product!
+(The angle brackets denote a dot product.)
+
+**Important note**: although the model can be non-linear in $\mathbf{x}$, it is still 
+linear in the parameters $\mathbf{w}$ (note that $\mathbf{w}$ appears *outside* $\mathbf{\phi}(\cdot)$!) 
+That's what makes it a *linear model*.
+
+Some basis functions have their own parameters that appear inside the basis function, 
+i.e. we might have a model $$\hat{y_i} = \mathbf{ w}^T \mathbf{ \phi}(\mathbf{ x_i}, 
+\mathbf{\theta})$$ where $\mathbf{\theta}$ are the parameters of the basis function.
+The model is *non-linear* in those parameters, and they need to be fixed before training.
 
 :::
 
@@ -345,6 +411,7 @@ and $\mathbf{\hat{y}} = \Phi \mathbf{w}$.
 Now that we have described some more flexible versions of the linear regression model, we will turn to the problem of finding the weight parameters, starting with the simple linear regression. (The simple linear regression solution will highlight some interesting statistical relationships.)
 
 :::
+
 
 
 ## Ordinary least squares solution for simple linear regression
@@ -546,6 +613,20 @@ $$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
 
 \newpage
 
+
+
+### Example: Intro ML grades (3)
+
+![Predicting students' grades in Intro ML, for two different sections.](../images/2-example-regression-metrics.svg){ width=75% }
+
+::: notes
+
+In Instructor A's section, a change in average overall course grades is associated with a bigger change in Intro ML course grade than in Instructor B's section; but in Instructor B's section, more of the variance among students is explained by the linear regression on previous overall grades.
+
+:::
+
+<!--
+
 ### Example: TX vaccination levels (2)
 
 ![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=40% }
@@ -564,6 +645,9 @@ In Florida, a change in vote share is associated with a bigger change in vaccina
 
 
 \newpage
+
+--> 
+
 
 ## Ordinary least squares solution for multiple/linear basis function regression
 
@@ -650,122 +734,3 @@ We can solve this as we would any set of linear equations (see supplementary not
 
 :::
 
-
-
-## Solution using gradient descent
-
-### Why gradient descent?
-
-We had
-
-$$\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}$$
-
-where $\Phi$ is an $n \times d$ matrix. If $n \geq d$ then it is (usually) full rank and a unique solution exists.
-
-What if $n$, $d$ are large?
-
-::: notes
-
-Runtime of a "naive" solution using "standard" matrix multiplication: 
-
-* $O(dn^2)$ to multiply $\Phi^T \Phi$
-* $O(dn)$ to muplity $\Phi^T y$
-* $O(d^3)$ to compute the inverse of $\Phi^T \Phi$ 
-
-Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(dn^2)$. Can we do better?
-
-(Note: in practice, we would not necessarily use the "naive" way.)
-
-:::
-
-
-### Gradients and optimization 
-
-Gradient has *two* important properties for optimization:
-
-At a minima (or maxima, or saddle point), 
-
-$$\nabla L(\mathbf{w}) = 0$$
-
-At other points, $\nabla L(\mathbf{w})$ points towards direction of maximum (infinitesimal) *increase*.
-
-\newpage
-
-### Gradient descent idea
-
-To move towards minimum of a (smooth, convex) function, use first order approximation: 
-
-Start from some initial point, then iteratively 
-
-* compute gradient at current point, and 
-* add some fraction of the negative gradient to the current point
-
-
-### Visual example: least square solution 3D plot
-
-![Regression parameters - 3D plot.](../images/3.2b.svg){ width=40% }
-
-
-### Standard ("batch") gradient descent
-
-For each step $t$ along the error curve:
-
-$$
-\begin{aligned}
-\mathbf{w}^{t+1} &= \mathbf{w}^t - \alpha \nabla L(\mathbf{w}^t) \\
- &= \mathbf{w}^t - \frac{\alpha}{n} \sum_{i=1}^n \nabla L_i(\mathbf{w}^t, \mathbf{x}_i, y_i)
-\end{aligned}
-$$
-
-
-Repeat until stopping criterion is met.
-
-::: notes
-
-
-To update $\mathbf{w}$, must compute $n$ loss functions and gradients - each iteration is $O(nd)$. We need multiple iterations, but as long as we need fewer than $n$ iterations, it's more efficient than the previous approach.
-
-However, if $n$ is large, it may still be expensive!
-
-:::
-
-\newpage
-
-### Stochastic gradient descent 
-
-Idea: 
-
-At each step, compute estimate of gradient using only one randomly selected sample, and move in the direction it indicates.
-
-Many of the steps will be in the wrong direction, but progress towards minimum occurs *on average*, as long as the steps are small.
-
-::: notes
-
-Each iteration is now only $O(d)$, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if $n$ is large!).
-
-See supplementary notes for an analysis of the number of iterations needed.
-
-:::
-
-### Mini-batch (also "stochastic") gradient descent (1)
-
-Idea: 
-
-At each step, select a small subset of training data ("mini-batch"), and evaluate gradient on that mini-batch. 
-
-Then move in the direction it indicates.
-
-### Mini-batch (also "stochastic") gradient descent (2)
-
-
-For each step $t$ along the error curve: 
-
-* Select random mini-batch $I_t\subset{1,\ldots,n}$
-* Compute gradient approximation:
-
-$$g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, \mathbf{w}^t)$$
-
-* Update parameters: $\mathbf{w}^{t+1} = \mathbf{w}^t - \alpha^t g^t$
-
-
-## Next: more on linear regression

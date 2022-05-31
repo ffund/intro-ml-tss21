@@ -38,7 +38,6 @@
 <li>OLS solution for simple regression</li>
 <li>Interpretation</li>
 <li>OLS solution for multiple/LBF regression</li>
-<li>Solution using gradient descent</li>
 </ul>
 </section>
 
@@ -57,8 +56,8 @@
 <section id="prediction-by-mean" class="slide level3">
 <h3>Prediction by mean</h3>
 <p>Last week, we imagined a simple model that predicts the mean of target variable in training data:</p>
-<p><span class="math display">\[\hat{y} = w_0\]</span></p>
-<p>where <span class="math inline">\(w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}\)</span>.</p>
+<p><span class="math display">\[\hat{y_i} = w_0\]</span></p>
+<p><span class="math inline">\(\forall i\)</span>, where <span class="math inline">\(w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}\)</span>.</p>
 </section>
 <section id="prediction-by-mean-illustration" class="slide level3">
 <h3>Prediction by mean, illustration</h3>
@@ -94,7 +93,7 @@
 <section id="simple-linear-regression-model" class="slide level3">
 <h3>Simple linear regression model</h3>
 <p>Assume a linear relationship:</p>
-<p><span class="math display">\[ \hat{y} = w_0 + w_1 x\]</span></p>
+<p><span class="math display">\[ \hat{y_i} = w_0 + w_1 x_i\]</span></p>
 <p>where <span class="math inline">\(\mathbf{w} = [w_0, w_1]\)</span>, the intercept and slope, are model <strong>parameters</strong> that we <em>fit</em> in training.</p>
 </section>
 <section id="residual-term-1" class="slide level3">
@@ -114,36 +113,79 @@
 <section id="residual-term-2" class="slide level3">
 <h3>Residual term (2)</h3>
 <p>The <em>residual</em> term captures everything that isn’t in the model:</p>
-<p><span class="math display">\[y = w_0 + w_1 x + e\]</span></p>
-<p>where <span class="math inline">\(e = y - \hat{y}\)</span>.</p>
+<p><span class="math display">\[y_i = w_0 + w_1 x_i + e_i\]</span></p>
+<p>where <span class="math inline">\(e_i = y_i - \hat{y_i}\)</span>.</p>
 </section>
-<section id="example-tx-vaccination-levels" class="slide level3">
-<h3>Example: TX vaccination levels</h3>
+<section id="example-intro-ml-grades-1" class="slide level3">
+<h3>Example: Intro ML grades (1)</h3>
 <figure>
-<img data-src="../images/2-reg-tx-covid.jpeg" style="width:45.0%" alt="Texas vaccination levels vs. share of 2020 Trump vote, by county. Via Charles Gaba." /><figcaption aria-hidden="true">Texas vaccination levels vs. share of 2020 Trump vote, by county. Via <a href="https://twitter.com/charles_gaba/status/1404472166926651395">Charles Gaba</a>.</figcaption>
+<img data-src="../images/2-example-hist.svg" style="width:40.0%" alt="Histogram of previous students’ grades in Intro ML." /><figcaption aria-hidden="true">Histogram of previous students’ grades in Intro ML.</figcaption>
 </figure>
 <aside class="notes">
-<p>Suppose we want to use linear regression to “predict” the vaccination levels of a TX county, given its vote in the 2020 election. The share of vote for the Republican candidate partly “explains” the variance among TX counties.</p>
+<p>Note: this is a fictional example with completely invented numbers.</p>
+<p>Suppose students in Intro ML have the following distribution of course grades. We want to develop a model that can predict whether you will be a student in the “95-100” bin or a student in the “75-80” bin.</p>
+</aside>
+</section>
+<section id="example-intro-ml-grades-2" class="slide level3">
+<h3>Example: Intro ML grades (2)</h3>
+<figure>
+<img data-src="../images/2-example-regression.svg" style="width:40.0%" alt="Predicting students’ grades in Intro ML using regression on previous coursework." /><figcaption aria-hidden="true">Predicting students’ grades in Intro ML using regression on previous coursework.</figcaption>
+</figure>
+<aside class="notes">
+<p>To some extent, a student’s average grades on previous coursework “explains” their grade in Intro ML.</p>
 <ul>
-<li>The predicted value for each county, <span class="math inline">\(\hat{y}\)</span>, is along the diagonal line. Draw a vertical line from each county’s point (<span class="math inline">\(y\)</span>) to the corresponding point on the line (<span class="math inline">\(\hat{y}\)</span>). This is the residual <span class="math inline">\(e = y - \hat{y}\)</span>.</li>
-<li>Travis county is an example of a county that is explained “well” by the linear model.</li>
-<li>Presidio county is an example of a county that is not explained as well by the linear model. The magnitude of the <em>residual</em> is greater for this county.</li>
-<li>The difference between the “true” value <span class="math inline">\(y\)</span> and the predicted value <span class="math inline">\(\hat{y}\)</span> may be due to all kinds of differences between Travis county and Presidio county - not everything about vaccination level can be explained by 2020 vote share! This is what the residual captures.</li>
+<li>The predicted value for each student, <span class="math inline">\(\hat{y}\)</span>, is along the diagonal line. Draw a vertical line from each student’s point (<span class="math inline">\(y\)</span>) to the corresponding point on the line (<span class="math inline">\(\hat{y}\)</span>). This is the residual <span class="math inline">\(e = y - \hat{y}\)</span>.</li>
+<li>Some students fall right on the line - these are examples that are explained “well” by the model.</li>
+<li>Some students are far from the line. The magnitude of the <em>residual</em> is greater for these examples.</li>
+<li>The difference between the “true” value <span class="math inline">\(y\)</span> and the predicted value <span class="math inline">\(\hat{y}\)</span> may be due to all kinds of differences between the “well-explained example” and the “not-well-explained-example” - not everything about Intro ML course grade can be explained by performance in previous coursework! This is what the residual captures.</li>
 </ul>
-<p>Interpreting the linear regression: If slope <span class="math inline">\(w_1\)</span> is -0.4176 percent vaccinated/percent voting for Trump, we can say that</p>
+<p>Interpreting the linear regression: If slope <span class="math inline">\(w_1\)</span> is 0.8 points in Intro ML per point average in previous coursework, we can say that</p>
 <ul>
-<li>a 1-point increase in share of Trump voters is, on average, associated with a 0.4176 point decrease in percent of population vaccinated as of 6/14/21.</li>
+<li>a 1-point increase in score on previous coursework is, on average, associated with a 0.8 point increase in Intro ML course rgade.</li>
 </ul>
 <p>What can we say about possible explanations? We can’t say much using this method - anything is possible:</p>
 <ul>
-<li>statistical fluke</li>
-<li>causal - Republican local governments may run less aggressive vaccine campaign</li>
-<li>partisanship/political values may be responsible for both vote and vaccination attitude among individuals</li>
-<li>confounding variable -. rural areas are more difficult to coordinate vaccines for, and also have higher vote share for Trump</li>
+<li>statistical fluke (we haven’t done any test for significance)</li>
+<li>causal - students who did well in previous coursework are better prepared</li>
+<li>confounding variable - students who did well in previous coursework might have more time to study because they don’t have any other jobs or obligations, and they are likely to do well in Intro ML for the same reason.</li>
 </ul>
 <p>This method doesn’t tell us <em>why</em> this association is observed, only that it is. (There are other methods in statistics for determining whether it is a statistical fluke, or for determining whether it is a causal relationship.)</p>
-<p>(Also note that the 0.4176 point decrease is only an <em>estimate</em> of the “true” relationship.)</p>
+<p>(Also note that the 0.8 point increase according to the regression model is only an <em>estimate</em> of the “true” relationship.)</p>
 </aside>
+<!-- images via https://colab.research.google.com/drive/1I_Ca2TKVNQhO_bRAHvP1D8Zcv-opssWf -->
+<!--
+### Example: TX vaccination levels
+
+![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=45% }
+
+
+::: notes
+
+Suppose we want to use linear regression to "predict" the vaccination levels of a TX county, given its vote in the 2020 election. The share of vote for the Republican candidate partly "explains" the variance among TX counties.
+
+* The predicted value for each county, $\hat{y}$, is along the diagonal line. Draw a vertical line from each county's point ($y$) to the corresponding point on the line ($\hat{y}$). This is the residual $e = y - \hat{y}$.
+* Travis county is an example of a county that is explained "well" by the linear model.
+* Presidio county is an example of a county that is not explained as well by the linear model. The magnitude of the *residual* is greater for this county.
+* The difference between the "true" value $y$ and the predicted value $\hat{y}$ may be due to all kinds of differences between Travis county and Presidio county - not everything about vaccination level can be explained by 2020 vote share! This is what the residual captures.
+
+Interpreting the linear regression: If slope $w_1$ is -0.4176 percent vaccinated/percent voting for Trump, we can say that 
+
+* a 1-point increase in share of Trump voters is, on average, associated with a 0.4176 point decrease in percent of population vaccinated as of 6/14/21.
+
+What can we say about possible explanations? We can't say much using this method - anything is possible:
+
+* statistical fluke
+* causal - Republican local governments may run less aggressive vaccine campaign
+* partisanship/political values may be responsible for both vote and vaccination attitude among individuals
+* confounding variable -. rural areas are more difficult to coordinate vaccines for, and also have higher vote share for Trump
+
+This method doesn't tell us *why* this association is observed, only that it is. (There are other methods in statistics for determining whether it is a statistical fluke, or for determining whether it is a causal relationship.)
+
+(Also note that the 0.4176 point decrease is only an *estimate* of the "true" relationship.)
+
+:::
+
+-->
 </section></section>
 <section>
 <section id="multiple-linear-regression" class="title-slide slide level2">
@@ -153,13 +195,13 @@
 <section id="matrix-representation-of-data" class="slide level3">
 <h3>Matrix representation of data</h3>
 <p>Represent data as a <strong>matrix</strong>, with <span class="math inline">\(n\)</span> samples and <span class="math inline">\(d\)</span> features; one sample per row and one feature per column:</p>
-<p><span class="math display">\[ X = 
+<p><span class="math display">\[ \mathbf{X} = 
 \begin{bmatrix}
 x_{1,1} &amp; \cdots &amp; x_{1,d} \\
 \vdots  &amp; \ddots &amp; \vdots  \\
 x_{n,1} &amp; \cdots &amp; x_{n,d} 
 \end{bmatrix},
-y = 
+\mathbf{y} = 
 \begin{bmatrix}
 y_{1}  \\
 \vdots \\
@@ -167,6 +209,9 @@ y_{n}
 \end{bmatrix}
 \]</span></p>
 <p><span class="math inline">\(x_{i,j}\)</span> is <span class="math inline">\(j\)</span>th feature of <span class="math inline">\(i\)</span>th sample.</p>
+<aside class="notes">
+<p>Note: by convention, we use capital letter for matrix, bold lowercase letter for vector.</p>
+</aside>
 </section>
 <section id="linear-model" class="slide level3">
 <h3>Linear model</h3>
@@ -185,7 +230,7 @@ y_{n}
 <section id="matrix-representation-of-linear-regression-1" class="slide level3">
 <h3>Matrix representation of linear regression (1)</h3>
 <p>Define a new <strong>design matrix</strong> and <strong>weight vector</strong>:</p>
-<p><span class="math display">\[ A = 
+<p><span class="math display">\[ \mathbf{A} = 
 \begin{bmatrix}
 1 &amp; x_{1,1} &amp; \cdots &amp; x_{1,d} \\
 \vdots &amp; \vdots  &amp; \ddots &amp; \vdots  \\
@@ -202,8 +247,8 @@ w_{d}
 </section>
 <section id="matrix-representation-of-linear-regression-2" class="slide level3">
 <h3>Matrix representation of linear regression (2)</h3>
-<p>Then, <span class="math inline">\(\hat{\mathbf{y}} = A\mathbf{w}\)</span>.</p>
-<p>And given a new sample with feature vector <span class="math inline">\(\mathbf{x}\)</span>, predicted value is <span class="math inline">\(\hat{y} = [1, \mathbf{x}^T] \mathbf{w}\)</span>.</p>
+<p>Then, <span class="math inline">\(\hat{\mathbf{y}} = \mathbf{A}\mathbf{w}\)</span>.</p>
+<p>And given a new sample with feature vector <span class="math inline">\(\mathbf{x_i}\)</span>, predicted value is <span class="math inline">\(\hat{y_i} = [1, \mathbf{x_i}^T] \mathbf{w}\)</span>.</p>
 <aside class="notes">
 <p>Here is an example showing the computation:</p>
 <figure>
@@ -215,7 +260,7 @@ w_{d}
 <section id="illustration---residual-with-two-features" class="slide level3">
 <h3>Illustration - residual with two features</h3>
 <figure>
-<img data-src="../images/3.4.svg" style="width:50.0%" alt="In 2D, the least squares regression is now a plane. In higher d, it’s a hyperplane." /><figcaption aria-hidden="true">In 2D, the least squares regression is now a plane. In higher <span class="math inline">\(d\)</span>, it’s a hyperplane.</figcaption>
+<img data-src="../images/3.4.svg" style="width:50.0%" alt="In 2D, the least squares regression is now a plane. In higher d, it’s a hyperplane. (ISLR)" /><figcaption aria-hidden="true">In 2D, the least squares regression is now a plane. In higher <span class="math inline">\(d\)</span>, it’s a hyperplane. (ISLR)</figcaption>
 </figure>
 </section></section>
 <section>
@@ -240,8 +285,8 @@ w_{d}
 <aside class="notes">
 <p>Some notes:</p>
 <ul>
-<li>The 1s column we added to the design matrix is easily represented as a basis function.</li>
-<li>There is not necessarily a one-to-one correspondence between the columns of <span class="math inline">\(X\)</span> and the basis functions (<span class="math inline">\(p \neq d\)</span> is OK!). You can have more basis functions than columns of <span class="math inline">\(X\)</span>.</li>
+<li>The 1s column we added to the design matrix is easily represented as a basis function (<span class="math inline">\(\phi_0(\mathbf{x}) = 1\)</span>).</li>
+<li>There is not necessarily a one-to-one correspondence between the columns of <span class="math inline">\(X\)</span> and the basis functions (<span class="math inline">\(p \neq d\)</span> is OK!). You can have more/fewer basis functions than columns of <span class="math inline">\(X\)</span>.</li>
 <li>Each basis function can accept as input the entire vector <span class="math inline">\(\mathbf{x_i}\)</span>.</li>
 <li>The model has <span class="math inline">\(p + 1\)</span> parameters.</li>
 </ul>
@@ -250,13 +295,16 @@ w_{d}
 <section id="vector-form-of-linear-basis-function-model" class="slide level3">
 <h3>Vector form of linear basis function model</h3>
 <p>The prediction of this model expressed in vector form is:</p>
-<p><span class="math display">\[\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle \]</span></p>
+<p><span class="math display">\[\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle = \mathbf{w}^T \mathbf{\phi (x_i)} \]</span></p>
 <p>where</p>
 <p><span class="math display">\[
 \mathbf{\phi (x_i)} = [\phi_0 (\mathbf{x_i}), \cdots, \phi_p (\mathbf{x_i})], \mathbf{w} = [w_0, \cdots, w_p]
 \]</span></p>
 <aside class="notes">
-<p>Note: the angle brackets denote a dot product!</p>
+<p>(The angle brackets denote a dot product.)</p>
+<p><strong>Important note</strong>: although the model can be non-linear in <span class="math inline">\(\mathbf{x}\)</span>, it is still linear in the parameters <span class="math inline">\(\mathbf{w}\)</span> (note that <span class="math inline">\(\mathbf{w}\)</span> appears <em>outside</em> <span class="math inline">\(\mathbf{\phi}(\cdot)\)</span>!) That’s what makes it a <em>linear model</em>.</p>
+<p>Some basis functions have their own parameters that appear inside the basis function, i.e. we might have a model <span class="math display">\[\hat{y_i} = \mathbf{ w}^T \mathbf{ \phi}(\mathbf{ x_i}, 
+\mathbf{\theta})\]</span> where <span class="math inline">\(\mathbf{\theta}\)</span> are the parameters of the basis function. The model is <em>non-linear</em> in those parameters, and they need to be fixed before training.</p>
 </aside>
 </section>
 <section id="matrix-form-of-linear-basis-function-model" class="slide level3">
@@ -424,20 +472,35 @@ w_{d}
 <p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
 \frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}\]</span></p>
 </section>
-<section id="example-tx-vaccination-levels-2" class="slide level3">
-<h3>Example: TX vaccination levels (2)</h3>
+<section id="example-intro-ml-grades-3" class="slide level3">
+<h3>Example: Intro ML grades (3)</h3>
 <figure>
-<img data-src="../images/2-reg-tx-covid.jpeg" style="width:40.0%" alt="Texas vaccination levels vs. share of 2020 Trump vote, by county. Via Charles Gaba." /><figcaption aria-hidden="true">Texas vaccination levels vs. share of 2020 Trump vote, by county. Via <a href="https://twitter.com/charles_gaba/status/1404472166926651395">Charles Gaba</a>.</figcaption>
-</figure>
-</section>
-<section id="example-fl-vaccination-levels" class="slide level3">
-<h3>Example: FL vaccination levels</h3>
-<figure>
-<img data-src="../images/2-reg-fl-covid.jpeg" style="width:40.0%" alt="Florida vaccination levels vs. share of 2020 Trump vote, by county. Via Charles Gaba." /><figcaption aria-hidden="true">Florida vaccination levels vs. share of 2020 Trump vote, by county. Via <a href="https://twitter.com/charles_gaba/status/1404472166926651395">Charles Gaba</a>.</figcaption>
+<img data-src="../images/2-example-regression-metrics.svg" style="width:75.0%" alt="Predicting students’ grades in Intro ML, for two different sections." /><figcaption aria-hidden="true">Predicting students’ grades in Intro ML, for two different sections.</figcaption>
 </figure>
 <aside class="notes">
-<p>In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.</p>
+<p>In Instructor A’s section, a change in average overall course grades is associated with a bigger change in Intro ML course grade than in Instructor B’s section; but in Instructor B’s section, more of the variance among students is explained by the linear regression on previous overall grades.</p>
 </aside>
+<!--
+
+### Example: TX vaccination levels (2)
+
+![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=40% }
+
+
+
+### Example: FL vaccination levels
+
+![Florida vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-fl-covid.jpeg){ width=40% }
+
+::: notes
+
+In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.
+
+:::
+
+
+
+-->
 </section></section>
 <section>
 <section id="ordinary-least-squares-solution-for-multiplelinear-basis-function-regression" class="title-slide slide level2">
@@ -501,97 +564,6 @@ w_{d}
 <p>We can solve this as we would any set of linear equations (see supplementary notebook on computing regression coefficients by hand.)</p>
 </aside>
 </section></section>
-<section>
-<section id="solution-using-gradient-descent" class="title-slide slide level2">
-<h2>Solution using gradient descent</h2>
-
-</section>
-<section id="why-gradient-descent" class="slide level3">
-<h3>Why gradient descent?</h3>
-<p>We had</p>
-<p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
-<p>where <span class="math inline">\(\Phi\)</span> is an <span class="math inline">\(n \times d\)</span> matrix. If <span class="math inline">\(n \geq d\)</span> then it is (usually) full rank and a unique solution exists.</p>
-<p>What if <span class="math inline">\(n\)</span>, <span class="math inline">\(d\)</span> are large?</p>
-<aside class="notes">
-<p>Runtime of a “naive” solution using “standard” matrix multiplication:</p>
-<ul>
-<li><span class="math inline">\(O(dn^2)\)</span> to multiply <span class="math inline">\(\Phi^T \Phi\)</span></li>
-<li><span class="math inline">\(O(dn)\)</span> to muplity <span class="math inline">\(\Phi^T y\)</span></li>
-<li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span></li>
-</ul>
-<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>. Can we do better?</p>
-<p>(Note: in practice, we would not necessarily use the “naive” way.)</p>
-</aside>
-</section>
-<section id="gradients-and-optimization" class="slide level3">
-<h3>Gradients and optimization</h3>
-<p>Gradient has <em>two</em> important properties for optimization:</p>
-<p>At a minima (or maxima, or saddle point),</p>
-<p><span class="math display">\[\nabla L(\mathbf{w}) = 0\]</span></p>
-<p>At other points, <span class="math inline">\(\nabla L(\mathbf{w})\)</span> points towards direction of maximum (infinitesimal) <em>increase</em>.</p>
-</section>
-<section id="gradient-descent-idea" class="slide level3">
-<h3>Gradient descent idea</h3>
-<p>To move towards minimum of a (smooth, convex) function, use first order approximation:</p>
-<p>Start from some initial point, then iteratively</p>
-<ul>
-<li>compute gradient at current point, and</li>
-<li>add some fraction of the negative gradient to the current point</li>
-</ul>
-</section>
-<section id="visual-example-least-square-solution-3d-plot" class="slide level3">
-<h3>Visual example: least square solution 3D plot</h3>
-<figure>
-<img data-src="../images/3.2b.svg" style="width:40.0%" alt="Regression parameters - 3D plot." /><figcaption aria-hidden="true">Regression parameters - 3D plot.</figcaption>
-</figure>
-</section>
-<section id="standard-batch-gradient-descent" class="slide level3">
-<h3>Standard (“batch”) gradient descent</h3>
-<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
-<p><span class="math display">\[
-\begin{aligned}
-\mathbf{w}^{t+1} &amp;= \mathbf{w}^t - \alpha \nabla L(\mathbf{w}^t) \\
- &amp;= \mathbf{w}^t - \frac{\alpha}{n} \sum_{i=1}^n \nabla L_i(\mathbf{w}^t, \mathbf{x}_i, y_i)
-\end{aligned}
-\]</span></p>
-<p>Repeat until stopping criterion is met.</p>
-<aside class="notes">
-<p>To update <span class="math inline">\(\mathbf{w}\)</span>, must compute <span class="math inline">\(n\)</span> loss functions and gradients - each iteration is <span class="math inline">\(O(nd)\)</span>. We need multiple iterations, but as long as we need fewer than <span class="math inline">\(n\)</span> iterations, it’s more efficient than the previous approach.</p>
-<p>However, if <span class="math inline">\(n\)</span> is large, it may still be expensive!</p>
-</aside>
-</section>
-<section id="stochastic-gradient-descent" class="slide level3">
-<h3>Stochastic gradient descent</h3>
-<p>Idea:</p>
-<p>At each step, compute estimate of gradient using only one randomly selected sample, and move in the direction it indicates.</p>
-<p>Many of the steps will be in the wrong direction, but progress towards minimum occurs <em>on average</em>, as long as the steps are small.</p>
-<aside class="notes">
-<p>Each iteration is now only <span class="math inline">\(O(d)\)</span>, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if <span class="math inline">\(n\)</span> is large!).</p>
-<p>See supplementary notes for an analysis of the number of iterations needed.</p>
-</aside>
-</section>
-<section id="mini-batch-also-stochastic-gradient-descent-1" class="slide level3">
-<h3>Mini-batch (also “stochastic”) gradient descent (1)</h3>
-<p>Idea:</p>
-<p>At each step, select a small subset of training data (“mini-batch”), and evaluate gradient on that mini-batch.</p>
-<p>Then move in the direction it indicates.</p>
-</section>
-<section id="mini-batch-also-stochastic-gradient-descent-2" class="slide level3">
-<h3>Mini-batch (also “stochastic”) gradient descent (2)</h3>
-<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
-<ul>
-<li>Select random mini-batch <span class="math inline">\(I_t\subset{1,\ldots,n}\)</span></li>
-<li>Compute gradient approximation:</li>
-</ul>
-<p><span class="math display">\[g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, \mathbf{w}^t)\]</span></p>
-<ul>
-<li>Update parameters: <span class="math inline">\(\mathbf{w}^{t+1} = \mathbf{w}^t - \alpha^t g^t\)</span></li>
-</ul>
-</section></section>
-<section id="next-more-on-linear-regression" class="title-slide slide level2">
-<h2>Next: more on linear regression</h2>
-
-</section>
     </div>
   </div>
 
