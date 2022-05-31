@@ -151,7 +151,7 @@ To some extent, a student's average grades on previous coursework "explains" the
 
 Interpreting the linear regression: If slope $w_1$ is 0.8 points in Intro ML per point average in previous coursework, we can say that 
 
-* a 1-point increase in score on previous coursework is, on average, associated with a 0.8 point increase in Intro ML course rgade.
+* a 1-point increase in score on previous coursework is, on average, associated with a 0.8 point increase in Intro ML course grade.
 
 
 What can we say about possible explanations? We can't say much using this method - anything is possible:
