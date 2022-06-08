@@ -10,14 +10,18 @@ author: 'Fraida Fund'
 
 * Runtime of OLS solution for multiple/LBF regression
 * Solution using gradient descent 
+* Variations on main idea
 
 
+## Runtime of OLS solution
+
+### Limitations of OLS solution
+
+* Specific to linear regression
+* For extremely large datasets, computation
 
 
-
-## Solution using gradient descent
-
-### Why gradient descent?
+### Computing OLS solution
 
 We had
 
@@ -25,7 +29,7 @@ $$\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}$$
 
 where $\Phi$ is an $n \times d$ matrix. If $n \geq d$ then it is (usually) full rank and a unique solution exists.
 
-What if $n$, $d$ are large?
+How long does it take to compute?
 
 ::: notes
 
@@ -35,9 +39,39 @@ Runtime of a "naive" solution using "standard" matrix multiplication:
 * $O(dn)$ to muplity $\Phi^T y$
 * $O(d^3)$ to compute the inverse of $\Phi^T \Phi$ 
 
-Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(dn^2)$. Can we do better?
+Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(dn^2)$. 
 
-(Note: in practice, we would not necessarily use the "naive" way.)
+(Note: in practice, we can do it a bit faster.)
+
+
+:::
+
+## Solution using gradient descent
+
+### Exhaustive search
+
+
+### Iterative solution
+
+Suppose we would start with all-zero or random weights. Then iteratively (for $t$ rounds):
+
+* pick random weights
+* if loss performance is better, keep those weights
+* if loss performance is worse, discard them
+
+::: notes
+
+What would this look like on a "loss surface"?
+
+For infinite $t$, we'd eventually find optimal weights - but clearly we could do better.
+
+:::
+
+
+### Background: convexity, gradients
+
+::: notes
+
 
 :::
 
@@ -64,9 +98,18 @@ Start from some initial point, then iteratively
 * add some fraction of the negative gradient to the current point
 
 
+### Gradient descent illustration
+
+![[Link for animation](https://miro.medium.com/max/700/1*KQVi812_aERFRolz_5G3rA.gif). Image credit: Peter Roelants](../images/gradient-descent-animation.gif){width=70%}
+
+<!--
+
 ### Visual example: least square solution 3D plot
 
 ![Regression parameters - 3D plot.](../images/3.2b.svg){ width=40% }
+
+-->
+
 
 
 ### Standard ("batch") gradient descent
@@ -83,6 +126,34 @@ $$
 
 Repeat until stopping criterion is met.
 
+
+### Example: gradient descent for linear regression (1)
+
+With a mean squared error loss function
+
+$$ 
+\begin{aligned}
+L(w, X, y) &= \frac{1}{n} \sum_{i=1}^n (y_i - \langle w, x_i \rangle)^2 \\
+     &= \frac{1}{n} \|y - Xw\|^2 
+\end{aligned}
+$$
+
+
+### Example: gradient descent for linear regression (2)
+
+
+
+we will compute the weights at each step as
+
+$$
+\begin{aligned} 
+w^{t+1} &= w^t + \frac{\alpha^t}{n} \sum_{i=1}^n (y_i - \langle w^t,x_i \rangle) x_i \\
+        &= w^t + \frac{\alpha^t}{n} X^T (y - X w^t)                  
+\end{aligned}
+$$
+
+(dropping the constant 2 factor)
+
 ::: notes
 
 
@@ -92,7 +163,20 @@ However, if $n$ is large, it may still be expensive!
 
 :::
 
-\newpage
+
+
+## Variations on main idea
+
+::: notes
+
+
+Two main "knobs" to turn:
+
+* "batch" size
+* learning rate
+
+:::
+
 
 ### Stochastic gradient descent 
 
@@ -107,6 +191,11 @@ Many of the steps will be in the wrong direction, but progress towards minimum o
 Each iteration is now only $O(d)$, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if $n$ is large!).
 
 See [supplementary notes](https://chinmayhegde.github.io/introml-notes-sp2020/pages/lecture3_notes.html) for an analysis of the number of iterations needed.
+
+Also:
+
+* SGD is often more efficient because of *redundancy* in the data - data points have some similarity.
+* If the function we want to optimize does not have a global minimum, the noise can be helpful - we can "bounce" out of a local minimum.
 
 :::
 
@@ -130,6 +219,10 @@ $$g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, \mathbf{w}^t
 
 * Update parameters: $\mathbf{w}^{t+1} = \mathbf{w}^t - \alpha^t g^t$
 
+::: notes
+
+This approach is often used in practice because we get some benefit of vectorization, but also take advantage of redundancy in data.
+:::
 
 
 
@@ -150,4 +243,111 @@ https://vis.ensmallen.org/
 https://sebastianraschka.com/pdf/lecture-notes/stat479ss19/L05_gradient-descent_slides.pdf
 
 -->
+
+
+
+### Selecting the learning rate
+
+
+![Choice of learning rate $\alpha$ is critical](../images/learning_rate_comparison.png){ width=85% }
+
+::: notes
+
+Also note: SGD "noise ball"
+
+:::
+
+
+
+
+### Annealing the learning rate
+
+One approach: decay learning rate slowly over time, such as 
+
+* Exponential decay: $\alpha_t = \alpha_0 e^{-k t}$
+* 1/t decay: $\alpha_t = \alpha_0 / (1 + k t )$ 
+
+(where $k$ is tuning parameter).
+
+
+::: notes
+
+But: this is still sensitive, requires careful selection of gradient descent parameters for the specific learning problem. 
+
+Can we do this in a way that is somehow "tuned" to the shape of the loss function?
+
+:::
+
+
+\newpage
+
+### Gradient descent in a ravine (1)
+
+![Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of $w_1$.](../images/ravine-grad-descent.png){width=50%}
+
+### Gradient descent in a ravine (2)
+
+![Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of $w_1$.](../images/ravine-grad-descent2.png){width=50%}
+
+### Momentum (1)
+
+* Idea:  Update includes a *velocity* vector $v$, that accumulates gradient of past steps. 
+* Each update is a linear combination of the gradient and the previous updates. 
+* (Go faster if gradient keeps pointing in the same direction!)
+
+\newpage
+
+### Momentum (2)
+
+Classical momentum: for some $0 \leq \gamma_t < 1$,
+
+$$v_{t+1} = \gamma_t v_t - \alpha_t \nabla L\left(w_t\right)$$
+
+so
+
+$$w_{t+1} = w_t + v_{t+1} = w_t  - \alpha_t \nabla L\left(w_t\right) + \gamma_t v_t$$
+
+($\gamma_t$ is often around 0.9, or starts at 0.5 and anneals to 0.99 over many epochs.)
+
+Note: $v_{t+1} = w_{t+1} - w_t$ is $\Delta w$.
+
+### Momentum: illustrated
+
+![Momentum dampens oscillations by reinforcing the component along $w_2$ while canceling out the components along $w_1$.](../images/ravine-momentum.png){width=50%}
+
+### RMSProp
+
+Idea: Track per-parameter EWMA of *square* of gradient, and use to normalize parameter update step. 
+
+Weights with recent gradients of large magnitude have smaller learning rate, weights with small recent gradients have larger learning rates.
+
+
+### Illustration (Beale's function)
+
+
+![Animation credit: Alec Radford. [Link for animation](https://imgur.com/a/Hqolp).](../images/beale-gradient.gif){width=40%}
+
+
+::: notes
+
+Due to the large initial gradient, velocity based techniques shoot off and bounce around, while those that scale gradients/step sizes like RMSProp proceed more like accelerated SGD.
+
+:::
+
+### Illustration (Long valley)
+
+
+![Animation credit: Alec Radford. [Link for animation](https://imgur.com/a/Hqolp).](../images/long-valley-gradient.gif){width=40%}
+
+::: notes
+
+SGD stalls and momentum has oscillations until it builds up velocity in optimization direction. Algorithms that scale step size quickly break symmetry and descend in optimization direction.
+
+:::
+
+
+## Recap
+
+* Gradient descent as a general approach to model training
+* Variations
 

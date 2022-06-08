@@ -361,10 +361,11 @@ Note: this is a "classic" view of the bias-variance tradeoff. Recent results sug
 
 :::
 
-
-### How to get small error?
-
-* Get model selection right: not too flexible, but flexible enough - **how?**
-* Get enough data to constrain variability of model?
+### Updated view: double descent
 
 
+## Recap
+
+* Decomposition of model error into different parts
+* Intuition about model complexity vs model error
+* Next: how to choose "good" models that balance the tradeoff?

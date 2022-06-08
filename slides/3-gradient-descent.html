@@ -34,20 +34,28 @@
 <ul>
 <li>Runtime of OLS solution for multiple/LBF regression</li>
 <li>Solution using gradient descent</li>
+<li>Variations on main idea</li>
 </ul>
 </section>
 
 <section>
-<section id="solution-using-gradient-descent" class="title-slide slide level2">
-<h2>Solution using gradient descent</h2>
+<section id="runtime-of-ols-solution" class="title-slide slide level2">
+<h2>Runtime of OLS solution</h2>
 
 </section>
-<section id="why-gradient-descent" class="slide level3">
-<h3>Why gradient descent?</h3>
+<section id="limitations-of-ols-solution" class="slide level3">
+<h3>Limitations of OLS solution</h3>
+<ul>
+<li>Specific to linear regression</li>
+<li>For extremely large datasets, computation</li>
+</ul>
+</section>
+<section id="computing-ols-solution" class="slide level3">
+<h3>Computing OLS solution</h3>
 <p>We had</p>
 <p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
 <p>where <span class="math inline">\(\Phi\)</span> is an <span class="math inline">\(n \times d\)</span> matrix. If <span class="math inline">\(n \geq d\)</span> then it is (usually) full rank and a unique solution exists.</p>
-<p>What if <span class="math inline">\(n\)</span>, <span class="math inline">\(d\)</span> are large?</p>
+<p>How long does it take to compute?</p>
 <aside class="notes">
 <p>Runtime of a “naive” solution using “standard” matrix multiplication:</p>
 <ul>
@@ -55,8 +63,35 @@
 <li><span class="math inline">\(O(dn)\)</span> to muplity <span class="math inline">\(\Phi^T y\)</span></li>
 <li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span></li>
 </ul>
-<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>. Can we do better?</p>
-<p>(Note: in practice, we would not necessarily use the “naive” way.)</p>
+<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>.</p>
+<p>(Note: in practice, we can do it a bit faster.)</p>
+</aside>
+</section></section>
+<section>
+<section id="solution-using-gradient-descent" class="title-slide slide level2">
+<h2>Solution using gradient descent</h2>
+
+</section>
+<section id="exhaustive-search" class="slide level3">
+<h3>Exhaustive search</h3>
+</section>
+<section id="iterative-solution" class="slide level3">
+<h3>Iterative solution</h3>
+<p>Suppose we would start with all-zero or random weights. Then iteratively (for <span class="math inline">\(t\)</span> rounds):</p>
+<ul>
+<li>pick random weights</li>
+<li>if loss performance is better, keep those weights</li>
+<li>if loss performance is worse, discard them</li>
+</ul>
+<aside class="notes">
+<p>What would this look like on a “loss surface”?</p>
+<p>For infinite <span class="math inline">\(t\)</span>, we’d eventually find optimal weights - but clearly we could do better.</p>
+</aside>
+</section>
+<section id="background-convexity-gradients" class="slide level3">
+<h3>Background: convexity, gradients</h3>
+<aside class="notes">
+
 </aside>
 </section>
 <section id="gradients-and-optimization" class="slide level3">
@@ -75,11 +110,18 @@
 <li>add some fraction of the negative gradient to the current point</li>
 </ul>
 </section>
-<section id="visual-example-least-square-solution-3d-plot" class="slide level3">
-<h3>Visual example: least square solution 3D plot</h3>
+<section id="gradient-descent-illustration" class="slide level3">
+<h3>Gradient descent illustration</h3>
 <figure>
-<img data-src="../images/3.2b.svg" style="width:40.0%" alt="Regression parameters - 3D plot." /><figcaption aria-hidden="true">Regression parameters - 3D plot.</figcaption>
+<img data-src="../images/gradient-descent-animation.gif" style="width:70.0%" alt="Link for animation. Image credit: Peter Roelants" /><figcaption aria-hidden="true"><a href="https://miro.medium.com/max/700/1*KQVi812_aERFRolz_5G3rA.gif">Link for animation</a>. Image credit: Peter Roelants</figcaption>
 </figure>
+<!--
+
+### Visual example: least square solution 3D plot
+
+![Regression parameters - 3D plot.](../images/3.2b.svg){ width=40% }
+
+-->
 </section>
 <section id="standard-batch-gradient-descent" class="slide level3">
 <h3>Standard (“batch”) gradient descent</h3>
@@ -91,9 +133,41 @@
 \end{aligned}
 \]</span></p>
 <p>Repeat until stopping criterion is met.</p>
+</section>
+<section id="example-gradient-descent-for-linear-regression-1" class="slide level3">
+<h3>Example: gradient descent for linear regression (1)</h3>
+<p>With a mean squared error loss function</p>
+<p><span class="math display">\[ 
+\begin{aligned}
+L(w, X, y) &amp;= \frac{1}{n} \sum_{i=1}^n (y_i - \langle w, x_i \rangle)^2 \\
+     &amp;= \frac{1}{n} \|y - Xw\|^2 
+\end{aligned}
+\]</span></p>
+</section>
+<section id="example-gradient-descent-for-linear-regression-2" class="slide level3">
+<h3>Example: gradient descent for linear regression (2)</h3>
+<p>we will compute the weights at each step as</p>
+<p><span class="math display">\[
+\begin{aligned} 
+w^{t+1} &amp;= w^t + \frac{\alpha^t}{n} \sum_{i=1}^n (y_i - \langle w^t,x_i \rangle) x_i \\
+        &amp;= w^t + \frac{\alpha^t}{n} X^T (y - X w^t)                  
+\end{aligned}
+\]</span></p>
+<p>(dropping the constant 2 factor)</p>
 <aside class="notes">
 <p>To update <span class="math inline">\(\mathbf{w}\)</span>, must compute <span class="math inline">\(n\)</span> loss functions and gradients - each iteration is <span class="math inline">\(O(nd)\)</span>. We need multiple iterations, but as long as we need fewer than <span class="math inline">\(n\)</span> iterations, it’s more efficient than the previous approach.</p>
 <p>However, if <span class="math inline">\(n\)</span> is large, it may still be expensive!</p>
+</aside>
+</section></section>
+<section>
+<section id="variations-on-main-idea" class="title-slide slide level2">
+<h2>Variations on main idea</h2>
+<aside class="notes">
+<p>Two main “knobs” to turn:</p>
+<ul>
+<li>“batch” size</li>
+<li>learning rate</li>
+</ul>
 </aside>
 </section>
 <section id="stochastic-gradient-descent" class="slide level3">
@@ -103,7 +177,12 @@
 <p>Many of the steps will be in the wrong direction, but progress towards minimum occurs <em>on average</em>, as long as the steps are small.</p>
 <aside class="notes">
 <p>Each iteration is now only <span class="math inline">\(O(d)\)</span>, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if <span class="math inline">\(n\)</span> is large!).</p>
-<p>See supplementary notes for an analysis of the number of iterations needed.</p>
+<p>See <a href="https://chinmayhegde.github.io/introml-notes-sp2020/pages/lecture3_notes.html">supplementary notes</a> for an analysis of the number of iterations needed.</p>
+<p>Also:</p>
+<ul>
+<li>SGD is often more efficient because of <em>redundancy</em> in the data - data points have some similarity.</li>
+<li>If the function we want to optimize does not have a global minimum, the noise can be helpful - we can “bounce” out of a local minimum.</li>
+</ul>
 </aside>
 </section>
 <section id="mini-batch-also-stochastic-gradient-descent-1" class="slide level3">
@@ -123,10 +202,113 @@
 <ul>
 <li>Update parameters: <span class="math inline">\(\mathbf{w}^{t+1} = \mathbf{w}^t - \alpha^t g^t\)</span></li>
 </ul>
-</section></section>
-<section id="next-more-on-linear-regression" class="title-slide slide level2">
-<h2>Next: more on linear regression</h2>
+<aside class="notes">
+<p>This approach is often used in practice because we get some benefit of vectorization, but also take advantage of redundancy in data.</p>
+</aside>
+<!-- 
 
+https://www.cs.cornell.edu/courses/cs4787/2021sp/
+https://www.cs.cornell.edu/courses/cs6787/2018fa/Lecture2.pdf
+
+
+https://ruder.io/optimizing-gradient-descent/
+
+https://sebastianraschka.com/faq/docs/sgd-methods.html
+https://sebastianraschka.com/faq/docs/gradient-optimization.html
+https://distill.pub/2017/momentum/
+https://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf
+https://sebastianraschka.com/pdf/lecture-notes/stat479ss19/L12_optim_slides.pdf
+https://vis.ensmallen.org/
+https://sebastianraschka.com/pdf/lecture-notes/stat479ss19/L05_gradient-descent_slides.pdf
+
+-->
+</section>
+<section id="selecting-the-learning-rate" class="slide level3">
+<h3>Selecting the learning rate</h3>
+<figure>
+<img data-src="../images/learning_rate_comparison.png" style="width:85.0%" alt="Choice of learning rate \alpha is critical" /><figcaption aria-hidden="true">Choice of learning rate <span class="math inline">\(\alpha\)</span> is critical</figcaption>
+</figure>
+<aside class="notes">
+<p>Also note: SGD “noise ball”</p>
+</aside>
+</section>
+<section id="annealing-the-learning-rate" class="slide level3">
+<h3>Annealing the learning rate</h3>
+<p>One approach: decay learning rate slowly over time, such as</p>
+<ul>
+<li>Exponential decay: <span class="math inline">\(\alpha_t = \alpha_0 e^{-k t}\)</span></li>
+<li>1/t decay: <span class="math inline">\(\alpha_t = \alpha_0 / (1 + k t )\)</span></li>
+</ul>
+<p>(where <span class="math inline">\(k\)</span> is tuning parameter).</p>
+<aside class="notes">
+<p>But: this is still sensitive, requires careful selection of gradient descent parameters for the specific learning problem.</p>
+<p>Can we do this in a way that is somehow “tuned” to the shape of the loss function?</p>
+</aside>
+</section>
+<section id="gradient-descent-in-a-ravine-1" class="slide level3">
+<h3>Gradient descent in a ravine (1)</h3>
+<figure>
+<img data-src="../images/ravine-grad-descent.png" style="width:50.0%" alt="Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of w_1." /><figcaption aria-hidden="true">Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of <span class="math inline">\(w_1\)</span>.</figcaption>
+</figure>
+</section>
+<section id="gradient-descent-in-a-ravine-2" class="slide level3">
+<h3>Gradient descent in a ravine (2)</h3>
+<figure>
+<img data-src="../images/ravine-grad-descent2.png" style="width:50.0%" alt="Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of w_1." /><figcaption aria-hidden="true">Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of <span class="math inline">\(w_1\)</span>.</figcaption>
+</figure>
+</section>
+<section id="momentum-1" class="slide level3">
+<h3>Momentum (1)</h3>
+<ul>
+<li>Idea: Update includes a <em>velocity</em> vector <span class="math inline">\(v\)</span>, that accumulates gradient of past steps.</li>
+<li>Each update is a linear combination of the gradient and the previous updates.</li>
+<li>(Go faster if gradient keeps pointing in the same direction!)</li>
+</ul>
+</section>
+<section id="momentum-2" class="slide level3">
+<h3>Momentum (2)</h3>
+<p>Classical momentum: for some <span class="math inline">\(0 \leq \gamma_t &lt; 1\)</span>,</p>
+<p><span class="math display">\[v_{t+1} = \gamma_t v_t - \alpha_t \nabla L\left(w_t\right)\]</span></p>
+<p>so</p>
+<p><span class="math display">\[w_{t+1} = w_t + v_{t+1} = w_t  - \alpha_t \nabla L\left(w_t\right) + \gamma_t v_t\]</span></p>
+<p>(<span class="math inline">\(\gamma_t\)</span> is often around 0.9, or starts at 0.5 and anneals to 0.99 over many epochs.)</p>
+<p>Note: <span class="math inline">\(v_{t+1} = w_{t+1} - w_t\)</span> is <span class="math inline">\(\Delta w\)</span>.</p>
+</section>
+<section id="momentum-illustrated" class="slide level3">
+<h3>Momentum: illustrated</h3>
+<figure>
+<img data-src="../images/ravine-momentum.png" style="width:50.0%" alt="Momentum dampens oscillations by reinforcing the component along w_2 while canceling out the components along w_1." /><figcaption aria-hidden="true">Momentum dampens oscillations by reinforcing the component along <span class="math inline">\(w_2\)</span> while canceling out the components along <span class="math inline">\(w_1\)</span>.</figcaption>
+</figure>
+</section>
+<section id="rmsprop" class="slide level3">
+<h3>RMSProp</h3>
+<p>Idea: Track per-parameter EWMA of <em>square</em> of gradient, and use to normalize parameter update step.</p>
+<p>Weights with recent gradients of large magnitude have smaller learning rate, weights with small recent gradients have larger learning rates.</p>
+</section>
+<section id="illustration-beales-function" class="slide level3">
+<h3>Illustration (Beale’s function)</h3>
+<figure>
+<img data-src="../images/beale-gradient.gif" style="width:40.0%" alt="Animation credit: Alec Radford. Link for animation." /><figcaption aria-hidden="true">Animation credit: Alec Radford. <a href="https://imgur.com/a/Hqolp">Link for animation</a>.</figcaption>
+</figure>
+<aside class="notes">
+<p>Due to the large initial gradient, velocity based techniques shoot off and bounce around, while those that scale gradients/step sizes like RMSProp proceed more like accelerated SGD.</p>
+</aside>
+</section>
+<section id="illustration-long-valley" class="slide level3">
+<h3>Illustration (Long valley)</h3>
+<figure>
+<img data-src="../images/long-valley-gradient.gif" style="width:40.0%" alt="Animation credit: Alec Radford. Link for animation." /><figcaption aria-hidden="true">Animation credit: Alec Radford. <a href="https://imgur.com/a/Hqolp">Link for animation</a>.</figcaption>
+</figure>
+<aside class="notes">
+<p>SGD stalls and momentum has oscillations until it builds up velocity in optimization direction. Algorithms that scale step size quickly break symmetry and descend in optimization direction.</p>
+</aside>
+</section></section>
+<section id="recap" class="title-slide slide level2">
+<h2>Recap</h2>
+<ul>
+<li>Gradient descent as a general approach to model training</li>
+<li>Variations</li>
+</ul>
 </section>
     </div>
   </div>
