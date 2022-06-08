@@ -26,8 +26,8 @@ There are many elements that can be "fixed." The main approaches are listed as f
 * Fix a data problem
 * Get more data
 * Change the model (i.e. the function that maps input data to target variable) by:
-  * Making it more flexible using hyperparameters
-  * Making it less flexible using hyperparameters
+  * Making it more flexible
+  * Making it less flexible
   * Completely changing its form
 * Change the feature representation of the data
 * Change the training algorithm used to fit the model
@@ -357,7 +357,7 @@ It's often the case that changing the model to reduce bias, increases variance (
 
 ::: notes
 
-Note: this is a "classic" view of the bias-variance tradeoff. Recent results suggest that this is only part of the picture - we'll discuss this again later in the semester.
+Note: this is a "classic" view of the bias-variance tradeoff. Recent results suggest that this is only part of the picture.
 
 :::
 
