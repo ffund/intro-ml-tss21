@@ -24,4 +24,11 @@
 * Handout: Linear regression <a href="slides/2-linear.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * [Notes: Extended derivation of linear regression parameters](notes/2-linear-extended-derivation) <a href="notes/2-linear-extended-derivation.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Compute regression coefficients by hand <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/2-compute-by-hand.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-compute-by-hand.ipynb)
+* Notebook: Linear regression in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-deep-dive.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-deep-dive.ipynb)
+* Notebook: Case study on "Beauty in the Classroom" <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-case-study.ipynb)
+
+## Week 3: Gradient descent, bias-variance tradeoff
+
+* [Notes: videos on convexity, directional derivatives, gradient descent](notes/2-gd-background-videos)
+* [Notes: Predicting the course of COVID-19 with a "cubic model"](notes/3-cubic-model) <a href="notes/3-cubic-model.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 
