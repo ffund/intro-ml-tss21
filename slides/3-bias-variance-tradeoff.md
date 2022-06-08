@@ -34,7 +34,7 @@ There are many elements that can be "fixed." The main approaches are listed as f
 
 In order to find the best remedy, it is essential first to understand the cause of the bad performance. 
 
-Note: this scenario is closely parahprased from *Section 11.3 What to Do If Learning Fails* in [Understanding Machine Learning: From Theory to Algorithms](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/) (Shalev-Shwartz and Ben-David).
+Note: this scenario is closely paraphrased from *Section 11.3 What to Do If Learning Fails* in [Understanding Machine Learning: From Theory to Algorithms](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/) (Shalev-Shwartz and Ben-David).
 
 
 :::

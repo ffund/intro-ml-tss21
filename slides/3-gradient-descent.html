@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Gradient descent</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Gradient descent</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Runtime of OLS solution for multiple/LBF regression</li>
+<li>Solution using gradient descent</li>
+</ul>
+</section>
+
+<section>
+<section id="solution-using-gradient-descent" class="title-slide slide level2">
+<h2>Solution using gradient descent</h2>
+
+</section>
+<section id="why-gradient-descent" class="slide level3">
+<h3>Why gradient descent?</h3>
+<p>We had</p>
+<p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
+<p>where <span class="math inline">\(\Phi\)</span> is an <span class="math inline">\(n \times d\)</span> matrix. If <span class="math inline">\(n \geq d\)</span> then it is (usually) full rank and a unique solution exists.</p>
+<p>What if <span class="math inline">\(n\)</span>, <span class="math inline">\(d\)</span> are large?</p>
+<aside class="notes">
+<p>Runtime of a “naive” solution using “standard” matrix multiplication:</p>
+<ul>
+<li><span class="math inline">\(O(dn^2)\)</span> to multiply <span class="math inline">\(\Phi^T \Phi\)</span></li>
+<li><span class="math inline">\(O(dn)\)</span> to muplity <span class="math inline">\(\Phi^T y\)</span></li>
+<li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span></li>
+</ul>
+<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>. Can we do better?</p>
+<p>(Note: in practice, we would not necessarily use the “naive” way.)</p>
+</aside>
+</section>
+<section id="gradients-and-optimization" class="slide level3">
+<h3>Gradients and optimization</h3>
+<p>Gradient has <em>two</em> important properties for optimization:</p>
+<p>At a minima (or maxima, or saddle point),</p>
+<p><span class="math display">\[\nabla L(\mathbf{w}) = 0\]</span></p>
+<p>At other points, <span class="math inline">\(\nabla L(\mathbf{w})\)</span> points towards direction of maximum (infinitesimal) <em>increase</em>.</p>
+</section>
+<section id="gradient-descent-idea" class="slide level3">
+<h3>Gradient descent idea</h3>
+<p>To move towards minimum of a (smooth, convex) function, use first order approximation:</p>
+<p>Start from some initial point, then iteratively</p>
+<ul>
+<li>compute gradient at current point, and</li>
+<li>add some fraction of the negative gradient to the current point</li>
+</ul>
+</section>
+<section id="visual-example-least-square-solution-3d-plot" class="slide level3">
+<h3>Visual example: least square solution 3D plot</h3>
+<figure>
+<img data-src="../images/3.2b.svg" style="width:40.0%" alt="Regression parameters - 3D plot." /><figcaption aria-hidden="true">Regression parameters - 3D plot.</figcaption>
+</figure>
+</section>
+<section id="standard-batch-gradient-descent" class="slide level3">
+<h3>Standard (“batch”) gradient descent</h3>
+<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathbf{w}^{t+1} &amp;= \mathbf{w}^t - \alpha \nabla L(\mathbf{w}^t) \\
+ &amp;= \mathbf{w}^t - \frac{\alpha}{n} \sum_{i=1}^n \nabla L_i(\mathbf{w}^t, \mathbf{x}_i, y_i)
+\end{aligned}
+\]</span></p>
+<p>Repeat until stopping criterion is met.</p>
+<aside class="notes">
+<p>To update <span class="math inline">\(\mathbf{w}\)</span>, must compute <span class="math inline">\(n\)</span> loss functions and gradients - each iteration is <span class="math inline">\(O(nd)\)</span>. We need multiple iterations, but as long as we need fewer than <span class="math inline">\(n\)</span> iterations, it’s more efficient than the previous approach.</p>
+<p>However, if <span class="math inline">\(n\)</span> is large, it may still be expensive!</p>
+</aside>
+</section>
+<section id="stochastic-gradient-descent" class="slide level3">
+<h3>Stochastic gradient descent</h3>
+<p>Idea:</p>
+<p>At each step, compute estimate of gradient using only one randomly selected sample, and move in the direction it indicates.</p>
+<p>Many of the steps will be in the wrong direction, but progress towards minimum occurs <em>on average</em>, as long as the steps are small.</p>
+<aside class="notes">
+<p>Each iteration is now only <span class="math inline">\(O(d)\)</span>, but we may need more iterations than for gradient descent. However, in many cases we still come out ahead (especially if <span class="math inline">\(n\)</span> is large!).</p>
+<p>See supplementary notes for an analysis of the number of iterations needed.</p>
+</aside>
+</section>
+<section id="mini-batch-also-stochastic-gradient-descent-1" class="slide level3">
+<h3>Mini-batch (also “stochastic”) gradient descent (1)</h3>
+<p>Idea:</p>
+<p>At each step, select a small subset of training data (“mini-batch”), and evaluate gradient on that mini-batch.</p>
+<p>Then move in the direction it indicates.</p>
+</section>
+<section id="mini-batch-also-stochastic-gradient-descent-2" class="slide level3">
+<h3>Mini-batch (also “stochastic”) gradient descent (2)</h3>
+<p>For each step <span class="math inline">\(t\)</span> along the error curve:</p>
+<ul>
+<li>Select random mini-batch <span class="math inline">\(I_t\subset{1,\ldots,n}\)</span></li>
+<li>Compute gradient approximation:</li>
+</ul>
+<p><span class="math display">\[g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, \mathbf{w}^t)\]</span></p>
+<ul>
+<li>Update parameters: <span class="math inline">\(\mathbf{w}^{t+1} = \mathbf{w}^t - \alpha^t g^t\)</span></li>
+</ul>
+</section></section>
+<section id="next-more-on-linear-regression" class="title-slide slide level2">
+<h2>Next: more on linear regression</h2>
+
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js-master/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
