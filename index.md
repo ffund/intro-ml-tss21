@@ -31,4 +31,6 @@
 
 * [Notes: videos on convexity, directional derivatives, gradient descent](notes/2-gd-background-videos)
 * [Notes: Predicting the course of COVID-19 with a "cubic model"](notes/3-cubic-model) <a href="notes/3-cubic-model.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-
+* Handout: Gradient descent <a href="slides/3-gradient-descent.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Bias-variance tradeoff <a href="slides/3-bias-variance-tradeoff.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* [Notes: bias and variance for linear regression](notes/3-linear-regression-bias-variance)  <a href="notes/3-linear-regression-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
