@@ -61,8 +61,6 @@ Suppose we would start with all-zero or random weights. Then iteratively (for $t
 
 ::: notes
 
-What would this look like on a "loss surface"?
-
 For infinite $t$, we'd eventually find optimal weights - but clearly we could do better.
 
 :::
@@ -100,7 +98,7 @@ Start from some initial point, then iteratively
 
 ### Gradient descent illustration
 
-![[Link for animation](https://miro.medium.com/max/700/1*KQVi812_aERFRolz_5G3rA.gif). Image credit: Peter Roelants](../images/gradient-descent-animation.gif){width=70%}
+![[Link for animation](https://miro.medium.com/max/700/1*KQVi812_aERFRolz_5G3rA.gif). Image credit: Peter Roelants](../images/gradient-descent-animation.gif){width=80%}
 
 <!--
 
@@ -125,6 +123,8 @@ $$
 
 
 Repeat until stopping criterion is met.
+
+\newpage
 
 
 ### Example: gradient descent for linear regression (1)
@@ -198,6 +198,8 @@ Also:
 * If the function we want to optimize does not have a global minimum, the noise can be helpful - we can "bounce" out of a local minimum.
 
 :::
+
+\newpage
 
 ### Mini-batch (also "stochastic") gradient descent (1)
 
@@ -321,6 +323,8 @@ Idea: Track per-parameter EWMA of *square* of gradient, and use to normalize par
 
 Weights with recent gradients of large magnitude have smaller learning rate, weights with small recent gradients have larger learning rates.
 
+
+\newpage
 
 ### Illustration (Beale's function)
 
