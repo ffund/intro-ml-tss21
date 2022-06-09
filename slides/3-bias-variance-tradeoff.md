@@ -363,6 +363,18 @@ Note: this is a "classic" view of the bias-variance tradeoff. Recent results sug
 
 ### Updated view: double descent
 
+::: notes
+
+For an intuitive explanation of "double descent", see:
+
+* [Double Descent](https://mlu-explain.github.io/double-descent/) (Jared Wilber, Brent Werness)
+* [Double Descent 2](https://mlu-explain.github.io/double-descent2/) (Brent Werness, Jared Wilber)
+
+:::
+
+<!--
+https://colab.research.google.com/github/aslanides/aslanides.github.io/blob/master/colabs/2019-10-10-interpolation-regime.ipynb
+-->
 
 ## Recap
 
