@@ -102,6 +102,23 @@ to use Colab - you'll just need a browser.
 You won't need to buy a textbook - all of the materials you'll need
 will be posted on the course site.
 
+### What topics will be included?
+
+Here is a rough outline of the course content (subject to change):
+
+1. Intro to ML, Python + numpy, exploratory data analysis
+2. Linear regression
+3. Gradient descent, bias-variance tradeoff 
+4. Model selection and regularization
+5. Logistic regression for classification
+6. K nearest neighbor
+7. Decision trees, ensembles
+8. Support vector machines, kernel trick
+9. Neural networks
+10. Deep learning, convolutional networks, transfer learning
+11. Unsupervised learning (project work)
+12. Reinforcement learning (project work)
+
 ### The course includes a project. Can I do the project on whatever topic I want? 
 
 Not exactly. For your project, I'm going to ask you to replicate and
