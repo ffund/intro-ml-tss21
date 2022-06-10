@@ -59,11 +59,11 @@
 <aside class="notes">
 <p>Runtime of a “naive” solution using “standard” matrix multiplication:</p>
 <ul>
-<li><span class="math inline">\(O(dn^2)\)</span> to multiply <span class="math inline">\(\Phi^T \Phi\)</span></li>
+<li><span class="math inline">\(O(d^2n)\)</span> to multiply <span class="math inline">\(\Phi^T \Phi\)</span></li>
 <li><span class="math inline">\(O(dn)\)</span> to muplity <span class="math inline">\(\Phi^T y\)</span></li>
 <li><span class="math inline">\(O(d^3)\)</span> to compute the inverse of <span class="math inline">\(\Phi^T \Phi\)</span></li>
 </ul>
-<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(dn^2)\)</span>.</p>
+<p>Since <span class="math inline">\(n\)</span> is generally much larger than <span class="math inline">\(d\)</span>, the first term dominates and the runtime is <span class="math inline">\(O(d^2n)\)</span>.</p>
 <p>(Note: in practice, we can do it a bit faster.)</p>
 </aside>
 </section></section>
@@ -154,7 +154,7 @@ w^{t+1} &amp;= w^t + \frac{\alpha^t}{n} \sum_{i=1}^n (y_i - \langle w^t,x_i \ran
 \]</span></p>
 <p>(dropping the constant 2 factor)</p>
 <aside class="notes">
-<p>To update <span class="math inline">\(\mathbf{w}\)</span>, must compute <span class="math inline">\(n\)</span> loss functions and gradients - each iteration is <span class="math inline">\(O(nd)\)</span>. We need multiple iterations, but as long as we need fewer than <span class="math inline">\(n\)</span> iterations, it’s more efficient than the previous approach.</p>
+<p>To update <span class="math inline">\(\mathbf{w}\)</span>, must compute <span class="math inline">\(n\)</span> loss functions and gradients - each iteration is <span class="math inline">\(O(nd)\)</span>. We need multiple iterations, but in many cases it’s more efficient than the previous approach.</p>
 <p>However, if <span class="math inline">\(n\)</span> is large, it may still be expensive!</p>
 </aside>
 </section></section>

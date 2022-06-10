@@ -35,11 +35,11 @@ How long does it take to compute?
 
 Runtime of a "naive" solution using "standard" matrix multiplication: 
 
-* $O(dn^2)$ to multiply $\Phi^T \Phi$
+* $O(d^2n)$ to multiply $\Phi^T \Phi$
 * $O(dn)$ to muplity $\Phi^T y$
 * $O(d^3)$ to compute the inverse of $\Phi^T \Phi$ 
 
-Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(dn^2)$. 
+Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(d^2n)$. 
 
 (Note: in practice, we can do it a bit faster.)
 
@@ -157,7 +157,7 @@ $$
 ::: notes
 
 
-To update $\mathbf{w}$, must compute $n$ loss functions and gradients - each iteration is $O(nd)$. We need multiple iterations, but as long as we need fewer than $n$ iterations, it's more efficient than the previous approach.
+To update $\mathbf{w}$, must compute $n$ loss functions and gradients - each iteration is $O(nd)$. We need multiple iterations, but in many cases it's more efficient than the previous approach.
 
 However, if $n$ is large, it may still be expensive!
 
