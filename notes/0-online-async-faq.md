@@ -116,8 +116,8 @@ Here is a rough outline of the course content (subject to change):
 8. Support vector machines, kernel trick
 9. Neural networks
 10. Deep learning, convolutional networks, transfer learning
-11. Unsupervised learning (project work)
-12. Reinforcement learning (project work)
+11. Unsupervised learning 
+12. Reinforcement learning
 
 ### The course includes a project. Can I do the project on whatever topic I want? 
 
