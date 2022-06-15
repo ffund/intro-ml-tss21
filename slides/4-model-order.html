@@ -29,6 +29,23 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section id="a-supervised-machine-learning-recipe" class="title-slide slide level2 cell markdown">
+<h2>A supervised machine learning “recipe”</h2>
+<ul>
+<li><em>Step 1</em>: Get labeled data: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,N\)</span>.</li>
+<li><em>Step 2</em>: Choose a candidate <strong>model</strong> <span class="math inline">\(f\)</span>: <span class="math inline">\(\hat{y} = f(x)\)</span>.</li>
+<li><em>Step 3</em>: Select a <strong>loss function</strong>.</li>
+<li><em>Step 4</em>: Find the model <strong>parameter</strong> values that minimize the loss function (<strong>training</strong>).</li>
+<li><em>Step 5</em>: Use trained model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new samples not used in training (<strong>inference</strong>).</li>
+<li><em>Step 6</em>: Evaluate how well your model <strong>generalizes</strong>.</li>
+</ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/3-validation-testonly.png" style="width:80.0%" alt="When we have only one model to consider, with no “hyperparameters”." /><figcaption aria-hidden="true">When we have only one model to consider, with no “hyperparameters”.</figcaption>
+</figure>
+</aside>
+</section>
+
 <section>
 <section id="model-selection-problems" class="title-slide slide level2">
 <h2>Model selection problems</h2>
@@ -36,14 +53,6 @@
 <p>Model selection problem: how to select the <span class="math inline">\(f()\)</span> that maps features <span class="math inline">\(X\)</span> to target <span class="math inline">\(y\)</span>?</p>
 <p>We’ll look at two examples of model selection problems, but there are many more.</p>
 </aside>
-</section>
-<section id="choosing-model-complexity" class="slide level3">
-<h3>Choosing model complexity</h3>
-<p>We need to select a model of appropriate complexity -</p>
-<ul>
-<li>what does that mean, and</li>
-<li>how do we select one?</li>
-</ul>
 </section>
 <section id="model-order-selection-problem" class="slide level3">
 <h3>Model order selection problem</h3>
@@ -64,21 +73,28 @@
 <li>Select <span class="math inline">\(d\)</span> that minimizes loss</li>
 </ul>
 <aside class="notes">
-<ul>
-<li>Problem: loss function always decreasing with <span class="math inline">\(d\)</span> (training error decreases with model complexity!)</li>
-</ul>
+<figure>
+<img data-src="../images/3-validation-select.png" style="width:80.0%" alt="Selecting the best of multiple models - this approach does not work, because the loss function always decreasing with d (training error decreases with model complexity!)" /><figcaption aria-hidden="true">Selecting the best of multiple models - this approach does <em>not</em> work, because the loss function always decreasing with <span class="math inline">\(d\)</span> (training error decreases with model complexity!)</figcaption>
+</figure>
+<p>Note that we shouldn’t use the test data to select a model either - then we wouldn’t have an “unused” data set on which to evaluate how well the model generalizes.</p>
 </aside>
 </section>
-<section id="feature-selection-problem" class="slide level3">
-<h3>Feature selection problem</h3>
+<section id="feature-selection-problem-1" class="slide level3">
+<h3>Feature selection problem (1)</h3>
 <p>Given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{n \times d}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
-<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+<p>Linear model: <span class="math inline">\(\hat{y} = w_0 + \sum_{j=1}^d w_j x_j\)</span></p>
 <aside class="notes">
 <ul>
-<li>Linear model: <span class="math inline">\(\hat{y} = w_0 + w_1 x_1 + \cdots + w_d x_d\)</span></li>
 <li>Many features, only some are relevant</li>
 <li><strong>Feature selection problem</strong>: fit a model with a small number of features</li>
 </ul>
+</aside>
+</section>
+<section id="feature-selection-problem-2" class="slide level3">
+<h3>Feature selection problem (2)</h3>
+<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
+<p>Linear model: <span class="math inline">\(\hat{y} = w_0 + \sum_{x \in \mathbf{X}_S} w_j x_j\)</span></p>
+<aside class="notes">
 <p>Why use a subset of features?</p>
 <ul>
 <li>High risk of overfitting if you use all features!</li>
@@ -92,21 +108,24 @@
 <h2>Validation</h2>
 
 </section>
-<section id="simple-trainvalidationtest-split" class="slide level3">
-<h3>Simple train/validation/test split</h3>
+<section id="hold-out-validation" class="slide level3">
+<h3>Hold-out validation</h3>
 <ul>
 <li>Divide data into training, validation, test sets</li>
 <li>For each candidate model, learn model parameters on training set</li>
 <li>Measure error for all models on validation set</li>
 <li>Select model that minimizes error on validation set</li>
-<li>Evaluate model on test set</li>
+<li>Evaluate <em>that</em> model on test set</li>
 </ul>
 <aside class="notes">
+<figure>
+<img data-src="../images/3-validation-single.png" style="width:80.0%" alt="Model selection with a validation set." /><figcaption aria-hidden="true">Model selection with a validation set.</figcaption>
+</figure>
 <p>Note: sometimes you’ll hear “validation set” and “test set” used according to the reverse meanings.</p>
 </aside>
 </section>
-<section id="simple-trainvalidationtest-algorithm-1" class="slide level3">
-<h3>Simple train/validation/test algorithm (1)</h3>
+<section id="hold-out-validation-1" class="slide level3">
+<h3>Hold-out validation (1)</h3>
 <ul>
 <li>Split <span class="math inline">\(X, y\)</span> into training, validation, and test.</li>
 <li>Loop over models of increasing complexity: For <span class="math inline">\(p=1,\ldots,p_{max}\)</span>,
@@ -117,15 +136,15 @@
 </ul></li>
 </ul>
 </section>
-<section id="simple-trainvalidationtest-algorithm-1-1" class="slide level3">
-<h3>Simple train/validation/test algorithm (1)</h3>
+<section id="hold-out-validation-2" class="slide level3">
+<h3>Hold-out validation (2)</h3>
 <ul>
 <li>Select model order with best score (here, assuming “lower is better”): <span class="math display">\[p^* = \operatorname*{argmin}_p S_p\]</span></li>
 <li>Evaluate: <span class="math display">\[S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})\]</span></li>
 </ul>
 </section>
-<section id="problems-with-simple-split" class="slide level3">
-<h3>Problems with simple split</h3>
+<section id="problems-with-hold-out-validation" class="slide level3">
+<h3>Problems with hold-out validation</h3>
 <aside class="notes">
 <ul>
 <li>Fitted model (and test error!) varies a lot depending on samples selected for training and validation.</li>
@@ -142,12 +161,11 @@
 <li>For each of the “splits”: evaluate model using <span class="math inline">\(K-1\)</span> parts for training, last part for validation</li>
 <li>Average the <span class="math inline">\(K\)</span> validation scores and choose based on average</li>
 </ul>
-</section>
-<section id="k-fold-cv-illustrated" class="slide level3">
-<h3>K-fold CV illustrated</h3>
+<aside class="notes">
 <figure>
-<img data-src="../images/sklearn_cross_validation.png" style="width:60.0%" alt="K-fold CV" /><figcaption aria-hidden="true">K-fold CV</figcaption>
+<img data-src="../images/3-validation-kfold.png" style="width:80.0%" alt="K-fold CV for model selection." /><figcaption aria-hidden="true">K-fold CV for model selection.</figcaption>
 </figure>
+</aside>
 </section>
 <section id="k-fold-cv---algorithm-1" class="slide level3">
 <h3>K-fold CV - algorithm (1)</h3>
@@ -176,18 +194,64 @@
 </figure>
 </aside>
 </section>
+<section id="leave-p-out-cv" class="slide level3">
+<h3>Leave-p-out CV</h3>
+<ul>
+<li>In each iteration, <span class="math inline">\(p\)</span> validation points</li>
+<li>Remaining <span class="math inline">\(n-p\)</span> points are for training</li>
+<li>Repeat for <em>all</em> possible sets of <span class="math inline">\(p\)</span> validation points</li>
+</ul>
+<aside class="notes">
+<p>This is <em>not</em> like K-fold CV which uses non-overlapping validation sets (they are only the same for <span class="math inline">\(p=1\)</span>)!</p>
+</aside>
+</section>
+<section id="computation-leave-p-out-cv" class="slide level3">
+<h3>Computation (leave-p-out CV)</h3>
+<p><span class="math inline">\({n \choose p}\)</span> iterations, in each:</p>
+<ul>
+<li>train on <span class="math inline">\(n-p\)</span> samples</li>
+<li>score on <span class="math inline">\(p\)</span> samples</li>
+</ul>
+<aside class="notes">
+<p>Usually, this is too expensive - but sometimes LOO CV can be a good match to the model (KNN).</p>
+</aside>
+</section>
+<section id="computation-k-fold-cv" class="slide level3">
+<h3>Computation (K-fold CV)</h3>
+<p>K iterations, in each:</p>
+<ul>
+<li>train on <span class="math inline">\(n-n/k\)</span> samples</li>
+<li>score on <span class="math inline">\(n/k\)</span> samples</li>
+</ul>
+</section>
 <section id="k-fold-cv---how-to-split" class="slide level3">
 <h3>K-fold CV - how to split?</h3>
 <figure>
 <img data-src="../images/3-kfold-variations.png" style="width:75.0%" alt="K-fold CV variations." /><figcaption aria-hidden="true">K-fold CV variations.</figcaption>
 </figure>
 <aside class="notes">
-<p>Selecting the right K-fold CV is very important for avoiding data leakage!</p>
+<p>Selecting the right K-fold CV is very important for avoiding data leakage! (Also for training/test split.)</p>
 <p>Refer to <a href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation">the function documentation</a> for more examples.</p>
+<figure>
+<img data-src="../images/4-shuffle-split.png" style="width:60.0%" alt="Example 1: The data is not homogeneous with respect to sample index, so splitting data data as shown on left would be a very bad idea - the training, validation, and test sets would not be similar! Instead, we should shuffle the indices before splitting the data, as shown on right." /><figcaption aria-hidden="true">Example 1: The data is not homogeneous with respect to sample index, so splitting data data as shown on left would be a very bad idea - the training, validation, and test sets would not be similar! Instead, we should shuffle the indices before splitting the data, as shown on right.</figcaption>
+</figure>
+<figure>
+<img data-src="../images/4-shuffle-group.png" style="width:60.0%" alt="Example 2: The split on the left seems OK, unless (as shown on the right), each person contributes several samples to the dataset, and the value of y is similar for different samples from the same person. This is an example of data leakage. The model is learning from data from an individual, then it is validated and evaluated on data from the same individual - but in production, the model is expected to make predictions about individuals it has never seen. The training, validation, and evaluation process will have overly optimistic performance compared to production (and the model may overfit)." /><figcaption aria-hidden="true">Example 2: The split on the left seems OK, unless (as shown on the right), each person contributes several samples to the dataset, and the value of <span class="math inline">\(y\)</span> is similar for different samples from the same person. This is an example of data leakage. The model is learning from data from an individual, then it is validated and evaluated on data from the same individual - but in production, the model is expected to make predictions about individuals it has never seen. The training, validation, and evaluation process will have overly optimistic performance compared to production (and the model may overfit).</figcaption>
+</figure>
+<figure>
+<img data-src="../images/4-fold-group.png" style="width:74.0%" alt="Example 2 - continued: Instead, we should make sure that each person is only in one type of “set” at a time (e.g. with GroupKFoldCV or equivalent)." /><figcaption aria-hidden="true">Example 2 - continued: Instead, we should make sure that each person is <em>only</em> in one type of “set” at a time (e.g. with GroupKFoldCV or equivalent).</figcaption>
+</figure>
+<figure>
+<img data-src="../images/4-bad-split-timeseries.png" style="width:77.0%" alt="Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)" /><figcaption aria-hidden="true">Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)</figcaption>
+</figure>
+<figure>
+<img data-src="../images/4-best-split-timeseries.png" style="width:77.0%" alt="A better way would be to train and validate like this (example shown is 3-fold CV)." /><figcaption aria-hidden="true">A better way would be to train and validate like this (example shown is 3-fold CV).</figcaption>
+</figure>
 </aside>
-</section>
-<section id="one-standard-error-rule" class="slide level3">
-<h3>One standard error rule</h3>
+</section></section>
+<section>
+<section id="one-standard-error-rule" class="title-slide slide level2">
+<h2>One standard error rule</h2>
 <ul>
 <li>Model selection that minimizes mean error often results in too-complex model</li>
 <li>One standard error rule: use simplest model where mean error is within one SE of the minimum mean error</li>
@@ -209,6 +273,9 @@
 <p>then select simplest model with score lower than target:</p>
 <p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \leq S_t\}\]</span></p>
 <aside class="notes">
+<figure>
+<img data-src="../images/4-one-se-mse.png" style="width:60.0%" alt="Model selection using one SE rule on MSE. The best scoring model is d=8, but d=6 is simplest model within one SE of the best scoring model, and so d=6 would be selected according to the one-SE rule." /><figcaption aria-hidden="true">Model selection using one SE rule on MSE. The best scoring model is <span class="math inline">\(d=8\)</span>, but <span class="math inline">\(d=6\)</span> is simplest model within one SE of the best scoring model, and so <span class="math inline">\(d=6\)</span> would be selected according to the one-SE rule.</figcaption>
+</figure>
 <p>Note: this assumes you are using a “smaller is better” metric such as MSE. If you are using a “larger is better” metric, like R2, how would we change the algorithm?</p>
 </aside>
 </section>
@@ -218,6 +285,11 @@
 <p><strong>One SE rule</strong> for “higher is better” scoring metric: Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} - SE_{p^*}\)</span></p>
 <p>then select simplest model with score higher than target:</p>
 <p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \geq S_t\}\]</span></p>
+<aside class="notes">
+<figure>
+<img data-src="../images/4-one-se-r2.png" style="width:60.0%" alt="Model selection using one SE rule on R2. In this example, the best scoring model is d=2, and there is no simpler model within one SE, so the one-SE rule would also select d=2." /><figcaption aria-hidden="true">Model selection using one SE rule on R2. In this example, the best scoring model is <span class="math inline">\(d=2\)</span>, and there is no simpler model within one SE, so the one-SE rule would also select <span class="math inline">\(d=2\)</span>.</figcaption>
+</figure>
+</aside>
 </section></section>
     </div>
   </div>

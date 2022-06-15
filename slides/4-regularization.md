@@ -39,7 +39,7 @@ $$ \phi (w) = \alpha \sum_{j=1}^d | w_j | $$
 
 ### Graphical representation
 
-![LS solution (+), RSS contours. As we increase $\alpha$, regularized solution moves from LS to 0. ](../images/regularization-contour.png){ width=100%}
+![[LS solution (+), RSS contours](https://xavierbourretsicotte.github.io/ridge_lasso_visual.html). As we increase $\alpha$, regularized solution moves from LS to 0. ](../images/regularization-contour.png){ width=100%}
 
 ### Common features: Ridge and LASSO
 

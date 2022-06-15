@@ -6,6 +6,30 @@ author: 'Fraida Fund'
 
 \newpage
 
+
+
+::: {.cell .markdown}
+
+## A supervised machine learning "recipe" 
+
+
+* *Step 1*: Get labeled data:  $(\mathbf{x_i}, y_i), i=1,2,\cdots,N$.
+* *Step 2*: Choose a candidate **model** $f$: $\hat{y} = f(x)$.
+* *Step 3*: Select a **loss function**.
+* *Step 4*: Find the model **parameter** values that minimize the loss function (**training**).
+* *Step 5*: Use trained model to **predict** $\hat{y}$ for new samples not used in training (**inference**).
+* *Step 6*: Evaluate how well your model **generalizes**.
+
+
+:::notes
+
+![When we have only one model to consider, with no "hyperparameters".](../images/3-validation-testonly.png){ width=80%  }
+
+:::
+
+:::
+
+
 ## Model selection problems
 
 ::: notes
@@ -16,12 +40,6 @@ We'll look at two examples of model selection problems, but there are many more.
 
 :::
 
-### Choosing model complexity
-
-We need to select a model of appropriate complexity -
-
-* what does that mean, and 
-* how do we select one?
 
 ### Model order selection problem
 
@@ -41,25 +59,38 @@ Suppose we would "search" over each possible $d$:
 
 ::: notes
 
-* Problem: loss function always decreasing with $d$ (training error decreases with model complexity!)
+![Selecting the best of multiple models - this approach does *not* work, because the  loss function always decreasing with $d$ (training error decreases with model complexity!)](../images/3-validation-select.png){ width=80%  }
+
+Note that we shouldn't use the test data to select a model either - then we wouldn't have an "unused" data set on which to evaluate how well the model generalizes.
 
 :::
 
 
-### Feature selection problem
+\newpage
+
+### Feature selection problem (1)
+
+
 
 Given high dimensional data $\mathbf{X} \in R^{n \times d}$ and target variable $y$, 
 
-Select a subset of $k << d$ features, $\mathbf{X}_S \in R^{n \times k}$ that is most relevant to target $y$. 
-
-
+Linear model: $\hat{y} = w_0 + \sum_{j=1}^d w_j x_j$
 
 ::: notes
 
-* Linear model: $\hat{y} = w_0 + w_1 x_1 + \cdots + w_d x_d$
 * Many features, only some are relevant
 * **Feature selection problem**: fit a model with a small number of features
 
+:::
+
+### Feature selection problem (2)
+
+Select a subset of $k << d$ features, $\mathbf{X}_S \in R^{n \times k}$ that is most relevant to target $y$. 
+
+Linear model: $\hat{y} = w_0 + \sum_{x \in \mathbf{X}_S} w_j x_j$
+
+
+::: notes
 
 Why use a subset of features?
 
@@ -69,27 +100,28 @@ Why use a subset of features?
 
 :::
 
-\newpage
 
 ## Validation
 
 
-### Simple train/validation/test split
+### Hold-out validation
 
 * Divide data into training, validation, test sets
 * For each candidate model, learn model parameters on training set
 * Measure error for all models on validation set
 * Select model that minimizes error on validation set
-* Evaluate model on test set
+* Evaluate *that* model on test set
 
 ::: notes
+
+![Model selection with a validation set.](../images/3-validation-single.png){ width=80%  }
 
 Note: sometimes you'll hear "validation set" and "test set" used according to the reverse meanings.
 
 
 :::
 
-### Simple train/validation/test algorithm (1)
+### Hold-out validation (1)
 
 * Split $X, y$ into training, validation, and test.
 * Loop over models of increasing complexity: For $p=1,\ldots,p_{max}$,
@@ -98,25 +130,20 @@ Note: sometimes you'll hear "validation set" and "test set" used according to th
   * **Score**: $S_p = \text{score}(y_{v}, \hat{y}_{v,p})$
 
 
-### Simple train/validation/test algorithm (1)
+### Hold-out validation (2)
 
 * Select model order with best score (here, assuming "lower is better"): $$p^* = \operatorname*{argmin}_p S_p$$
 * Evaluate: $$S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})$$
 
-### Problems with simple split
+### Problems with hold-out validation
 
 ::: notes
-
 
 * Fitted model (and test error!) varies a lot depending on samples selected for training and validation.
 * Fewer samples available for estimating parameters.
 * Especially bad for problems with small number of samples.
 
-
-
 :::
-
-\newpage
 
 
 ### K-fold cross validation
@@ -127,9 +154,11 @@ Alternative to simple split:
 * For each of the "splits": evaluate model using $K-1$ parts for training, last part for validation
 * Average the $K$ validation scores and choose based on average
 
-### K-fold CV illustrated
+:::notes
 
-![K-fold CV](../images/sklearn_cross_validation.png){ width=60%}
+![K-fold CV for model selection.](../images/3-validation-kfold.png){ width=80%  }
+
+:::
 
 
 
@@ -152,15 +181,46 @@ Alternative to simple split:
 * Re-train model on entire training set: $\hat{w}_{p^*} = \text{fit}_p(X_{tr}, y_{tr})$
 * Evaluate new fitted model on test set
 
-\newpage
-
 ::: notes
 
 ![Summary of approaches. [Source](https://sebastianraschka.com/faq/docs/evaluate-a-model.html).](../images/3-validation-options.png){ width=100% }
 
+:::
+
 \newpage
 
+### Leave-p-out CV
+
+* In each iteration, $p$ validation points
+* Remaining $n-p$ points are for training
+* Repeat for *all* possible sets of $p$ validation points 
+
+:::notes
+
+This is *not* like K-fold CV which uses non-overlapping validation sets (they are only the same for $p=1$)! 
+
 :::
+
+### Computation (leave-p-out CV)
+
+${n \choose p}$ iterations, in each:
+
+ - train on $n-p$ samples
+ - score on $p$ samples
+
+
+:::notes
+
+Usually, this is too expensive - but sometimes LOO CV can be a good match to the model (KNN).
+
+:::
+
+### Computation (K-fold CV)
+
+K iterations, in each:
+
+ - train on $n-n/k$ samples
+ - score on $n/k$ samples
 
 ### K-fold CV - how to split?
 
@@ -169,15 +229,29 @@ Alternative to simple split:
 ::: notes
 
 
-Selecting the right K-fold CV is very important for avoiding data leakage!
+Selecting the right K-fold CV is very important for avoiding data leakage! (Also for training/test split.)
 
 Refer to [the function documentation](https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation) for more examples.
+
+\newpage
+
+![Example 1: The data is not homogeneous with respect to sample index, so splitting data data as shown on left would be a very bad idea - the training, validation, and test sets would not be similar! Instead, we should shuffle the indices before splitting the data, as shown on right.](../images/4-shuffle-split.png){ width=60% }
+
+![Example 2: The split on the left seems OK, unless (as shown on the right), each person contributes several samples to the dataset, and the value of $y$ is similar for different samples from the same person. This is an example of data leakage. The model is learning from data from an individual, then it is validated and evaluated on data from the same individual - but in production, the model is expected to make predictions about individuals it has never seen. The training, validation, and evaluation process will have overly optimistic performance compared to production (and the model may overfit).](../images/4-shuffle-group.png){ width=60% }
+
+![Example 2 - continued:  Instead, we should make sure that each person is *only* in one type of "set" at a time (e.g. with GroupKFoldCV or equivalent).](../images/4-fold-group.png){ width=74% }
+
+\newpage
+
+![Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)](../images/4-bad-split-timeseries.png){ width=77% }
+
+![A better way would be to train and validate like this (example shown is 3-fold CV).](../images/4-best-split-timeseries.png){ width=77% }
 
 :::
 
 \newpage
 
-### One standard error rule
+## One standard error rule
 
 * Model selection that minimizes mean error often results in too-complex model
 * One standard error rule: use simplest model where mean error is within one SE of the minimum mean error
@@ -202,10 +276,13 @@ $$p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \leq S_t\}$$
 
 ::: notes
 
+![Model selection using one SE rule on MSE. The best scoring model is $d=8$, but $d=6$ is simplest model within one SE of the best scoring model, and so $d=6$ would be selected according to the one-SE rule.](../images/4-one-se-mse.png){width=60%}
+
 Note: this assumes you are using a "smaller is better" metric such as MSE. If you are using a "larger is better" metric, like R2, how would we change the algorithm?
 
 :::
 
+\newpage
 
 ### One standard error rule - algorithm (3)
 
@@ -218,6 +295,10 @@ then select simplest model with score higher than target:
 $$p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \geq S_t\}$$
 
 
+::: notes
 
+![Model selection using one SE rule on R2. In this example, the best scoring model is $d=2$, and there is no simpler model within one SE, so the one-SE rule would also select $d=2$.](../images/4-one-se-r2.png){width=60%}
+
+:::
 
 
