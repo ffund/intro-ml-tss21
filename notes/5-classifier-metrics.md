@@ -35,10 +35,10 @@ Actual $\downarrow$ Pred. $\rightarrow$  1   0
 1                                      TP  FN
 0                                      FP  TN
 
-We may also define two more quantities, each of which is computed as the sum of a row in the confusion matrix:
+We may also define two more quantities:
 
-* The number of actual positive values (when $y = 1$) **P** = TP+FN, is the sum of the $1$ row.
-* The number of actual negative values (when $y = 0$) **N** = FP+TN is the sum of the $0$ row.
+* The number of actual positive values (when $y = 1$) **P** = TP+FN, is the sum of the "actual positive" cells.
+* The number of actual negative values (when $y = 0$) **N** = FP+TN is the sum of the "actual negative" cells.
 
 The **total population**, P + N, is the total number of samples.
 
