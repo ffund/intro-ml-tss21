@@ -95,7 +95,7 @@ $$ FNR = \frac{FN}{FN+TP}  = 1 - TPR = P(\hat{y}=0 | y = 1)$$
 
 * **False Omission Rate** (FOR):
 
-$$ FOR = \frac{FN}{FN+TN}  = 1 - TPR = P(y=1 | \hat{y} = 0)$$
+$$ FOR = \frac{FN}{FN+TN}  = 1 - NPV = P(y=1 | \hat{y} = 0)$$
 
 These metrics are illustrated in the following table:
 
