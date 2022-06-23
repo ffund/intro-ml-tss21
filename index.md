@@ -43,5 +43,18 @@
 ## Week 4: Model selection, regularization
 
 * Handout: Model selection <a href="slides/4-model-order.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Handout: Regularization <a href="slides/4-regularization.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Model selection in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/4-model-selection.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/4-model-selection.ipynb)
+* Notebook: Model order selection for neural data (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/4-neural-model-selection-hw.ipynb)
 
+* Handout: Regularization <a href="slides/4-regularization.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Regularization in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/4-regularization-deep-dive.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/4-regularization-deep-dive.ipynb)
+
+## Week 5: Logistic regression for classification
+
+* [Notes: Classifier metrics](notes/5-classifier-metrics.html) <a href="notes/5-classifier-metrics.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Logistic regression <a href="slides/5-logistic-regression.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Logistic regression in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/5-logistic-regression-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-logistic-regression-in-depth.ipynb)
+* Notebook: Logistic regression for handwritten digits classification <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/5-logistic-regression-digits.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-logistic-regression-digits.ipynb)
+* [Outside reference: Machine bias](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing)
+* [Outside reference: Can you make AI fairer than a judge?](https://www.technologyreview.com/2019/10/17/75285/ai-fairer-than-judge-criminal-risk-assessment-algorithm/)
+* Notebook: COMPAS case study <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/5-compas-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-compas-case-study.ipynb)
