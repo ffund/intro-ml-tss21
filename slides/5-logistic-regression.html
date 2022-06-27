@@ -35,6 +35,7 @@
 <li>Linear classifiers</li>
 <li>Logistic regression</li>
 <li>Fitting logistic regression</li>
+<li>Naive Bayes classifier</li>
 </ul>
 </section>
 
@@ -136,8 +137,7 @@
 <img data-src="../images/sigmoid.png" style="width:30.0%" alt="\sigma(z) = \frac{1}{1 + e^{-z}} is a classic “S”-shaped function." /><figcaption aria-hidden="true"><span class="math inline">\(\sigma(z) = \frac{1}{1 + e^{-z}}\)</span> is a classic “S”-shaped function.</figcaption>
 </figure>
 <aside class="notes">
-<p>Why the sigmoid/logistic function? Among its other nice properties, its derivative is <span class="math inline">\(\sigma (1-\sigma)\)</span>, which makes for an easy update rule for gradient descent.</p>
-<p>Also note the intuitive relationship behind this function’s output and the distance from the linear separator (the argument that is input to the function).</p>
+<p>Note the intuitive relationship behind this function’s output and the distance from the linear separator (the argument that is input to the function).</p>
 <figure>
 <img data-src="../images/4-logistic-sigmoid-distance.png" style="width:50.0%" alt="Output is close to 0 or 1 if the argument to the \sigma has large magnitude (point is far from separating hyperplane, but closer to 0.5 if the argument is small (point is near separating hyperplane)." /><figcaption aria-hidden="true">Output is close to 0 or 1 if the argument to the <span class="math inline">\(\sigma\)</span> has large magnitude (point is far from separating hyperplane, but closer to 0.5 if the argument is small (point is near separating hyperplane).</figcaption>
 </figure>
@@ -178,7 +178,6 @@
 <ul>
 <li>Unlike linear regression, weights do <em>not</em> correspond to change in output associated with one-unit change in input.</li>
 <li>Sign of weight <em>does</em> tell us about relationship between a given feature and target variable.</li>
-<li>Can add a regularization penalty to cost function to reduce variance, just like with linear regression.</li>
 </ul>
 </section>
 <section id="logistic-regression---illustration" class="slide level3">
@@ -332,9 +331,18 @@ L(\mathbf{W}) &amp;= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 <p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} = 0 \]</span></p>
 <p>for all <span class="math inline">\(W_{kj}\)</span></p>
 <p><strong>But</strong>, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent)</p>
+</section>
+<section id="transformations-bias-variance" class="slide level3">
+<h3>Transformations, bias, variance</h3>
+<ul>
+<li>Can use basis functions to map problem to transformed feature space (if “natural” decision boundary is non-linear)</li>
+<li>Variance increases with <span class="math inline">\(d\)</span> and decreases with <span class="math inline">\(n\)</span></li>
+<li>Can add a regularization penalty to loss function</li>
+</ul>
 </section></section>
 <section id="recipe-for-logistic-regression-binary-classifier" class="title-slide slide level2">
 <h2>“Recipe” for logistic regression (binary classifier)</h2>
+<aside class="notes">
 <ul>
 <li>Choose a <strong>model</strong>: <span class="math display">\[P(y = 1 | x, w) = \sigma\left(w_0 + \sum_{i=1}^d w_d x_d\right)\]</span></li>
 </ul>
@@ -353,10 +361,12 @@ L(\mathbf{W}) &amp;= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 <li>Find model <strong>parameters</strong> that minimize loss: use numerical optimization to find weight vector <span class="math inline">\(w\)</span></li>
 <li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
 </ul>
+</aside>
 </section>
 
 <section id="recipe-for-logistic-regression-multi-class-classifier" class="title-slide slide level2">
 <h2>“Recipe” for logistic regression (multi-class classifier)</h2>
+<aside class="notes">
 <ul>
 <li>Choose a <strong>model</strong>: find probability of belonging to each class, then choose the class for which the probability is highest.</li>
 </ul>
@@ -376,7 +386,125 @@ L(\mathbf{W}) &amp;= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 <li>Find model <strong>parameters</strong> that minimize loss: use numerical optimization to find weight vector <span class="math inline">\(w\)</span></li>
 <li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
 </ul>
+</aside>
 </section>
+
+<section>
+<section id="naive-bayes-classifier" class="title-slide slide level2">
+<h2>Naive Bayes classifier</h2>
+<aside class="notes">
+<p>A quick look at a different type of model!</p>
+</aside>
+</section>
+<section id="probabilistic-models-1" class="slide level3">
+<h3>Probabilistic models (1)</h3>
+<p>For logistic regression, minimizing the cross-entropy loss finds the parameters for which</p>
+<p><span class="math inline">\(P(\mathbf{y}| \mathbf{X}, \mathbf{W})\)</span></p>
+<p>is maximized.</p>
+</section>
+<section id="probabilistic-models-2" class="slide level3">
+<h3>Probabilistic models (2)</h3>
+<p>For linear regression, assuming normally distributed stochastic error, minimizing the <strong>squared error</strong> loss finds the parameters for which</p>
+<p><span class="math inline">\(P(\mathbf{y}| \mathbf{X}, \mathbf{w})\)</span></p>
+<p>is maximized.</p>
+<aside class="notes">
+<p>Surprise! We’ve been doing maximum likelihood estimation all along.</p>
+</aside>
+</section>
+<section id="probabilistic-models-3" class="slide level3">
+<h3>Probabilistic models (3)</h3>
+<p>ML models that try to</p>
+<ul>
+<li>get a good fit for <span class="math inline">\(P(y|X)\)</span>: <strong>discriminative</strong> models.</li>
+<li>fit <span class="math inline">\(P(X, y)\)</span> or <span class="math inline">\(P(X|y) P(y)\)</span>: <strong>generative</strong> models.</li>
+</ul>
+<aside class="notes">
+<p>Linear regression and logistic regression are both considered discriminative models; they say “given that we have this data, what’s the most likely label?” (e.g. learning a mapping from an input to a target variable).</p>
+<p>Generative models try to learn “what does data for each class look like” and then apply Bayes rule.</p>
+</aside>
+</section>
+<section id="bayes-rule" class="slide level3">
+<h3>Bayes rule</h3>
+<p>For a sample <span class="math inline">\(\mathbf{x}_i\)</span>, <span class="math inline">\(y_k\)</span> is label of class <span class="math inline">\(k\)</span>:</p>
+<p><span class="math display">\[P(y_k | \mathbf{x}_i) = \frac{P(\mathbf{x}_i|y_k) P(y_k)}{P(\mathbf{x}_i)}\]</span></p>
+<aside class="notes">
+<ul>
+<li><span class="math inline">\(P(y_k | \mathbf{x}_i)\)</span>: posterior probability. “What is the probability that this sample belongs to class <span class="math inline">\(k\)</span>, given its observed feature values are <span class="math inline">\(\mathbf{x}_i\)</span>?”</li>
+<li><span class="math inline">\(P(\mathbf{x}_i | y_k)\)</span>: conditional probability: “What is the probability of observing the feature values <span class="math inline">\(\mathbf{x}_i\)</span> in a sample, given that the sample belongs to class <span class="math inline">\(k\)</span>?”</li>
+<li><span class="math inline">\(P(y_k)\)</span>: prior probability</li>
+<li><span class="math inline">\(P(\mathbf{x}_i)\)</span>: evidence</li>
+</ul>
+</aside>
+<!--
+http://stanford.edu/~jurafsky/slp3/slides/7_NB.pdf
+https://sebastianraschka.com/faq/docs/naive-naive-bayes.html
+https://sebastianraschka.com/Articles/2014_naive_bayes_1.html
+https://sebastianraschka.com/faq/docs/naive-bayes-vs-logistic-regression.html
+-->
+</section>
+<section id="class-conditional-probability-1" class="slide level3">
+<h3>Class conditional probability (1)</h3>
+<p>“Naive” assumption conditional independence of features:</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(\mathbf{x}_i | y_k) &amp;= P(x_{i,1} | y_k) P(x_{i,2} | y_k) \ldots P(x_{i,d} | y_k)  \\
+                    &amp;= \prod_{j=1}^d P(x_{i,j}|y_k)
+\end{aligned}
+\]</span></p>
+<aside class="notes">
+<p>This is called “naive” because this assumption is probably not true in most realistic situations.</p>
+<!--
+For example, given the two words “peanut” and “butter” in a text document, intuition tells us that this assumption is obviously violated: If a document contains the word “peanut” it will be more likely that it also contains the word “butter” (or “allergy”).
+-->
+<p>(But the classifier may still work OK!)</p>
+<p>Also assumes samples are i.i.d.</p>
+</aside>
+</section>
+<section id="class-conditional-probability-2" class="slide level3">
+<h3>Class conditional probability (2)</h3>
+<p>Example: for binary/categorical features, we could compute</p>
+<p><span class="math display">\[\hat{P}(x_{i,j}| y_k) = \frac{N_{x_{i,j}, y_k}}{N_{y_k}}\]</span></p>
+<aside class="notes">
+<ul>
+<li><span class="math inline">\(N_{x_{i,j}, y_k}\)</span> is the number of samples belonging to class <span class="math inline">\(k\)</span> that have feature <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(N_{y_k}\)</span> is the total number of samples belonging to class <span class="math inline">\(k\)</span>.</li>
+</ul>
+<p>Example: for cat photo classifier,</p>
+<p><span class="math display">\[
+\hat{P}(\mathbf{x}_i = \text{[has tail, has pointy ears, has fur, purrs when petted, likes to eat fish]}| y = \text{cat})\]</span></p>
+<p><span class="math display">\[ \rightarrow P(\frac{N_{\text{tail, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{pointy ears, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{fur, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{purrs, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{eats fish, cat}}}{N_{\text{cat}}})\]</span></p>
+<p><span class="math display">\[\rightarrow \frac{20}{20} \frac{18}{20} \frac{17}{20} \frac{5}{20} \frac{15}{20}\]</span></p>
+</aside>
+</section>
+<section id="prior-probability" class="slide level3">
+<h3>Prior probability</h3>
+<p>Can estimate prior probability as</p>
+<p><span class="math display">\[\hat{P}(y_k) = \frac{N_{y_k}}{N}\]</span></p>
+<aside class="notes">
+<p>Prior probabilities: probability of encountering a particular class <span class="math inline">\(k\)</span>.</p>
+<p>Example: <span class="math inline">\(\frac{20}{1500}\)</span> photos are cats.</p>
+</aside>
+</section>
+<section id="evidence" class="slide level3">
+<h3>Evidence</h3>
+<p>We don’t actually need <span class="math inline">\(P(\mathbf{x}_i)\)</span> to make decisions, since it is the same for every class.</p>
+</section>
+<section id="naive-bayes-decision-boundary" class="slide level3">
+<h3>Naive bayes decision boundary</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/5-naive-bayes-decision.png" style="width:80.0%" alt="Naive bayes decision boundary." /><figcaption aria-hidden="true">Naive bayes decision boundary.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="why-generative-model" class="slide level3">
+<h3>Why generative model?</h3>
+<aside class="notes">
+<p>The generative model solves a more general problem than the discriminative model!</p>
+<p>But, only the generative model can be used to <strong>generate</strong> new samples similar to the training data.</p>
+<p>Example: “generate a new sample that is probably a cat.”</p>
+</aside>
+</section></section>
     </div>
   </div>
 

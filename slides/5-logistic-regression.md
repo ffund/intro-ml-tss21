@@ -11,6 +11,7 @@ author: 'Fraida Fund'
 * Linear classifiers
 * Logistic regression 
 * Fitting logistic regression
+* Naive Bayes classifier
 
 
 
@@ -137,9 +138,7 @@ We need a function that takes a real value and maps it to range $[0,1]$. What fu
 
 ::: notes
 
-Why the sigmoid/logistic function? Among its other nice properties, its derivative is $\sigma (1-\sigma)$, which makes for an easy update rule for gradient descent.
-
-Also note the intuitive relationship behind this function's output and the distance from the linear separator (the argument that is input to the function).
+Note the intuitive relationship behind this function's output and the distance from the linear separator (the argument that is input to the function).
 
 ![Output is close to 0 or 1 if the argument to the $\sigma$ has large magnitude (point is far from separating hyperplane, but closer to 0.5 if the argument is small (point is near separating hyperplane).](../images/4-logistic-sigmoid-distance.png){ width=50% }
 
@@ -183,7 +182,6 @@ $$
 
 * Unlike linear regression, weights do _not_ correspond to change in output associated with one-unit change in input.
 * Sign of weight _does_ tell us about relationship between a given feature and target variable.
-* Can add a regularization penalty to cost function to reduce variance, just like with linear regression.
 
 
 ### Logistic regression - illustration
@@ -383,9 +381,21 @@ for all $W_{kj}$
 
 **But**, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent)
 
+
+
 \newpage
 
-## "Recipe" for logistic regression (binary classifier)
+
+### Transformations, bias, variance
+
+* Can use basis functions to map problem to transformed feature space (if "natural" decision boundary is non-linear)
+* Variance increases with $d$ and decreases with $n$
+* Can add a regularization penalty to loss function
+
+
+## "Recipe" for logistic regression (binary classifier) 
+
+:::notes
 
 * Choose a **model**: 
 $$P(y = 1 | x, w) = \sigma\left(w_0 + \sum_{i=1}^d w_d x_d\right)$$
@@ -408,8 +418,12 @@ $$\sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
 * Use model to **predict** $\hat{y}$ for new, unlabeled samples.
 
 
+:::
+
 
 ## "Recipe" for logistic regression (multi-class classifier)
+
+:::notes
 
 * Choose a **model**: find probability of belonging to each class, then choose the class for which the probability is highest.
 
@@ -432,3 +446,158 @@ $$
 * Find model **parameters** that minimize loss: use numerical optimization to find weight vector $w$
 * Use model to **predict** $\hat{y}$ for new, unlabeled samples.
 
+:::
+
+\newpage
+
+## Naive Bayes classifier
+
+:::notes
+A quick look at a different type of model!
+:::
+
+
+### Probabilistic models (1)
+
+For logistic regression, minimizing the cross-entropy loss finds the parameters for which 
+
+$P(\mathbf{y}| \mathbf{X}, \mathbf{W})$
+
+is maximized.
+
+
+### Probabilistic models (2)
+
+For linear regression, assuming normally distributed stochastic error, minimizing the **squared error** loss finds the parameters for which 
+
+$P(\mathbf{y}| \mathbf{X}, \mathbf{w})$
+
+is maximized.
+
+:::notes
+Surprise! We've been doing maximum likelihood estimation all along.
+:::
+
+### Probabilistic models (3)
+
+ML models that try to 
+
+* get a good fit for $P(y|X)$: **discriminative** models.
+* fit $P(X, y)$ or $P(X|y) P(y)$: **generative** models. 
+
+
+:::notes
+
+Linear regression and logistic regression are both considered discriminative models; they say "given that we have this data, what's the most likely label?" (e.g. learning a mapping from an input to a target variable).
+
+Generative models try to learn "what does data for each class look like" and then apply Bayes rule.
+
+:::
+
+### Bayes rule
+
+For a sample $\mathbf{x}_i$, $y_k$ is label of class $k$: 
+
+$$P(y_k | \mathbf{x}_i) = \frac{P(\mathbf{x}_i|y_k) P(y_k)}{P(\mathbf{x}_i)}$$
+
+:::notes
+
+* $P(y_k | \mathbf{x}_i)$: posterior probability. "What is the probability that this sample belongs to class $k$, given its observed feature values are $\mathbf{x}_i$?"
+* $P(\mathbf{x}_i | y_k)$: conditional probability: "What is the probability of observing the feature values $\mathbf{x}_i$ in a sample, given that the sample belongs to class $k$?"
+* $P(y_k)$: prior probability
+* $P(\mathbf{x}_i)$: evidence
+
+:::
+<!--
+http://stanford.edu/~jurafsky/slp3/slides/7_NB.pdf
+https://sebastianraschka.com/faq/docs/naive-naive-bayes.html
+https://sebastianraschka.com/Articles/2014_naive_bayes_1.html
+https://sebastianraschka.com/faq/docs/naive-bayes-vs-logistic-regression.html
+-->
+
+\newpage
+
+### Class conditional probability (1)
+
+"Naive" assumption conditional independence of features:
+
+$$
+\begin{aligned}
+P(\mathbf{x}_i | y_k) &= P(x_{i,1} | y_k) P(x_{i,2} | y_k) \ldots P(x_{i,d} | y_k)  \\
+				    &= \prod_{j=1}^d P(x_{i,j}|y_k)
+\end{aligned}
+$$
+
+:::notes
+This is called "naive" because this assumption is probably not true in most realistic situations.  
+
+<!--
+For example, given the two words “peanut” and “butter” in a text document, intuition tells us that this assumption is obviously violated: If a document contains the word “peanut” it will be more likely that it also contains the word “butter” (or “allergy”).
+-->
+
+(But the classifier may still work OK!)
+
+Also assumes samples are i.i.d.
+:::
+
+### Class conditional probability (2)
+
+Example: for binary/categorical features, we could compute
+
+$$\hat{P}(x_{i,j}| y_k) = \frac{N_{x_{i,j}, y_k}}{N_{y_k}}$$
+
+:::notes
+
+* $N_{x_{i,j}, y_k}$ is the number of samples belonging to class $k$ that have feature $j$.
+* $N_{y_k}$ is the total number of samples belonging to class $k$.
+
+Example: for cat photo classifier,
+
+$$
+\hat{P}(\mathbf{x}_i = \text{[has tail, has pointy ears, has fur, purrs when petted, likes to eat fish]}| y = \text{cat})$$
+
+$$ \rightarrow P(\frac{N_{\text{tail, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{pointy ears, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{fur, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{purrs, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{eats fish, cat}}}{N_{\text{cat}}})$$
+
+
+$$\rightarrow \frac{20}{20} \frac{18}{20} \frac{17}{20} \frac{5}{20} \frac{15}{20}$$
+
+:::
+
+### Prior probability
+
+Can estimate prior probability as
+
+$$\hat{P}(y_k) = \frac{N_{y_k}}{N}$$
+
+:::notes
+
+Prior probabilities: probability of encountering a particular class $k$.
+
+Example: $\frac{20}{1500}$ photos are cats.
+
+:::
+
+### Evidence
+
+We don't actually need $P(\mathbf{x}_i)$ to make decisions, since it is the same for every class.
+
+\newpage
+
+### Naive bayes decision boundary
+
+:::notes
+![Naive bayes decision boundary.](../images/5-naive-bayes-decision.png){width=80%}
+:::
+
+
+### Why generative model?
+
+:::notes
+
+The generative model solves a more general problem than the discriminative model! 
+
+But, only the generative model can be used to **generate** new samples similar to the training data.
+
+Example: "generate a new sample that is probably a cat."
+
+:::
