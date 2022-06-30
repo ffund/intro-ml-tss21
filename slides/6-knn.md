@@ -12,6 +12,7 @@ author: 'Fraida Fund'
 * Model choices
 * Bias and variance of KNN
 * The Curse of Dimensionality
+* Feature selection and feature weighting
 
 \newpage
 
@@ -270,13 +271,17 @@ Suppose you are trying to predict a student's course grade using their previous 
 
 :::
 
-Alternative to equal weighted features: assign feature weights
+Alternative to equal weighted features:  assign feature weights
 
 $$d(\mathbf{a, b}) = \left(  \sum_{i=1}^k ( w_i | a_i - b_i | ) ^q \right) ^{\frac{1}{q}}$$
 
 ::: notes
 
 But then we need a way to learn feature weights! 
+
+With L1 regularization, we had a data-driven way to do feature selection. The nearest neighbor method doesn't have any "built-in" way to do feature weighting or feature selection as part of the training process, so we need to do it ourselves as part of the pre-processing steps.
+
+We'll go back to this at the end.
 
 :::
 
@@ -353,7 +358,7 @@ i.e. squared bias, variance, and irreducible error.
 
 ### KNN output
 
-The output of the KNN algorithm at the test point is
+The output of a KNN regression at the test point is
 
 $$f(\mathbf{x_t}) = \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell) + \epsilon_\ell $$
 
@@ -431,7 +436,7 @@ where $K_x$ is the set of K nearest neighbors of $\mathbf{x}$.
 ::: notes
 
 
-Why does bias increase with $K$? For a smooth function, the few closest neighbrs to the test point will have similar values, so average will be close to $t(\mathbf{x})$; as K increases, neighbors are further way, and average of neighbors moves away from $t(\mathbf{x})$.
+Why does bias increase with $K$? For a smooth function, the few closest neighbors to the test point will have similar values, so average will be close to $t(\mathbf{x})$; as K increases, neighbors are further way, and average of neighbors moves away from $t(\mathbf{x})$.
 
 You can think about the extreme case, where $K=n$ so you use the average of *all* of the training samples. This is equivalent to "prediction by mean".
 
@@ -558,3 +563,105 @@ Bad:
 
 * Slow prediction (especially with large N)
 * Curse of dimensionality
+
+\newpage
+
+## Feature selection and feature weighting
+
+:::notes
+
+Feature selection is actually two problems:
+
+* best number of features
+* best subset of features
+
+For some models, like KNN, we can also do feature weighting as an alternative to (or in addition to) feature selection.
+
+:::
+
+### Feature selection methods
+
+* **Wrapper methods**: use learning model on training data and different subsets of features.
+* **Filter methods**: consider only the statistics of the training data, don't actually fit any learning model.
+* **Embedded methods**: use something built-in to training algorithm (e.g. LASSO regularization). (Not available for KNN!)
+
+### Feature selection with exhaustive search (1)
+
+* Basic **wrapper** method: train model using every possible feature subset.
+* Select model with best CV performance.
+
+### Feature selection with exhaustive search (2)
+
+* Given $d$ features, there are $2^d$ possible feature subsets
+* Too expensive to try all possibilities for large $d$!
+
+### Greedy sequential (forward) feature selection
+
+* Let $S^{t-1}$ be the set of selected features at time $t-1$
+* Train and evaluate model for all combinations of current set + one more feature
+* For the next time step $S^t$, add the feature that gave you the best performance.
+
+:::notes
+
+("Backward" alternative: start with all features, and "prune" one at a time.)
+
+This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search.
+
+This method available in `sklearn.feature_selection` as `SequentialFeatureSelector`.
+
+:::
+
+\newpage
+
+### Filter feature selection/weighting
+
+* Give each feature a score (ideally, something fast to compute!)
+* add/select features based on score (can pick a threshold, or use CV)
+* alternative: weight features based on score (works for KNN!)
+
+:::notes
+
+Compared to feature selection, feature weighting does not have the benefit of faster inference time, but it does have the advantage of not throwing out useful information.
+
+:::
+### Scoring functions
+
+* Correlation coefficient, F-value (captures linear association between feature and target variable)
+* Mutual information (captures non-linear associations, too)
+
+
+:::notes
+
+In `sklearn.feature_selection`, available scoring functions include: `f_classif`, `f_regression`, `r_regression`, `mutual_info_classif`, `mutual_info_regression`.
+
+If we were using a mode that assumes a linear relationship, it would make sense to use F-value, because we want to select features that will be predictive *for our model*! (MI might recommend features that have a strong non-linear association, but our model wouldn't be able to learn those associations.)
+
+If we were using a model that does not assume a linear relationship (like KNN!) then we would be better off using MI.
+
+:::
+
+### Illustration: scoring functions
+
+![F-test selects $x_1$ as the most informative feature, MI selects $x_2$.](../images/6-feature-selection-scoring.png ){ width=80% }
+
+
+### Univariate feature selection
+
+* Score each feature $x_i$ 
+* Pick $k$ features that have highest score (use CV to choose k?)
+
+:::notes
+
+This method available in `sklearn.feature_selection` as `SelectKBest`.
+
+The problem with univariate feature selection is that some features may carry redundant information. In that case, we don't gain much from having both features in our model, but both will have similar scores.
+
+MI and F-value scores can account for the redundancy in a new feature vs. the ones already in the "set".
+
+:::
+
+### Recursive feature selection
+
+* Let $S^{t-1}$ be the set of selected features at time $t-1$
+* Compute score for all combinations of current set + one more feature
+* For the next time step $S^t$, add the feature that gave you the best performance.

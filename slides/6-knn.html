@@ -37,6 +37,7 @@
 <li>Model choices</li>
 <li>Bias and variance of KNN</li>
 <li>The Curse of Dimensionality</li>
+<li>Feature selection and feature weighting</li>
 </ul>
 </section>
 
@@ -267,6 +268,8 @@
 <p><span class="math display">\[d(\mathbf{a, b}) = \left(  \sum_{i=1}^k ( w_i | a_i - b_i | ) ^q \right) ^{\frac{1}{q}}\]</span></p>
 <aside class="notes">
 <p>But then we need a way to learn feature weights!</p>
+<p>With L1 regularization, we had a data-driven way to do feature selection. The nearest neighbor method doesn’t have any “built-in” way to do feature weighting or feature selection as part of the training process, so we need to do it ourselves as part of the pre-processing steps.</p>
+<p>We’ll go back to this at the end.</p>
 </aside>
 </section>
 <section id="distance-measure---perceptual-distance" class="slide level3">
@@ -333,7 +336,7 @@ MSE(\mathbf{x_t}) :=&amp;  E[(y-\hat{y})^2]  \\
 </section>
 <section id="knn-output" class="slide level3">
 <h3>KNN output</h3>
-<p>The output of the KNN algorithm at the test point is</p>
+<p>The output of a KNN regression at the test point is</p>
 <p><span class="math display">\[f(\mathbf{x_t}) = \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell) + \epsilon_\ell \]</span></p>
 <p>where <span class="math inline">\(K_x\)</span> is the set of K nearest neighbors of <span class="math inline">\(\mathbf{x_t}\)</span>. (We assume that these neighbors are fixed.)</p>
 </section>
@@ -391,7 +394,7 @@ Var(\hat{y}) &amp;= E[(f(\mathbf{x_t}) - E[f(\mathbf{x_t})])^2] \\
 <li>Bias likely to increase with K, if function <span class="math inline">\(t()\)</span> is smooth.</li>
 </ul>
 <aside class="notes">
-<p>Why does bias increase with <span class="math inline">\(K\)</span>? For a smooth function, the few closest neighbrs to the test point will have similar values, so average will be close to <span class="math inline">\(t(\mathbf{x})\)</span>; as K increases, neighbors are further way, and average of neighbors moves away from <span class="math inline">\(t(\mathbf{x})\)</span>.</p>
+<p>Why does bias increase with <span class="math inline">\(K\)</span>? For a smooth function, the few closest neighbors to the test point will have similar values, so average will be close to <span class="math inline">\(t(\mathbf{x})\)</span>; as K increases, neighbors are further way, and average of neighbors moves away from <span class="math inline">\(t(\mathbf{x})\)</span>.</p>
 <p>You can think about the extreme case, where <span class="math inline">\(K=n\)</span> so you use the average of <em>all</em> of the training samples. This is equivalent to “prediction by mean”.</p>
 </aside>
 </section></section>
@@ -508,6 +511,102 @@ What happens to this quantity as $d$ increases?
 <ul>
 <li>Slow prediction (especially with large N)</li>
 <li>Curse of dimensionality</li>
+</ul>
+</section></section>
+<section>
+<section id="feature-selection-and-feature-weighting" class="title-slide slide level2">
+<h2>Feature selection and feature weighting</h2>
+<aside class="notes">
+<p>Feature selection is actually two problems:</p>
+<ul>
+<li>best number of features</li>
+<li>best subset of features</li>
+</ul>
+<p>For some models, like KNN, we can also do feature weighting as an alternative to (or in addition to) feature selection.</p>
+</aside>
+</section>
+<section id="feature-selection-methods" class="slide level3">
+<h3>Feature selection methods</h3>
+<ul>
+<li><strong>Wrapper methods</strong>: use learning model on training data and different subsets of features.</li>
+<li><strong>Filter methods</strong>: consider only the statistics of the training data, don’t actually fit any learning model.</li>
+<li><strong>Embedded methods</strong>: use something built-in to training algorithm (e.g. LASSO regularization). (Not available for KNN!)</li>
+</ul>
+</section>
+<section id="feature-selection-with-exhaustive-search-1" class="slide level3">
+<h3>Feature selection with exhaustive search (1)</h3>
+<ul>
+<li>Basic <strong>wrapper</strong> method: train model using every possible feature subset.</li>
+<li>Select model with best CV performance.</li>
+</ul>
+</section>
+<section id="feature-selection-with-exhaustive-search-2" class="slide level3">
+<h3>Feature selection with exhaustive search (2)</h3>
+<ul>
+<li>Given <span class="math inline">\(d\)</span> features, there are <span class="math inline">\(2^d\)</span> possible feature subsets</li>
+<li>Too expensive to try all possibilities for large <span class="math inline">\(d\)</span>!</li>
+</ul>
+</section>
+<section id="greedy-sequential-forward-feature-selection" class="slide level3">
+<h3>Greedy sequential (forward) feature selection</h3>
+<ul>
+<li>Let <span class="math inline">\(S^{t-1}\)</span> be the set of selected features at time <span class="math inline">\(t-1\)</span></li>
+<li>Train and evaluate model for all combinations of current set + one more feature</li>
+<li>For the next time step <span class="math inline">\(S^t\)</span>, add the feature that gave you the best performance.</li>
+</ul>
+<aside class="notes">
+<p>(“Backward” alternative: start with all features, and “prune” one at a time.)</p>
+<p>This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search.</p>
+<p>This method available in <code>sklearn.feature_selection</code> as <code>SequentialFeatureSelector</code>.</p>
+</aside>
+</section>
+<section id="filter-feature-selectionweighting" class="slide level3">
+<h3>Filter feature selection/weighting</h3>
+<ul>
+<li>Give each feature a score (ideally, something fast to compute!)</li>
+<li>add/select features based on score (can pick a threshold, or use CV)</li>
+<li>alternative: weight features based on score (works for KNN!)</li>
+</ul>
+<aside class="notes">
+<p>Compared to feature selection, feature weighting does not have the benefit of faster inference time, but it does have the advantage of not throwing out useful information.</p>
+</aside>
+</section>
+<section id="scoring-functions" class="slide level3">
+<h3>Scoring functions</h3>
+<ul>
+<li>Correlation coefficient, F-value (captures linear association between feature and target variable)</li>
+<li>Mutual information (captures non-linear associations, too)</li>
+</ul>
+<aside class="notes">
+<p>In <code>sklearn.feature_selection</code>, available scoring functions include: <code>f_classif</code>, <code>f_regression</code>, <code>r_regression</code>, <code>mutual_info_classif</code>, <code>mutual_info_regression</code>.</p>
+<p>If we were using a mode that assumes a linear relationship, it would make sense to use F-value, because we want to select features that will be predictive <em>for our model</em>! (MI might recommend features that have a strong non-linear association, but our model wouldn’t be able to learn those associations.)</p>
+<p>If we were using a model that does not assume a linear relationship (like KNN!) then we would be better off using MI.</p>
+</aside>
+</section>
+<section id="illustration-scoring-functions" class="slide level3">
+<h3>Illustration: scoring functions</h3>
+<figure>
+<img data-src="../images/6-feature-selection-scoring.png" style="width:80.0%" alt="F-test selects x_1 as the most informative feature, MI selects x_2." /><figcaption aria-hidden="true">F-test selects <span class="math inline">\(x_1\)</span> as the most informative feature, MI selects <span class="math inline">\(x_2\)</span>.</figcaption>
+</figure>
+</section>
+<section id="univariate-feature-selection" class="slide level3">
+<h3>Univariate feature selection</h3>
+<ul>
+<li>Score each feature <span class="math inline">\(x_i\)</span></li>
+<li>Pick <span class="math inline">\(k\)</span> features that have highest score (use CV to choose k?)</li>
+</ul>
+<aside class="notes">
+<p>This method available in <code>sklearn.feature_selection</code> as <code>SelectKBest</code>.</p>
+<p>The problem with univariate feature selection is that some features may carry redundant information. In that case, we don’t gain much from having both features in our model, but both will have similar scores.</p>
+<p>MI and F-value scores can account for the redundancy in a new feature vs. the ones already in the “set”.</p>
+</aside>
+</section>
+<section id="recursive-feature-selection" class="slide level3">
+<h3>Recursive feature selection</h3>
+<ul>
+<li>Let <span class="math inline">\(S^{t-1}\)</span> be the set of selected features at time <span class="math inline">\(t-1\)</span></li>
+<li>Compute score for all combinations of current set + one more feature</li>
+<li>For the next time step <span class="math inline">\(S^t\)</span>, add the feature that gave you the best performance.</li>
 </ul>
 </section></section>
     </div>
