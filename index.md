@@ -58,3 +58,29 @@
 * [Outside reference: Machine bias](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing)
 * [Outside reference: Can you make AI fairer than a judge?](https://www.technologyreview.com/2019/10/17/75285/ai-fairer-than-judge-criminal-risk-assessment-algorithm/)
 * Notebook: COMPAS case study <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/5-compas-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-compas-case-study.ipynb)
+
+## Week 6: K nearest neighbor, decision trees
+
+* Handout: K nearest neighbor <a href="slides/6-knn.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Decision tree <a href="slides/6-tree.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: K nearest neighbor in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/6-k-nearest-neighbors-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-k-nearest-neighbors-in-depth.ipynb)
+* Notebook: Decision trees <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/6-decision-trees.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-decision-trees.ipynb)
+* Notebook: Bias and variance of KNN and decision tree models [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-knn-tree-bias-variance.ipynb)
+
+* Notebook: Voter classification with K nearest neighbor (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-knn-voter-classification-hw.ipynb)
+
+## Week 7: Ensembles, support vector classifiers
+
+* Handout: Ensemble methods <a href="slides/7-ensemble.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Support vector classifier <a href="slides/7-svm.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Decision trees and ensembles in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks//7-trees-ensembles-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-trees-ensembles-in-depth.ipynb)
+* Notebook: Adaboost in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/7-demo-adaboost.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-demo-adaboost.ipynb)
+* Notebook: Support vector machines in depth <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/7-svm-pre-kernel.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-svm-pre-kernel.ipynb)
+* Notebook: Handwritten digits classification <a href="https://github.com/ffund/ml-notebooks/blob/master/notebooks/7-demo-digits-classifiers.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-demo-digits-classifiers.ipynb)
+* Notebook: Bias and variance of KNN and decision tree models [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-knn-tree-bias-variance.ipynb)
+
+
+## Week 8: Kernels, neural networks
+
+* Handout: SVM with kernels <a href="slides/8-svm-kernel.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Neural networks <a href="slides/8-neural.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
