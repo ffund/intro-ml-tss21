@@ -50,12 +50,21 @@
 <figure>
 <img data-src="../images/7-reg-comp-graph.png" style="width:60.0%" alt="Regression and classification models." /><figcaption aria-hidden="true">Regression and classification models.</figcaption>
 </figure>
-<p>Then, let’s see what it would look like with a basis function transformation applied to the data first.</p>
+<p>We can use also do a linear regression or logistic regression with a basis function transformation applied to the data first. Here, we have one “transformation” node for each basis function, and then the output of those “transformation” nodes become the input to the logistic regression (or linear regression).</p>
 <figure>
-<img data-src="../images/7-lbf-comp-graph.png" style="width:65.0%" alt="With a basis function transformation." /><figcaption aria-hidden="true">With a basis function transformation.</figcaption>
+<img data-src="../images/7-lbf-graph-trans.png" style="width:65.0%" alt="With a basis function transformation." /><figcaption aria-hidden="true">With a basis function transformation.</figcaption>
+</figure>
+<p>We can also represent the SVM with a linear or non-linear kernel using a computational graph.</p>
+<p>Here, we have one “transformation node” for each training sample! (The “transformation” is the kernel function, which is computed over the input sample and the training sample).</p>
+<p>Then the weighted sum of those nodes (weighted by <span class="math inline">\(\alpha_i\)</span>, which is learned by the SVM, and which is zero for every non-support vector training sample and non-zero for every support vector training sample) is used to compute the class label.</p>
+<figure>
+<img data-src="../images/7-svm-graph.png" style="width:65.0%" alt="SVM computational graph." /><figcaption aria-hidden="true">SVM computational graph.</figcaption>
 </figure>
 <p>In those regression and classification models, we use a fixed basis function to transform features. We only learned the weights to map the transformed features to a continuous output (regression) or to a class label (classification).</p>
 <p>Would it be possible to instead learn the first part - the mapping of the features to a transformed feature space?</p>
+<figure>
+<img data-src="../images/7-lbf-comp-graph.png" style="width:65.0%" alt="Can we learn this transformation part?" /><figcaption aria-hidden="true">Can we learn this transformation part?</figcaption>
+</figure>
 </aside>
 </section>
 <section id="example-synthetic-data" class="slide level3">
@@ -132,7 +141,7 @@
 <li>Choose parameters to minimize loss: <span class="math inline">\(\hat{\mathbf{W}} = \operatorname*{argmin}_{\mathbf{W}} L(\mathbf{W})\)</span></li>
 </ul>
 <aside class="notes">
-<p>(We use the negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )</p>
+<p>(Using negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )</p>
 <p>How do we choose the parameters in the last step? We’ll use <em>gradient descent</em> on the computational graph. More on that soon…</p>
 </aside>
 </section></section>
@@ -192,7 +201,8 @@
 <li>To get non-linear decision boundary, need non-linear activation functions.</li>
 </ul>
 <aside class="notes">
-<p>Universal approximation theorem: under certain conditions, with enough (finite) hidden nodes, can approximate <em>any</em> continuous real-valued function, to any degree of precision. But only with non-linear decision boundary!</p>
+<p>Universal approximation theorem: under certain conditions, with enough (finite) hidden nodes, can approximate <em>any</em> continuous real-valued function, to any degree of precision. But only with non-linear decision boundary! (See <a href="http://neuralnetworksanddeeplearning.com/chap4.html">this post</a> for a convincing demonstration.)</p>
+<p>By scaling, shifting, and adding a bunch of “step” or “step-like” functions, you can approximate a complicated function. What step-like function can you use?</p>
 </aside>
 </section>
 <section id="activation-functions-at-hidden-layer-binary-step" class="slide level3">
@@ -465,9 +475,15 @@
 </ul>
 </section></section>
 <section>
-<section id="why-is-it-so-important" class="title-slide slide level2">
-<h2>Why is it so important?</h2>
-
+<section id="why-is-backpropagation-so-important" class="title-slide slide level2">
+<h2>Why is backpropagation so important?</h2>
+<p>Example: <span class="math inline">\(e = (a + b) \times (b+1)\)</span></p>
+<figure>
+<img data-src="../images/tree-eval-derivs.png" style="width:60.0%" alt="Derivatives on a computational graph" /><figcaption aria-hidden="true">Derivatives on a computational graph</figcaption>
+</figure>
+<aside class="notes">
+<p>Image via <a href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
+</aside>
 </section>
 <section id="forward-mode-differentiation" class="slide level3">
 <h3>Forward-mode differentiation</h3>

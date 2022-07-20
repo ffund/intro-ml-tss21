@@ -21,13 +21,26 @@ Let's represent the linear regression and logistic regression models using a com
 
 ![Regression and classification models.](../images/7-reg-comp-graph.png){ width=60% }
 
-Then, let's see what it would look like with a basis function transformation applied to the data first.
+We can use also do a linear regression or logistic regression with a basis function transformation applied to the data first. Here, we have one "transformation" node for each basis function, and then the output of those "transformation" nodes become the input to the logistic regression (or linear regression).
 
-![With a basis function transformation.](../images/7-lbf-comp-graph.png){ width=65% }
+![With a basis function transformation.](../images/7-lbf-graph-trans.png){ width=65% }
+
+\newpage
+
+We can also represent the SVM with a linear or non-linear kernel using a computational graph. 
+
+Here, we have one "transformation node" for each training sample! (The "transformation" is the kernel function, which is computed over the input sample and the training sample). 
+
+Then the weighted sum of those nodes (weighted by $\alpha_i$, which is learned by the SVM, and which is zero for every non-support vector training sample and non-zero for every support vector training sample) is used to compute the class label.
+
+![SVM computational graph.](../images/7-svm-graph.png){ width=65% }
+
 
 In those regression and classification models, we use a fixed basis function to transform features. We only learned the weights to map the transformed features to a continuous output (regression) or to a class label (classification).
 
 Would it be possible to instead learn the first part - the mapping of the features to a transformed feature space?
+
+![Can we learn this transformation part?](../images/7-lbf-comp-graph.png){ width=65% }
 
 :::
 
@@ -112,7 +125,7 @@ What does the output look like (over the feature space) at each node?
 
 ::: notes
 
-(We use the negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )
+(Using negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )
 
 How do we choose the parameters in the last step? We'll use *gradient descent* on the computational graph. More on that soon...
 
@@ -175,7 +188,9 @@ For regression, $y \in R^{K}$:
 
 ::: notes
 
-Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear decision boundary!
+Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear decision boundary! (See [this post](http://neuralnetworksanddeeplearning.com/chap4.html) for a convincing demonstration.)
+
+By scaling, shifting, and adding a bunch of "step" or "step-like" functions, you can approximate a complicated function. What step-like function can you use?
 
 :::
 
@@ -514,8 +529,18 @@ $$L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partia
 
 \newpage
 
-## Why is it so important?
+## Why is backpropagation so important?
 
+Example: $e = (a + b) \times (b+1)$
+
+![Derivatives on a computational graph](../images/tree-eval-derivs.png){width=60%}
+
+
+::: notes
+
+Image via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github.io/posts/2015-08-Backprop).
+
+:::
 ### Forward-mode differentiation
 
 ![Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input. ](../images/tree-forwradmode.png){width=60%}
@@ -525,6 +550,8 @@ $$L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partia
 Image via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github.io/posts/2015-08-Backprop).
 
 :::
+
+\newpage
 
 ### Reverse-mode differentiation
 

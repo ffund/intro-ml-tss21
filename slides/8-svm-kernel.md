@@ -20,7 +20,10 @@ Measures inner product (a kind of "correlation") between new sample and each sup
 
 ::: notes
 
-This assumes a linear decision boundary. (The expression for $z$ gives the equation of the hyperplane that separates the classes.)
+For the geometric intuition/why inner product measures the similarity between two vectors, watch: 
+[3Blue1Brown series  S1 E9: Dot products and duality](https://www.youtube.com/watch?v=LyGKycYT2v0).
+
+This SVM assumes a linear decision boundary. (The expression for $z$ gives the equation of the hyperplane that separates the classes.)
 
 :::
 
