@@ -1,5 +1,5 @@
 ---
-title:  'Deep neural networks'
+title:  'Deep learning'
 author: 'Fraida Fund'
 ---
 
@@ -23,7 +23,20 @@ by the designer.
 
 ![Image is based on a figure in Deep learning, by Goodfellow, Bengio, Courville. ](../images/8-deep-learning-motivation.png){ width=100% }
 
+A neural network with non-linear activation, with one hidden layer and many units in it *can* approximate virtually any continuous real-valued function, with the right weights.  (Refer to the *Universal Approximation Theorem*.) But (1) it may need a very large number of units to represent the function, and (2) those weights might not be learned by gradient descent - the loss surface is very unfriendly.
+
+Instead of a single hidden layer, if we use multiple hidden layers they can "compose" functions learned by the previous layers into more complex functions - use fewer units, and tends to learn better weights .
+
+
+<!--
+
+Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%20ArchitectureDesign.pdf
+
+-->
+
 :::
+
+\newpage
 
 ## Deep neural networks
 
@@ -39,29 +52,18 @@ Some comments:
 
 We call the number of layers the "depth" of the network and the number of hidden units in a layer its "width."
 
+
 :::
 
-<!--
+### Challenges with deep neural networks (1)
 
-Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%20ArchitectureDesign.pdf
-
--->
-
-
-### Challenges with deep neural networks
-
-* Optimization
+* Efficient learning
 * Generalization
-
-
-
-## Optimizing deep neural networks
-
 
 
 ### Loss landscape
 
-!["Loss landscape" of a deep neural network in a "slice" of the high-dimensional feature space.](../images/resnet56_noshort_small.jpg){ width=40% }
+!["Loss landscape" of a deep neural network in a "slice" of the high-dimensional feature space.](../images/resnet56_noshort_small.jpg){ width=30% }
 
 ::: notes
 
@@ -71,12 +73,110 @@ Neural networks are optimized using backpropagation over the computational graph
 
 :::
 
-### Effective training depends on
+\newpage
 
-* Activation function
-* Pre-processing data
-* Initial weights
-* Optimizer
+### Double descent curve
+
+
+![Double descent curve (left) and realization in a real neural network (right).](../images/8-double-descent.png){ width=100% }
+
+
+::: notes
+
+
+Interpolation threshold: where the model is just big enough to fit the training data exactly.
+
+- too-small models: can't represent the "true" function well
+- too-big models (before interpolation threshold): memorizes the input, doesn't generalize well to unseen data (very sensitive to noise)
+- REALLY big models: many possible weights that memorize the input, but SGD finds weight combination that memorizes the input *and* does well on unseen data
+
+
+
+:::
+
+
+### Double descent: animation
+
+![Polynomial model before and after the interpolation threshold. Image source: [Boaz Barak, click link to see animation](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/8-polynomial-animation.gif){ width=40% }
+
+::: notes
+
+Explanation (via [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)):
+
+> When $d$ of the model is less than $d_t$ of the polynomial, we are "under-fitting" and will not get good performance. As $d$ increases between $d_t$ and $n$, we fit more and more of the noise, until for $d=n$ we have a perfect interpolating polynomial that will have perfect training but very poor test performance. When $d$ grows beyond $n$, more than one polynomial can fit the data, and (under certain conditions) SGD will select the minimal norm one, which will make the interpolation smoother and smoother and actually result in better performance.
+
+
+What this means: in practice, we let the network get big (have capacity to learn complicated data representations!) and use other methods to help select a "good" set of weights from all these candidates.
+
+:::
+
+\newpage
+
+### Challenges with deep neural networks (2)
+
+* Efficient learning
+* Generalization
+
+::: notes
+
+In deep learning, we don't want to use "smaller" (simpler) models, which won't be as capable of learning good feature representations. Instead, lots of work around (1) finding good weights quickly, and (2) finding weights that will generalize.
+
+![Image credit: Sebastian Raschka](../images/deep-learning-markmap.svg){ width=60% }
+
+
+:::
+
+
+
+## Dataset
+
+
+### Data augmentation
+
+![Data augmentation on a cat image.](../images/cats-augmentation.png){ width=50% }
+
+
+::: notes
+
+It doesn't restrict network capacity - but it helps generalization by increasing the size of your training set! 
+
+Apply rotation, crops, scales, change contrast, brightness, color... etc. during training.
+
+:::
+
+### Transfer learning
+
+Idea: leverage model trained on *related* data.
+
+### Using pre-trained networks
+
+* State-of-the-art networks involve millions of parameters, huge datasets, and days of training on GPU clusters
+* Idea: share pre-trained networks (network architecture and weights)
+* Some famous networks for image classification: Inception, ResNet, and more
+* Can be loaded directly in Keras
+
+\newpage
+
+### Transfer learning from pre-trained networks
+
+Use pre-trained network for a different task
+
+* Use early layers from pre-trained network, freeze their parameters
+* Only train small number of parameters at the end
+
+
+### Transfer learning illustration (1)
+
+![When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head.](../images/8-transfer-similar.png){ width=60% }
+
+### Transfer learning illustration (2)
+
+![If the original network is not as relevant, may fine-tune more layers.](../images/8-transfer-less.png){ width=60% }
+
+
+\newpage
+
+## Architecture/setup
 
 ### Recall: activation functions
 
@@ -104,7 +204,7 @@ What happens if the $u_i$ terms are always positive?
 
 -->
 
-### Vanishing/exploding gradient
+### Vanishing gradient
 
 
 ::: notes
@@ -116,9 +216,11 @@ What happens when you are in the far left or far right part of the sigmoid?
 * The "downstream" gradients will also be values close to zero! (Because of backpropagation.)
 * And, when you multiply quantities close to zero - they get even smaller.
 
-When the sigmoid "saturates", it "kills" the neuron!
+Even the maximum value of the gradient is only 0.25 - so the gradient is always less than 1, and we know what happens if you multiply many quantities less than 1...
 
-(Same issue with tanh.)
+The network "learns fastest" when the gradient is large. When the sigmoid "saturates", it "kills" the neuron!
+
+Same issue with tanh, although that is slightly better - its output is centered at zero, and its gradient has.
 
 (There is also an analagous "exploding gradient" problem when large gradients are propagated back through the network.)
 
@@ -145,49 +247,17 @@ $$f(x) = \text{max}(\alpha x, x)$$
 
 ($\alpha$ is a hyperparameter.)
 
-Also other variations on this...
+Many other variations on this...
 
 :::
 
+<!-- 
 ### Skip connections
 
 * Direct connection between some higher layers and lower layers
 * A "highway" for gradient info to go directly back to lower layers
 
-\newpage
-
-### Data pre-processing
-
-You can make the loss surface much "nicer" by pre-processing:
-
-* Remove mean (zero center)
-* Normalize (divide by standard deviation)
-* OR decorrelation (whitening/rotation)
-
-::: notes
-
-There are several reasons why this helps. We already discussed the "ravine" in the loss function that is created by correlated features. 
-
-What about zero-centering and normalization? Think about a binary classification problem of a data cloud that is far from the origin, vs. one close to the origin. In which case will the loss function react more (be more sensitive) to a small change in weights?
-
-![The classifier on the right is more sensitive to small changes in the weights.](../images/8-pre-processing.png){ width=30% }
-
-
-Note: Whitening/decorrelation is not applied to image data. For image data, we sometimes subtract the "mean image" or the per-color mean.
-
-:::
-
-### Data preprocessing (1)
-
-![Image source: Stanford CS231n.](../images/8-preprocessing-1.jpeg){ width=50% }
-
-### Data preprocessing (2)
-
-![Image source: Stanford CS231n.](../images/8-preprocessing-2.jpeg){ width=50% }
-
-
-
-
+-->
 
 ### Weight initialization
 
@@ -220,7 +290,7 @@ Xavier initialization for tanh, He initialization for ReLU.
 
 ::: notes
 
-Xavier scales variance by $\frac{1}{N_{in}}$, He by $\frac{2}{N_{in}}$ where $N_{in}$ is the number of inputs to the layer.
+Xavier scales by $\frac{1}{\sqrt{N_{in}}}$, He by $\frac{2}{\sqrt{N_{in}}}$ where $N_{in}$ is the number of inputs to the layer.
 
 :::
 
@@ -235,12 +305,65 @@ Xavier scales variance by $\frac{1}{N_{in}}$, He by $\frac{2}{N_{in}}$ where $N_
 
 ![Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson.](../images/8-init-xavier.png){ width=70% }
 
-
 \newpage
 
-## Optimizers
+## Normalization 
+
+### Data pre-processing
+
+You can make the loss surface much "nicer" by pre-processing:
+
+* Remove mean (zero center)
+* Normalize (divide by standard deviation)
+* OR decorrelation (whitening/rotation)
+
+::: notes
+
+There are several reasons why this helps. We already discussed the "ravine" in the loss function that is created by correlated features. 
+
+<!-- What about zero-centering and normalization? Think about a binary classification problem of a data cloud that is far from the origin, vs. one close to the origin. In which case will the loss function react more (be more sensitive) to a small change in weights?
+
+![The classifier on the right is more sensitive to small changes in the weights.](../images/8-pre-processing.png){ width=30% }
+
+-->
+
+Note: Whitening/decorrelation is not applied to image data. For image data, we sometimes subtract the "mean image" or the per-color mean.
+
+:::
+
+### Data preprocessing (1)
+
+![Image source: Stanford CS231n.](../images/8-preprocessing-1.jpeg){ width=50% }
+
+### Data preprocessing (2)
+
+![Image source: Stanford CS231n.](../images/8-preprocessing-2.jpeg){ width=50% }
 
 
+
+::: notes
+
+Input standardization helps with the first hidden layer, but what about the hidden layers?
+
+:::
+
+### Batch normalization
+
+* Re-center and re-scale between layers
+* Training: Mean and standard deviation per training mini-batch
+* Test: Using fixed statistics
+
+::: notes
+
+Lots of discussion about how/why BatchNorm helps - still ongoing.
+
+:::
+
+
+
+## Gradient descent
+
+<!-- 
 ### Standard ("batch") gradient descent
 
 For each step $t$ along the error curve:
@@ -275,7 +398,6 @@ For each step $t$ along the error curve:
 
 ![Effect of batch size on gradient descent.](../images/grad-descent-comparison.png){ width=50% }
 
-<!--
 
 ### Why does mini-batch gradient help? (Intuition)
 
@@ -285,7 +407,6 @@ For each step $t$ along the error curve:
 * Also: memory required scales with mini-batch size.
 * Also: there is often redundancy in training set.
 
--->
 
 ### Gradient descent terminology
 
@@ -406,57 +527,26 @@ $$
 Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 
 \newpage
-
-## Generalization
-
-::: notes
-
-Why don't deep neural networks overfit?
-
-:::
-
-
-### Double descent curve
-
-
-![Double descent curve (left) and realization in a real neural network (right).](../images/8-double-descent.png){ width=100% }
-
-
-::: notes
-
-
-Interpolation threshold: where the model is just big enough to fit the training data exactly.
-
-
-
-:::
-
-
-
-### Double descent: animation
-
-![Polynomial model before and after the interpolation threshold. Image source: [Boaz Barak, click link to see animation](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/8-polynomial-animation.gif){ width=40% }
-
-::: notes
-
-Explanation (via [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)):
-
-> When $d$ of the model is less than $d_t$ of the polynomial, we are "under-fitting" and will not get good performance. As $d$ increases between $d_t$ and $n$, we fit more and more of the noise, until for $d=n$ we have a perfect interpolating polynomial that will have perfect training but very poor test performance. When $d$ grows beyond $n$, more than one polynomial can fit the data, and (under certain conditions) SGD will select the minimal norm one, which will make the interpolation smoother and smoother and actually result in better performance.
-
-
-What this means: in practice, we let the network get big (have capacity to learn complicated data representations!) and use other methods to help select a "good" set of weights from all these candidates.
-
-:::
+-->
 
 \newpage
 
-### Regularization
+## Regularization
+
+
+### L1 or L2 regularization
 
 As with other models, we can add a penalty on the norm of the weights:
 
 * L1 penalty
 * L2 penalty
 * Combination (ElasticNet)
+
+:::notes
+
+Not so common with neural networks.
+
+:::
 
 ### Early stopping 
 
@@ -497,37 +587,6 @@ Note: when you use Dropout layers, you may notice that the validation/test loss 
 
 :::
 
-### Batch normalization
-
-* Re-center and re-scale between layers
-* Training: Mean and standard deviation per training mini-batch
-* Test: Using fixed statistics
-
-<!--
-::: notes
-
-Why does it work? Some ideas:
-
-* It introduces some randomness during training?
-
-:::
-
--->
-
-\newpage
-
-### Data augmentation
-
-![Data augmentation on a cat image.](../images/cats-augmentation.png){ width=80% }
-
-
-::: notes
-
-It doesn't restrict network capacity - but it helps generalization by increasing the size of your training set! 
-
-Apply rotation, crops, scales, change contrast, brightness, color... etc. during training.
-
-:::
 
 
 <!--

@@ -248,35 +248,6 @@ Source of most images here, and excellent set of notes on convolutional neural n
 [https://cs231n.github.io/convolutional-networks/](https://cs231n.github.io/convolutional-networks/)
 
 
-\newpage
-
-## Transfer learning
-
-### Using pre-trained networks
-
-* State-of-the-art networks involve millions of parameters, huge datasets, and days of training on GPU clusters
-* Idea: share pre-trained networks (network architecture and weights)
-* Some famous networks for image classification: Inception, ResNet, and more
-* Can be loaded directly in Keras
-
-
-### Transfer learning from pre-trained networks
-
-Use pre-trained network for a different task
-
-* Use early layers from pre-trained network, freeze their parameters
-* Only train small number of parameters at the end
-
-### Transfer learning illustration (1)
-
-![When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head.](../images/8-transfer-similar.png){ width=60% }
-
-### Transfer learning illustration (2)
-
-![If the original network is not as relevant, may fine-tune more layers.](../images/8-transfer-less.png){ width=60% }
-
-
-
 
 
 <!--

@@ -282,40 +282,6 @@
 <h3>Reference</h3>
 <p>Source of most images here, and excellent set of notes on convolutional neural networks:</p>
 <p><a href="https://cs231n.github.io/convolutional-networks/">https://cs231n.github.io/convolutional-networks/</a></p>
-</section></section>
-<section>
-<section id="transfer-learning" class="title-slide slide level2">
-<h2>Transfer learning</h2>
-
-</section>
-<section id="using-pre-trained-networks" class="slide level3">
-<h3>Using pre-trained networks</h3>
-<ul>
-<li>State-of-the-art networks involve millions of parameters, huge datasets, and days of training on GPU clusters</li>
-<li>Idea: share pre-trained networks (network architecture and weights)</li>
-<li>Some famous networks for image classification: Inception, ResNet, and more</li>
-<li>Can be loaded directly in Keras</li>
-</ul>
-</section>
-<section id="transfer-learning-from-pre-trained-networks" class="slide level3">
-<h3>Transfer learning from pre-trained networks</h3>
-<p>Use pre-trained network for a different task</p>
-<ul>
-<li>Use early layers from pre-trained network, freeze their parameters</li>
-<li>Only train small number of parameters at the end</li>
-</ul>
-</section>
-<section id="transfer-learning-illustration-1" class="slide level3">
-<h3>Transfer learning illustration (1)</h3>
-<figure>
-<img data-src="../images/8-transfer-similar.png" style="width:60.0%" alt="When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head." /><figcaption aria-hidden="true">When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head.</figcaption>
-</figure>
-</section>
-<section id="transfer-learning-illustration-2" class="slide level3">
-<h3>Transfer learning illustration (2)</h3>
-<figure>
-<img data-src="../images/8-transfer-less.png" style="width:60.0%" alt="If the original network is not as relevant, may fine-tune more layers." /><figcaption aria-hidden="true">If the original network is not as relevant, may fine-tune more layers.</figcaption>
-</figure>
 <!--
 
 More stuff:

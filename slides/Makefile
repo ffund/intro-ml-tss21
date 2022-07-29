@@ -14,8 +14,8 @@ SOURCES += 7-ensemble.md
 SOURCES += 7-svm.md
 SOURCES += 8-svm-kernel.md
 SOURCES += 8-neural.md
-SOURCES += 8-deep-neural-nets.md
-SOURCES += 8-convolutional.md
+SOURCES += 9-deep-neural-nets.md
+SOURCES += 9-convolutional.md
 SOURCES += 9-unsupervised.md
 SOURCES += 10-rl.md
 
