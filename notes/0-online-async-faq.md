@@ -21,6 +21,7 @@ There are two main ways to get help:
 
 * Post a question on the Q&A forum for this course. 
 * Attend a Zoom office hours session with the instructor. (Zoom office hours are scheduled once per week.)
+* Attend a Zoom office hours session with a course assistant. 
 
 (Note that you can ask questions **anonymously** on the Q&A forum, if you feel more comfortable that way.)
 
