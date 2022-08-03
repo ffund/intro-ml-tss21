@@ -40,6 +40,11 @@
 <p><span class="math display">\[\mathbf{x} = (x_1, x_2,..., x_d)\]</span></p>
 <p>There is some (unknown) relationship between <span class="math inline">\(\mathbf{x}\)</span> and a <strong>target</strong> variable, <span class="math inline">\(y\)</span>, whose value is unknown.</p>
 <p>We want to find <span class="math inline">\(\hat{y}\)</span>, our <strong>prediction</strong> for the value of <span class="math inline">\(y\)</span>.</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/10-supervised.png" style="width:55.0%" alt="Basic supervised learning problem." /><figcaption aria-hidden="true">Basic supervised learning problem.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="the-basic-unsupervised-learning-problem" class="slide level3">
 <h3>The basic unsupervised learning problem</h3>
@@ -48,6 +53,9 @@
 <p>We want to learn something about the underlying <em>structure</em> of the data.</p>
 <p>No labels!</p>
 <aside class="notes">
+<figure>
+<img data-src="../images/10-unsupervised.png" style="width:55.0%" alt="Unsupervised learning." /><figcaption aria-hidden="true">Unsupervised learning.</figcaption>
+</figure>
 <p>What are some things we might be able to learn about the structure of the data?</p>
 <ul>
 <li>dimensionality reduction</li>
@@ -56,6 +64,9 @@
 <li>feature learning</li>
 <li>density estimation</li>
 </ul>
+<figure>
+<img data-src="../images/10-unsupervised-examples.png" style="width:100.0%" alt="Unupervised learning problems." /><figcaption aria-hidden="true">Unupervised learning problems.</figcaption>
+</figure>
 </aside>
 </section></section>
 <section>
@@ -87,7 +98,7 @@
 <p>Now: <em>new</em> features, so we can get max information with min features.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/9-pca-vs-feature-selection.png" style="width:100.0%" alt="Instead of using existing features, we project the data onto a new feature space." /><figcaption aria-hidden="true">Instead of using existing features, we project the data onto a new feature space.</figcaption>
+<img data-src="../images/10-feature-selection-vs-pca.png" style="width:100.0%" alt="Instead of using existing features, we project the data onto a new feature space." /><figcaption aria-hidden="true">Instead of using existing features, we project the data onto a new feature space.</figcaption>
 </figure>
 </aside>
 </section>
@@ -98,7 +109,7 @@
 <p><span class="math inline">\(V = \{\alpha v | \alpha \in R\}\)</span> are the vectors on the line spanned by <span class="math inline">\(v\)</span>, then <span class="math inline">\(\text{Proj}_v (z)\)</span> is the closest vector in <span class="math inline">\(V\)</span> to <span class="math inline">\(z\)</span>: <span class="math inline">\(\hat{z} = \operatorname*{argmin}_{w \in V} || z - w ||^2\)</span>.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/9-projection.png" style="width:40.0%" alt="Projection of z onto v." /><figcaption aria-hidden="true">Projection of <span class="math inline">\(z\)</span> onto <span class="math inline">\(v\)</span>.</figcaption>
+<img data-src="../images/9-projection.png" style="width:35.0%" alt="Projection of z onto v." /><figcaption aria-hidden="true">Projection of <span class="math inline">\(z\)</span> onto <span class="math inline">\(v\)</span>.</figcaption>
 </figure>
 </aside>
 </section>
@@ -122,9 +133,12 @@
 <li>Minimize average squared length of the corresponding red connecting lines; <strong>total reconstruction error</strong></li>
 </ul>
 <aside class="notes">
-<p>Can you convince yourself that these two objectives are achieved by the same projection?</p>
+<p>Can you convince yourself that these two objectives are related, and are achieved by the same projection?</p>
+<!-- 
+Suppose we have a zero-centered data set ($\bar{x} = 0$) and consider a single data point. The point's contribution to the variance is fixed (red line). We decide the direction of the projection, which will determine the projected point's contribution to the "new" variance (purple line) and the difference between the original point and projected point (green line).
+-->
 <figure>
-<img data-src="../images/9-pythagorean.png" style="width:30.0%" alt="Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average)." /><figcaption aria-hidden="true">Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average).</figcaption>
+<img data-src="../images/9-pythagorean.png" style="width:50.0%" alt="Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average)." /><figcaption aria-hidden="true">Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average).</figcaption>
 </figure>
 <p>The intuition is that, by Pythagorean decomposition: the variance of the data (a fixed quantity) is equal to the variance of the projected data (which we want to be large) plus the reconstruction error (which we want to be small).</p>
 <!--
@@ -143,8 +157,9 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 </ul>
 <p><span class="math display">\[ Q_{k,l} = \frac{1}{N} \sum_{i=1}^N (x_{ik} - \bar{x}_k)(x_{il} - \bar{x}_l)\]</span></p>
 <aside class="notes">
+<p>Note: <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> in this notation are two different features, not a feature matrix and label.</p>
 <figure>
-<img data-src="../images/9-cov-matrix.png" style="width:30.0%" alt="Illustration of covariance matrix." /><figcaption aria-hidden="true">Illustration of covariance matrix.</figcaption>
+<img data-src="../images/9-cov-matrix.png" style="width:35.0%" alt="Illustration of covariance matrix." /><figcaption aria-hidden="true">Illustration of covariance matrix.</figcaption>
 </figure>
 </aside>
 </section>
@@ -154,10 +169,6 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <p>Sample covariance matrix is:</p>
 <p><span class="math display">\[Q = \frac{1}{N} \widetilde{X} ^T \widetilde{X}\]</span></p>
 <p>(compute covariance matrix by matrix product!)</p>
-<aside class="notes">
-<p>Now we have these mean-removed rows of data, and we want to project each row onto some vector <span class="math inline">\(v\)</span>, where <span class="math inline">\(z\)</span> is the projection of <span class="math inline">\(\widetilde{x}_i\)</span> onto <span class="math inline">\(v\)</span>. And we want to choose <span class="math inline">\(v\)</span> to maximize the variance of <span class="math inline">\(z\)</span>, <span class="math inline">\(s_z^2\)</span>.</p>
-<p>We will call this the <em>directional variance</em> - the variance of the projection of the row onto <span class="math inline">\(v\)</span>.</p>
-</aside>
 </section>
 <section id="directional-variance" class="slide level3">
 <h3>Directional variance</h3>
@@ -166,6 +177,10 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <li>Sample mean: <span class="math inline">\(\bar{z} = v^T \bar{x}\)</span></li>
 <li>Sample variance: <span class="math inline">\(s_z^2 = v^T Q v\)</span></li>
 </ul>
+<aside class="notes">
+<p>Now we have these mean-removed rows of data, and we want to project each row onto some vector <span class="math inline">\(v\)</span>, where <span class="math inline">\(z\)</span> is the projection of <span class="math inline">\(\widetilde{x}_i\)</span> onto <span class="math inline">\(v\)</span>. And we want to choose <span class="math inline">\(v\)</span> to maximize the variance of <span class="math inline">\(z\)</span>, <span class="math inline">\(s_z^2\)</span>.</p>
+<p>We will call this the <em>directional variance</em> - the variance of the projection of the row onto <span class="math inline">\(v\)</span>.</p>
+</aside>
 </section>
 <section id="maximizing-directional-variance-1" class="slide level3">
 <h3>Maximizing directional variance (1)</h3>
@@ -186,14 +201,13 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 </section>
 <section id="maximizing-directional-variance-2" class="slide level3">
 <h3>Maximizing directional variance (2)</h3>
-<p>Let <span class="math inline">\(v_1, \ldots, v_p\)</span> be  of <span class="math inline">\(Q\)</span> (there are <span class="math inline">\(p\)</span>):</p>
+<p>Let <span class="math inline">\(v_1, \ldots, v_p\)</span> be <em>eigenvectors</em> of <span class="math inline">\(Q\)</span> (there are <span class="math inline">\(p\)</span>):</p>
 <p><span class="math display">\[Q v_j = \lambda_j v_j\]</span></p>
 <ul>
 <li>Sort them in descending order: <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq \cdots \lambda_p\)</span>.</li>
 <li>The largest one is the vector that maximizes directional variance, the next is direction of second most variance, etc.</li>
 </ul>
 <aside class="notes">
-<!--For a nice, detailed proof of this, I recommend [this set of notes](http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf).-->
 <p><strong>Theorem</strong>: any eigenvector of <span class="math inline">\(Q\)</span> is a local maxima of the optimization problem</p>
 <p><span class="math display">\[\operatorname*{max}_v v^T Q v \quad \text{s.t} ||v|| = 1\]</span></p>
 <p><strong>Proof</strong>: Define the Lagrangian,</p>
@@ -201,6 +215,7 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <p>At any local maxima,</p>
 <p><span class="math display">\[\frac{\partial L}{\partial v} = 0 \implies Qv - \lambda v = 0\]</span></p>
 <p>Therefore, <span class="math inline">\(v\)</span> is an eigenvector of <span class="math inline">\(Q\)</span>.</p>
+<p>For a nice, detailed proof of this, I recommend <a href="http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf">this set of notes</a> by Cosma Shalizi at CMU.</p>
 </aside>
 </section>
 <section id="projections-onto-eigenvectors-uncorrelated-features" class="slide level3">
@@ -216,7 +231,7 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <section id="pca-intuition-5" class="slide level3">
 <h3>PCA intuition (5)</h3>
 <figure>
-<img data-src="../images/pca-animation.gif" style="width:50.0%" alt="In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix, and grey line points toward second eigenvector. View animation here." /><figcaption aria-hidden="true">In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix, and grey line points toward second eigenvector. <a href="https://stats.stackexchange.com/a/140579/41284">View animation here.</a></figcaption>
+<img data-src="../images/pca-animation.gif" style="width:50.0%" alt="In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). View animation here." /><figcaption aria-hidden="true">In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). <a href="https://stats.stackexchange.com/a/140579/41284">View animation here.</a></figcaption>
 </figure>
 </section>
 <section id="pca-in-summary-1" class="slide level3">
@@ -233,6 +248,9 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <p>Now you have <span class="math inline">\(N \times p&#39;\)</span> data that maximizes info</p>
 <aside class="notes">
 <p>Note: in practice, we compute PCA using singular value decomposition (SVD) which is numerically more stable.</p>
+<figure>
+<img data-src="../images/10-pca-summary.png" style="width:70.0%" alt="PCA summary." /><figcaption aria-hidden="true">PCA summary.</figcaption>
+</figure>
 </aside>
 </section>
 <section id="approximating-data" class="slide level3">
@@ -295,6 +313,9 @@ Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/u
 <li><span class="math inline">\(u_i\)</span> is the mean of each cluster</li>
 <li><span class="math inline">\(\sigma_n \in \{1, \ldots, K\}\)</span> is the cluster that <span class="math inline">\(x_n\)</span> belongs to</li>
 </ul>
+<!-- _
+![Clustering objective.](../images/10-clustering-objective.png){ width=70% }
+-->
 </section>
 <section id="k-means-algorithm" class="slide level3">
 <h3>K-means algorithm</h3>
@@ -307,12 +328,25 @@ Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/u
 <li>Update mean of each cluster (centroid rule): for every <span class="math inline">\(i\)</span>, <span class="math inline">\(u_i\)</span> is average of <span class="math inline">\(x_n\)</span> in <span class="math inline">\(C_i\)</span></li>
 </ul>
 <p>(Sensitive to initial conditions!)</p>
+<aside class="notes">
+<figure>
+<img data-src="../images/10-clustering-algorithm.png" style="width:90.0%" alt="K-means clustering." /><figcaption aria-hidden="true">K-means clustering.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="k-means-visualization" class="slide level3">
 <h3>K-means visualization</h3>
 <figure>
-<img data-src="../images/kmeansViz.png" style="width:60.0%" alt="Visualization of k-means clustering." /><figcaption aria-hidden="true">Visualization of k-means clustering.</figcaption>
+<img data-src="../images/kmeansViz.png" style="width:70.0%" alt="Visualization of k-means clustering." /><figcaption aria-hidden="true">Visualization of k-means clustering.</figcaption>
 </figure>
+</section>
+<section id="k-means-summary" class="slide level3">
+<h3>K-means summary</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/10-clustering-summary.png" style="width:80.0%" alt="Clustering summary." /><figcaption aria-hidden="true">Clustering summary.</figcaption>
+</figure>
+</aside>
 <!--
 
 ### K-means demo
@@ -345,6 +379,11 @@ This week: deep unsupervised learning
 <li>Decoder: reconstructs an estimate of input from the low-dimensional representation, <span class="math inline">\(z \rightarrow \hat{x}\)</span></li>
 <li><span class="math inline">\(z\)</span> known as <em>latent variables</em>, <em>latent representation</em>, or <em>code</em></li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/10-autoencoder.png" style="width:70.0%" alt="Autoencoder." /><figcaption aria-hidden="true">Autoencoder.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="k-means-as-an-autoencoder-1" class="slide level3">
 <h3>K-means as an autoencoder (1)</h3>
@@ -357,7 +396,7 @@ This week: deep unsupervised learning
 <h3>K-means as an autoencoder (2)</h3>
 <ul>
 <li>Let <span class="math inline">\(X\in \mathbb{R}^{n\times d}\)</span> be the data matrix containg <span class="math inline">\(n\)</span> <span class="math inline">\(d\)</span>-dimensional data points.</li>
-<li>Let <span class="math inline">\(Z\)</span> be a <span class="math inline">\(n\times k\)</span> matrix (if <span class="math inline">\(k\)</span> clusters) where each column is all zeros, except for one 1</li>
+<li>Let <span class="math inline">\(Z\)</span> be a <span class="math inline">\(n\times k\)</span> matrix (if <span class="math inline">\(k\)</span> clusters) where each entry is all zeros, except for one 1</li>
 <li>Let <span class="math inline">\(D\)</span> be a <span class="math inline">\(k\times d\)</span> matrix of cluster centers.</li>
 </ul>
 </section>
@@ -368,6 +407,9 @@ This week: deep unsupervised learning
 <li>Decoder is linear:</li>
 </ul>
 <p><span class="math display">\[X\approx \hat{X} = ZD\]</span></p>
+<aside class="notes">
+<p>Note: <span class="math inline">\(Z\)</span> was <span class="math inline">\(n \times k\)</span>, <span class="math inline">\(D\)</span> was <span class="math inline">\(k \times d\)</span>, so <span class="math inline">\(ZD\)</span> will be <span class="math inline">\(n \times d\)</span>.</p>
+</aside>
 </section>
 <section id="pca-as-an-autoencoder-1" class="slide level3">
 <h3>PCA as an autoencoder (1)</h3>
@@ -402,6 +444,9 @@ This week: deep unsupervised learning
 <li>Train network to learn approximation of identity function</li>
 </ul>
 <aside class="notes">
+<figure>
+<img data-src="../images/10-neural-autoencoder.png" style="width:70.0%" alt="Neural autoencoder." /><figcaption aria-hidden="true">Neural autoencoder.</figcaption>
+</figure>
 <p>What should the architecture of the network be?</p>
 </aside>
 </section>
@@ -414,7 +459,7 @@ This week: deep unsupervised learning
 <section id="undercomplete-autoencoder" class="slide level3">
 <h3>Undercomplete autoencoder</h3>
 <figure>
-<img data-src="../images/undercomplete-autoencoder.svg" style="width:30.0%" alt="This network is forced to learn a low-dimensional representation." /><figcaption aria-hidden="true">This network is forced to learn a low-dimensional representation.</figcaption>
+<img data-src="../images/undercomplete-autoencoder.svg" style="width:30.0%" alt="Is this network forced to learn a low-dimensional representation?" /><figcaption aria-hidden="true">Is this network forced to learn a low-dimensional representation?</figcaption>
 </figure>
 </section>
 <section id="sparse-autoencoder-1" class="slide level3">
@@ -459,13 +504,13 @@ This week: deep unsupervised learning
 <section id="example-reconstruction-of-faces" class="slide level3">
 <h3>Example: reconstruction of faces</h3>
 <figure>
-<img data-src="../images/autoencoder-vs-pca-science06.png" alt="Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." /><figcaption aria-hidden="true">Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006.</figcaption>
+<img data-src="../images/autoencoder-vs-pca-science06.png" style="width:80.0%" alt="Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." /><figcaption aria-hidden="true">Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006.</figcaption>
 </figure>
 </section>
 <section id="example-mnist-visualization" class="slide level3">
 <h3>Example: MNIST visualization</h3>
 <figure>
-<img data-src="../images/autoencoder-mnist.png" alt="Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." /><figcaption aria-hidden="true">Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006.</figcaption>
+<img data-src="../images/autoencoder-mnist.png" style="width:80.0%" alt="Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." /><figcaption aria-hidden="true">Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006.</figcaption>
 </figure>
 </section></section>
 <section>
@@ -597,7 +642,7 @@ Given a set of data instances $X$ and a set of labels $y$,
 <section id="illustration-training-generator" class="slide level3">
 <h3>Illustration: training generator</h3>
 <figure>
-<img data-src="../images/9-gan-generator.png" style="width:100.0%" alt="Training the discriminator." /><figcaption aria-hidden="true">Training the discriminator.</figcaption>
+<img data-src="../images/9-gan-generator.png" style="width:100.0%" alt="Training the generator." /><figcaption aria-hidden="true">Training the generator.</figcaption>
 </figure>
 <!--
 

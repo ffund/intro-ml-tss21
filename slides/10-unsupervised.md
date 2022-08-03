@@ -18,6 +18,13 @@ There is some (unknown) relationship between $\mathbf{x}$ and a **target** varia
 
 We want to find $\hat{y}$, our **prediction** for the value of $y$.
 
+:::notes
+
+![Basic supervised learning problem.](../images/10-supervised.png){ width=55% }
+
+
+:::
+
 ### The basic unsupervised learning problem
 
 Given a **sample** with a vector of **features**
@@ -30,6 +37,10 @@ No labels!
 
 ::: notes
 
+![Unsupervised learning.](../images/10-unsupervised.png){ width=55% }
+
+\newpage
+
 What are some things we might be able to learn about the structure of the data?
 
 
@@ -39,13 +50,15 @@ What are some things we might be able to learn about the structure of the data?
 * feature learning
 * density estimation
 
+
+![Unupervised learning problems.](../images/10-unsupervised-examples.png){ width=100% }
+
 :::
 
 
 ## Dimensionality reduction with PCA
 
 ::: notes
-
 
 Why?
 
@@ -61,7 +74,6 @@ Why?
 * Given $N \times p$ data matrix ${X}$ where each row is a sample $x_n$
 * **Problem**: Map data to $N \times p'$ where $p' \ll p$
 
-\newpage
 
 ### Dimensionality reduction with PCA vs feature selection
 
@@ -75,9 +87,11 @@ Now: *new* features, so we can get max information with min features.
 ::: notes
 
 
-![Instead of using existing features, we project the data onto a new feature space.](../images/9-pca-vs-feature-selection.png){ width=100% }
+![Instead of using existing features, we project the data onto a new feature space.](../images/10-feature-selection-vs-pca.png){ width=100% }
 
 :::
+
+\newpage
 
 
 ### Projections
@@ -91,13 +105,11 @@ $V = \{\alpha v | \alpha \in R\}$ are the vectors on the line spanned by $v$, th
 
 ::: notes
 
-![Projection of $z$ onto $v$.](../images/9-projection.png){ width=40% }
+![Projection of $z$ onto $v$.](../images/9-projection.png){ width=35% }
 
 
 :::
 
-
-\newpage
 
 ### PCA intution (1)
 
@@ -107,6 +119,7 @@ $V = \{\alpha v | \alpha \in R\}$ are the vectors on the line spanned by $v$, th
 
 ![Construct a new feature by drawing a line $w_1 x_1 + w_2 x_2$, and projecting data onto that line (red dots are projections). [View animation here.](https://stats.stackexchange.com/a/140579/41284)](../images/pca-animation.gif){ width=60% }
 
+\newpage
 
 ### PCA intuition (3)
 
@@ -117,9 +130,13 @@ Project onto which line?
 
 ::: notes
 
-Can you convince yourself that these two objectives are achieved by the same projection?
+Can you convince yourself that these two objectives are related, and are achieved by the same projection?
 
-![Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average).](../images/9-pythagorean.png){ width=30% }
+<!-- 
+Suppose we have a zero-centered data set ($\bar{x} = 0$) and consider a single data point. The point's contribution to the variance is fixed (red line). We decide the direction of the projection, which will determine the projected point's contribution to the "new" variance (purple line) and the difference between the original point and projected point (green line).
+-->
+
+![Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average).](../images/9-pythagorean.png){ width=50% }
 
 The intuition is that, by Pythagorean decomposition: the variance of the data (a fixed quantity) is equal to the variance of the projected data (which we want to be large) plus the reconstruction error (which we want to be small).
 
@@ -131,7 +148,6 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 
 :::
 
-\newpage
 
 
 ### Sample covariance matrix (1)
@@ -144,8 +160,9 @@ $$ Q_{k,l} = \frac{1}{N} \sum_{i=1}^N (x_{ik} - \bar{x}_k)(x_{il} - \bar{x}_l)$$
 
 ::: notes
 
+Note: $x$ and $y$ in this notation are two different features, not a feature matrix and label.
 
-![Illustration of covariance matrix.](../images/9-cov-matrix.png){ width=30% }
+![Illustration of covariance matrix.](../images/9-cov-matrix.png){ width=35% }
 
 
 :::
@@ -160,14 +177,6 @@ $$Q = \frac{1}{N} \widetilde{X} ^T \widetilde{X}$$
 
 (compute covariance matrix by matrix product!)
 
-::: notes
-
-Now we have these mean-removed rows of data, and we want to project each row onto some vector $v$, where $z$ is the projection of $\widetilde{x}_i$ onto $v$. And we want to choose $v$ to maximize the variance of $z$, $s_z^2$. 
-
-We will call this the *directional variance* - the variance of the projection of the row onto $v$.
-
-:::
-
 
 ### Directional variance 
 
@@ -176,7 +185,14 @@ Projection onto $v$: $z_i= (v^T \widetilde{x}_i) v$
 * Sample mean: $\bar{z} = v^T \bar{x}$
 * Sample variance: $s_z^2 = v^T Q v$
 
-\newpage
+::: notes
+
+Now we have these mean-removed rows of data, and we want to project each row onto some vector $v$, where $z$ is the projection of $\widetilde{x}_i$ onto $v$. And we want to choose $v$ to maximize the variance of $z$, $s_z^2$. 
+
+We will call this the *directional variance* - the variance of the projection of the row onto $v$.
+
+:::
+
 
 ### Maximizing directional variance (1)
 
@@ -201,7 +217,7 @@ Important note:
 ### Maximizing directional variance (2)
 
 
-Let $v_1, \ldots, v_p$ be \emph{eigenvectors} of $Q$ (there are $p$): 
+Let $v_1, \ldots, v_p$ be *eigenvectors* of $Q$ (there are $p$): 
 
 $$Q v_j = \lambda_j v_j$$
 
@@ -210,7 +226,6 @@ $$Q v_j = \lambda_j v_j$$
 
 ::: notes
 
-<!--For a nice, detailed proof of this, I recommend [this set of notes](http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf).-->
 
 
 **Theorem**: any eigenvector of $Q$ is a local maxima of the optimization problem
@@ -226,9 +241,11 @@ At any local maxima,
 $$\frac{\partial L}{\partial v} = 0 \implies Qv - \lambda v = 0$$
 
 Therefore, $v$ is an eigenvector of $Q$.
+
+For a nice, detailed proof of this, I recommend [this set of notes](http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf) by Cosma Shalizi at CMU.
+
 :::
 
-\newpage
 
 ### Projections onto eigenvectors: uncorrelated features
 
@@ -243,9 +260,13 @@ Therefore, $v$ is an eigenvector of $Q$.
 ::: 
 
 
+
 ### PCA intuition (5)
 
-![In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix, and grey line points toward second eigenvector. [View animation here.](https://stats.stackexchange.com/a/140579/41284)](../images/pca-animation.gif){ width=50% }
+![In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). [View animation here.](https://stats.stackexchange.com/a/140579/41284)](../images/pca-animation.gif){ width=50% }
+
+\newpage
+
 
 ### PCA in summary (1)
 
@@ -265,6 +286,8 @@ Now you have $N \times p'$ data that maximizes info
 
 Note: in practice, we compute PCA using singular value decomposition (SVD) which is numerically more stable.
 
+
+![PCA summary.](../images/10-pca-summary.png){ width=70% }
 
 :::
 \newpage
@@ -334,6 +357,7 @@ Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/u
 * More formally: Assign $\sigma_n = \{1, \ldots, K\}$ cluster label for each sample
 * Samples in same cluster should be close: $||x_n - x_m||$ is small when $\sigma_n = \sigma_m$
 
+
 ### K-means clustering 
 
 We want to minimize 
@@ -343,6 +367,10 @@ $$J = \sum_{i=1}^K \sum_{n\in C_i} || x_n - \mu_j || ^2 $$
 
 * $u_i$ is the mean of each cluster
 * $\sigma_n \in \{1, \ldots, K\}$ is the cluster that $x_n$ belongs to 
+
+<!-- _
+![Clustering objective.](../images/10-clustering-objective.png){ width=70% }
+-->
 
 ### K-means algorithm
 
@@ -358,10 +386,26 @@ $$\sigma_n = \operatorname*{argmin}_i ||x_n - \mu_i||^2$$
 
 (Sensitive to initial conditions!)
 
+:::notes
+
+![K-means clustering.](../images/10-clustering-algorithm.png){width=90%}
+
+:::
+
+\newpage
+
 ### K-means visualization
 
-![Visualization of k-means clustering.](../images/kmeansViz.png){width=60%}
+![Visualization of k-means clustering.](../images/kmeansViz.png){width=70%}
 
+
+### K-means summary
+
+:::notes
+
+![Clustering summary.](../images/10-clustering-summary.png){ width=80% }
+
+:::
 
 <!--
 
@@ -395,6 +439,12 @@ An *autoencoder* is a learner that includes:
 * Decoder: reconstructs an estimate of input from the low-dimensional representation, $z \rightarrow \hat{x}$
 * $z$ known as *latent variables*, *latent representation*, or *code*
 
+:::notes
+
+![Autoencoder.](../images/10-autoencoder.png){ width=70% }
+
+:::
+
 
 ### K-means as an autoencoder (1)
 
@@ -404,7 +454,7 @@ An *autoencoder* is a learner that includes:
 ### K-means as an autoencoder (2)
 
 * Let $X\in \mathbb{R}^{n\times d}$ be the data matrix containg $n$ $d$-dimensional data points. 
-* Let $Z$ be a $n\times k$ matrix (if $k$ clusters) where each column is all zeros, except for one 1
+* Let $Z$ be a $n\times k$ matrix (if $k$ clusters) where each entry is all zeros, except for one 1
 * Let $D$ be a $k\times d$ matrix of cluster centers.
 
 ### K-means as an autoencoder (3)
@@ -414,6 +464,9 @@ An *autoencoder* is a learner that includes:
 
 $$X\approx \hat{X} = ZD$$
 
+:::notes
+Note: $Z$ was $n \times k$, $D$ was $k \times d$, so $ZD$ will be $n \times d$.
+:::
 
 ### PCA as an autoencoder (1)
 
@@ -443,15 +496,15 @@ $$X\approx \hat{X} = ZD$$
 * (*Self-supervised*: creates its own labels)
 * Train network to learn approximation of identity function
 
-\newpage
-
-
 ::: notes
+
+![Neural autoencoder.](../images/10-neural-autoencoder.png){ width=70% }
 
 What should the architecture of the network be?
 
-
 :::
+
+\newpage
 
 ### Overcomplete autoencoder
 
@@ -459,10 +512,8 @@ What should the architecture of the network be?
 
 ### Undercomplete autoencoder
 
-![This network is forced to learn a low-dimensional representation.](../images/undercomplete-autoencoder.svg){ width=30% }
+![Is this network forced to learn a low-dimensional representation?](../images/undercomplete-autoencoder.svg){ width=30% }
 
-
-\newpage
 
 
 ### Sparse autoencoder (1)
@@ -479,6 +530,8 @@ Allow many hidden units, but for a given input, most of them must produce a very
 
 * Add penalty term to loss function, like regularization, but not on weights!
 * Penalty is on average activation value (over all the training samples)
+
+\newpage
 
 ### Autoencoder comparison
 
@@ -499,15 +552,13 @@ Allow many hidden units, but for a given input, most of them must produce a very
 
 -->
 
-\newpage
-
 ### Example: reconstruction of faces
 
-![Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al "Reducing the dimensionality of data with neural networks", Science, 2006.](../images/autoencoder-vs-pca-science06.png)
+![Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al "Reducing the dimensionality of data with neural networks", Science, 2006.](../images/autoencoder-vs-pca-science06.png){ width=80% }
 
 ### Example: MNIST visualization
 
-![Image via Hinton et al "Reducing the dimensionality of data with neural networks", Science, 2006.](../images/autoencoder-mnist.png)
+![Image via Hinton et al "Reducing the dimensionality of data with neural networks", Science, 2006.](../images/autoencoder-mnist.png){ width=80% }
 
 
 
@@ -648,7 +699,7 @@ $$\frac{1}{m}  \sum_{i=1}^m \log \left(D_\phi(G_\theta({z}^{(i)})) \right)$$
 
 ### Illustration: training generator
 
-![Training the discriminator.](../images/9-gan-generator.png){ width=100% }
+![Training the generator.](../images/9-gan-generator.png){ width=100% }
 
 
 <!--

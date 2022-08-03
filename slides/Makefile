@@ -16,7 +16,7 @@ SOURCES += 8-svm-kernel.md
 SOURCES += 8-neural.md
 SOURCES += 9-deep-neural-nets.md
 SOURCES += 9-convolutional.md
-SOURCES += 9-unsupervised.md
+SOURCES += 10-unsupervised.md
 SOURCES += 10-rl.md
 
 # Convert the list of source files (Markdown files )
