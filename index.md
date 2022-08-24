@@ -1,9 +1,12 @@
-# Intro Machine Learning - Summer 2022
+# Intro Machine Learning 
+
+_Fraida Fund_
 
 
 ## Week 0: Course Intro
 
-* [Notes: FAQ for online section](notes/0-online-faq) <a href="notes/0-online-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* [Notes: FAQ for online section with scheduled meeting time](notes/0-online-faq) <a href="notes/0-online-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* [Notes: FAQ for online section with no scheduled meeting time](notes/0-online-async-faq) <a href="notes/0-online-async-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * [Notes: Prerequisite review](notes/0-prerequisite-review) <a href="notes/0-prerequisite-review.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * [Notes: Textbooks and Resources](notes/0-books) <a href="notes/0-books.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 
