@@ -88,3 +88,19 @@
 * Notebook: Bias and variance of SVM <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-svm-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-svm-bias-variance.ipynb)
 * Notebook: Backpropagation <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-demo-backprop.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-demo-backprop.ipynb)
 * Notebook: Draw your own classification problem for a neural network [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw.ipynb)
+
+## Week 9: Deep neural networks, convolutional neural networks
+
+* Handout: Deep neural networks <a href="slides/9-deep-neural-nets"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Convolutional neural networks <a href="slides/9-convolutional.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: the Slash dataset <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/9-slash-dataset.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-slash-dataset.ipynb)
+* Notebook: Convolutional neural networks <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/9-convolutional-neural-networks.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-convolutional-neural-networks.ipynb)
+* Notebook: Transfer learning on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-fine-tune-rock-paper-scissors.ipynb)
+
+## Week 10: Unsupervised learning
+
+* Handout: Unsupervised learning <a href="slides/10-unsupervised.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Notebook: Clustering [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1bYGtfCpb3UCqfVHo_x06oKlwgjjhN7zl)
+* Notebook: PCA on handwritten digits [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EU3YyE94ghKyxmmmuRNygZLAfTQ-6jwb)
+* Notebook: PCA on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xOppWFpoaQbbU9mE5KuxNFPSiuxfMoRB)
+
