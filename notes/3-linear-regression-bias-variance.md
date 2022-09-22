@@ -129,7 +129,7 @@ Now us give a definition of *variance* on a test point, $(x_t, y_t)$ for a funct
 
 $$\text{Var}(x_t) :=  E[ (f(x_t, \hat{w}) - E[f(x_t, \hat{w})] ) ^2 ]$$
 
-We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate $\hat{w}$. Then, we will describe the variance of the model output $f(x_t, \hat{w})$ for a fixed $x_t$. Finally, we will find the variance over the distribution of $x_t$.
+We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate $\hat{w}$. Then, we will describe the variance of the model output $f(x_t, \hat{w})$ for a fixed $x_t$. Finally, we will find the expected variance over the distribution of $x_t$.
 
 
 ### Variance of parameter estimate

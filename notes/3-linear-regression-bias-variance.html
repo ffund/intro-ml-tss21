@@ -96,7 +96,7 @@ Cov (x_d, x_1) &amp; \cdots &amp; Cov (x_d, x_d) \\
 <h2 id="variance-of-linear-model">Variance of linear model</h2>
 <p>Now us give a definition of <em>variance</em> on a test point, <span class="math inline">\((x_t, y_t)\)</span> for a function <span class="math inline">\(f\)</span> with parameter estimate <span class="math inline">\(\hat{w}\)</span>:</p>
 <p><span class="math display">\[\text{Var}(x_t) :=  E[ (f(x_t, \hat{w}) - E[f(x_t, \hat{w})] ) ^2 ]\]</span></p>
-<p>We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate <span class="math inline">\(\hat{w}\)</span>. Then, we will describe the variance of the model output <span class="math inline">\(f(x_t, \hat{w})\)</span> for a fixed <span class="math inline">\(x_t\)</span>. Finally, we will find the variance over the distribution of <span class="math inline">\(x_t\)</span>.</p>
+<p>We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate <span class="math inline">\(\hat{w}\)</span>. Then, we will describe the variance of the model output <span class="math inline">\(f(x_t, \hat{w})\)</span> for a fixed <span class="math inline">\(x_t\)</span>. Finally, we will find the expected variance over the distribution of <span class="math inline">\(x_t\)</span>.</p>
 <h3 id="variance-of-parameter-estimate">Variance of parameter estimate</h3>
 <p>Recall that <span class="math inline">\(\epsilon_i\)</span> are independent for different samples, with <span class="math inline">\(E[\epsilon_i] = 0\)</span> and <span class="math inline">\(Var(\epsilon) = \sigma_\epsilon^2\)</span>.</p>
 <p>Then,</p>
