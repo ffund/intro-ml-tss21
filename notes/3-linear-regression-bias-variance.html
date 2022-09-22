@@ -55,7 +55,7 @@
 <h2 id="bias-of-linear-model">Bias of linear model</h2>
 <p>Let us give a definition of <em>bias</em> on a test point, <span class="math inline">\((x_t, y_t)\)</span> for a function <span class="math inline">\(f\)</span> with parameter estimate <span class="math inline">\(\hat{w}\)</span>:</p>
 <p><span class="math display">\[\text{Bias}(x_t) := t( x_t ) -  E[f(x_t, \hat{w})] \]</span></p>
-<p>We will try to derive the bias for a linear regression when the true functino is in the assumed model class, i.e. there is no under-modeling.</p>
+<p>We will try to derive the bias for a linear regression when the true function is in the assumed model class, i.e. there is no under-modeling.</p>
 <p>Suppose that there is no under-modeling, so there is a parameter vector <span class="math inline">\(w_t\)</span> such that</p>
 <p><span class="math display">\[t(x) = f(x,w_t) = \phi(x)^T w_t\]</span></p>
 <p>Then for each training sample <span class="math inline">\(i=1,\ldots,n\)</span>,</p>
@@ -94,6 +94,9 @@ Cov (x_d, x_1) &amp; \cdots &amp; Cov (x_d, x_d) \\
 <li>The mean and variance matrix under this linear transform are given by <span class="math inline">\(E(y) = AE(x) + b\)</span> and <span class="math inline">\(Var(y) = A Var(x) A^T\)</span>, respectively.</li>
 </ul>
 <h2 id="variance-of-linear-model">Variance of linear model</h2>
+<p>Now us give a definition of <em>variance</em> on a test point, <span class="math inline">\((x_t, y_t)\)</span> for a function <span class="math inline">\(f\)</span> with parameter estimate <span class="math inline">\(\hat{w}\)</span>:</p>
+<p><span class="math display">\[\text{Var}(x_t) :=  E[ (f(x_t, \hat{w}) - E[f(x_t, \hat{w})] ) ^2 ]\]</span></p>
+<p>We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate <span class="math inline">\(\hat{w}\)</span>. Then, we will describe the variance of the model output <span class="math inline">\(f(x_t, \hat{w})\)</span> for a fixed <span class="math inline">\(x_t\)</span>. Finally, we will find the variance over the distribution of <span class="math inline">\(x_t\)</span>.</p>
 <h3 id="variance-of-parameter-estimate">Variance of parameter estimate</h3>
 <p>Recall that <span class="math inline">\(\epsilon_i\)</span> are independent for different samples, with <span class="math inline">\(E[\epsilon_i] = 0\)</span> and <span class="math inline">\(Var(\epsilon) = \sigma_\epsilon^2\)</span>.</p>
 <p>Then,</p>

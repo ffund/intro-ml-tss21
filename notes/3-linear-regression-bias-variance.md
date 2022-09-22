@@ -64,7 +64,7 @@ Let us give a definition of *bias* on a test point, $(x_t, y_t)$ for a function 
 $$\text{Bias}(x_t) := t( x_t ) -  E[f(x_t, \hat{w})] $$
 
 
-We will try to derive the bias for a linear regression when the true functino is in the assumed model class, i.e. there is no under-modeling.
+We will try to derive the bias for a linear regression when the true function is in the assumed model class, i.e. there is no under-modeling.
 
 Suppose that there is no under-modeling, so there is a parameter vector $w_t$ such that
 
@@ -124,6 +124,13 @@ $$
 \newpage
 
 ## Variance of linear model
+
+Now us give a definition of *variance* on a test point, $(x_t, y_t)$ for a function $f$ with parameter estimate $\hat{w}$:
+
+$$\text{Var}(x_t) :=  E[ (f(x_t, \hat{w}) - E[f(x_t, \hat{w})] ) ^2 ]$$
+
+We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate $\hat{w}$. Then, we will describe the variance of the model output $f(x_t, \hat{w})$ for a fixed $x_t$. Finally, we will find the variance over the distribution of $x_t$.
+
 
 ### Variance of parameter estimate
 
