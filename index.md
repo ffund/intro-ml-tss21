@@ -30,6 +30,8 @@ _Fraida Fund_
 * Notebook: Linear regression in depth <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/2-linear-regression-deep-dive.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-deep-dive.ipynb)
 * Notebook: Case study on "Beauty in the Classroom" <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/2-linear-regression-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-linear-regression-case-study.ipynb)
 
+* Notebook: Linear regression on Advertising data (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/2-advertising-hw.ipynb)
+
 ## Week 3: Gradient descent, bias-variance tradeoff
 
 * [Notes: videos on convexity, directional derivatives, gradient descent](notes/2-gd-background-videos)
@@ -61,6 +63,8 @@ _Fraida Fund_
 * [Outside reference: Machine bias](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing)
 * [Outside reference: Can you make AI fairer than a judge?](https://www.technologyreview.com/2019/10/17/75285/ai-fairer-than-judge-criminal-risk-assessment-algorithm/)
 * Notebook: COMPAS case study <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/5-compas-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-compas-case-study.ipynb)
+
+* Notebook: Classify your own handwritten digit (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-hw-logistic-regression.ipynb)
 
 ## Week 6: K nearest neighbor, decision trees
 
