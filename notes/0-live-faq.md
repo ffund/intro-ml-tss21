@@ -79,7 +79,7 @@ If you want to brush up, you can review:
 
 There will be a significant programming component to this course, and
 class and homework exercises will be in Python. You do not need to know
-Python a priori, but you should know basic programming concepts and have
+Python a priori if you feel comfortable picking it up as you go, but you should know basic programming concepts and have
 experience programming in some programming language. We will review 
 some important Python basics in the first week of the course.
 
