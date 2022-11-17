@@ -78,11 +78,10 @@ You can use your baseline code to help you understand the topic, too. Look at th
 
 #### 3. Select a claim that you think you can validate
 
-After you have some baseline code running and you have a good grasp of the topic/technique, you are in a good position to extend the baseline in a way that shows your understanding of the topic.
+After you have some baseline code running and you have a good grasp of the topic/technique, you are in a good position to select an important, specific, falsifiable claim in the paper, and decide how to validate it.
 
-A good original contribution is one that shows that you understand the technique, how it is used, and what its strengths and weaknesses are. For example, you might apply it to a problem it is especially well suited for (and explain why it is!), compare it to another technique that is used for similar tasks (and make sure to explain the results!), show how it works with some carefully selected test samples that are designed to highlight its strengths and weaknesses, etc.
-
-If you're not sure about your planned extension, feel free to ask for feedback!
+Selecting an appropriate claim, and validating it effecitvely, shows that you understand the technique, how it is used, and why it matters.
+If you're not sure about your choice of claim to validate (and how you plan to validate it), feel free to ask for feedback!
 
 #### 4. Prepare your presentation and notebook submission
 
