@@ -3,11 +3,11 @@ title: Intro ML Project
 author: Fraida Fund
 ---
 
-For the project component of this course, you will study a piece of recently published work in machine learning by: learning about your the work described in the paper, replicating some existing version of it (using a Python notebook or source code that is provided for you), and then extending that provided notebook or source code to highlight some element of the work.
+For the project component of this course, you will study a piece of recently published work in machine learning by: learning about the work described in the paper, running some existing version of it (using a Python notebook or source code that is provided for you), and then using that to validate a claim made in the paper.
 
 ## Goals
 
-I assign this project format because as you move on from this introductory course, it's important to:
+I assign this project format because as you move on from this introductory course, I want you to:
 
 * Engage with high-quality research in the field of machine learning.
 * Practice building on your foundation in machine learning fundamentals, to learn new concepts and techniques.
@@ -16,32 +16,35 @@ I assign this project format because as you move on from this introductory cours
 
 To learn about the work that is the topic of your project, you should expect to read the primary research paper or other academic material describing the work. You may need to read additional papers or other materials to fill in gaps between the introductory material in the lectures, and the project topic. For example, if your topic involves a kind of neural network called a _transformer_, you will probably have to learn about encoders and decoders, attention, and self-attention before you can begin to understand the transformer. You can ask for learning resources on Ed if you're having trouble finding high-quality learning material on any particular topic.
 
-To replicate the work, you'll use a Python notebook or open-source Python code that will be given to you. Depending on the specific topic, you may find that the notebook provided to you runs on Colab without any changes necessary. Other students may have to do some more work to: retrieve data into the Colab workspace, install Python libraries or specific versions of Python libraries, make small changes to the code to work with different library versions, or similar modifications. 
+To replicate the work, you'll use a Python notebook or open-source Python code that will be given to you. Depending on the specific topic, you may find that the notebook provided to you runs on Colab without any changes necessary. Other students may have to do some more work to: retrieve data into the Colab workspace, install Python libraries or specific versions of Python libraries, make small changes to the code to work with different library versions, or similar modifications. (Your project must run in Colab or another shared environment, not your own laptop - if you think it's not possible to run your project in Colab, you can reach out on Ed for futher advice.)
 
-Finally, you'll extend the provided notebook or source code to highlight your understanding of the work. You'll have to decide the best way to extend the work, but it's important that you do something that shows your understanding. Some examples:
+You will prepare a presentation that explains the topic at a level appropriate for students who have just finished Intro ML ;)
 
-* You might show the output of intermediate steps of a multi-step process, to show how the process works.
-* If the paper that describes your method discusses some of its strengths and weaknesses, you might use specially prepared test samples to show how the model does well on test samples that fall within its "strengths" and poorly on test samples that fall within its "weaknesses". 
-* You might use a completely different type of test data, explain why you would expect the model to perform well (or not!) on that type of data, and show what you could do to improve the model performance on that type of data.
-* You might compare and contrast different methods for a similar problem using the same data, and explain any differences in their performance using your understanding of the methods.
-* If your model uses an interesting and non-obvious loss function, or is evaluated by an interesting metric (e.g. ROUGE, BLEU), you can break down the steps involved in computing it, and show what it computes for selected "good" and "bad" samples to explain why it works.
+Next, you'll use the provided notebook or source code to validate an important, specific, and falsifiable claim made in the paper. You'll have to decide the best "claim" to validate and how to use the notebook or source code to do this. For example:
 
-**Important note**: hyperparameter tuning does *not* show anything about your understanding of this particular work. You should *not* bother with hyperparameter tuning, and you should *not* consider it an "extension" of the work.
+* _This image classification model X, is an improvement over the status quo because X is much faster - it can run inference on more frames per second._ You can find code for X and for other comparable models, and compare the runtime. 
+* _The music generation model Y creates more pleasant sounds because of its unique loss function, which rewards sounds that "sound good"._ You can do a deep dive on the loss function, and show how it is computed on some "good sound" and "bad sound" examples.
+* _The text classification model A has better performance than model B on data of type C, because D. But it does worse on data of type E, because F."_ You can find code for both models, and prepare some carefully selected samples to show why one does better than the other in each case.
 
-Note that many of these "extensions" will work even with a pre-trained model! In many cases, you will not need to actually train a model from scratch.
+
+Note that you will *not* be doing any of the following:
+
+* Not hyperparameter tuning - that doesn't show anything about your understanding of the topic, and it's not what this project is about.
+* Not applying the model to some other data or context (unless this is relevant to the claim you are trying to validate.)
+* In most cases, you will not be training a model from scratch - unless it is really necessary. Most of these models have pre-trained weights available that you can use in your projects.
 
 ## The process
 
 ### Selecting a project
 
-You'll choose your project from the following list (open with your NYU Google account) on a first-come, first-served basis. (Two students cannot do the same project.)
+You'll find a partner - this proejct will be completed in teams of 2. Then, you and your partner will choose your project from the following list (open with your NYU Google account) on a first-come, first-served basis. (Only one team can "claim" each project.)
 
-[https://docs.google.com/document/d/1UERHzBDwU33_kuiLwVFIL9jLuuKtg4B9UiZSLAz1Df0/](https://docs.google.com/document/d/1UERHzBDwU33_kuiLwVFIL9jLuuKtg4B9UiZSLAz1Df0/)
+[https://docs.google.com/document/d/16oyIIy15ZbyyUeu8k3bIzyqqFULS5C8YyCtGX129JQI/edit?usp=sharing](https://docs.google.com/document/d/16oyIIy15ZbyyUeu8k3bIzyqqFULS5C8YyCtGX129JQI/edit?usp=sharing)
 
 To "claim" your project:
 
 * In the Google Doc, find the list item for your selected project, and make sure it is not already "claimed".
-* Highlight the entire list item, and add a comment with the names and email addresses of your entire "team". A "team" can be one student or two students.
+* Highlight the entire list item, and add a comment with the names and email addresses of your entire "team". 
 * Do not mark the comment as "resolved".
 
 ### I have a project topic, now what?
@@ -54,7 +57,7 @@ A quick scan of the paper will help you get the main points of what it's all abo
 
 All of the projects include a link to some code - one or more notebooks, Github repositories, blog posts with code snippets included, or other source code that you can use as a baseline for your project.
 
-A good first step is to get some baseline code running on Colab. Some of you have a notebook that will run as-is without any changes, so you don't have to do anything to get your baseline code running. Some of you will need to make a few small changes, like changing the Tensorflow version from 2.x to 1.x, or installing some packages, in order to get your baseline code to run. Some of you will need to make more substantial changes. 
+A good first step is to get some baseline code running on Colab. Some of you have a notebook that will run as-is without any changes, so you don't have to do anything to get your baseline code running. Some of you will need to make a few small changes, like installing some packages or specific versions of packages, in order to get your baseline code to run. Some of you will need to make more substantial changes. 
 
 Why should this be your first step? If you can't get your baseline code working, you should reach out to me for help as soon as possible, so that I can work with you to get something running. If we can't get your baseline code working together, then I'll help you get started on a different, related project instead.
 
@@ -73,7 +76,7 @@ Look for details like:
 
 You can use your baseline code to help you understand the topic, too. Look at the source code, and try to understand how it connects to the details you've read about how the technique works. You may add extra visualizations or other output to your baseline code to help you understand the technique.
 
-#### 3. Plan to extend your work
+#### 3. Select a claim that you think you can validate
 
 After you have some baseline code running and you have a good grasp of the topic/technique, you are in a good position to extend the baseline in a way that shows your understanding of the topic.
 
