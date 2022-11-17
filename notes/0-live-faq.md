@@ -148,8 +148,8 @@ The NYU Tandon School values an inclusive and equitable environment for all our 
 
 If you are student with a disability who is requesting accommodations, please contact New York University’s Moses Center for Students with Disabilities (CSD) at 212-998-4980 or mosescsd@nyu.edu.  You must be registered with CSD to receive accommodations.  Information about the Moses Center can be found at www.nyu.edu/csd. The Moses Center is located at 726 Broadway on the 3rd floor.
 
-Note for those who require accommodations for timed assessments: the final exam will be a timed exam.
+Note for those who require accommodations for timed assessments: the midterm exam and final exam will be timed exams.
 
 ### Illness or other exceptional situation
 
-If you are experiencing an illness or any other situation that might affect your academic performance in a class, please contact the student advocate: eng.studentadvocate@nyu.edu. The student advocate can reach out to your instructors to make arrangements on your behalf, when warranted.
+If you are experiencing an illness or any other situation that might affect your academic performance in a class, please contact the student advocate: advocacy.tandonstudentlife@nyu.edu. The student advocate can reach out to your instructors to make arrangements on your behalf, when warranted.
