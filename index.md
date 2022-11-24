@@ -98,7 +98,7 @@ _Fraida Fund_
 
 ## Week 9: Deep neural networks, convolutional neural networks
 
-* Handout: Deep neural networks <a href="slides/9-deep-neural-nets"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Deep neural networks <a href="slides/9-deep-neural-nets.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Convolutional neural networks <a href="slides/9-convolutional.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: the Slash dataset <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/9-slash-dataset.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-slash-dataset.ipynb)
 * Notebook: Convolutional neural networks <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/9-convolutional-neural-networks.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-convolutional-neural-networks.ipynb)
