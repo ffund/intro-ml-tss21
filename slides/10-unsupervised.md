@@ -325,7 +325,7 @@ $$\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \l
 
 ### Proportion of variance explained
 
-The \emph{proportion of variance} explained by $d$ PCs is:
+The *proportion of variance* explained by $d$ PCs is:
 
 $$PoV(d) = \frac{\sum_{j=1}^d \lambda_j} {\sum_{j=1}^p \lambda_j }$$
 
