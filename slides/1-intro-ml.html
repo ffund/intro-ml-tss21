@@ -152,6 +152,12 @@
 <p>(“Rules” are inferred automatically from data!)</p>
 </aside>
 </section>
+<section id="ml-vs.-rule-based-system---comic" class="slide level3 cell markdown">
+<h3>ML vs. rule-based system - comic</h3>
+<figure>
+<img data-src="../images/1-programing-ml.png" style="width:70.0%" alt="ML vs rule-based programming, via Christoph Molnar’s Interpretable Machine Learning" /><figcaption aria-hidden="true">ML vs rule-based programming, via <a href="https://christophm.github.io/interpretable-ml-book/terminology.html">Christoph Molnar’s Interpretable Machine Learning</a></figcaption>
+</figure>
+</section>
 <section id="rule-based-vs.-data-driven-problem-solving" class="slide level3 cell markdown">
 <h3>Rule-based vs. data driven problem solving</h3>
 <aside class="notes">
@@ -183,7 +189,7 @@
 <img data-src="../images/1-bad-five.svg" style="width:15.0%" alt="Example of a handwritten 5 that the 1964 system would struggle with." /><figcaption aria-hidden="true">Example of a handwritten 5 that the 1964 system would struggle with.</figcaption>
 </figure>
 <aside class="notes">
-<p>You read or will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?</p>
+<p>You will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?</p>
 <p>Are there any important reasons <em>not</em> to use ML for this?</p>
 </aside>
 </section>
@@ -229,16 +235,13 @@
 </section>
 <section id="score-candidates-performance-in-a-job-interview-1" class="slide level3 cell markdown">
 <h3>Score candidate’s performance in a job interview (1)</h3>
-<aside class="notes">
 <ul>
 <li>Use video recording as input to ML system</li>
 <li>Train using videos of past interviews + human assessment on key personality features</li>
-<li>Do you think the video (not audio) of your interview is a good predictor of how you will perform the job?</li>
 </ul>
+<aside class="notes">
+<p>Do you think the video (not audio) of your interview is a good predictor of how you will perform the job?</p>
 </aside>
-<figure>
-<img data-src="../images/1-alex-interview.jpg" style="width:50.0%" alt="Source: An Interview with Alex by artist Carrie Sijia Wang." /><figcaption aria-hidden="true">Source: <a href="http://theinterview.ai/">An Interview with Alex</a> by artist Carrie Sijia Wang.</figcaption>
-</figure>
 </section>
 <section id="score-candidates-performance-in-a-job-interview-2" class="slide level3 cell markdown">
 <h3>Score candidate’s performance in a job interview (2)</h3>
@@ -273,6 +276,10 @@
 <li>Reduced “pain disparity” by 43% (does a better job than radiologists of finding things that “hurt”, especially in Black knees!)</li>
 </ul>
 </section>
+<section id="quick-draw" class="slide level3 cell markdown">
+<h3>Quick, Draw</h3>
+<p><a href="https://quickdraw.withgoogle.com/">https://quickdraw.withgoogle.com/</a></p>
+</section>
 <section id="what-problems-are-good-for-ml-overall" class="slide level3 cell markdown">
 <h3>What problems are “good” for ML, overall?</h3>
 </section>
@@ -283,6 +290,7 @@
 <li>There is no “good” data available to train the model.</li>
 <li>The model can be “tricked”, with potentially severe consequences.</li>
 <li>Need to audit or explain the output.</li>
+<li>Expects human empathy, expert creativity.</li>
 </ul>
 </section>
 <section id="problems-that-are-often-good-candidates-for-ml" class="slide level3 cell markdown">
@@ -294,10 +302,6 @@
 <li>Humans cannot easily explain their expertise</li>
 <li>We will get more data during operation + can improve with experience</li>
 </ul>
-</section>
-<section id="quick-draw" class="slide level3 cell markdown">
-<h3>Quick, Draw</h3>
-<p><a href="https://quickdraw.withgoogle.com/">https://quickdraw.withgoogle.com/</a></p>
 </section>
 <section id="why-now" class="slide level3 cell markdown">
 <h3>Why now?</h3>
@@ -402,41 +406,64 @@
 </figure>
 </aside>
 </section>
-<section id="reality-check" class="title-slide slide level2 cell markdown">
-<h2>Reality check</h2>
+<section id="limitations" class="title-slide slide level2 cell markdown">
+<h2>Limitations</h2>
 
 </section>
 
 <section id="ml-finds-patterns" class="slide level3 cell markdown">
 <h3>ML finds patterns</h3>
 </section>
-<section id="pattern-finding-1" class="slide level3 cell markdown">
-<h3>Pattern finding (1)</h3>
+<section id="image-captioning-1" class="slide level3 cell markdown">
+<h3>Image captioning (1)</h3>
 <figure>
 <img data-src="../images/1-hillside-sheep.jpg" style="width:55.0%" alt="ML model sees imaginary sheep on this grassy hillside. Source: Janelle Shane" /><figcaption aria-hidden="true">ML model sees imaginary sheep on this grassy hillside. Source: <a href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle Shane</a></figcaption>
 </figure>
 </section>
-<section id="pattern-finding-2" class="slide level3 cell markdown">
-<h3>Pattern finding (2)</h3>
+<section id="image-captioning-2" class="slide level3 cell markdown">
+<h3>Image captioning (2)</h3>
 <figure>
 <img data-src="../images/1-goats-arms.jpg" style="width:45.0%" alt="Goats in arms are assumed to be dogs. Source: Janelle Shane" /><figcaption aria-hidden="true">Goats in arms are assumed to be dogs. Source: <a href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle Shane</a></figcaption>
 </figure>
 </section>
-<section id="pattern-finding-3" class="slide level3 cell markdown">
-<h3>Pattern finding (3)</h3>
+<section id="image-captioning-3" class="slide level3 cell markdown">
+<h3>Image captioning (3)</h3>
 <figure>
 <img data-src="../images/1-goats-trees.jpg" style="width:55.0%" alt="Goats in trees are assumed to be birds. Source: Janelle Shane" /><figcaption aria-hidden="true">Goats in trees are assumed to be birds. Source: <a href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle Shane</a></figcaption>
 </figure>
 </section>
-<section id="pattern-finding-4" class="slide level3 cell markdown">
-<h3>Pattern finding (4)</h3>
+<section id="chatgpt-1" class="slide level3 cell markdown">
+<h3>ChatGPT (1)</h3>
 <figure>
-<img data-src="../images/1-chatbot-training.png" style="width:75.0%" alt="Generating data sets for visual dialog task. Source" /><figcaption aria-hidden="true">Generating data sets for visual dialog task. <a href="https://github.com/batra-mlp-lab/visdial-amt-chat">Source</a></figcaption>
+<img data-src="../images/1-chatgpt-pregnant.jpeg" style="width:45.0%" alt="ChatGPT does not understand pregnancy. Source." /><figcaption aria-hidden="true">ChatGPT does not understand pregnancy. <a href="https://twitter.com/sergioontiveros/status/1599590647367110656">Source</a>.</figcaption>
 </figure>
 </section>
-<section id="pattern-finding-5" class="slide level3 cell markdown">
-<h3>Pattern finding (5)</h3>
-<p><a href="http://demo-visualdialog.cloudcv.org/">http://demo-visualdialog.cloudcv.org/</a></p>
+<section id="chatgpt-2" class="slide level3 cell markdown">
+<h3>ChatGPT (2)</h3>
+<figure>
+<img data-src="../images/1-chatgpt-fryegg.png" style="width:65.0%" alt="ChatGPT does not understand fried eggs. Source." /><figcaption aria-hidden="true">ChatGPT does not understand fried eggs. <a href="https://twitter.com/bio_bootloader/status/1599131249553330176">Source</a>.</figcaption>
+</figure>
+</section>
+<section id="ml-as-leaky-pipeline" class="slide level3 cell markdown">
+<h3>ML as leaky pipeline</h3>
+</section>
+<section id="ml-as-a-leaky-pipeline" class="slide level3 cell markdown">
+<h3>ML as a “leaky pipeline”</h3>
+<figure>
+<img data-src="../images/1-wot-leaky-pipelines.png" style="width:70.0%" alt="Source: Boaz Barak" /><figcaption aria-hidden="true">Source: <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak</a></figcaption>
+</figure>
+<aside class="notes">
+<blockquote>
+<p>We want to create an adaptive system that performs well in the wild, but to do so, we:</p>
+<ul>
+<li>Set up a benchmark task, so we have some way to compare different systems.</li>
+<li>We typically can’t optimize directly on the benchmark (though there are exceptions, such as when optimizing for playing video games.) Hence we set up the task of optimizing some proxy loss function <span class="math inline">\(\mathcal{L}\)</span> on some finite samples of training data.</li>
+<li>We then run an optimization algorithm whose ostensible goal is to find the <span class="math inline">\(f \in \mathcal{F}\)</span> that minimizes the loss function over the training data. (<span class="math inline">\(\mathcal{F}\)</span> is a set of models, sometimes known as architecture, and sometimes we also add other restrictions such norms of weights, which is known as regularization)</li>
+</ul>
+<p>All these steps are typically “leaky”. Test performance on benchmarks is not the same as real-world performance. Minimizing the loss over the training set is not the same as test performance. Moreover, we typically can’t solve the loss minimization task optimally, and there isn’t a unique minimizer, so the choice of <span class="math inline">\(f\)</span> depends on the algorithm.</p>
+</blockquote>
+<p>Quotes from: <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak</a></p>
+</aside>
 </section>
 <section id="example-grad-school-admissions" class="slide level3 cell markdown">
 <h3>Example: grad school admissions</h3>
@@ -466,22 +493,21 @@
 </ol>
 </aside>
 </section>
-<section id="ml-as-a-leaky-pipeline" class="slide level3 cell markdown">
-<h3>ML as a “leaky pipeline”</h3>
+<section id="ml-training-vs-reality" class="slide level3 cell markdown">
+<h3>ML training vs reality</h3>
 <figure>
-<img data-src="../images/1-wot-leaky-pipelines.png" style="width:70.0%" alt="Source: Boaz Barak" /><figcaption aria-hidden="true">Source: <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak</a></figcaption>
+<img data-src="../images/1-ml-shark.jpg" style="width:75.0%" alt="Kiddie pool vs shark ocean. Via Boaz Barak" /><figcaption aria-hidden="true">Kiddie pool vs shark ocean. Via <a href="https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/">Boaz Barak</a></figcaption>
 </figure>
+</section>
+<section id="limitations-recap" class="title-slide slide level2 cell markdown">
+<h2>Limitations (recap)</h2>
 <aside class="notes">
-<blockquote>
-<p>We want to create an adaptive system that performs well in the wild, but to do so, we:</p>
+<p>We described limitations -</p>
 <ul>
-<li>Set up a benchmark task, so we have some way to compare different systems.</li>
-<li>We typically can’t optimize directly on the benchmark (though there are exceptions, such as when optimizing for playing video games.) Hence we set up the task of optimizing some proxy loss function <span class="math inline">\(\mathcal{L}\)</span> on some finite samples of training data.</li>
-<li>We then run an optimization algorithm whose ostensible goal is to find the <span class="math inline">\(f \in \mathcal{F}\)</span> that minimizes the loss function over the training data. (<span class="math inline">\(\mathcal{F}\)</span> is a set of models, sometimes known as architecture, and sometimes we also add other restrictions such norms of weights, which is known as regularization)</li>
+<li>ML is just “pattern finding”. Sometimes it finds patterns that we want it to find, sometimes it finds patterns that work most of the time, sometimes it finds patterns that are not at all what we wanted it to learn.</li>
+<li>ML system is part of a “leaky pipeline”, where all along the path there are disconnects between what we want and what we can realize.</li>
 </ul>
-<p>All these steps are typically “leaky”. Test performance on benchmarks is not the same as real-world performance. Minimizing the loss over the training set is not the same as test performance. Moreover, we typically can’t solve the loss minimization task optimally, and there isn’t a unique minimizer, so the choice of <span class="math inline">\(f\)</span> depends on the algorithm.</p>
-</blockquote>
-<p>Quotes from: <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak</a></p>
+<p>Now we’ll look more closely at the <em>data</em>, which is often the culprit in either case.</p>
 </aside>
 </section>
     </div>

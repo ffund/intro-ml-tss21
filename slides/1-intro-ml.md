@@ -211,6 +211,13 @@ Is this ML?
 :::
 
 
+::: {.cell .markdown}
+
+### ML vs. rule-based system - comic
+
+![ML vs rule-based programming, via [Christoph Molnar's Interpretable Machine Learning](https://christophm.github.io/interpretable-ml-book/terminology.html)](../images/1-programing-ml.png){ width=70% }
+
+:::
 
 ::: {.cell .markdown}
 
@@ -231,9 +238,9 @@ What are some benefits of predicting course grade using the data-driven approach
 
 :::
 
+\newpage
 
 ::: {.cell .markdown}
-
 
 
 ## Machine learning problems
@@ -256,7 +263,7 @@ Now that we understand the difference between rule-based problem solving and ML-
 
 ::: notes
 
-You read or will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?
+You will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?
 
 Are there any important reasons *not* to use ML for this?
 
@@ -264,7 +271,6 @@ Are there any important reasons *not* to use ML for this?
 
 :::
 
-\newpage
 
 ::: {.cell .markdown}
 
@@ -287,6 +293,8 @@ What makes this problem a good/bad candidate for ML? Are there reasons *not* to 
 
 :::
 
+\newpage
+
 ::: {.cell .markdown}
 
 ### Autonomous driving control (2)
@@ -296,7 +304,6 @@ What makes this problem a good/bad candidate for ML? Are there reasons *not* to 
 
 :::
 
-\newpage 
 
 ::: {.cell .markdown}
 
@@ -313,6 +320,7 @@ Are there reasons not to use ML here?
 
 :::
 
+\newpage
 
 :::
 
@@ -325,23 +333,19 @@ Are there reasons not to use ML here?
 
 :::
 
-\newpage
-
 
 ::: {.cell .markdown}
 
 ### Score candidate's performance in a job interview (1)
 
-::: notes
-
 * Use video recording as input to ML system
 * Train using videos of past interviews + human assessment on key personality features
-* Do you think the video (not audio) of your interview is a good predictor of how you will perform the job?
+
+::: notes
+
+Do you think the video (not audio) of your interview is a good predictor of how you will perform the job?
 
 :::
-
-![Source: [An Interview with Alex](http://theinterview.ai/) by artist Carrie Sijia Wang.](../images/1-alex-interview.jpg){ width=50% }
-
 
 :::
 
@@ -392,6 +396,16 @@ Are there reasons not to use ML here?
 
 :::
 
+
+::: {.cell .markdown}
+
+### Quick, Draw
+
+[https://quickdraw.withgoogle.com/](https://quickdraw.withgoogle.com/)
+
+:::
+
+
 ::: {.cell .markdown}
 
 ### What problems are "good" for ML, overall?
@@ -406,6 +420,7 @@ Are there reasons not to use ML here?
 * There is no "good" data available to train the model.
 * The model can be "tricked", with potentially severe consequences.
 * Need to audit or explain the output.
+* Expects human empathy, expert creativity.
 
 :::
 
@@ -420,18 +435,9 @@ Are there reasons not to use ML here?
 * Humans cannot easily explain their expertise 
 * We will get more data during operation + can improve with experience
 
-
-
 :::
 
 
-::: {.cell .markdown}
-
-### Quick, Draw
-
-[https://quickdraw.withgoogle.com/](https://quickdraw.withgoogle.com/)
-
-:::
 
 
 
@@ -608,7 +614,7 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 ::: {.cell .markdown}
 
-## Reality check
+## Limitations
 
 
 :::
@@ -624,7 +630,7 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 ::: {.cell .markdown}
 
-### Pattern finding (1)
+### Image captioning (1)
 
 
 ![ML model sees imaginary sheep on this grassy hillside. Source:  [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-hillside-sheep.jpg){ width=55% }
@@ -634,7 +640,7 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 ::: {.cell .markdown}
 
-### Pattern finding (2)
+### Image captioning (2)
 
 ![Goats in arms are assumed to be dogs. Source:  [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-goats-arms.jpg){ width=45% }
 
@@ -647,34 +653,65 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 ::: {.cell .markdown}
 
-### Pattern finding (3)
+### Image captioning (3)
 
 ![Goats in trees are assumed to be birds. Source: [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-goats-trees.jpg){ width=55% }
 
 
 :::
 
+\newpage
 
 
 ::: {.cell .markdown}
 
-### Pattern finding (4)
+### ChatGPT (1)
 
-![Generating data sets for visual dialog task. [Source](https://github.com/batra-mlp-lab/visdial-amt-chat)](../images/1-chatbot-training.png){ width=75% }
+![ChatGPT does not understand pregnancy. [Source](https://twitter.com/sergioontiveros/status/1599590647367110656).](../images/1-chatgpt-pregnant.jpeg){ width=45% }
 
 :::
 
 ::: {.cell .markdown}
 
-### Pattern finding (5)
+### ChatGPT (2)
 
-[http://demo-visualdialog.cloudcv.org/](http://demo-visualdialog.cloudcv.org/)
+![ChatGPT does not understand fried eggs. [Source](https://twitter.com/bio_bootloader/status/1599131249553330176).](../images/1-chatgpt-fryegg.png){ width=65% }
 
 
 :::
 
 
 \newpage
+
+::: {.cell .markdown}
+
+### ML as leaky pipeline
+
+
+:::
+
+::: {.cell .markdown}
+
+### ML as a "leaky pipeline"
+
+![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)](../images/1-wot-leaky-pipelines.png){ width=70% }
+
+::: notes
+
+> We want to create an adaptive system that performs well in the wild, but to do so, we:
+> 
+> * Set up a benchmark task, so we have some way to compare different systems.
+> * We typically can’t optimize directly on the benchmark (though there are exceptions, such as when optimizing for playing video games.) Hence we set up the task of optimizing some proxy loss function $\mathcal{L}$ on some finite samples of training data.
+> * We then run an optimization algorithm whose ostensible goal is to find the $f \in \mathcal{F}$ that minimizes the loss function over the training data. ($\mathcal{F}$ is a set of models, sometimes known as architecture, and sometimes we also add other restrictions such norms of weights, which is known as regularization)
+> 
+> All these steps are typically "leaky". Test performance on benchmarks is not the same as real-world performance. Minimizing the loss over the training set is not the same as test performance. Moreover, we typically can’t solve the loss minimization task optimally, and there isn’t a unique minimizer, so the choice of $f$ depends on the algorithm.
+
+Quotes from: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)
+
+:::
+
+:::
+
 
 ::: {.cell .markdown}
 
@@ -706,28 +743,37 @@ Our ultimate ML system will be many steps disconnected from this task:
 
 :::
 
-\newpage
+::: {.cell .markdown}
 
+### ML training vs reality
+
+![Kiddie pool vs shark ocean. Via [Boaz Barak](https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/)](../images/1-ml-shark.jpg
+){ width=75% }
+
+
+:::
 
 
 ::: {.cell .markdown}
 
-### ML as a "leaky pipeline"
+## Limitations (recap)
 
-![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)](../images/1-wot-leaky-pipelines.png){ width=70% }
 
 ::: notes
 
-> We want to create an adaptive system that performs well in the wild, but to do so, we:
-> 
-> * Set up a benchmark task, so we have some way to compare different systems.
-> * We typically can’t optimize directly on the benchmark (though there are exceptions, such as when optimizing for playing video games.) Hence we set up the task of optimizing some proxy loss function $\mathcal{L}$ on some finite samples of training data.
-> * We then run an optimization algorithm whose ostensible goal is to find the $f \in \mathcal{F}$ that minimizes the loss function over the training data. ($\mathcal{F}$ is a set of models, sometimes known as architecture, and sometimes we also add other restrictions such norms of weights, which is known as regularization)
-> 
-> All these steps are typically "leaky". Test performance on benchmarks is not the same as real-world performance. Minimizing the loss over the training set is not the same as test performance. Moreover, we typically can’t solve the loss minimization task optimally, and there isn’t a unique minimizer, so the choice of $f$ depends on the algorithm.
+We described limitations - 
 
-Quotes from: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)
+* ML is just "pattern finding". Sometimes it finds patterns that we want it to find, sometimes it finds patterns that work most of the time, sometimes it finds patterns that are not at all what we wanted it to learn.
+* ML system is part of a "leaky pipeline", where all along the path there are disconnects between what we want and what we can realize.
 
+
+Now we'll look more closely at the *data*, which is often the culprit in either case.
 :::
 
 :::
+
+
+\newpage
+
+
+
