@@ -255,7 +255,7 @@ Model has $d+1$ **parameters**.
 
 
 * Samples are vector-label pairs: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$
-* Each sample has a feature vector $\mathbf{x_i} = [x_i,1, \cdots, x_i,d]$ and scalar target $y_i$
+* Each sample has a feature vector $\mathbf{x_i} = [x_{i,1}, \cdots, x_{i,d}]$ and scalar target $y_i$
 * Predicted value for $i$th sample will be $\hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d}$
 
 It's a little awkward to carry around that $w_0$ separately, if we roll it in to the rest of the weights we can use a matrix representation...
