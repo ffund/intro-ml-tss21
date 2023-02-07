@@ -17,8 +17,8 @@ author: 'Fraida Fund'
 
 ### Limitations of OLS solution
 
-* Specific to linear regression
-* For extremely large datasets, computation
+* Specific to linear regression, L2 loss
+* For extremely large datasets: runtime, memory
 
 
 ### Computing OLS solution
@@ -36,7 +36,7 @@ How long does it take to compute?
 Runtime of a "naive" solution using "standard" matrix multiplication: 
 
 * $O(d^2n)$ to multiply $\Phi^T \Phi$
-* $O(dn)$ to muplity $\Phi^T y$
+* $O(dn)$ to multiply $\Phi^T y$
 * $O(d^3)$ to compute the inverse of $\Phi^T \Phi$ 
 
 Since $n$ is generally much larger than $d$, the first term dominates and the runtime is $O(d^2n)$. 
