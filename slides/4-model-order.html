@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -29,19 +37,30 @@
   <p class="author">Fraida Fund</p>
 </section>
 
-<section id="a-supervised-machine-learning-recipe" class="title-slide slide level2 cell markdown">
+<section id="a-supervised-machine-learning-recipe"
+class="title-slide slide level2 cell markdown">
 <h2>A supervised machine learning “recipe”</h2>
 <ul>
-<li><em>Step 1</em>: Get labeled data: <span class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,N\)</span>.</li>
-<li><em>Step 2</em>: Choose a candidate <strong>model</strong> <span class="math inline">\(f\)</span>: <span class="math inline">\(\hat{y} = f(x)\)</span>.</li>
+<li><em>Step 1</em>: Get labeled data: <span
+class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,N\)</span>.</li>
+<li><em>Step 2</em>: Choose a candidate <strong>model</strong> <span
+class="math inline">\(f\)</span>: <span class="math inline">\(\hat{y} =
+f(x)\)</span>.</li>
 <li><em>Step 3</em>: Select a <strong>loss function</strong>.</li>
-<li><em>Step 4</em>: Find the model <strong>parameter</strong> values that minimize the loss function (<strong>training</strong>).</li>
-<li><em>Step 5</em>: Use trained model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new samples not used in training (<strong>inference</strong>).</li>
-<li><em>Step 6</em>: Evaluate how well your model <strong>generalizes</strong>.</li>
+<li><em>Step 4</em>: Find the model <strong>parameter</strong> values
+that minimize the loss function (<strong>training</strong>).</li>
+<li><em>Step 5</em>: Use trained model to <strong>predict</strong> <span
+class="math inline">\(\hat{y}\)</span> for new samples not used in
+training (<strong>inference</strong>).</li>
+<li><em>Step 6</em>: Evaluate how well your model
+<strong>generalizes</strong>.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-validation-testonly.png" style="width:80.0%" alt="When we have only one model to consider, with no “hyperparameters”." /><figcaption aria-hidden="true">When we have only one model to consider, with no “hyperparameters”.</figcaption>
+<img data-src="../images/3-validation-testonly.png" style="width:80.0%"
+alt="When we have only one model to consider, with no “hyperparameters”." />
+<figcaption aria-hidden="true">When we have only one model to consider,
+with no “hyperparameters”.</figcaption>
 </figure>
 </aside>
 </section>
@@ -50,56 +69,89 @@
 <section id="model-selection-problems" class="title-slide slide level2">
 <h2>Model selection problems</h2>
 <aside class="notes">
-<p>Model selection problem: how to select the <span class="math inline">\(f()\)</span> that maps features <span class="math inline">\(X\)</span> to target <span class="math inline">\(y\)</span>?</p>
-<p>We’ll look at two examples of model selection problems, but there are many more.</p>
+<p>Model selection problem: how to select the <span
+class="math inline">\(f()\)</span> that maps features <span
+class="math inline">\(X\)</span> to target <span
+class="math inline">\(y\)</span>?</p>
+<p>We’ll look at two examples of model selection problems, but there are
+many more.</p>
 </aside>
 </section>
 <section id="model-order-selection-problem" class="slide level3">
 <h3>Model order selection problem</h3>
 <ul>
-<li>Given data <span class="math inline">\((x_i, y_i), i=1\cdots,N\)</span> (one feature)</li>
-<li>Polynomial model: <span class="math inline">\(\hat{y} = w_0 + w_1 x + \cdots + w_d x^d\)</span></li>
-<li><span class="math inline">\(d\)</span> is degree of polynomial, called <strong>model order</strong></li>
-<li><strong>Model order selection problem</strong>: choosing <span class="math inline">\(d\)</span></li>
+<li>Given data <span class="math inline">\((x_i, y_i),
+i=1\cdots,N\)</span> (one feature)</li>
+<li>Polynomial model: <span class="math inline">\(\hat{y} = w_0 + w_1 x
++ \cdots + w_d x^d\)</span></li>
+<li><span class="math inline">\(d\)</span> is degree of polynomial,
+called <strong>model order</strong></li>
+<li><strong>Model order selection problem</strong>: choosing <span
+class="math inline">\(d\)</span></li>
 </ul>
 </section>
-<section id="using-loss-function-for-model-order-selection" class="slide level3">
+<section id="using-loss-function-for-model-order-selection"
+class="slide level3">
 <h3>Using loss function for model order selection?</h3>
-<p>Suppose we would “search” over each possible <span class="math inline">\(d\)</span>:</p>
+<p>Suppose we would “search” over each possible <span
+class="math inline">\(d\)</span>:</p>
 <ul>
-<li>Fit model of order <span class="math inline">\(d\)</span> on training data, get <span class="math inline">\(\mathbf{w}\)</span></li>
+<li>Fit model of order <span class="math inline">\(d\)</span> on
+training data, get <span class="math inline">\(\mathbf{w}\)</span></li>
 <li>Compute predictions on training data</li>
-<li>Compute loss function on training data: <span class="math inline">\(MSE = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2\)</span></li>
-<li>Select <span class="math inline">\(d\)</span> that minimizes loss</li>
+<li>Compute loss function on training data: <span
+class="math inline">\(MSE = \frac{1}{n}\sum_{i=1}^n (y_i -
+\hat{y_i})^2\)</span></li>
+<li>Select <span class="math inline">\(d\)</span> that minimizes
+loss</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-validation-select.png" style="width:80.0%" alt="Selecting the best of multiple models - this approach does not work, because the loss function always decreasing with d (training error decreases with model complexity!)" /><figcaption aria-hidden="true">Selecting the best of multiple models - this approach does <em>not</em> work, because the loss function always decreasing with <span class="math inline">\(d\)</span> (training error decreases with model complexity!)</figcaption>
+<img data-src="../images/3-validation-select.png" style="width:80.0%"
+alt="Selecting the best of multiple models - this approach does not work, because the loss function always decreasing with d (training error decreases with model complexity!)" />
+<figcaption aria-hidden="true">Selecting the best of multiple models -
+this approach does <em>not</em> work, because the loss function always
+decreasing with <span class="math inline">\(d\)</span> (training error
+decreases with model complexity!)</figcaption>
 </figure>
-<p>Note that we shouldn’t use the test data to select a model either - then we wouldn’t have an “unused” data set on which to evaluate how well the model generalizes.</p>
+<p>Note that we shouldn’t use the test data to select a model either -
+then we wouldn’t have an “unused” data set on which to evaluate how well
+the model generalizes.</p>
 </aside>
 </section>
 <section id="feature-selection-problem-1" class="slide level3">
 <h3>Feature selection problem (1)</h3>
-<p>Given high dimensional data <span class="math inline">\(\mathbf{X} \in R^{n \times d}\)</span> and target variable <span class="math inline">\(y\)</span>,</p>
-<p>Linear model: <span class="math inline">\(\hat{y} = w_0 + \sum_{j=1}^d w_j x_j\)</span></p>
+<p>Given high dimensional data <span class="math inline">\(\mathbf{X}
+\in R^{n \times d}\)</span> and target variable <span
+class="math inline">\(y\)</span>,</p>
+<p>Linear model: <span class="math inline">\(\hat{y} = w_0 +
+\sum_{j=1}^d w_j x_j\)</span></p>
 <aside class="notes">
 <ul>
 <li>Many features, only some are relevant</li>
-<li><strong>Feature selection problem</strong>: fit a model with a small number of features</li>
+<li><strong>Feature selection problem</strong>: fit a model with a small
+number of features</li>
 </ul>
 </aside>
 </section>
 <section id="feature-selection-problem-2" class="slide level3">
 <h3>Feature selection problem (2)</h3>
-<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span> features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times k}\)</span> that is most relevant to target <span class="math inline">\(y\)</span>.</p>
-<p>Linear model: <span class="math inline">\(\hat{y} = w_0 + \sum_{x \in \mathbf{X}_S} w_j x_j\)</span></p>
+<p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span>
+features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times
+k}\)</span> that is most relevant to target <span
+class="math inline">\(y\)</span>.</p>
+<p>Linear model: <span class="math inline">\(\hat{y} = w_0 + \sum_{x \in
+\mathbf{X}_S} w_j x_j\)</span></p>
 <aside class="notes">
 <p>Why use a subset of features?</p>
 <ul>
 <li>High risk of overfitting if you use all features!</li>
-<li>For linear regression, there’s a unique OLS solution only if <span class="math inline">\(n \geq d\)</span></li>
-<li>For linear regression, when <span class="math inline">\(N \geq p\)</span>, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)</li>
+<li>For linear regression, there’s a unique OLS solution only if <span
+class="math inline">\(n \geq d\)</span></li>
+<li>For linear regression, when <span class="math inline">\(N \geq
+p\)</span>, variance increases linearly with number of parameters,
+inversely with number of samples. (Not derived in class, but read extra
+notes posted after class at home.)</li>
 </ul>
 </aside>
 </section></section>
@@ -112,42 +164,57 @@
 <h3>Hold-out validation</h3>
 <ul>
 <li>Divide data into training, validation, test sets</li>
-<li>For each candidate model, learn model parameters on training set</li>
+<li>For each candidate model, learn model parameters on training
+set</li>
 <li>Measure error for all models on validation set</li>
 <li>Select model that minimizes error on validation set</li>
 <li>Evaluate <em>that</em> model on test set</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-validation-single.png" style="width:80.0%" alt="Model selection with a validation set." /><figcaption aria-hidden="true">Model selection with a validation set.</figcaption>
+<img data-src="../images/3-validation-single.png" style="width:80.0%"
+alt="Model selection with a validation set." />
+<figcaption aria-hidden="true">Model selection with a validation
+set.</figcaption>
 </figure>
-<p>Note: sometimes you’ll hear “validation set” and “test set” used according to the reverse meanings.</p>
+<p>Note: sometimes you’ll hear “validation set” and “test set” used
+according to the reverse meanings.</p>
 </aside>
 </section>
 <section id="hold-out-validation-1" class="slide level3">
 <h3>Hold-out validation (1)</h3>
 <ul>
-<li>Split <span class="math inline">\(X, y\)</span> into training, validation, and test.</li>
-<li>Loop over models of increasing complexity: For <span class="math inline">\(p=1,\ldots,p_{max}\)</span>,
+<li>Split <span class="math inline">\(X, y\)</span> into training,
+validation, and test.</li>
+<li>Loop over models of increasing complexity: For <span
+class="math inline">\(p=1,\ldots,p_{max}\)</span>,
 <ul>
-<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_p = \text{fit}_p(X_{tr}, y_{tr})\)</span></li>
-<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{v,p} = \text{pred}(X_{v}, \hat{w}_p)\)</span></li>
-<li><strong>Score</strong>: <span class="math inline">\(S_p = \text{score}(y_{v}, \hat{y}_{v,p})\)</span></li>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_p =
+\text{fit}_p(X_{tr}, y_{tr})\)</span></li>
+<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{v,p}
+= \text{pred}(X_{v}, \hat{w}_p)\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_p =
+\text{score}(y_{v}, \hat{y}_{v,p})\)</span></li>
 </ul></li>
 </ul>
 </section>
 <section id="hold-out-validation-2" class="slide level3">
 <h3>Hold-out validation (2)</h3>
 <ul>
-<li>Select model order with best score (here, assuming “lower is better”): <span class="math display">\[p^* = \operatorname*{argmin}_p S_p\]</span></li>
-<li>Evaluate: <span class="math display">\[S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})\]</span></li>
+<li>Select model order with best score (here, assuming “lower is
+better”): <span class="math display">\[p^* = \operatorname*{argmin}_p
+S_p\]</span></li>
+<li>Evaluate: <span class="math display">\[S_{p^*} =
+\text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} =
+\text{pred}(X_{ts}, \hat{w}_{p^*})\]</span></li>
 </ul>
 </section>
 <section id="problems-with-hold-out-validation" class="slide level3">
 <h3>Problems with hold-out validation</h3>
 <aside class="notes">
 <ul>
-<li>Fitted model (and test error!) varies a lot depending on samples selected for training and validation.</li>
+<li>Fitted model (and test error!) varies a lot depending on samples
+selected for training and validation.</li>
 <li>Fewer samples available for estimating parameters.</li>
 <li>Especially bad for problems with small number of samples.</li>
 </ul>
@@ -157,63 +224,95 @@
 <h3>K-fold cross validation</h3>
 <p>Alternative to simple split:</p>
 <ul>
-<li>Divide data into <span class="math inline">\(K\)</span> equal-sized parts (typically 5, 10)</li>
-<li>For each of the “splits”: evaluate model using <span class="math inline">\(K-1\)</span> parts for training, last part for validation</li>
-<li>Average the <span class="math inline">\(K\)</span> validation scores and choose based on average</li>
+<li>Divide data into <span class="math inline">\(K\)</span> equal-sized
+parts (typically 5, 10)</li>
+<li>For each of the “splits”: evaluate model using <span
+class="math inline">\(K-1\)</span> parts for training, last part for
+validation</li>
+<li>Average the <span class="math inline">\(K\)</span> validation scores
+and choose based on average</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-validation-kfold.png" style="width:80.0%" alt="K-fold CV for model selection." /><figcaption aria-hidden="true">K-fold CV for model selection.</figcaption>
+<img data-src="../images/3-validation-kfold.png" style="width:80.0%"
+alt="K-fold CV for model selection." />
+<figcaption aria-hidden="true">K-fold CV for model
+selection.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="k-fold-cv---algorithm-1" class="slide level3">
 <h3>K-fold CV - algorithm (1)</h3>
-<p><strong>Outer loop</strong> over folds: for <span class="math inline">\(i=1\)</span> to <span class="math inline">\(K\)</span></p>
+<p><strong>Outer loop</strong> over folds: for <span
+class="math inline">\(i=1\)</span> to <span
+class="math inline">\(K\)</span></p>
 <ul>
-<li><p>Get training and validation sets for fold <span class="math inline">\(i\)</span>:</p></li>
-<li><p><strong>Inner loop</strong> over models of increasing complexity: For <span class="math inline">\(p=1\)</span> to <span class="math inline">\(p_{max}\)</span>,</p>
+<li><p>Get training and validation sets for fold <span
+class="math inline">\(i\)</span>:</p></li>
+<li><p><strong>Inner loop</strong> over models of increasing complexity:
+For <span class="math inline">\(p=1\)</span> to <span
+class="math inline">\(p_{max}\)</span>,</p>
 <ul>
-<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_{p,i} = \text{fit}_p(X_{tr_i}, y_{tr_i})\)</span></li>
-<li><strong>Predict</strong>: <span class="math inline">\(\hat{y}_{v_i,p} = \text{pred}(X_{v_i}, \hat{w}_{p,i})\)</span></li>
-<li><strong>Score</strong>: <span class="math inline">\(S_{p,i} = score(y_{v_i}, \hat{y}_{v_i,p})\)</span></li>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_{p,i} =
+\text{fit}_p(X_{tr_i}, y_{tr_i})\)</span></li>
+<li><strong>Predict</strong>: <span
+class="math inline">\(\hat{y}_{v_i,p} = \text{pred}(X_{v_i},
+\hat{w}_{p,i})\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_{p,i} =
+score(y_{v_i}, \hat{y}_{v_i,p})\)</span></li>
 </ul></li>
 </ul>
 </section>
 <section id="k-fold-cv---algorithm-2" class="slide level3">
 <h3>K-fold CV - algorithm (2)</h3>
 <ul>
-<li>Find average score (across <span class="math inline">\(K\)</span> scores) for each model: <span class="math inline">\(\bar{S}_p\)</span></li>
-<li>Select model with best <em>average</em> score: <span class="math inline">\(p^* = \operatorname*{argmin}_p \bar{S}_p\)</span></li>
-<li>Re-train model on entire training set: <span class="math inline">\(\hat{w}_{p^*} = \text{fit}_p(X_{tr}, y_{tr})\)</span></li>
+<li>Find average score (across <span class="math inline">\(K\)</span>
+scores) for each model: <span
+class="math inline">\(\bar{S}_p\)</span></li>
+<li>Select model with best <em>average</em> score: <span
+class="math inline">\(p^* = \operatorname*{argmin}_p
+\bar{S}_p\)</span></li>
+<li>Re-train model on entire training set: <span
+class="math inline">\(\hat{w}_{p^*} = \text{fit}_p(X_{tr},
+y_{tr})\)</span></li>
 <li>Evaluate new fitted model on test set</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-validation-options.png" style="width:100.0%" alt="Summary of approaches. Source." /><figcaption aria-hidden="true">Summary of approaches. <a href="https://sebastianraschka.com/faq/docs/evaluate-a-model.html">Source</a>.</figcaption>
+<img data-src="../images/3-validation-options.png" style="width:100.0%"
+alt="Summary of approaches. Source." />
+<figcaption aria-hidden="true">Summary of approaches. <a
+href="https://sebastianraschka.com/faq/docs/evaluate-a-model.html">Source</a>.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="leave-p-out-cv" class="slide level3">
 <h3>Leave-p-out CV</h3>
 <ul>
-<li>In each iteration, <span class="math inline">\(p\)</span> validation points</li>
-<li>Remaining <span class="math inline">\(n-p\)</span> points are for training</li>
-<li>Repeat for <em>all</em> possible sets of <span class="math inline">\(p\)</span> validation points</li>
+<li>In each iteration, <span class="math inline">\(p\)</span> validation
+points</li>
+<li>Remaining <span class="math inline">\(n-p\)</span> points are for
+training</li>
+<li>Repeat for <em>all</em> possible sets of <span
+class="math inline">\(p\)</span> validation points</li>
 </ul>
 <aside class="notes">
-<p>This is <em>not</em> like K-fold CV which uses non-overlapping validation sets (they are only the same for <span class="math inline">\(p=1\)</span>)!</p>
+<p>This is <em>not</em> like K-fold CV which uses non-overlapping
+validation sets (they are only the same for <span
+class="math inline">\(p=1\)</span>)!</p>
 </aside>
 </section>
 <section id="computation-leave-p-out-cv" class="slide level3">
 <h3>Computation (leave-p-out CV)</h3>
-<p><span class="math inline">\({n \choose p}\)</span> iterations, in each:</p>
+<p><span class="math inline">\({n \choose p}\)</span> iterations, in
+each:</p>
 <ul>
 <li>train on <span class="math inline">\(n-p\)</span> samples</li>
 <li>score on <span class="math inline">\(p\)</span> samples</li>
 </ul>
 <aside class="notes">
-<p>Usually, this is too expensive - but sometimes LOO CV can be a good match to the model (KNN).</p>
+<p>Usually, this is too expensive - but sometimes LOO CV can be a good
+match to the model (KNN).</p>
 </aside>
 </section>
 <section id="computation-k-fold-cv" class="slide level3">
@@ -227,25 +326,63 @@
 <section id="k-fold-cv---how-to-split" class="slide level3">
 <h3>K-fold CV - how to split?</h3>
 <figure>
-<img data-src="../images/3-kfold-variations.png" style="width:75.0%" alt="K-fold CV variations." /><figcaption aria-hidden="true">K-fold CV variations.</figcaption>
+<img data-src="../images/3-kfold-variations.png" style="width:75.0%"
+alt="K-fold CV variations." />
+<figcaption aria-hidden="true">K-fold CV variations.</figcaption>
 </figure>
 <aside class="notes">
-<p>Selecting the right K-fold CV is very important for avoiding data leakage! (Also for training/test split.)</p>
-<p>Refer to <a href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation">the function documentation</a> for more examples.</p>
+<p>Selecting the right K-fold CV is very important for avoiding data
+leakage! (Also for training/test split.)</p>
+<p>Refer to <a
+href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation">the
+function documentation</a> for more examples.</p>
 <figure>
-<img data-src="../images/4-shuffle-split.png" style="width:60.0%" alt="Example 1: The data is not homogeneous with respect to sample index, so splitting data data as shown on left would be a very bad idea - the training, validation, and test sets would not be similar! Instead, we should shuffle the indices before splitting the data, as shown on right." /><figcaption aria-hidden="true">Example 1: The data is not homogeneous with respect to sample index, so splitting data data as shown on left would be a very bad idea - the training, validation, and test sets would not be similar! Instead, we should shuffle the indices before splitting the data, as shown on right.</figcaption>
+<img data-src="../images/4-shuffle-split.png" style="width:60.0%"
+alt="Example 1: The data is not homogeneous with respect to sample index, so splitting data data as shown on left would be a very bad idea - the training, validation, and test sets would not be similar! Instead, we should shuffle the indices before splitting the data, as shown on right." />
+<figcaption aria-hidden="true">Example 1: The data is not homogeneous
+with respect to sample index, so splitting data data as shown on left
+would be a very bad idea - the training, validation, and test sets would
+not be similar! Instead, we should shuffle the indices before splitting
+the data, as shown on right.</figcaption>
 </figure>
 <figure>
-<img data-src="../images/4-shuffle-group.png" style="width:60.0%" alt="Example 2: The split on the left seems OK, unless (as shown on the right), each person contributes several samples to the dataset, and the value of y is similar for different samples from the same person. This is an example of data leakage. The model is learning from data from an individual, then it is validated and evaluated on data from the same individual - but in production, the model is expected to make predictions about individuals it has never seen. The training, validation, and evaluation process will have overly optimistic performance compared to production (and the model may overfit)." /><figcaption aria-hidden="true">Example 2: The split on the left seems OK, unless (as shown on the right), each person contributes several samples to the dataset, and the value of <span class="math inline">\(y\)</span> is similar for different samples from the same person. This is an example of data leakage. The model is learning from data from an individual, then it is validated and evaluated on data from the same individual - but in production, the model is expected to make predictions about individuals it has never seen. The training, validation, and evaluation process will have overly optimistic performance compared to production (and the model may overfit).</figcaption>
+<img data-src="../images/4-shuffle-group.png" style="width:60.0%"
+alt="Example 2: The split on the left seems OK, unless (as shown on the right), each person contributes several samples to the dataset, and the value of y is similar for different samples from the same person. This is an example of data leakage. The model is learning from data from an individual, then it is validated and evaluated on data from the same individual - but in production, the model is expected to make predictions about individuals it has never seen. The training, validation, and evaluation process will have overly optimistic performance compared to production (and the model may overfit)." />
+<figcaption aria-hidden="true">Example 2: The split on the left seems
+OK, unless (as shown on the right), each person contributes several
+samples to the dataset, and the value of <span
+class="math inline">\(y\)</span> is similar for different samples from
+the same person. This is an example of data leakage. The model is
+learning from data from an individual, then it is validated and
+evaluated on data from the same individual - but in production, the
+model is expected to make predictions about individuals it has never
+seen. The training, validation, and evaluation process will have overly
+optimistic performance compared to production (and the model may
+overfit).</figcaption>
 </figure>
 <figure>
-<img data-src="../images/4-fold-group.png" style="width:74.0%" alt="Example 2 - continued: Instead, we should make sure that each person is only in one type of “set” at a time (e.g. with GroupKFoldCV or equivalent)." /><figcaption aria-hidden="true">Example 2 - continued: Instead, we should make sure that each person is <em>only</em> in one type of “set” at a time (e.g. with GroupKFoldCV or equivalent).</figcaption>
+<img data-src="../images/4-fold-group.png" style="width:74.0%"
+alt="Example 2 - continued: Instead, we should make sure that each person is only in one type of “set” at a time (e.g. with GroupKFoldCV or equivalent)." />
+<figcaption aria-hidden="true">Example 2 - continued: Instead, we should
+make sure that each person is <em>only</em> in one type of “set” at a
+time (e.g. with GroupKFoldCV or equivalent).</figcaption>
 </figure>
 <figure>
-<img data-src="../images/4-bad-split-timeseries.png" style="width:77.0%" alt="Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)" /><figcaption aria-hidden="true">Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)</figcaption>
+<img data-src="../images/4-bad-split-timeseries.png" style="width:77.0%"
+alt="Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)" />
+<figcaption aria-hidden="true">Example 3: if we would split this time
+series data as shown on the left, we would get overly optimistic
+performance in training/validation/evaluation, but then much worse error
+in production! (This is also an example of data leakage: the model
+learns from future data, and from adjacent data points, in training -
+but that data is not available during production.)</figcaption>
 </figure>
 <figure>
-<img data-src="../images/4-best-split-timeseries.png" style="width:77.0%" alt="A better way would be to train and validate like this (example shown is 3-fold CV)." /><figcaption aria-hidden="true">A better way would be to train and validate like this (example shown is 3-fold CV).</figcaption>
+<img data-src="../images/4-best-split-timeseries.png"
+style="width:77.0%"
+alt="A better way would be to train and validate like this (example shown is 3-fold CV)." />
+<figcaption aria-hidden="true">A better way would be to train and
+validate like this (example shown is 3-fold CV).</figcaption>
 </figure>
 </aside>
 </section></section>
@@ -253,50 +390,126 @@
 <section id="one-standard-error-rule" class="title-slide slide level2">
 <h2>One standard error rule</h2>
 <ul>
-<li>Model selection that minimizes mean error often results in too-complex model</li>
-<li>One standard error rule: use simplest model where mean error is within one SE of the minimum mean error</li>
+<li>Model selection that minimizes mean error often results in
+too-complex model</li>
+<li>One standard error rule: use simplest model where mean error is
+within one SE of the minimum mean error</li>
 </ul>
 </section>
-<section id="one-standard-error-rule---algorithm-1" class="slide level3">
+<section id="one-standard-error-rule---algorithm-1"
+class="slide level3">
 <h3>One standard error rule - algorithm (1)</h3>
 <ul>
 <li>Given data <span class="math inline">\(X, y\)</span></li>
-<li>Compute score <span class="math inline">\(S_{p,i}\)</span> for model <span class="math inline">\(p\)</span> on fold <span class="math inline">\(i\)</span> (of <span class="math inline">\(K\)</span>)</li>
-<li>Compute average (<span class="math inline">\(\bar{S}_p\)</span>), standard deviation <span class="math inline">\(\sigma_p\)</span>, and standard error of scores:</li>
+<li>Compute score <span class="math inline">\(S_{p,i}\)</span> for model
+<span class="math inline">\(p\)</span> on fold <span
+class="math inline">\(i\)</span> (of <span
+class="math inline">\(K\)</span>)</li>
+<li>Compute average (<span class="math inline">\(\bar{S}_p\)</span>),
+standard deviation <span class="math inline">\(\sigma_p\)</span>, and
+standard error of scores:</li>
 </ul>
-<p><span class="math display">\[SE_p = \frac{\sigma_p}{\sqrt{K-1}}\]</span></p>
+<p><span class="math display">\[SE_p =
+\frac{\sigma_p}{\sqrt{K-1}}\]</span></p>
 </section>
-<section id="one-standard-error-rule---algorithm-2" class="slide level3">
+<section id="one-standard-error-rule---algorithm-2"
+class="slide level3">
 <h3>One standard error rule - algorithm (2)</h3>
-<p>“Best score” model selection: <span class="math inline">\(p^* = \operatorname*{argmin}_p \bar{S}_p\)</span></p>
-<p><strong>One SE rule</strong> for “lower is better” scoring metric: Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} + SE_{p^*}\)</span></p>
+<p>“Best score” model selection: <span class="math inline">\(p^* =
+\operatorname*{argmin}_p \bar{S}_p\)</span></p>
+<p><strong>One SE rule</strong> for “lower is better” scoring metric:
+Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} +
+SE_{p^*}\)</span></p>
 <p>then select simplest model with score lower than target:</p>
-<p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \leq S_t\}\]</span></p>
+<p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p |
+\bar{S}_p \leq S_t\}\]</span></p>
 <aside class="notes">
 <figure>
-<img data-src="../images/4-one-se-mse.png" style="width:60.0%" alt="Model selection using one SE rule on MSE. The best scoring model is d=8, but d=6 is simplest model within one SE of the best scoring model, and so d=6 would be selected according to the one-SE rule." /><figcaption aria-hidden="true">Model selection using one SE rule on MSE. The best scoring model is <span class="math inline">\(d=8\)</span>, but <span class="math inline">\(d=6\)</span> is simplest model within one SE of the best scoring model, and so <span class="math inline">\(d=6\)</span> would be selected according to the one-SE rule.</figcaption>
+<img data-src="../images/4-one-se-mse.png" style="width:60.0%"
+alt="Model selection using one SE rule on MSE. The best scoring model is d=8, but d=6 is simplest model within one SE of the best scoring model, and so d=6 would be selected according to the one-SE rule." />
+<figcaption aria-hidden="true">Model selection using one SE rule on MSE.
+The best scoring model is <span class="math inline">\(d=8\)</span>, but
+<span class="math inline">\(d=6\)</span> is simplest model within one SE
+of the best scoring model, and so <span
+class="math inline">\(d=6\)</span> would be selected according to the
+one-SE rule.</figcaption>
 </figure>
-<p>Note: this assumes you are using a “smaller is better” metric such as MSE. If you are using a “larger is better” metric, like R2, how would we change the algorithm?</p>
+<p>Note: this assumes you are using a “smaller is better” metric such as
+MSE. If you are using a “larger is better” metric, like R2, how would we
+change the algorithm?</p>
 </aside>
 </section>
-<section id="one-standard-error-rule---algorithm-3" class="slide level3">
+<section id="one-standard-error-rule---algorithm-3"
+class="slide level3">
 <h3>One standard error rule - algorithm (3)</h3>
-<p>“Best score” model selection: <span class="math inline">\(p^* = \operatorname*{argmax}_p \bar{S}_p\)</span></p>
-<p><strong>One SE rule</strong> for “higher is better” scoring metric: Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} - SE_{p^*}\)</span></p>
+<p>“Best score” model selection: <span class="math inline">\(p^* =
+\operatorname*{argmax}_p \bar{S}_p\)</span></p>
+<p><strong>One SE rule</strong> for “higher is better” scoring metric:
+Compute target score: <span class="math inline">\(S_t = \bar{S}_{p^*} -
+SE_{p^*}\)</span></p>
 <p>then select simplest model with score higher than target:</p>
-<p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \geq S_t\}\]</span></p>
+<p><span class="math display">\[p^{*,1{\text{SE}}} = \min \{p |
+\bar{S}_p \geq S_t\}\]</span></p>
 <aside class="notes">
 <figure>
-<img data-src="../images/4-one-se-r2.png" style="width:60.0%" alt="Model selection using one SE rule on R2. In this example, the best scoring model is d=2, and there is no simpler model within one SE, so the one-SE rule would also select d=2." /><figcaption aria-hidden="true">Model selection using one SE rule on R2. In this example, the best scoring model is <span class="math inline">\(d=2\)</span>, and there is no simpler model within one SE, so the one-SE rule would also select <span class="math inline">\(d=2\)</span>.</figcaption>
+<img data-src="../images/4-one-se-r2.png" style="width:60.0%"
+alt="Model selection using one SE rule on R2. In this example, the best scoring model is d=2, and there is no simpler model within one SE, so the one-SE rule would also select d=2." />
+<figcaption aria-hidden="true">Model selection using one SE rule on R2.
+In this example, the best scoring model is <span
+class="math inline">\(d=2\)</span>, and there is no simpler model within
+one SE, so the one-SE rule would also select <span
+class="math inline">\(d=2\)</span>.</figcaption>
 </figure>
 </aside>
 </section></section>
+<section id="placing-computation"
+class="title-slide slide level2 cell markdown">
+<h2>Placing computation</h2>
+
+</section>
+
+<section id="placement-options" class="slide level3 cell markdown">
+<h3>Placement options</h3>
+<p>Any “step” could be placed:</p>
+<ul>
+<li>before the train/test split</li>
+<li>after the split, outside loop</li>
+<li>in the first (outer) loop</li>
+<li>in the second (inner) loop</li>
+</ul>
+<aside class="notes">
+<p>We want to place each “step” in the appropriate position to minimize
+the computation required, but also in order to use the split
+effectively! In placing a “step”, we need to ask ourselves:</p>
+<ul>
+<li>does the result of this computation depend on the train/test
+split?</li>
+<li>does the result of this computation depend on the first loop
+variable?</li>
+<li>does the result of this computation depend on the second loop
+variable?</li>
+</ul>
+<p>Note: the order of the loops (first loop over models, then over
+splits; or first loop over splits, then over models) is up to us - we
+can select the order that is most efficient for computation.</p>
+<p>Data pre-processing should be considered part of model training, so
+steps that depend on the data should not come before the train/test
+split. Examples:</p>
+<ul>
+<li>filling missing values with some statistic from the data (mean,
+median, max, etc.)</li>
+<li>standardizing (removing mean and scaling to unit variance) or other
+scaling</li>
+</ul>
+<p>The test data should never be used to compute these statistics.</p>
+</aside>
+</section>
     </div>
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -307,10 +520,148 @@
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

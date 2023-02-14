@@ -302,3 +302,41 @@ $$p^{*,1{\text{SE}}} = \min \{p | \bar{S}_p \geq S_t\}$$
 :::
 
 
+
+::: {.cell .markdown}
+## Placing computation
+
+:::
+
+::: {.cell .markdown}
+### Placement options
+
+Any "step" could be placed:
+
+* before the train/test split
+* after the split, outside loop
+* in the first (outer) loop
+* in the second (inner) loop
+
+:::notes
+
+We want to place each "step" in the appropriate position to minimize the computation required, but also in order to use the split effectively! In placing a "step", we need to ask ourselves:
+
+* does the result of this computation depend on the train/test split?
+* does the result of this computation depend on the first loop variable?
+* does the result of this computation depend on the second loop variable?
+
+Note: the order of the loops (first loop over models, then over splits; or first loop over splits, then over models) is up to us - we can select the order that is most efficient for computation.
+
+Data pre-processing should be considered part of model training, so steps that depend on the data should not come before the train/test split. Examples:
+
+* filling missing values with some statistic from the data (mean, median, max, etc.)
+* standardizing (removing mean and scaling to unit variance) or other scaling
+
+The test data should never be used to compute these statistics.
+
+:::
+
+:::
+
+
