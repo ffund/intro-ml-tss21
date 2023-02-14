@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -36,35 +44,53 @@
 </section>
 <section id="penalty-for-model-complexity" class="slide level3">
 <h3>Penalty for model complexity</h3>
-<p>With no bounds on complexity of model, we can always get a model with zero training error on finite training set - overfitting.</p>
-<p>Basic idea: apply penalty in loss function to discourage more complex models</p>
+<p>With no bounds on complexity of model, we can always get a model with
+zero training error on finite training set - overfitting.</p>
+<p>Basic idea: apply penalty in loss function to discourage more complex
+models</p>
 </section>
 <section id="regularization-vs.-standard-ls" class="slide level3">
 <h3>Regularization vs. standard LS</h3>
 <p>Least squares estimate:</p>
-<p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w MSE(w), \quad MSE(w) = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2 \]</span></p>
-<p>Regularized estimate w/ <strong>regularizing function</strong> <span class="math inline">\(\phi(w)\)</span>:</p>
-<p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w J(w), \quad  J(w) = MSE(w) + \phi(w) \]</span></p>
+<p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w
+MSE(w), \quad MSE(w) = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2
+\]</span></p>
+<p>Regularized estimate w/ <strong>regularizing function</strong> <span
+class="math inline">\(\phi(w)\)</span>:</p>
+<p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w
+J(w), \quad  J(w) = MSE(w) + \phi(w) \]</span></p>
 </section>
 <section id="common-regularizers" class="slide level3">
 <h3>Common regularizers</h3>
 <p>Ridge regression (L2):</p>
-<p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j | ^2 \]</span></p>
+<p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j |
+^2 \]</span></p>
 <p>LASSO regression (L1):</p>
-<p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j | \]</span></p>
+<p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j |
+\]</span></p>
 </section>
 <section id="graphical-representation" class="slide level3">
 <h3>Graphical representation</h3>
 <figure>
-<img data-src="../images/regularization-contour.png" style="width:100.0%" alt="LS solution (+), RSS contours. As we increase \alpha, regularized solution moves from LS to 0." /><figcaption aria-hidden="true"><a href="https://xavierbourretsicotte.github.io/ridge_lasso_visual.html">LS solution (+), RSS contours</a>. As we increase <span class="math inline">\(\alpha\)</span>, regularized solution moves from LS to 0.</figcaption>
+<img data-src="../images/regularization-contour.png"
+style="width:100.0%"
+alt="LS solution (+), RSS contours. As we increase \alpha, regularized solution moves from LS to 0." />
+<figcaption aria-hidden="true"><a
+href="https://xavierbourretsicotte.github.io/ridge_lasso_visual.html">LS
+solution (+), RSS contours</a>. As we increase <span
+class="math inline">\(\alpha\)</span>, regularized solution moves from
+LS to 0.</figcaption>
 </figure>
 </section>
 <section id="common-features-ridge-and-lasso" class="slide level3">
 <h3>Common features: Ridge and LASSO</h3>
 <ul>
 <li>Both penalize large <span class="math inline">\(w_j\)</span></li>
-<li>Both have parameter <span class="math inline">\(\alpha\)</span> that controls level of regularization</li>
-<li>Intercept <span class="math inline">\(w_0\)</span> not included in regularization sum (starts at 1!), this depends on mean of <span class="math inline">\(y\)</span> and should not be constrained.</li>
+<li>Both have parameter <span class="math inline">\(\alpha\)</span> that
+controls level of regularization</li>
+<li>Intercept <span class="math inline">\(w_0\)</span> not included in
+regularization sum (starts at 1!), this depends on mean of <span
+class="math inline">\(y\)</span> and should not be constrained.</li>
 </ul>
 </section>
 <section id="differences-ridge-and-lasso-1" class="slide level3">
@@ -84,15 +110,21 @@
 <ul>
 <li>minimizes <span class="math inline">\(|w_j|\)</span></li>
 <li>tends to make coefficients either 0 or large (sparse!)</li>
-<li>does feature selection (setting <span class="math inline">\(w_j\)</span> to zero is equivalent to un-selecting feature)</li>
+<li>does feature selection (setting <span
+class="math inline">\(w_j\)</span> to zero is equivalent to un-selecting
+feature)</li>
 </ul>
 </section>
 <section id="standardization-1" class="slide level3">
 <h3>Standardization (1)</h3>
-<p>Before learning a model with regularization, we typically <em>standardize</em> each feature and target to have zero mean, unit variance:</p>
+<p>Before learning a model with regularization, we typically
+<em>standardize</em> each feature and target to have zero mean, unit
+variance:</p>
 <ul>
-<li><span class="math inline">\(x_{i,j} \rightarrow \frac{x_{i,j} - \bar{x}_j}{s_{x_j}}\)</span></li>
-<li><span class="math inline">\(y_{i} \rightarrow \frac{y_{i} - \bar{y}}{s_{y}}\)</span></li>
+<li><span class="math inline">\(x_{i,j} \rightarrow \frac{x_{i,j} -
+\bar{x}_j}{s_{x_j}}\)</span></li>
+<li><span class="math inline">\(y_{i} \rightarrow \frac{y_{i} -
+\bar{y}}{s_{y}}\)</span></li>
 </ul>
 </section>
 <section id="standardization-2" class="slide level3">
@@ -100,68 +132,97 @@
 <p>Why?</p>
 <ul>
 <li>Without scaling, regularization depends on data range</li>
-<li>With mean removal, no longer need <span class="math inline">\(w_0\)</span>, so regularization term is just L1 or L2 norm of coefficient vector</li>
+<li>With mean removal, no longer need <span
+class="math inline">\(w_0\)</span>, so regularization term is just L1 or
+L2 norm of coefficient vector</li>
 </ul>
 </section>
-<section id="l1-and-l2-norm-with-standardization-1" class="slide level3">
+<section id="l1-and-l2-norm-with-standardization-1"
+class="slide level3">
 <h3>L1 and L2 norm with standardization (1)</h3>
-<p>Assuming data standardized to zero mean, unit variance, the Ridge cost function is:</p>
+<p>Assuming data standardized to zero mean, unit variance, the Ridge
+cost function is:</p>
 <p><span class="math display">\[
 \begin{aligned}
-J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| ^2  \\
-&amp;= || \mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2 
+J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 +
+\alpha  \sum_{j=1}^d |w_j| ^2  \\
+&amp;= || \mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha ||
+\mathbf{w} || ^2
 \end{aligned}
 \]</span></p>
 </section>
-<section id="l1-and-l2-norm-with-standardization-2" class="slide level3">
+<section id="l1-and-l2-norm-with-standardization-2"
+class="slide level3">
 <h3>L1 and L2 norm with standardization (2)</h3>
-<p>LASSO cost function (<span class="math inline">\(|| \mathbf{w} ||_1\)</span> is L1 norm):</p>
+<p>LASSO cost function (<span class="math inline">\(|| \mathbf{w}
+||_1\)</span> is L1 norm):</p>
 <p><span class="math display">\[
 \begin{aligned}
-J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| \\
-&amp;= ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} ||_1 
+J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 +
+\alpha  \sum_{j=1}^d |w_j| \\
+&amp;= ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha ||
+\mathbf{w} ||_1
 \end{aligned}
 \]</span></p>
 </section>
 <section id="ridge-regularization" class="slide level3">
 <h3>Ridge regularization</h3>
-<p>Why minimize <span class="math inline">\(|| \mathbf{w} || ^2\)</span>?</p>
+<p>Why minimize <span class="math inline">\(|| \mathbf{w} ||
+^2\)</span>?</p>
 <p>Without regularization:</p>
 <ul>
 <li>large coefficients lead to high variance</li>
-<li>large positive and negative coefficients cancel each other for correlated features (remember attractiveness ratings in linear regression case study…)</li>
+<li>large positive and negative coefficients cancel each other for
+correlated features (remember attractiveness ratings in linear
+regression case study…)</li>
 </ul>
 </section>
 <section id="ridge-term-and-derivative" class="slide level3">
 <h3>Ridge term and derivative</h3>
 <figure>
-<img data-src="../images/ridge-derivative.png" style="width:40.0%" alt="L2 term and its derivative for one parameter." /><figcaption aria-hidden="true">L2 term and its derivative for one parameter.</figcaption>
+<img data-src="../images/ridge-derivative.png" style="width:40.0%"
+alt="L2 term and its derivative for one parameter." />
+<figcaption aria-hidden="true">L2 term and its derivative for one
+parameter.</figcaption>
 </figure>
 </section>
 <section id="ridge-closed-form-solution" class="slide level3">
 <h3>Ridge closed-form solution</h3>
-<p><span class="math display">\[J(\mathbf{w}) = ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2\]</span></p>
+<p><span class="math display">\[J(\mathbf{w}) = ||\mathbf{A} \mathbf{w}
+-  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2\]</span></p>
 <p>Taking derivative:</p>
-<p><span class="math display">\[\frac{\partial J(\mathbf{w})}{\partial \mathbf{w}} = 2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{w}) + 2 \alpha \mathbf{w} \]</span></p>
+<p><span class="math display">\[\frac{\partial J(\mathbf{w})}{\partial
+\mathbf{w}} = 2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{w}) + 2
+\alpha \mathbf{w} \]</span></p>
 <p>Setting it to zero, we find</p>
-<p><span class="math display">\[\mathbf{w}_{\text{ridge}} = (\mathbf{A}^T\mathbf{A} + \alpha \mathbf{I})^{-1} \mathbf{A}^T \mathbf{y}\]</span></p>
+<p><span class="math display">\[\mathbf{w}_{\text{ridge}} =
+(\mathbf{A}^T\mathbf{A} + \alpha \mathbf{I})^{-1} \mathbf{A}^T
+\mathbf{y}\]</span></p>
 </section>
 <section id="lasso-term-and-derivative" class="slide level3">
 <h3>LASSO term and derivative</h3>
 <figure>
-<img data-src="../images/lasso-derivative.png" style="width:40.0%" alt="L1 term and its derivative for one parameter." /><figcaption aria-hidden="true">L1 term and its derivative for one parameter.</figcaption>
+<img data-src="../images/lasso-derivative.png" style="width:40.0%"
+alt="L1 term and its derivative for one parameter." />
+<figcaption aria-hidden="true">L1 term and its derivative for one
+parameter.</figcaption>
 </figure>
 <ul>
-<li>No closed-form solution: derivative of <span class="math inline">\(|w_j|\)</span> is not continuous</li>
-<li>But there is a unique minimum, because cost function is convex, can solve iteratively</li>
+<li>No closed-form solution: derivative of <span
+class="math inline">\(|w_j|\)</span> is not continuous</li>
+<li>But there is a unique minimum, because cost function is convex, can
+solve iteratively</li>
 </ul>
 </section>
 <section id="effect-of-regularization-level" class="slide level3">
 <h3>Effect of regularization level</h3>
-<p>Greater <span class="math inline">\(\alpha\)</span>, more complex model.</p>
+<p>Greater <span class="math inline">\(\alpha\)</span>, less complex
+model.</p>
 <ul>
-<li>Ridge: Greater <span class="math inline">\(\alpha\)</span> makes coefficients smaller.</li>
-<li>LASSO: Greater <span class="math inline">\(\alpha\)</span> makes more weights zero.</li>
+<li>Ridge: Greater <span class="math inline">\(\alpha\)</span> makes
+coefficients smaller.</li>
+<li>LASSO: Greater <span class="math inline">\(\alpha\)</span> makes
+more weights zero.</li>
 </ul>
 </section>
 <section id="selecting-regularization-level" class="slide level3">
@@ -169,7 +230,8 @@ J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_
 <p>How to select <span class="math inline">\(\alpha\)</span>? by CV!</p>
 <ul>
 <li>Outer loop: loop over CV folds</li>
-<li>Inner loop: loop over <span class="math inline">\(\alpha\)</span></li>
+<li>Inner loop: loop over <span
+class="math inline">\(\alpha\)</span></li>
 </ul>
 </section></section>
     </div>
@@ -177,7 +239,7 @@ J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -188,10 +250,148 @@ J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

@@ -140,7 +140,7 @@ $$\mathbf{w}_{\text{ridge}} = (\mathbf{A}^T\mathbf{A} + \alpha \mathbf{I})^{-1} 
 
 ### Effect of regularization level
 
-Greater $\alpha$, more complex model.
+Greater $\alpha$, less complex model.
 
 * Ridge: Greater $\alpha$ makes coefficients smaller.
 * LASSO: Greater $\alpha$ makes more weights zero.
