@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -41,10 +49,18 @@
 
 <section id="classification" class="title-slide slide level2">
 <h2>Classification</h2>
-<p>Suppose we have a series of data points <span class="math inline">\(\{(\mathbf{x_1},y_1),(\mathbf{x_2},y_2),\ldots,(\mathbf{x_n},y_n)\}\)</span> and there is some (unknown) relationship between <span class="math inline">\(\mathbf{x_i}\)</span> and <span class="math inline">\(y_i\)</span>.</p>
+<p>Suppose we have a series of data points <span
+class="math inline">\(\{(\mathbf{x_1},y_1),(\mathbf{x_2},y_2),\ldots,(\mathbf{x_n},y_n)\}\)</span>
+and there is some (unknown) relationship between <span
+class="math inline">\(\mathbf{x_i}\)</span> and <span
+class="math inline">\(y_i\)</span>.</p>
 <ul>
-<li><p><strong>Classification</strong>: The output variable <span class="math inline">\(y\)</span> is constrained to be <span class="math inline">\(\in {1,2,\cdots,K}\)</span></p></li>
-<li><p><strong>Binary classification</strong>: The output variable <span class="math inline">\(y\)</span> is constrained to be <span class="math inline">\(\in {0, 1}\)</span></p></li>
+<li><p><strong>Classification</strong>: The output variable <span
+class="math inline">\(y\)</span> is constrained to be <span
+class="math inline">\(\in {1,2,\cdots,K}\)</span></p></li>
+<li><p><strong>Binary classification</strong>: The output variable <span
+class="math inline">\(y\)</span> is constrained to be <span
+class="math inline">\(\in {0, 1}\)</span></p></li>
 </ul>
 </section>
 
@@ -53,67 +69,99 @@
 <h2>Linear classifiers</h2>
 
 </section>
-<section id="binary-classification-with-linear-decision-boundary" class="slide level3">
+<section id="binary-classification-with-linear-decision-boundary"
+class="slide level3">
 <h3>Binary classification with linear decision boundary</h3>
 <aside class="notes">
 <ul>
 <li>Plot training data points</li>
-<li>Draw a line (<strong>decision boundary</strong>) separating 0 class and 1 class</li>
-<li>If a new data point is in the <strong>decision region</strong> corresponding to class 0, then <span class="math inline">\(\hat{y} = 0\)</span>.</li>
-<li>If it is in the decision region corresponding to class 1, then <span class="math inline">\(\hat{y} = 1\)</span>.</li>
+<li>Draw a line (<strong>decision boundary</strong>) separating 0 class
+and 1 class</li>
+<li>If a new data point is in the <strong>decision region</strong>
+corresponding to class 0, then <span class="math inline">\(\hat{y} =
+0\)</span>.</li>
+<li>If it is in the decision region corresponding to class 1, then <span
+class="math inline">\(\hat{y} = 1\)</span>.</li>
 </ul>
 <figure>
-<img data-src="../images/4-linear-classifier.png" style="width:40.0%" alt="Binary classification problem with linear decision boundary." /><figcaption aria-hidden="true">Binary classification problem with linear decision boundary.</figcaption>
+<img data-src="../images/4-linear-classifier.png" style="width:40.0%"
+alt="Binary classification problem with linear decision boundary." />
+<figcaption aria-hidden="true">Binary classification problem with linear
+decision boundary.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="linear-classification-rule" class="slide level3">
 <h3>Linear classification rule</h3>
 <ul>
-<li>Given a <strong>weight vector</strong>: <span class="math inline">\(\mathbf{w} = (w_0, \cdots, w_d)\)</span></li>
-<li>Compute linear combination <span class="math inline">\(z = w_0 + \sum_{j=1}^d w_d x_d\)</span></li>
-<li>Predict class: <span class="math display">\[  \hat{y} = 
+<li>Given a <strong>weight vector</strong>: <span
+class="math inline">\(\mathbf{w} = (w_0, \cdots, w_d)\)</span></li>
+<li>Compute linear combination <span class="math inline">\(z = w_0 +
+\sum_{j=1}^d w_d x_d\)</span></li>
+<li>Predict class: <span class="math display">\[  \hat{y} =
   \begin{cases}
   1, z &gt; 0 \\
   0, z \leq 0
   \end{cases}
- \]</span></li>
+\]</span></li>
 </ul>
 </section>
-<section id="multi-class-classification-illustration" class="slide level3">
+<section id="multi-class-classification-illustration"
+class="slide level3">
 <h3>Multi-class classification: illustration</h3>
 <figure>
-<img data-src="../images/hyperplane.png" style="width:50.0%" alt="Each hyperplane H_i separates the examples of C_i from the examples of all other classes." /><figcaption aria-hidden="true">Each hyperplane <span class="math inline">\(H_i\)</span> separates the examples of <span class="math inline">\(C_i\)</span> from the examples of all other classes.</figcaption>
+<img data-src="../images/hyperplane.png" style="width:50.0%"
+alt="Each hyperplane H_i separates the examples of C_i from the examples of all other classes." />
+<figcaption aria-hidden="true">Each hyperplane <span
+class="math inline">\(H_i\)</span> separates the examples of <span
+class="math inline">\(C_i\)</span> from the examples of all other
+classes.</figcaption>
 </figure>
 </section>
 <section id="linear-separability" class="slide level3">
 <h3>Linear separability</h3>
 <p>Given training data</p>
-<p><span class="math display">\[(\mathbf{x}_i, y_i), i=1,\cdots,N\]</span></p>
-<p>The problem is <strong>perfectly linearly separable</strong> if there exists a <strong>separating hyperplane</strong> <span class="math inline">\(H_i\)</span> such that all <span class="math inline">\(\mathbf{x} \in C_i\)</span> lie on its positive side, and all <span class="math inline">\(\mathbf{x} \in C_j, j \neq i\)</span> lie on its negative side.</p>
+<p><span class="math display">\[(\mathbf{x}_i, y_i),
+i=1,\cdots,N\]</span></p>
+<p>The problem is <strong>perfectly linearly separable</strong> if there
+exists a <strong>separating hyperplane</strong> <span
+class="math inline">\(H_i\)</span> such that all <span
+class="math inline">\(\mathbf{x} \in C_i\)</span> lie on its positive
+side, and all <span class="math inline">\(\mathbf{x} \in C_j, j \neq
+i\)</span> lie on its negative side.</p>
 </section>
-<section id="non-uniqueness-of-separating-hyperplane" class="slide level3">
+<section id="non-uniqueness-of-separating-hyperplane"
+class="slide level3">
 <h3>Non-uniqueness of separating hyperplane</h3>
 <aside class="notes">
-<p>When a separating hyperplane exists, it is not unique (there are in fact infinitely many such hyperplanes.)</p>
+<p>When a separating hyperplane exists, it is not unique (there are in
+fact infinitely many such hyperplanes.)</p>
 <figure>
-<img data-src="../images/4-linear-classifier-non-unique.png" style="width:40.0%" alt="Several separating hyperplanes." /><figcaption aria-hidden="true">Several separating hyperplanes.</figcaption>
+<img data-src="../images/4-linear-classifier-non-unique.png"
+style="width:40.0%" alt="Several separating hyperplanes." />
+<figcaption aria-hidden="true">Several separating
+hyperplanes.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="non-existence-of-perfectly-separating-hyperplane" class="slide level3">
+<section id="non-existence-of-perfectly-separating-hyperplane"
+class="slide level3">
 <h3>Non-existence of perfectly separating hyperplane</h3>
 <aside class="notes">
-<p>Many datasets <em>not</em> linearly separable - some points will be misclassified by <em>any</em> possible hyperplane.</p>
+<p>Many datasets <em>not</em> linearly separable - some points will be
+misclassified by <em>any</em> possible hyperplane.</p>
 <figure>
-<img data-src="../images/4-linear-classifier-non-sep.png" style="width:40.0%" alt="This data is not separable." /><figcaption aria-hidden="true">This data is not separable.</figcaption>
+<img data-src="../images/4-linear-classifier-non-sep.png"
+style="width:40.0%" alt="This data is not separable." />
+<figcaption aria-hidden="true">This data is not separable.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="choosing-a-hyperplane" class="slide level3">
 <h3>Choosing a hyperplane</h3>
 <p>Which hyperplane to choose?</p>
-<p>We will try to find the hyperplane that minimizes loss according to some <strong>loss function</strong>.</p>
+<p>We will try to find the hyperplane that minimizes loss according to
+some <strong>loss function</strong>.</p>
 <p>Will revisit several times this semester.</p>
 </section></section>
 <section>
@@ -121,38 +169,59 @@
 <h2>Logistic regression</h2>
 
 </section>
-<section id="probabilistic-model-for-binary-classification" class="slide level3">
+<section id="probabilistic-model-for-binary-classification"
+class="slide level3">
 <h3>Probabilistic model for binary classification</h3>
-<p>Instead of looking for a model <span class="math inline">\(f\)</span> so that</p>
+<p>Instead of looking for a model <span class="math inline">\(f\)</span>
+so that</p>
 <p><span class="math display">\[y_i \approx f(x_i)\]</span></p>
-<p>we will look for an <span class="math inline">\(f\)</span> so that</p>
-<p><span class="math display">\[ P(y_i = 1 | x_i) = f(x_i), P(y_i = 0 | x_i) = 1 - f(x_i)\]</span></p>
+<p>we will look for an <span class="math inline">\(f\)</span> so
+that</p>
+<p><span class="math display">\[ P(y_i = 1 | x_i) = f(x_i), P(y_i = 0 |
+x_i) = 1 - f(x_i)\]</span></p>
 <aside class="notes">
-<p>We need a function that takes a real value and maps it to range <span class="math inline">\([0,1]\)</span>. What function should we use?</p>
+<p>We need a function that takes a real value and maps it to range <span
+class="math inline">\([0,1]\)</span>. What function should we use?</p>
 </aside>
 </section>
 <section id="logisticsigmoid-function" class="slide level3">
 <h3>Logistic/sigmoid function</h3>
 <figure>
-<img data-src="../images/sigmoid.png" style="width:30.0%" alt="\sigma(z) = \frac{1}{1 + e^{-z}} is a classic “S”-shaped function." /><figcaption aria-hidden="true"><span class="math inline">\(\sigma(z) = \frac{1}{1 + e^{-z}}\)</span> is a classic “S”-shaped function.</figcaption>
+<img data-src="../images/sigmoid.png" style="width:30.0%"
+alt="\sigma(z) = \frac{1}{1 + e^{-z}} is a classic “S”-shaped function." />
+<figcaption aria-hidden="true"><span class="math inline">\(\sigma(z) =
+\frac{1}{1 + e^{-z}}\)</span> is a classic “S”-shaped
+function.</figcaption>
 </figure>
 <aside class="notes">
-<p>Note the intuitive relationship behind this function’s output and the distance from the linear separator (the argument that is input to the function).</p>
+<p>Note the intuitive relationship behind this function’s output and the
+distance from the linear separator (the argument that is input to the
+function).</p>
 <figure>
-<img data-src="../images/4-logistic-sigmoid-distance.png" style="width:50.0%" alt="Output is close to 0 or 1 if the argument to the \sigma has large magnitude (point is far from separating hyperplane, but closer to 0.5 if the argument is small (point is near separating hyperplane)." /><figcaption aria-hidden="true">Output is close to 0 or 1 if the argument to the <span class="math inline">\(\sigma\)</span> has large magnitude (point is far from separating hyperplane, but closer to 0.5 if the argument is small (point is near separating hyperplane).</figcaption>
+<img data-src="../images/4-logistic-sigmoid-distance.png"
+style="width:50.0%"
+alt="Output is close to 0 or 1 if the argument to the \sigma has large magnitude (point is far from separating hyperplane, but closer to 0.5 if the argument is small (point is near separating hyperplane)." />
+<figcaption aria-hidden="true">Output is close to 0 or 1 if the argument
+to the <span class="math inline">\(\sigma\)</span> has large magnitude
+(point is far from separating hyperplane, but closer to 0.5 if the
+argument is small (point is near separating hyperplane).</figcaption>
 </figure>
 </aside>
 </section>
-<section id="logistic-function-for-binary-classification" class="slide level3">
+<section id="logistic-function-for-binary-classification"
+class="slide level3">
 <h3>Logistic function for binary classification</h3>
-<p>Let <span class="math inline">\(z = w_0 + \sum_{j=1}^d w_d x_d\)</span>, then</p>
-<p><span class="math display">\[ P(y=1|\mathbf{x}) = \frac{1}{1 + e^{-z}}, \quad  P(y=0|\mathbf{x}) = \frac{e^{-z}}{1 + e^{-z}} \]</span></p>
+<p>Let <span class="math inline">\(z = w_0 + \sum_{j=1}^d w_d
+x_d\)</span>, then</p>
+<p><span class="math display">\[ P(y=1|\mathbf{x}) = \frac{1}{1 +
+e^{-z}}, \quad  P(y=0|\mathbf{x}) = \frac{e^{-z}}{1 + e^{-z}}
+\]</span></p>
 <p>(note: <span class="math inline">\(P(y=1) + P(y=0) = 1\)</span>)</p>
 </section>
 <section id="logistic-function-with-threshold" class="slide level3">
 <h3>Logistic function with threshold</h3>
 <p>Choose a threshold <span class="math inline">\(t\)</span>, then</p>
-<p><span class="math display">\[ \hat{y} = 
+<p><span class="math display">\[ \hat{y} =
 \begin{cases}
 1, \quad P(y=1|\mathbf{x}) \geq t \\
 0, \quad P(y=1|\mathbf{x}) &lt; t
@@ -162,106 +231,154 @@
 <section id="logistic-model-as-a-soft-classifier" class="slide level3">
 <h3>Logistic model as a “soft” classifier</h3>
 <figure>
-<img data-src="../images/sigmoid-shape.png" style="width:30.0%" alt="Plot of P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x. As w_1 \to \infty the logistic model becomes a “hard” rule." /><figcaption aria-hidden="true">Plot of <span class="math inline">\(P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x\)</span>. As <span class="math inline">\(w_1 \to \infty\)</span> the logistic model becomes a “hard” rule.</figcaption>
+<img data-src="../images/sigmoid-shape.png" style="width:30.0%"
+alt="Plot of P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x. As w_1 \to \infty the logistic model becomes a “hard” rule." />
+<figcaption aria-hidden="true">Plot of <span
+class="math inline">\(P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x\)</span>.
+As <span class="math inline">\(w_1 \to \infty\)</span> the logistic
+model becomes a “hard” rule.</figcaption>
 </figure>
 </section>
 <section id="logistic-classifier-properties-1" class="slide level3">
 <h3>Logistic classifier properties (1)</h3>
 <ul>
-<li>Class probabilities depend on distance from separating hyperplane</li>
-<li>Points far from separating hyperplane have probability <span class="math inline">\(\approx 0\)</span> or <span class="math inline">\(\approx 1\)</span></li>
-<li>When <span class="math inline">\(|| \mathbf{w}||\)</span> is larger, class probabilities go towards extremes (0,1) more quickly</li>
+<li>Class probabilities depend on distance from separating
+hyperplane</li>
+<li>Points far from separating hyperplane have probability <span
+class="math inline">\(\approx 0\)</span> or <span
+class="math inline">\(\approx 1\)</span></li>
+<li>When <span class="math inline">\(|| \mathbf{w}||\)</span> is larger,
+class probabilities go towards extremes (0,1) more quickly</li>
 </ul>
 </section>
 <section id="logistic-classifier-properties-2" class="slide level3">
 <h3>Logistic classifier properties (2)</h3>
 <ul>
-<li>Unlike linear regression, weights do <em>not</em> correspond to change in output associated with one-unit change in input.</li>
-<li>Sign of weight <em>does</em> tell us about relationship between a given feature and target variable.</li>
+<li>Unlike linear regression, weights do <em>not</em> correspond to
+change in output associated with one-unit change in input.</li>
+<li>Sign of weight <em>does</em> tell us about relationship between a
+given feature and target variable.</li>
 </ul>
 </section>
 <section id="logistic-regression---illustration" class="slide level3">
 <h3>Logistic regression - illustration</h3>
 <figure>
-<img data-src="../images/logistic-regression-contour-plot.png" style="width:60.0%" alt="Logistic regression, illustrated with contour plot." /><figcaption aria-hidden="true">Logistic regression, illustrated with contour plot.</figcaption>
+<img data-src="../images/logistic-regression-contour-plot.png"
+style="width:60.0%"
+alt="Logistic regression, illustrated with contour plot." />
+<figcaption aria-hidden="true">Logistic regression, illustrated with
+contour plot.</figcaption>
 </figure>
 </section>
 <section id="multi-class-logistic-regression" class="slide level3">
 <h3>Multi-class logistic regression</h3>
-<p>Suppose <span class="math inline">\(y \in 1, \ldots, K\)</span>. We use:</p>
+<p>Suppose <span class="math inline">\(y \in 1, \ldots, K\)</span>. We
+use:</p>
 <ul>
-<li><span class="math inline">\(\mathbf{W} \in R^{K\times d}\)</span> (parameter matrix)</li>
-<li><span class="math inline">\(\mathbf{z} = \mathbf{Wx}\)</span> (<span class="math inline">\(K\)</span> linear functions)</li>
+<li><span class="math inline">\(\mathbf{W} \in R^{K\times d}\)</span>
+(parameter matrix)</li>
+<li><span class="math inline">\(\mathbf{z} = \mathbf{Wx}\)</span> (<span
+class="math inline">\(K\)</span> linear functions)</li>
 </ul>
 <aside class="notes">
-<p>Assume we have stacked a 1s column so that the intercept is rolled into the parameter matrix.</p>
+<p>Assume we have stacked a 1s column so that the intercept is rolled
+into the parameter matrix.</p>
 </aside>
 </section>
 <section id="softmax-function" class="slide level3">
 <h3>Softmax function</h3>
-<p><span class="math display">\[ g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
+<p><span class="math display">\[ g_k(\mathbf{z}) =
+\frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
 <ul>
-<li>Takes as input a vector of <span class="math inline">\(K\)</span> numbers</li>
-<li>Outputs <span class="math inline">\(K\)</span> probabilities proportional to the exponentials of the input numbers.</li>
+<li>Takes as input a vector of <span class="math inline">\(K\)</span>
+numbers</li>
+<li>Outputs <span class="math inline">\(K\)</span> probabilities
+proportional to the exponentials of the input numbers.</li>
 </ul>
 </section>
 <section id="softmax-function-as-a-pmf" class="slide level3">
 <h3>Softmax function as a PMF</h3>
 <p>Acts like a probability mass function:</p>
 <ul>
-<li><span class="math inline">\(g_k(\mathbf{z}) \in [0,1]\)</span> for each <span class="math inline">\(k\)</span></li>
-<li><span class="math inline">\(\sum_{k=1}^K g_k(\mathbf{z}) = 1\)</span></li>
+<li><span class="math inline">\(g_k(\mathbf{z}) \in [0,1]\)</span> for
+each <span class="math inline">\(k\)</span></li>
+<li><span class="math inline">\(\sum_{k=1}^K g_k(\mathbf{z}) =
+1\)</span></li>
 <li>larger input corresponds to larger “probability”</li>
 </ul>
 </section>
-<section id="softmax-function-for-multi-class-logistic-regression-1" class="slide level3">
+<section id="softmax-function-for-multi-class-logistic-regression-1"
+class="slide level3">
 <h3>Softmax function for multi-class logistic regression (1)</h3>
 <p>Class probabilities are given by</p>
-<p><span class="math display">\[P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
+<p><span class="math display">\[P(y=k | \mathbf{x}) =
+\frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
 </section>
-<section id="softmax-function-for-multi-class-logistic-regression-2" class="slide level3">
+<section id="softmax-function-for-multi-class-logistic-regression-2"
+class="slide level3">
 <h3>Softmax function for multi-class logistic regression (2)</h3>
-<p>When <span class="math inline">\(z_k \gg z_{\ell}\)</span> for all <span class="math inline">\(\ell \neq k\)</span>:</p>
+<p>When <span class="math inline">\(z_k \gg z_{\ell}\)</span> for all
+<span class="math inline">\(\ell \neq k\)</span>:</p>
 <ul>
 <li><span class="math inline">\(g_k(\mathbf{z}) \approx 1\)</span></li>
-<li><span class="math inline">\(g_\ell(\mathbf{z}) \approx 0\)</span> for all <span class="math inline">\(\ell \neq k\)</span></li>
+<li><span class="math inline">\(g_\ell(\mathbf{z}) \approx 0\)</span>
+for all <span class="math inline">\(\ell \neq k\)</span></li>
 </ul>
-<p>Assign highest probability to class <span class="math inline">\(k\)</span> when <span class="math inline">\(z_k\)</span> is largest.</p>
+<p>Assign highest probability to class <span
+class="math inline">\(k\)</span> when <span
+class="math inline">\(z_k\)</span> is largest.</p>
 </section></section>
 <section>
-<section id="fitting-logistic-regression-model" class="title-slide slide level2">
+<section id="fitting-logistic-regression-model"
+class="title-slide slide level2">
 <h2>Fitting logistic regression model</h2>
 <aside class="notes">
 <p>We know that to fit weights, we need</p>
 <ul>
 <li>a loss function,</li>
-<li>and a training algorithm to find the weights that minimize the loss function.</li>
+<li>and a training algorithm to find the weights that minimize the loss
+function.</li>
 </ul>
 </aside>
 </section>
 <section id="learning-logistic-model-parameters" class="slide level3">
 <h3>Learning logistic model parameters</h3>
-<p>Weights <span class="math inline">\(\mathbf{W}\)</span> are the unknown <strong>model parameters</strong>:</p>
-<p><span class="math display">\[ \mathbf{z} = \mathbf{W x}, \mathbf{W} \in R^{K \times d}\]</span></p>
-<p><span class="math display">\[ P(y=k | \mathbf{x}) = g_k(\mathbf{z}) = g_k(\mathbf{Wx})\]</span></p>
-<p>Given training data <span class="math inline">\((\mathbf{x}_i, y_i), i=1,\ldots,n\)</span>, we must learn <span class="math inline">\(\mathbf{W}\)</span>.</p>
+<p>Weights <span class="math inline">\(\mathbf{W}\)</span> are the
+unknown <strong>model parameters</strong>:</p>
+<p><span class="math display">\[ \mathbf{z} = \mathbf{W x}, \mathbf{W}
+\in R^{K \times d}\]</span></p>
+<p><span class="math display">\[ P(y=k | \mathbf{x}) = g_k(\mathbf{z}) =
+g_k(\mathbf{Wx})\]</span></p>
+<p>Given training data <span class="math inline">\((\mathbf{x}_i, y_i),
+i=1,\ldots,n\)</span>, we must learn <span
+class="math inline">\(\mathbf{W}\)</span>.</p>
 </section>
 <section id="maximum-likelihood-estimation-1" class="slide level3">
 <h3>Maximum likelihood estimation (1)</h3>
-<p>Let <span class="math inline">\(P(\mathbf{y}| \mathbf{X}, \mathbf{W})\)</span> be the probability of observing class labels <span class="math inline">\(\mathbf{y} = (y_1, \ldots, y_n)^T\)</span></p>
-<p>given inputs <span class="math inline">\(\mathbf{X} = (\mathbf{x}_1, \ldots, \mathbf{x}_n)^T\)</span> and weights <span class="math inline">\(\mathbf{W}\)</span>.</p>
+<p>Let <span class="math inline">\(P(\mathbf{y}| \mathbf{X},
+\mathbf{W})\)</span> be the probability of observing class labels <span
+class="math inline">\(\mathbf{y} = (y_1, \ldots, y_n)^T\)</span></p>
+<p>given inputs <span class="math inline">\(\mathbf{X} = (\mathbf{x}_1,
+\ldots, \mathbf{x}_n)^T\)</span> and weights <span
+class="math inline">\(\mathbf{W}\)</span>.</p>
 <p>The <strong>maximum likelihood estimate</strong> is</p>
-<p><span class="math display">\[ \mathbf{\hat{W}} = \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W})\]</span></p>
+<p><span class="math display">\[ \mathbf{\hat{W}} =
+\operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X},
+\mathbf{W})\]</span></p>
 <aside class="notes">
-<p>It is the estimate of parameters for which these observations are most likely.</p>
+<p>It is the estimate of parameters for which these observations are
+most likely.</p>
 </aside>
 </section>
 <section id="maximum-likelihood-estimation-2" class="slide level3">
 <h3>Maximum likelihood estimation (2)</h3>
-<p>Assume outputs <span class="math inline">\(y_i\)</span> are independent of one another,</p>
-<p><span class="math display">\[ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \prod_{i=1}^n P(y_i| \mathbf{x_i}, \mathbf{W})\]</span></p>
+<p>Assume outputs <span class="math inline">\(y_i\)</span> are
+independent of one another,</p>
+<p><span class="math display">\[ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) =
+\prod_{i=1}^n P(y_i| \mathbf{x_i}, \mathbf{W})\]</span></p>
 <aside class="notes">
-<p>We take the log of both sides, because then the product turns into a sum…</p>
+<p>We take the log of both sides, because then the product turns into a
+sum…</p>
 </aside>
 </section>
 <section id="maximum-likelihood-estimation-3" class="slide level3">
@@ -275,116 +392,171 @@ L(\mathbf{W}) &amp;= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 \]</span></p>
 <p>(the term in the sum is also called cross-entropy)</p>
 <aside class="notes">
-<p>Note that maximizing the likelihood is the same as minimizing the negative log likelihood.</p>
+<p>Note that maximizing the likelihood is the same as minimizing the
+negative log likelihood.</p>
 </aside>
 </section>
 <section id="maximum-likelihood-estimation-4" class="slide level3">
 <h3>Maximum likelihood estimation (4)</h3>
-<p>Now we can re-write max likelihood estimator with a loss function to minimize:</p>
-<p><span class="math display">\[ \mathbf{\hat{W}} = \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \operatorname*{argmin}_W L(\mathbf{W})\]</span></p>
+<p>Now we can re-write max likelihood estimator with a loss function to
+minimize:</p>
+<p><span class="math display">\[ \mathbf{\hat{W}} =
+\operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W}) =
+\operatorname*{argmin}_W L(\mathbf{W})\]</span></p>
 <aside class="notes">
 <p>The next step will be to plug in our sigmoid function.</p>
 </aside>
 </section>
 <section id="binary-cross-entropy-loss-1" class="slide level3">
 <h3>Binary cross-entropy loss (1)</h3>
-<p>For binary classification with class labels <span class="math inline">\(0, 1\)</span>:</p>
-<p><span class="math display">\[\begin{equation} 
+<p>For binary classification with class labels <span
+class="math inline">\(0, 1\)</span>:</p>
+<p><span class="math display">\[\begin{equation}
 \begin{aligned}
-\ln P(y_i | \mathbf{x_i}, \mathbf{w})  &amp; = y_i \ln P(y_i = 1| \mathbf{x_i}, \mathbf{w}) + (1 − y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{w}) \\
- &amp; = y_i \ln \sigma(z_i)  + (1 − y_i) \ln (1-\sigma(z_i)) \\
- &amp; = y_i (\ln \sigma(z_i) - \ln \sigma(-z_i)) + \ln \sigma(-z_i) \\
- &amp; = y_i \ln \frac{\sigma(z_i)}{\sigma(-z_i)} + \ln \sigma(-z_i) \\
- &amp; = y_i \ln \frac{1+e^{z_i}}{1+e^{-z_i}} + \ln \sigma(-z_i) \\
- &amp; = y_i \ln \frac{e^{z_i}(e^{-z_i}+1)}{1+e^{-z_i}} + \ln \sigma(-z_i)  \\
- &amp; =  y_i z_i - \ln (1+e^{z_i}) 
+\ln P(y_i | \mathbf{x_i}, \mathbf{w})  &amp; = y_i \ln P(y_i = 1|
+\mathbf{x_i}, \mathbf{w}) + (1 − y_i) \ln P(y_i = 0| \mathbf{x_i},
+\mathbf{w}) \\
+&amp; = y_i \ln \sigma(z_i)  + (1 − y_i) \ln (1-\sigma(z_i)) \\
+&amp; = y_i (\ln \sigma(z_i) - \ln \sigma(-z_i)) + \ln \sigma(-z_i) \\
+&amp; = y_i \ln \frac{\sigma(z_i)}{\sigma(-z_i)} + \ln \sigma(-z_i) \\
+&amp; = y_i \ln \frac{1+e^{z_i}}{1+e^{-z_i}} + \ln \sigma(-z_i) \\
+&amp; = y_i \ln \frac{e^{z_i}(e^{-z_i}+1)}{1+e^{-z_i}} + \ln
+\sigma(-z_i)  \\
+&amp; =  y_i z_i - \ln (1+e^{z_i})
 \end{aligned}
 \end{equation}\]</span></p>
-<p>(Note: <span class="math inline">\(\sigma(-z) = 1-\sigma(z)\)</span>)</p>
+<p>(Note: <span class="math inline">\(\sigma(-z) =
+1-\sigma(z)\)</span>)</p>
 </section>
 <section id="binary-cross-entropy-loss-2" class="slide level3">
 <h3>Binary cross-entropy loss (2)</h3>
 <p>Binary cross-entropy loss function (negative log likelihood):</p>
-<p><span class="math display">\[\sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i\]</span></p>
+<p><span class="math display">\[\sum_{i=1}^n \ln (1+e^{z_i}) - y_i
+z_i\]</span></p>
 </section>
-<section id="cross-entropy-loss-for-multi-class-classification-1" class="slide level3">
+<section id="cross-entropy-loss-for-multi-class-classification-1"
+class="slide level3">
 <h3>Cross-entropy loss for multi-class classification (1)</h3>
-<p>Define “one-hot” vector - for a sample from class <span class="math inline">\(k\)</span>, all entries in the vector are <span class="math inline">\(0\)</span> except for the <span class="math inline">\(k\)</span>th entry which is <span class="math inline">\(1\)</span>:</p>
-<p><span class="math display">\[r_{ik} = 
+<p>Define “one-hot” vector - for a sample from class <span
+class="math inline">\(k\)</span>, all entries in the vector are <span
+class="math inline">\(0\)</span> except for the <span
+class="math inline">\(k\)</span>th entry which is <span
+class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[r_{ik} =
 \begin{cases}
 1 \quad y_i = k \\
 0 \quad y_i \neq k
 \end{cases}
 \]</span></p>
-<p><span class="math display">\[i = 1,\ldots , n, \quad k=1, \ldots, K\]</span></p>
+<p><span class="math display">\[i = 1,\ldots , n, \quad k=1, \ldots,
+K\]</span></p>
 </section>
-<section id="cross-entropy-loss-for-multi-class-classification-2" class="slide level3">
+<section id="cross-entropy-loss-for-multi-class-classification-2"
+class="slide level3">
 <h3>Cross-entropy loss for multi-class classification (2)</h3>
 <p>Then,</p>
-<p><span class="math display">\[ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) = \sum_{k=1}^K r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})\]</span></p>
+<p><span class="math display">\[ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) =
+\sum_{k=1}^K r_{ik} \ln P(y_i = k| \mathbf{x_i},
+\mathbf{W})\]</span></p>
 <p>Cross-entropy loss function is</p>
-<p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right]\]</span></p>
+<p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k
+e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right]\]</span></p>
 </section>
 <section id="minimizing-cross-entropy-loss" class="slide level3">
 <h3>Minimizing cross-entropy loss</h3>
 <p>To minimize, we would take the partial derivative:</p>
-<p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} = 0 \]</span></p>
+<p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} =
+0 \]</span></p>
 <p>for all <span class="math inline">\(W_{kj}\)</span></p>
-<p><strong>But</strong>, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent)</p>
+<p><strong>But</strong>, there is no closed-form expression - can only
+estimate weights via numerical optimization (e.g. gradient descent)</p>
 </section>
-<section id="transformations-bias-variance" class="slide level3">
-<h3>Transformations, bias, variance</h3>
+<section id="non-linear-decision-boundaries" class="slide level3">
+<h3>Non-linear decision boundaries</h3>
 <ul>
-<li>Can use basis functions to map problem to transformed feature space (if “natural” decision boundary is non-linear)</li>
-<li>Variance increases with <span class="math inline">\(d\)</span> and decreases with <span class="math inline">\(n\)</span></li>
+<li>Logistic regression learns linear boundary</li>
+<li>What if the “natural” decision boundary is non-linear?</li>
+</ul>
+<aside class="notes">
+<p>Can use basis functions to map problem to transformed feature space
+(if “natural” decision boundary is non-linear)</p>
+</aside>
+</section>
+<section id="bias-variance" class="slide level3">
+<h3>Bias, variance</h3>
+<ul>
+<li>Variance increases with <span class="math inline">\(d\)</span> and
+decreases with <span class="math inline">\(n\)</span></li>
 <li>Can add a regularization penalty to loss function</li>
 </ul>
 </section></section>
-<section id="recipe-for-logistic-regression-binary-classifier" class="title-slide slide level2">
+<section id="recipe-for-logistic-regression-binary-classifier"
+class="title-slide slide level2">
 <h2>“Recipe” for logistic regression (binary classifier)</h2>
 <aside class="notes">
 <ul>
-<li>Choose a <strong>model</strong>: <span class="math display">\[P(y = 1 | x, w) = \sigma\left(w_0 + \sum_{i=1}^d w_d x_d\right)\]</span></li>
+<li>Choose a <strong>model</strong>: <span class="math display">\[P(y =
+1 | x, w) = \sigma\left(w_0 + \sum_{i=1}^d w_d x_d\right)\]</span></li>
 </ul>
-<p><span class="math display">\[ \hat{y} = 
+<p><span class="math display">\[ \hat{y} =
 \begin{cases}
 1, \quad P(y=1|\mathbf{x}) \geq t \\
 0, \quad P(y=1|\mathbf{x}) &lt; t
 \end{cases}
 \]</span></p>
 <ul>
-<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,n\)</span></li>
-<li>Choose a <strong>loss function</strong> that will measure how well model fits data: binary cross-entropy</li>
+<li>Get <strong>data</strong> - for supervised learning, we need
+<strong>labeled</strong> examples: <span class="math inline">\((x_i,
+y_i), i=1,2,\cdots,n\)</span></li>
+<li>Choose a <strong>loss function</strong> that will measure how well
+model fits data: binary cross-entropy</li>
 </ul>
-<p><span class="math display">\[\sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i\]</span></p>
+<p><span class="math display">\[\sum_{i=1}^n \ln (1+e^{z_i}) - y_i
+z_i\]</span></p>
 <ul>
-<li>Find model <strong>parameters</strong> that minimize loss: use numerical optimization to find weight vector <span class="math inline">\(w\)</span></li>
-<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
+<li>Find model <strong>parameters</strong> that minimize loss: use
+numerical optimization to find weight vector <span
+class="math inline">\(w\)</span></li>
+<li>Use model to <strong>predict</strong> <span
+class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
 </ul>
 </aside>
 </section>
 
-<section id="recipe-for-logistic-regression-multi-class-classifier" class="title-slide slide level2">
+<section id="recipe-for-logistic-regression-multi-class-classifier"
+class="title-slide slide level2">
 <h2>“Recipe” for logistic regression (multi-class classifier)</h2>
 <aside class="notes">
 <ul>
-<li>Choose a <strong>model</strong>: find probability of belonging to each class, then choose the class for which the probability is highest.</li>
+<li>Choose a <strong>model</strong>: find probability of belonging to
+each class, then choose the class for which the probability is
+highest.</li>
 </ul>
-<p><span class="math display">\[P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}} \text{ where } \mathbf{z} = \mathbf{Wx}\]</span></p>
+<p><span class="math display">\[P(y=k | \mathbf{x}) =
+\frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}} \text{ where } \mathbf{z} =
+\mathbf{Wx}\]</span></p>
 <ul>
-<li>Get <strong>data</strong> - for supervised learning, we need <strong>labeled</strong> examples: <span class="math inline">\((x_i, y_i), i=1,2,\cdots,n\)</span></li>
-<li>Choose a <strong>loss function</strong> that will measure how well model fits data: cross-entropy</li>
+<li>Get <strong>data</strong> - for supervised learning, we need
+<strong>labeled</strong> examples: <span class="math inline">\((x_i,
+y_i), i=1,2,\cdots,n\)</span></li>
+<li>Choose a <strong>loss function</strong> that will measure how well
+model fits data: cross-entropy</li>
 </ul>
-<p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] \text{ where }\]</span></p>
-<p><span class="math display">\[r_{ik} = 
+<p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k
+e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] \text{ where
+}\]</span></p>
+<p><span class="math display">\[r_{ik} =
 \begin{cases}
 1 \quad y_i = k \\
 0 \quad y_i \neq k
 \end{cases}
 \]</span></p>
 <ul>
-<li>Find model <strong>parameters</strong> that minimize loss: use numerical optimization to find weight vector <span class="math inline">\(w\)</span></li>
-<li>Use model to <strong>predict</strong> <span class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
+<li>Find model <strong>parameters</strong> that minimize loss: use
+numerical optimization to find weight vector <span
+class="math inline">\(w\)</span></li>
+<li>Use model to <strong>predict</strong> <span
+class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
 </ul>
 </aside>
 </section>
@@ -398,39 +570,63 @@ L(\mathbf{W}) &amp;= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 </section>
 <section id="probabilistic-models-1" class="slide level3">
 <h3>Probabilistic models (1)</h3>
-<p>For logistic regression, minimizing the cross-entropy loss finds the parameters for which</p>
-<p><span class="math inline">\(P(\mathbf{y}| \mathbf{X}, \mathbf{W})\)</span></p>
+<p>For logistic regression, minimizing the cross-entropy loss finds the
+parameters for which</p>
+<p><span class="math inline">\(P(\mathbf{y}| \mathbf{X},
+\mathbf{W})\)</span></p>
 <p>is maximized.</p>
 </section>
 <section id="probabilistic-models-2" class="slide level3">
 <h3>Probabilistic models (2)</h3>
-<p>For linear regression, assuming normally distributed stochastic error, minimizing the <strong>squared error</strong> loss finds the parameters for which</p>
-<p><span class="math inline">\(P(\mathbf{y}| \mathbf{X}, \mathbf{w})\)</span></p>
+<p>For linear regression, assuming normally distributed stochastic
+error, minimizing the <strong>squared error</strong> loss finds the
+parameters for which</p>
+<p><span class="math inline">\(P(\mathbf{y}| \mathbf{X},
+\mathbf{w})\)</span></p>
 <p>is maximized.</p>
 <aside class="notes">
-<p>Surprise! We’ve been doing maximum likelihood estimation all along.</p>
+<p>Surprise! We’ve been doing maximum likelihood estimation all
+along.</p>
 </aside>
 </section>
 <section id="probabilistic-models-3" class="slide level3">
 <h3>Probabilistic models (3)</h3>
 <p>ML models that try to</p>
 <ul>
-<li>get a good fit for <span class="math inline">\(P(y|X)\)</span>: <strong>discriminative</strong> models.</li>
-<li>fit <span class="math inline">\(P(X, y)\)</span> or <span class="math inline">\(P(X|y) P(y)\)</span>: <strong>generative</strong> models.</li>
+<li>get a good fit for <span class="math inline">\(P(y|X)\)</span>:
+<strong>discriminative</strong> models.</li>
+<li>fit <span class="math inline">\(P(X, y)\)</span> or <span
+class="math inline">\(P(X|y) P(y)\)</span>: <strong>generative</strong>
+models.</li>
 </ul>
 <aside class="notes">
-<p>Linear regression and logistic regression are both considered discriminative models; they say “given that we have this data, what’s the most likely label?” (e.g. learning a mapping from an input to a target variable).</p>
-<p>Generative models try to learn “what does data for each class look like” and then apply Bayes rule.</p>
+<p>Linear regression and logistic regression are both considered
+discriminative models; they say “given that we have this data, what’s
+the most likely label?” (e.g. learning a mapping from an input to a
+target variable).</p>
+<p>Generative models try to learn “what does data for each class look
+like” and then apply Bayes rule.</p>
 </aside>
 </section>
 <section id="bayes-rule" class="slide level3">
 <h3>Bayes rule</h3>
-<p>For a sample <span class="math inline">\(\mathbf{x}_i\)</span>, <span class="math inline">\(y_k\)</span> is label of class <span class="math inline">\(k\)</span>:</p>
-<p><span class="math display">\[P(y_k | \mathbf{x}_i) = \frac{P(\mathbf{x}_i|y_k) P(y_k)}{P(\mathbf{x}_i)}\]</span></p>
+<p>For a sample <span class="math inline">\(\mathbf{x}_i\)</span>, <span
+class="math inline">\(y_k\)</span> is label of class <span
+class="math inline">\(k\)</span>:</p>
+<p><span class="math display">\[P(y_k | \mathbf{x}_i) =
+\frac{P(\mathbf{x}_i|y_k) P(y_k)}{P(\mathbf{x}_i)}\]</span></p>
 <aside class="notes">
 <ul>
-<li><span class="math inline">\(P(y_k | \mathbf{x}_i)\)</span>: posterior probability. “What is the probability that this sample belongs to class <span class="math inline">\(k\)</span>, given its observed feature values are <span class="math inline">\(\mathbf{x}_i\)</span>?”</li>
-<li><span class="math inline">\(P(\mathbf{x}_i | y_k)\)</span>: conditional probability: “What is the probability of observing the feature values <span class="math inline">\(\mathbf{x}_i\)</span> in a sample, given that the sample belongs to class <span class="math inline">\(k\)</span>?”</li>
+<li><span class="math inline">\(P(y_k | \mathbf{x}_i)\)</span>:
+posterior probability. “What is the probability that this sample belongs
+to class <span class="math inline">\(k\)</span>, given its observed
+feature values are <span
+class="math inline">\(\mathbf{x}_i\)</span>?”</li>
+<li><span class="math inline">\(P(\mathbf{x}_i | y_k)\)</span>:
+conditional probability: “What is the probability of observing the
+feature values <span class="math inline">\(\mathbf{x}_i\)</span> in a
+sample, given that the sample belongs to class <span
+class="math inline">\(k\)</span>?”</li>
 <li><span class="math inline">\(P(y_k)\)</span>: prior probability</li>
 <li><span class="math inline">\(P(\mathbf{x}_i)\)</span>: evidence</li>
 </ul>
@@ -447,12 +643,14 @@ https://sebastianraschka.com/faq/docs/naive-bayes-vs-logistic-regression.html
 <p>“Naive” assumption conditional independence of features:</p>
 <p><span class="math display">\[
 \begin{aligned}
-P(\mathbf{x}_i | y_k) &amp;= P(x_{i,1} | y_k) P(x_{i,2} | y_k) \ldots P(x_{i,d} | y_k)  \\
+P(\mathbf{x}_i | y_k) &amp;= P(x_{i,1} | y_k) P(x_{i,2} | y_k) \ldots
+P(x_{i,d} | y_k)  \\
                     &amp;= \prod_{j=1}^d P(x_{i,j}|y_k)
 \end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>This is called “naive” because this assumption is probably not true in most realistic situations.</p>
+<p>This is called “naive” because this assumption is probably not true
+in most realistic situations.</p>
 <!--
 For example, given the two words “peanut” and “butter” in a text document, intuition tells us that this assumption is obviously violated: If a document contains the word “peanut” it will be more likely that it also contains the word “butter” (or “allergy”).
 -->
@@ -463,45 +661,65 @@ For example, given the two words “peanut” and “butter” in a text documen
 <section id="class-conditional-probability-2" class="slide level3">
 <h3>Class conditional probability (2)</h3>
 <p>Example: for binary/categorical features, we could compute</p>
-<p><span class="math display">\[\hat{P}(x_{i,j}| y_k) = \frac{N_{x_{i,j}, y_k}}{N_{y_k}}\]</span></p>
+<p><span class="math display">\[\hat{P}(x_{i,j}| y_k) =
+\frac{N_{x_{i,j}, y_k}}{N_{y_k}}\]</span></p>
 <aside class="notes">
 <ul>
-<li><span class="math inline">\(N_{x_{i,j}, y_k}\)</span> is the number of samples belonging to class <span class="math inline">\(k\)</span> that have feature <span class="math inline">\(j\)</span>.</li>
-<li><span class="math inline">\(N_{y_k}\)</span> is the total number of samples belonging to class <span class="math inline">\(k\)</span>.</li>
+<li><span class="math inline">\(N_{x_{i,j}, y_k}\)</span> is the number
+of samples belonging to class <span class="math inline">\(k\)</span>
+that have feature <span class="math inline">\(j\)</span>.</li>
+<li><span class="math inline">\(N_{y_k}\)</span> is the total number of
+samples belonging to class <span class="math inline">\(k\)</span>.</li>
 </ul>
 <p>Example: for cat photo classifier,</p>
 <p><span class="math display">\[
-\hat{P}(\mathbf{x}_i = \text{[has tail, has pointy ears, has fur, purrs when petted, likes to eat fish]}| y = \text{cat})\]</span></p>
-<p><span class="math display">\[ \rightarrow P(\frac{N_{\text{tail, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{pointy ears, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{fur, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{purrs, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{eats fish, cat}}}{N_{\text{cat}}})\]</span></p>
-<p><span class="math display">\[\rightarrow \frac{20}{20} \frac{18}{20} \frac{17}{20} \frac{5}{20} \frac{15}{20}\]</span></p>
+\hat{P}(\mathbf{x}_i = \text{[has tail, has pointy ears, has fur, purrs
+when petted, likes to eat fish]}| y = \text{cat})\]</span></p>
+<p><span class="math display">\[ \rightarrow P(\frac{N_{\text{tail,
+cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{pointy ears,
+cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{fur, cat}}}{N_{\text{cat}}})
+P(\frac{N_{\text{purrs, cat}}}{N_{\text{cat}}}) P(\frac{N_{\text{eats
+fish, cat}}}{N_{\text{cat}}})\]</span></p>
+<p><span class="math display">\[\rightarrow \frac{20}{20} \frac{18}{20}
+\frac{17}{20} \frac{5}{20} \frac{15}{20}\]</span></p>
 </aside>
 </section>
 <section id="prior-probability" class="slide level3">
 <h3>Prior probability</h3>
 <p>Can estimate prior probability as</p>
-<p><span class="math display">\[\hat{P}(y_k) = \frac{N_{y_k}}{N}\]</span></p>
+<p><span class="math display">\[\hat{P}(y_k) =
+\frac{N_{y_k}}{N}\]</span></p>
 <aside class="notes">
-<p>Prior probabilities: probability of encountering a particular class <span class="math inline">\(k\)</span>.</p>
-<p>Example: <span class="math inline">\(\frac{20}{1500}\)</span> photos are cats.</p>
+<p>Prior probabilities: probability of encountering a particular class
+<span class="math inline">\(k\)</span>.</p>
+<p>Example: <span class="math inline">\(\frac{20}{1500}\)</span> photos
+are cats.</p>
 </aside>
 </section>
 <section id="evidence" class="slide level3">
 <h3>Evidence</h3>
-<p>We don’t actually need <span class="math inline">\(P(\mathbf{x}_i)\)</span> to make decisions, since it is the same for every class.</p>
+<p>We don’t actually need <span
+class="math inline">\(P(\mathbf{x}_i)\)</span> to make decisions, since
+it is the same for every class.</p>
 </section>
 <section id="naive-bayes-decision-boundary" class="slide level3">
 <h3>Naive bayes decision boundary</h3>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-naive-bayes-decision.png" style="width:80.0%" alt="Naive bayes decision boundary." /><figcaption aria-hidden="true">Naive bayes decision boundary.</figcaption>
+<img data-src="../images/5-naive-bayes-decision.png" style="width:80.0%"
+alt="Naive bayes decision boundary." />
+<figcaption aria-hidden="true">Naive bayes decision
+boundary.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="why-generative-model" class="slide level3">
 <h3>Why generative model?</h3>
 <aside class="notes">
-<p>The generative model solves a more general problem than the discriminative model!</p>
-<p>But, only the generative model can be used to <strong>generate</strong> new samples similar to the training data.</p>
+<p>The generative model solves a more general problem than the
+discriminative model!</p>
+<p>But, only the generative model can be used to
+<strong>generate</strong> new samples similar to the training data.</p>
 <p>Example: “generate a new sample that is probably a cat.”</p>
 </aside>
 </section></section>
@@ -510,7 +728,7 @@ For example, given the two words “peanut” and “butter” in a text documen
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -521,10 +739,148 @@ For example, given the two words “peanut” and “butter” in a text documen
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

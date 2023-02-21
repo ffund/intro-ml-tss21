@@ -383,14 +383,27 @@ for all $W_{kj}$
 
 
 
+### Non-linear decision boundaries
+
+* Logistic regression learns linear boundary
+* What if the "natural" decision boundary is non-linear?
+
+
+:::notes
+
+Can use basis functions to map problem to transformed feature space (if "natural" decision boundary is non-linear)
+
+:::
+
+### Bias, variance
+
+* Variance increases with $d$ and decreases with $n$
+* Can add a regularization penalty to loss function
+
+
 \newpage
 
 
-### Transformations, bias, variance
-
-* Can use basis functions to map problem to transformed feature space (if "natural" decision boundary is non-linear)
-* Variance increases with $d$ and decreases with $n$
-* Can add a regularization penalty to loss function
 
 
 ## "Recipe" for logistic regression (binary classifier) 
