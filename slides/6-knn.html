@@ -11,12 +11,84 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -42,24 +114,35 @@
 </section>
 
 <section>
-<section id="parametric-vs.-non-parametric-models" class="title-slide slide level2">
+<section id="parametric-vs.-non-parametric-models"
+class="title-slide slide level2">
 <h2>Parametric vs. non-parametric models</h2>
 
 </section>
 <section id="so-far" class="slide level3">
 <h3>So far…</h3>
 <p>All of our models have looked like</p>
-<p><span class="math display">\[\hat{y} = f(x,w) = w_0 + w_1 x_1 + \cdots + w_d x_d\]</span></p>
-<p>A model class is more flexible if <span class="math inline">\(f(x, w)\)</span> can represent more possible functions.</p>
+<p><span class="math display">\[\hat{y} = f(x,w) = w_0 + w_1 x_1 +
+\cdots + w_d x_d\]</span></p>
+<p>A model class is more flexible if <span class="math inline">\(f(x,
+w)\)</span> can represent more possible functions.</p>
 <aside class="notes">
 <ul>
-<li>Some possibilities for <span class="math inline">\(f(x, w) = w_0 + w_1 x_1\)</span></li>
-<li>More possibilities for <span class="math inline">\(f(x, w) = w_0 + w_1 x_1 + w_2 x_2\)</span></li>
-<li>Even more possibilities for <span class="math inline">\(f(x, w) = w_0 + w_1 x_1 + w_2 x_2 + w_3 x_3\)</span></li>
+<li>Some possibilities for <span class="math inline">\(f(x, w) = w_0 +
+w_1 x_1\)</span></li>
+<li>More possibilities for <span class="math inline">\(f(x, w) = w_0 +
+w_1 x_1 + w_2 x_2\)</span></li>
+<li>Even more possibilities for <span class="math inline">\(f(x, w) =
+w_0 + w_1 x_1 + w_2 x_2 + w_3 x_3\)</span></li>
 </ul>
-<p>But until now, we had to “know” how to add flexibility - for example, by adding interaction terms or other basis functions.</p>
-<p>A way to get more flexible models is with a <strong>non-parametric</strong> approach, where we don’t a priori impose the functional form or a fixed number of parameters that the model should learn.</p>
-<p><strong>Note</strong>: “parametric” and “non-parametric” are not precisely defined terms, but this is how they are often understood.</p>
+<p>But until now, we had to “know” how to add flexibility - for example,
+by adding interaction terms or other basis functions.</p>
+<p>A way to get more flexible models is with a
+<strong>non-parametric</strong> approach, where we don’t a priori impose
+the functional form or a fixed number of parameters that the model
+should learn.</p>
+<p><strong>Note</strong>: “parametric” and “non-parametric” are not
+precisely defined terms, but this is how they are often understood.</p>
 </aside>
 </section>
 <section id="parametric-models" class="slide level3">
@@ -69,7 +152,9 @@
 <li>Number of parameters fixed in advance</li>
 </ul>
 <aside class="notes">
-<p>Note: even if you use K-fold CV to try different candidate models with different number of parameters, you are still defining each candidate model in advance.</p>
+<p>Note: even if you use K-fold CV to try different candidate models
+with different number of parameters, you are still defining each
+candidate model in advance.</p>
 </aside>
 </section>
 <section id="non-parametric-models" class="slide level3">
@@ -85,25 +170,39 @@
 <aside class="notes">
 <ul>
 <li>A kind of non-parametric model.</li>
-<li>Basic idea: Find labeled samples that are “similar” to the new sample, and use their labels to make prediction for the new sample.</li>
+<li>Basic idea: Find labeled samples that are “similar” to the new
+sample, and use their labels to make prediction for the new sample.</li>
 </ul>
-<p>We previously spoke about the inductive bias of the linear models - we assumed that the target variable can be modeled as a linear combination of features or transformed versions of features. What is the inductive bias here?</p>
+<p>We previously spoke about the inductive bias of the linear models -
+we assumed that the target variable can be modeled as a linear
+combination of features or transformed versions of features. What is the
+inductive bias here?</p>
 </aside>
 </section>
 <section id="nn" class="slide level3">
 <h3>1-NN</h3>
 <ul>
-<li>Given training data <span class="math inline">\((\mathbf{x}_{1}, y_{1}), \ldots, (\mathbf{x}_{n}, y_{n})\)</span></li>
-<li>And a new sample <span class="math inline">\(\mathbf{x}_{0}\)</span></li>
-<li>Find the sample in the training data <span class="math inline">\(\mathbf{x}_{i&#39;}\)</span> with the least distance to <span class="math inline">\(\mathbf{x}_{0}\)</span>.</li>
+<li>Given training data <span class="math inline">\((\mathbf{x}_{1},
+y_{1}), \ldots, (\mathbf{x}_{n}, y_{n})\)</span></li>
+<li>And a new sample <span
+class="math inline">\(\mathbf{x}_{0}\)</span></li>
+<li>Find the sample in the training data <span
+class="math inline">\(\mathbf{x}_{i&#39;}\)</span> with the least
+distance to <span class="math inline">\(\mathbf{x}_{0}\)</span>.</li>
 </ul>
-<p><span class="math display">\[ i&#39; = \operatorname*{argmin}_{i=1,\ldots,n}  d(\mathbf{x}_i, \mathbf{x}_0)\]</span></p>
+<p><span class="math display">\[ i&#39; =
+\operatorname*{argmin}_{i=1,\ldots,n}  d(\mathbf{x}_i,
+\mathbf{x}_0)\]</span></p>
 <ul>
 <li>Let <span class="math inline">\(\hat{y}_0 = y_{i&#39;}\)</span></li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-1nn-example.png" style="width:40.0%" alt="The nearest neighbor to the orange test point is the one that has the smallest distance in the feature space." /><figcaption aria-hidden="true">The nearest neighbor to the orange test point is the one that has the smallest distance in the feature space.</figcaption>
+<img data-src="../images/5-1nn-example.png" style="width:40.0%"
+alt="The nearest neighbor to the orange test point is the one that has the smallest distance in the feature space." />
+<figcaption aria-hidden="true">The nearest neighbor to the orange test
+point is the one that has the smallest distance in the feature
+space.</figcaption>
 </figure>
 </aside>
 </section>
@@ -113,58 +212,90 @@
 <li>Training: just store data</li>
 <li>Inference: need to
 <ul>
-<li>compute distance to each of <span class="math inline">\(n\)</span> points</li>
-<li>distance metric typically scales with <span class="math inline">\(d\)</span></li>
+<li>compute distance to each of <span class="math inline">\(n\)</span>
+points</li>
+<li>distance metric typically scales with <span
+class="math inline">\(d\)</span></li>
 </ul></li>
 </ul>
 <aside class="notes">
-<p>The runtime for predicting <em>each</em> test point is <span class="math inline">\(O(nd)\)</span>. How does this compare to linear regression or logistic regression?</p>
-<p>There, the training time could be long, but <em>inference</em> was only <span class="math inline">\(O(d)\)</span>. We can tolerate a long training time more easily than a long inference time.</p>
+<p>The runtime for predicting <em>each</em> test point is <span
+class="math inline">\(O(nd)\)</span>. How does this compare to linear
+regression or logistic regression?</p>
+<p>There, the training time could be long, but <em>inference</em> was
+only <span class="math inline">\(O(d)\)</span>. We can tolerate a long
+training time more easily than a long inference time.</p>
 </aside>
 </section>
 <section id="nn---decision-boundaries" class="slide level3">
 <h3>1NN - decision boundaries</h3>
 <figure>
-<img data-src="../images/knn-decision-boundaries.png" style="width:60.0%" alt="1NN decision boundaries - Nearest neighborhoods for each point of the training data set." /><figcaption aria-hidden="true">1NN decision boundaries - Nearest neighborhoods for each point of the training data set.</figcaption>
+<img data-src="../images/knn-decision-boundaries.png"
+style="width:60.0%"
+alt="1NN decision boundaries - Nearest neighborhoods for each point of the training data set." />
+<figcaption aria-hidden="true">1NN decision boundaries - Nearest
+neighborhoods for each point of the training data set.</figcaption>
 </figure>
 <aside class="notes">
-<p>Note that there will be zero error on training set (unless there are training data points that have identical feature values, but different labels).</p>
+<p>Note that there will be zero error on training set (unless there are
+training data points that have identical feature values, but different
+labels).</p>
 </aside>
 </section>
 <section id="k-nearest-neighbors" class="slide level3">
 <h3>K nearest neighbors</h3>
-<p>Instead of 1 closest sample, we find <span class="math inline">\(K\)</span>: Let <span class="math inline">\(N_0\)</span> be the set of <span class="math inline">\(K\)</span> training points that are closest to <span class="math inline">\(\mathbf{x}_0\)</span>.</p>
+<p>Instead of 1 closest sample, we find <span
+class="math inline">\(K\)</span>: Let <span
+class="math inline">\(N_0\)</span> be the set of <span
+class="math inline">\(K\)</span> training points that are closest to
+<span class="math inline">\(\mathbf{x}_0\)</span>.</p>
 <p>How do we use this set for (1) classification? (2) regression?</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-3nn-line.png" style="width:30.0%" alt="3 nearest neighbors." /><figcaption aria-hidden="true">3 nearest neighbors.</figcaption>
+<img data-src="../images/5-3nn-line.png" style="width:30.0%"
+alt="3 nearest neighbors." />
+<figcaption aria-hidden="true">3 nearest neighbors.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="knn-for-classification" class="slide level3">
 <h3>KNN for classification</h3>
 <aside class="notes">
-<p>Idea: Estimate conditional probability for a class as fraction of points among neighbors with the class label.</p>
-<p>Remember: Let <span class="math inline">\(N_0\)</span> be the set of <span class="math inline">\(K\)</span> training points that are closest to <span class="math inline">\(\mathbf{x}_0\)</span>.</p>
-<p>Then, we can estimate the per-class conditional probability given the sample <span class="math inline">\(x_0\)</span>.</p>
+<p>Idea: Estimate conditional probability for a class as fraction of
+points among neighbors with the class label.</p>
+<p>Remember: Let <span class="math inline">\(N_0\)</span> be the set of
+<span class="math inline">\(K\)</span> training points that are closest
+to <span class="math inline">\(\mathbf{x}_0\)</span>.</p>
+<p>Then, we can estimate the per-class conditional probability given the
+sample <span class="math inline">\(x_0\)</span>.</p>
 </aside>
 <p>For each class <span class="math inline">\(m \in M\)</span>:</p>
-<p><span class="math display">\[ P(y=m | \mathbf{x_0} ) = \frac{1}{K} \sum_{ (\mathbf{x}_i, y_i) \in N_0} I(y_i = k) \]</span></p>
-<p>where <span class="math inline">\(I(y_i = m)\)</span> is 1 if <span class="math inline">\((\mathbf{x}_i, y_i) \in N_0\)</span> is a member of class <span class="math inline">\(m\)</span>, 0 otherwise.</p>
+<p><span class="math display">\[ P(y=m | \mathbf{x_0} ) = \frac{1}{K}
+\sum_{ (\mathbf{x}_i, y_i) \in N_0} I(y_i = k) \]</span></p>
+<p>where <span class="math inline">\(I(y_i = m)\)</span> is 1 if <span
+class="math inline">\((\mathbf{x}_i, y_i) \in N_0\)</span> is a member
+of class <span class="math inline">\(m\)</span>, 0 otherwise.</p>
 <aside class="notes">
 <ul>
 <li>We can then select the class with the highest probability.</li>
-<li>Practically: select the most frequent class among the neighbors.</li>
+<li>Practically: select the most frequent class among the
+neighbors.</li>
 </ul>
 </aside>
 </section>
 <section id="knn-for-regression" class="slide level3">
 <h3>KNN for regression</h3>
-<p>Idea: Use the the combined label of the K nearest neighbors. For example, we can take their mean:</p>
-<p><span class="math display">\[\hat{y}_{0} = \frac{1}{K} \sum_{ (\mathbf{x}_i, y_i) \in N_0} y_i \]</span></p>
+<p>Idea: Use the the combined label of the K nearest neighbors. For
+example, we can take their mean:</p>
+<p><span class="math display">\[\hat{y}_{0} = \frac{1}{K} \sum_{
+(\mathbf{x}_i, y_i) \in N_0} y_i \]</span></p>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-3nn-regression.png" style="width:40.0%" alt="Example of a regression using median vote of the 3NN. The “true function” is shown in black, the orange dashed line shows the prediction of the regression model." /><figcaption aria-hidden="true">Example of a regression using median vote of the 3NN. The “true function” is shown in black, the orange dashed line shows the prediction of the regression model.</figcaption>
+<img data-src="../images/5-3nn-regression.png" style="width:40.0%"
+alt="Example of a regression using median vote of the 3NN. The “true function” is shown in black, the orange dashed line shows the prediction of the regression model." />
+<figcaption aria-hidden="true">Example of a regression using median vote
+of the 3NN. The “true function” is shown in black, the orange dashed
+line shows the prediction of the regression model.</figcaption>
 </figure>
 </aside>
 </section></section>
@@ -172,37 +303,48 @@
 <section id="model-choices" class="title-slide slide level2">
 <h2>Model choices</h2>
 <aside class="notes">
-<p>We’re letting the data dictate the form of the solution, but we still need to make many model choices:</p>
+<p>We’re letting the data dictate the form of the solution, but we still
+need to make many model choices:</p>
 <ul>
 <li>What value of <span class="math inline">\(K\)</span>?</li>
 <li>What distance measure?</li>
-<li>How to combine <span class="math inline">\(K\)</span> labels into prediction?</li>
+<li>How to combine <span class="math inline">\(K\)</span> labels into
+prediction?</li>
 </ul>
-<p>Question: does larger K mean “more flexible” or “less flexible” model?</p>
+<p>Question: does larger K mean “more flexible” or “less flexible”
+model?</p>
 </aside>
 </section>
 <section id="what-value-of-k-illustration-1nn" class="slide level3">
 <h3>What value of K? Illustration (1NN)</h3>
 <figure>
-<img data-src="../images/knnDemo-1nn.png" style="width:50.0%" alt="1NN" /><figcaption aria-hidden="true">1NN</figcaption>
+<img data-src="../images/knnDemo-1nn.png" style="width:50.0%"
+alt="1NN" />
+<figcaption aria-hidden="true">1NN</figcaption>
 </figure>
 </section>
 <section id="what-value-of-k-illustration-2nn" class="slide level3">
 <h3>What value of K? Illustration (2NN)</h3>
 <figure>
-<img data-src="../images/knnDemo-2nn.png" style="width:50.0%" alt="2NN" /><figcaption aria-hidden="true">2NN</figcaption>
+<img data-src="../images/knnDemo-2nn.png" style="width:50.0%"
+alt="2NN" />
+<figcaption aria-hidden="true">2NN</figcaption>
 </figure>
 </section>
 <section id="what-value-of-k-illustration-3nn" class="slide level3">
 <h3>What value of K? Illustration (3NN)</h3>
 <figure>
-<img data-src="../images/knnDemo-3nn.png" style="width:50.0%" alt="3NN" /><figcaption aria-hidden="true">3NN</figcaption>
+<img data-src="../images/knnDemo-3nn.png" style="width:50.0%"
+alt="3NN" />
+<figcaption aria-hidden="true">3NN</figcaption>
 </figure>
 </section>
 <section id="what-value-of-k-illustration-9nn" class="slide level3">
 <h3>What value of K? Illustration (9NN)</h3>
 <figure>
-<img data-src="../images/knnDemo-9nn.png" style="width:50.0%" alt="9NN" /><figcaption aria-hidden="true">9NN</figcaption>
+<img data-src="../images/knnDemo-9nn.png" style="width:50.0%"
+alt="9NN" />
+<figcaption aria-hidden="true">9NN</figcaption>
 </figure>
 </section>
 <section id="what-value-of-k-1" class="slide level3">
@@ -210,86 +352,137 @@
 <ul>
 <li>In general: larger K, less complex model</li>
 <li><span class="math inline">\(K\)</span> can be selected by CV.</li>
-<li>Often cited “rule of thumb”: use <span class="math inline">\(K=\sqrt{N}\)</span></li>
+<li>Often cited “rule of thumb”: use <span
+class="math inline">\(K=\sqrt{N}\)</span></li>
 </ul>
 </section>
 <section id="what-value-of-k-2" class="slide level3">
 <h3>What value of K? (2)</h3>
 <ul>
-<li>Alternative to fixed <span class="math inline">\(K\)</span>: Radius-based neighbor learning.</li>
-<li>A fixed radius <span class="math inline">\(r\)</span> is specified, can be selected by CV.</li>
+<li>Alternative to fixed <span class="math inline">\(K\)</span>:
+Radius-based neighbor learning.</li>
+<li>A fixed radius <span class="math inline">\(r\)</span> is specified,
+can be selected by CV.</li>
 <li>Number of neighbors depends on local density of points.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-radius-based.png" style="width:60.0%" alt="Comparison of KNN (top) and radius-based neighbor learning (bottom) when the density of training points in the feature space is uneven." /><figcaption aria-hidden="true">Comparison of KNN (top) and radius-based neighbor learning (bottom) when the density of training points in the feature space is uneven.</figcaption>
+<img data-src="../images/5-radius-based.png" style="width:60.0%"
+alt="Comparison of KNN (top) and radius-based neighbor learning (bottom) when the density of training points in the feature space is uneven." />
+<figcaption aria-hidden="true">Comparison of KNN (top) and radius-based
+neighbor learning (bottom) when the density of training points in the
+feature space is uneven.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="what-distance-measure-1" class="slide level3">
 <h3>What distance measure? (1)</h3>
-<p>Some popular choices: for two vectors <span class="math inline">\(a_i, b_i\)</span>,</p>
+<p>Some popular choices: for two vectors <span
+class="math inline">\(a_i, b_i\)</span>,</p>
 <ul>
-<li>Euclidean (L2): <span class="math inline">\(\sqrt{\sum_{i=1}^d(a_i - b_i)^2}\)</span></li>
-<li>Manhattan (L1): <span class="math inline">\(\sum_{i=1}^d |a_i - b_i|\)</span></li>
+<li>Euclidean (L2): <span class="math inline">\(\sqrt{\sum_{i=1}^d(a_i -
+b_i)^2}\)</span></li>
+<li>Manhattan (L1): <span class="math inline">\(\sum_{i=1}^d |a_i -
+b_i|\)</span></li>
 </ul>
 <aside class="notes">
-<p>(L2 distance prefers many medium-sized disagreements to one big one.)</p>
-<p>There are many more choices - for example, look at the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html">distance metrics implemented in sklearn</a>.</p>
+<p>(L2 distance prefers many medium-sized disagreements to one big
+one.)</p>
+<p>There are many more choices - for example, look at the <a
+href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html">distance
+metrics implemented in sklearn</a>.</p>
 <p>Problems with the basic distance metrics:</p>
 <ul>
 <li>When features have different scale/range, need to standardize</li>
-<li>KNN implicitly weights all features equally: this is a problem if you have features that are not relevant for the target variable!</li>
-<li>For images: pixel-wise distance doesn’t necessarily equate to perceptual similarity</li>
+<li>KNN implicitly weights all features equally: this is a problem if
+you have features that are not relevant for the target variable!</li>
+<li>For images: pixel-wise distance doesn’t necessarily equate to
+perceptual similarity</li>
 </ul>
 </aside>
 </section>
 <section id="distance-measure---standardization-1" class="slide level3">
 <h3>Distance measure - standardization (1)</h3>
 <figure>
-<img data-src="https://i.stack.imgur.com/OCUmI.png" style="width:40.0%" alt="Without standardization, via https://stats.stackexchange.com/a/287439/. The x2 feature dominates the distance measure." /><figcaption aria-hidden="true">Without standardization, via <a href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a>. The x2 feature dominates the distance measure.</figcaption>
+<img data-src="https://i.stack.imgur.com/OCUmI.png" style="width:40.0%"
+alt="Without standardization, via https://stats.stackexchange.com/a/287439/. The x2 feature dominates the distance measure." />
+<figcaption aria-hidden="true">Without standardization, via <a
+href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a>.
+The x2 feature dominates the distance measure.</figcaption>
 </figure>
 </section>
 <section id="distance-measure---standardization-2" class="slide level3">
 <h3>Distance measure - standardization (2)</h3>
 <figure>
-<img data-src="https://i.stack.imgur.com/J5r01.png" style="width:40.0%" alt="With standardization, via https://stats.stackexchange.com/a/287439/" /><figcaption aria-hidden="true">With standardization, via <a href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a></figcaption>
+<img data-src="https://i.stack.imgur.com/J5r01.png" style="width:40.0%"
+alt="With standardization, via https://stats.stackexchange.com/a/287439/" />
+<figcaption aria-hidden="true">With standardization, via <a
+href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a></figcaption>
 </figure>
 </section>
-<section id="distance-measure---equal-weighted-features" class="slide level3">
+<section id="distance-measure---equal-weighted-features"
+class="slide level3">
 <h3>Distance measure - equal weighted features</h3>
 <aside class="notes">
-<p>Suppose you are trying to predict a student’s course grade using their previous GPA and how far they live from the NYU campus:</p>
+<p>Suppose you are trying to predict a student’s course grade using
+their previous GPA and how far they live from the NYU campus:</p>
 <figure>
-<img data-src="../images/5-irrelevant.png" style="width:40.0%" alt="The training point circled in orange is the nearest neighbor, but it’s not the most similar according to the only feature that matters (previous GPA). All features are weighted equally in the distance metric, regardless of their importance." /><figcaption aria-hidden="true">The training point circled in orange is the nearest neighbor, but it’s not the most similar according to the only feature that matters (previous GPA). All features are weighted equally in the distance metric, regardless of their importance.</figcaption>
+<img data-src="../images/5-irrelevant.png" style="width:40.0%"
+alt="The training point circled in orange is the nearest neighbor, but it’s not the most similar according to the only feature that matters (previous GPA). All features are weighted equally in the distance metric, regardless of their importance." />
+<figcaption aria-hidden="true">The training point circled in orange is
+the nearest neighbor, but it’s not the most similar according to the
+only feature that matters (previous GPA). All features are weighted
+equally in the distance metric, regardless of their
+importance.</figcaption>
 </figure>
 </aside>
 <p>Alternative to equal weighted features: assign feature weights</p>
-<p><span class="math display">\[d(\mathbf{a, b}) = \left(  \sum_{i=1}^k ( w_i | a_i - b_i | ) ^q \right) ^{\frac{1}{q}}\]</span></p>
+<p><span class="math display">\[d(\mathbf{a, b}) = \left(  \sum_{i=1}^k
+( w_i | a_i - b_i | ) ^q \right) ^{\frac{1}{q}}\]</span></p>
 <aside class="notes">
 <p>But then we need a way to learn feature weights!</p>
-<p>With L1 regularization, we had a data-driven way to do feature selection. The nearest neighbor method doesn’t have any “built-in” way to do feature weighting or feature selection as part of the training process, so we need to do it ourselves as part of the pre-processing steps.</p>
+<p>With L1 regularization, we had a data-driven way to do feature
+selection. The nearest neighbor method doesn’t have any “built-in” way
+to do feature weighting or feature selection as part of the training
+process, so we need to do it ourselves as part of the pre-processing
+steps.</p>
 <p>We’ll go back to this at the end.</p>
 </aside>
 </section>
-<section id="distance-measure---perceptual-distance" class="slide level3">
+<section id="distance-measure---perceptual-distance"
+class="slide level3">
 <h3>Distance measure - perceptual distance</h3>
 <figure>
-<img data-src="../images/knn-samenorm.png" style="width:60.0%" alt="An original image (left) and three other images next to it that are all equally far away from it based on L2 pixel distance. Image via CS321n." /><figcaption aria-hidden="true">An original image (left) and three other images next to it that are all equally far away from it based on L2 pixel distance. Image via <a href="https://cs231n.github.io/classification/#nn">CS321n</a>.</figcaption>
+<img data-src="../images/knn-samenorm.png" style="width:60.0%"
+alt="An original image (left) and three other images next to it that are all equally far away from it based on L2 pixel distance. Image via CS321n." />
+<figcaption aria-hidden="true">An original image (left) and three other
+images next to it that are all equally far away from it based on L2
+pixel distance. Image via <a
+href="https://cs231n.github.io/classification/#nn">CS321n</a>.</figcaption>
 </figure>
 <aside class="notes">
-<p>This is a little more difficult to overcome. In practice, KNN is often just not very useful for image data.</p>
+<p>This is a little more difficult to overcome. In practice, KNN is
+often just not very useful for image data.</p>
 </aside>
 </section>
-<section id="how-to-combine-labels-into-prediction" class="slide level3">
+<section id="how-to-combine-labels-into-prediction"
+class="slide level3">
 <h3>How to combine labels into prediction?</h3>
 <ul>
-<li><strong>Basic voting</strong>: use mode of neighbors for classification, mean or median for regression.</li>
-<li><strong>Distance-weighted</strong>: weight of vote inversely proportional to distance from the query point. (“More similar” training points count more.)</li>
+<li><strong>Basic voting</strong>: use mode of neighbors for
+classification, mean or median for regression.</li>
+<li><strong>Distance-weighted</strong>: weight of vote inversely
+proportional to distance from the query point. (“More similar” training
+points count more.)</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-weight-by-distance.png" style="width:40.0%" alt="In this example, the red training point will get a bigger “vote” in the class label because it is closest to the test point. The point can be classified as red, even though 2 of the 3 neighbors are blue." /><figcaption aria-hidden="true">In this example, the red training point will get a bigger “vote” in the class label because it is closest to the test point. The point can be classified as red, even though 2 of the 3 neighbors are blue.</figcaption>
+<img data-src="../images/5-weight-by-distance.png" style="width:40.0%"
+alt="In this example, the red training point will get a bigger “vote” in the class label because it is closest to the test point. The point can be classified as red, even though 2 of the 3 neighbors are blue." />
+<figcaption aria-hidden="true">In this example, the red training point
+will get a bigger “vote” in the class label because it is closest to the
+test point. The point can be classified as red, even though 2 of the 3
+neighbors are blue.</figcaption>
 </figure>
 </aside>
 </section></section>
@@ -305,8 +498,10 @@ See: https://stats.stackexchange.com/questions/189806/derivation-of-bias-varianc
 <section id="true-function" class="slide level3">
 <h3>True function</h3>
 <p>Suppose data has true relation</p>
-<p><span class="math display">\[ y = t(\mathbf{x}) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2) \]</span></p>
-<p>and our model predicts <span class="math inline">\(\hat{y} = f(\mathbf{x})\)</span>.</p>
+<p><span class="math display">\[ y = t(\mathbf{x}) + \epsilon, \quad
+\epsilon \sim N(0, \sigma_\epsilon^2) \]</span></p>
+<p>and our model predicts <span class="math inline">\(\hat{y} =
+f(\mathbf{x})\)</span>.</p>
 </section>
 <section id="assumption-of-fixed-training-set" class="slide level3">
 <h3>Assumption of fixed training set</h3>
@@ -314,31 +509,45 @@ See: https://stats.stackexchange.com/questions/189806/derivation-of-bias-varianc
 <ul>
 <li>the test points</li>
 <li>the error <span class="math inline">\(\epsilon\)</span></li>
-<li>the randomness in the <span class="math inline">\(y\)</span> values in the training set!</li>
+<li>the randomness in the <span class="math inline">\(y\)</span> values
+in the training set!</li>
 </ul>
-<p>We do not consider randomness in the <span class="math inline">\(x\)</span> values - we assume a fixed training set.</p>
+<p>We do not consider randomness in the <span
+class="math inline">\(x\)</span> values - we assume a fixed training
+set.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-fixed-training-set.png" style="width:30.0%" alt="Assume the x values in the training set are fixed (and therefore, the neighbors of any given test point), but there is randomness in the y values." /><figcaption aria-hidden="true">Assume the <span class="math inline">\(x\)</span> values in the training set are fixed (and therefore, the neighbors of any given test point), but there is randomness in the <span class="math inline">\(y\)</span> values.</figcaption>
+<img data-src="../images/5-fixed-training-set.png" style="width:30.0%"
+alt="Assume the x values in the training set are fixed (and therefore, the neighbors of any given test point), but there is randomness in the y values." />
+<figcaption aria-hidden="true">Assume the <span
+class="math inline">\(x\)</span> values in the training set are fixed
+(and therefore, the neighbors of any given test point), but there is
+randomness in the <span class="math inline">\(y\)</span>
+values.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="expected-loss" class="slide level3">
 <h3>Expected loss</h3>
-<p>We will use an L2 loss function, so that the expected error of the prediction <span class="math inline">\(\hat{y}\)</span> for a given test point <span class="math inline">\(\mathbf{x_t}\)</span> is:</p>
+<p>We will use an L2 loss function, so that the expected error of the
+prediction <span class="math inline">\(\hat{y}\)</span> for a given test
+point <span class="math inline">\(\mathbf{x_t}\)</span> is:</p>
 <p><span class="math display">\[ \begin{aligned}
 MSE(\mathbf{x_t}) :=&amp;  E[(y-\hat{y})^2]  \\
 =&amp; \left( t(\mathbf{x_t})- E[f(\mathbf{x_t})] \right) ^2 + \\
- &amp;E[(f(\mathbf{x_t}) - E[f(\mathbf{x_t})])^2] + \\
- &amp;\sigma_\epsilon^2
+&amp;E[(f(\mathbf{x_t}) - E[f(\mathbf{x_t})])^2] + \\
+&amp;\sigma_\epsilon^2
 \end{aligned}\]</span></p>
 <p>i.e. squared bias, variance, and irreducible error.</p>
 </section>
 <section id="knn-output" class="slide level3">
 <h3>KNN output</h3>
 <p>The output of a KNN regression at the test point is</p>
-<p><span class="math display">\[f(\mathbf{x_t}) = \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell) + \epsilon_\ell \]</span></p>
-<p>where <span class="math inline">\(K_x\)</span> is the set of K nearest neighbors of <span class="math inline">\(\mathbf{x_t}\)</span>. (We assume that these neighbors are fixed.)</p>
+<p><span class="math display">\[f(\mathbf{x_t}) = \frac{1}{K} \sum_{\ell
+\in K_x} t(\mathbf{x}_\ell) + \epsilon_\ell \]</span></p>
+<p>where <span class="math inline">\(K_x\)</span> is the set of K
+nearest neighbors of <span class="math inline">\(\mathbf{x_t}\)</span>.
+(We assume that these neighbors are fixed.)</p>
 </section>
 <section id="bias-of-knn" class="slide level3">
 <h3>Bias of KNN</h3>
@@ -346,13 +555,22 @@ MSE(\mathbf{x_t}) :=&amp;  E[(y-\hat{y})^2]  \\
 <p><span class="math display">\[
 \begin{aligned}
 Bias^2 &amp;= \left( t(\mathbf{x_t})- E[f(\mathbf{x_t})] \right) ^2 \\
-&amp;= \left( t(\mathbf{x_t})   - E \left( \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell) + \epsilon_\ell \right)\right) ^2 \\
-&amp;=\left( t(\mathbf{x_t}) - \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell)  \right) ^2
+&amp;= \left( t(\mathbf{x_t})   - E \left( \frac{1}{K} \sum_{\ell \in
+K_x} t(\mathbf{x}_\ell) + \epsilon_\ell \right)\right) ^2 \\
+&amp;=\left( t(\mathbf{x_t}) - \frac{1}{K} \sum_{\ell \in K_x}
+t(\mathbf{x}_\ell)  \right) ^2
 \end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>The expectation is over the training sample draw - but note that the <span class="math inline">\(x\)</span> values in the training samples are fixed! So the only randomness is in <span class="math inline">\(\epsilon_\ell\)</span>.</p>
-<p>Since the <span class="math inline">\(x\)</span> values in the training samples are fixed, the <span class="math inline">\(\frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell)\)</span> can come out of the expectation as a constant. Then <span class="math inline">\(E [\epsilon_\ell] = 0\)</span>.</p>
+<p>The expectation is over the training sample draw - but note that the
+<span class="math inline">\(x\)</span> values in the training samples
+are fixed! So the only randomness is in <span
+class="math inline">\(\epsilon_\ell\)</span>.</p>
+<p>Since the <span class="math inline">\(x\)</span> values in the
+training samples are fixed, the <span class="math inline">\(\frac{1}{K}
+\sum_{\ell \in K_x} t(\mathbf{x}_\ell)\)</span> can come out of the
+expectation as a constant. Then <span class="math inline">\(E
+[\epsilon_\ell] = 0\)</span>.</p>
 </aside>
 </section>
 <section id="variance-of-knn-1" class="slide level3">
@@ -360,9 +578,13 @@ Bias^2 &amp;= \left( t(\mathbf{x_t})- E[f(\mathbf{x_t})] \right) ^2 \\
 <p><span class="math display">\[
 \begin{aligned}
 Var(\hat{y}) &amp;= E[(f(\mathbf{x_t}) - E[f(\mathbf{x_t})])^2] \\
-&amp;= E\left[\left(f(\mathbf{x_t}) - \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell)  \right)^2\right] \\
-&amp;= E\left[\left( \frac{1}{K} \sum_{\ell \in K_x} (t(\mathbf{x}_\ell) + \epsilon_\ell) - \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell)  \right)^2\right] \\
-&amp;= E\left[\left( \frac{1}{K} \sum_{\ell \in K_x}  \epsilon_\ell \right)^2\right]
+&amp;= E\left[\left(f(\mathbf{x_t}) - \frac{1}{K} \sum_{\ell \in K_x}
+t(\mathbf{x}_\ell)  \right)^2\right] \\
+&amp;= E\left[\left( \frac{1}{K} \sum_{\ell \in K_x} (t(\mathbf{x}_\ell)
++ \epsilon_\ell) - \frac{1}{K} \sum_{\ell \in K_x}
+t(\mathbf{x}_\ell)  \right)^2\right] \\
+&amp;= E\left[\left( \frac{1}{K} \sum_{\ell \in K_x}  \epsilon_\ell
+\right)^2\right]
 \end{aligned}
 \]</span></p>
 </section>
@@ -370,49 +592,75 @@ Var(\hat{y}) &amp;= E[(f(\mathbf{x_t}) - E[f(\mathbf{x_t})])^2] \\
 <h3>Variance of KNN (2)</h3>
 <p><span class="math display">\[
 \begin{aligned}
-&amp;= E\left[\left( \frac{1}{K} \sum_{\ell \in K_x}  \epsilon_\ell \right)^2\right] = \frac{1}{K^2} E\left[\left(  \sum_{\ell \in K_x}  \epsilon_\ell \right)^2\right] \\
-&amp;=\frac{1}{K^2} Var \left(  \sum_{\ell \in K_x}  \epsilon_\ell \right)  = \frac{1}{K^2}   \sum_{\ell \in K_x} Var \left( \epsilon_\ell \right) = \frac{K \sigma^2_\epsilon}{K^2} \\
+&amp;= E\left[\left( \frac{1}{K} \sum_{\ell \in K_x}  \epsilon_\ell
+\right)^2\right] = \frac{1}{K^2} E\left[\left(  \sum_{\ell \in
+K_x}  \epsilon_\ell \right)^2\right] \\
+&amp;=\frac{1}{K^2} Var \left(  \sum_{\ell \in K_x}  \epsilon_\ell
+\right)  = \frac{1}{K^2}   \sum_{\ell \in K_x} Var \left( \epsilon_\ell
+\right) = \frac{K \sigma^2_\epsilon}{K^2} \\
 &amp;= \frac{\sigma^2_\epsilon}{K}
 \end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>Note: we use the fact that the <span class="math inline">\(\epsilon\)</span> terms are independent, so the variance of sum is equal to sum of variances.</p>
+<p>Note: we use the fact that the <span
+class="math inline">\(\epsilon\)</span> terms are independent, so the
+variance of sum is equal to sum of variances.</p>
 </aside>
 </section>
 <section id="error-of-knn" class="slide level3">
 <h3>Error of KNN</h3>
 <p>Then the expected error of KNN is</p>
-<p><span class="math display">\[ 
-\left( t(\mathbf{x_t}) - \frac{1}{K} \sum_{\ell \in K_x} t(\mathbf{x}_\ell)  \right) ^2 + \frac{\sigma^2_\epsilon}{K} + \sigma_\epsilon^2
- \]</span></p>
-<p>where <span class="math inline">\(K_x\)</span> is the set of K nearest neighbors of <span class="math inline">\(\mathbf{x}\)</span>.</p>
+<p><span class="math display">\[
+\left( t(\mathbf{x_t}) - \frac{1}{K} \sum_{\ell \in K_x}
+t(\mathbf{x}_\ell)  \right) ^2 + \frac{\sigma^2_\epsilon}{K} +
+\sigma_\epsilon^2
+\]</span></p>
+<p>where <span class="math inline">\(K_x\)</span> is the set of K
+nearest neighbors of <span
+class="math inline">\(\mathbf{x}\)</span>.</p>
 </section>
 <section id="bias-variance-tradeoff" class="slide level3">
 <h3>Bias variance tradeoff</h3>
 <ul>
 <li>Variance decreases with K</li>
-<li>Bias likely to increase with K, if function <span class="math inline">\(t()\)</span> is smooth.</li>
+<li>Bias likely to increase with K, if function <span
+class="math inline">\(t()\)</span> is smooth.</li>
 </ul>
 <aside class="notes">
-<p>Why does bias increase with <span class="math inline">\(K\)</span>? For a smooth function, the few closest neighbors to the test point will have similar values, so average will be close to <span class="math inline">\(t(\mathbf{x})\)</span>; as K increases, neighbors are further way, and average of neighbors moves away from <span class="math inline">\(t(\mathbf{x})\)</span>.</p>
-<p>You can think about the extreme case, where <span class="math inline">\(K=n\)</span> so you use the average of <em>all</em> of the training samples. This is equivalent to “prediction by mean”.</p>
+<p>Why does bias increase with <span class="math inline">\(K\)</span>?
+For a smooth function, the few closest neighbors to the test point will
+have similar values, so average will be close to <span
+class="math inline">\(t(\mathbf{x})\)</span>; as K increases, neighbors
+are further way, and average of neighbors moves away from <span
+class="math inline">\(t(\mathbf{x})\)</span>.</p>
+<p>You can think about the extreme case, where <span
+class="math inline">\(K=n\)</span> so you use the average of
+<em>all</em> of the training samples. This is equivalent to “prediction
+by mean”.</p>
 </aside>
 </section></section>
 <section>
-<section id="the-curse-of-dimensionality" class="title-slide slide level2">
+<section id="the-curse-of-dimensionality"
+class="title-slide slide level2">
 <h2>The Curse of Dimensionality</h2>
 <aside class="notes">
 <figure>
-<img data-src="../images/bishop1-21.png" style="width:55.0%" alt="Feature space grows exponentially with dimension. From Bishop PRML, Fig. 1-21" /><figcaption aria-hidden="true">Feature space grows exponentially with dimension. From Bishop PRML, Fig. 1-21</figcaption>
+<img data-src="../images/bishop1-21.png" style="width:55.0%"
+alt="Feature space grows exponentially with dimension. From Bishop PRML, Fig. 1-21" />
+<figcaption aria-hidden="true">Feature space grows exponentially with
+dimension. From Bishop PRML, Fig. 1-21</figcaption>
 </figure>
 </aside>
 </section>
 <section id="knn-in-1d" class="slide level3">
 <h3>KNN in 1D</h3>
 <ul>
-<li>Consider a dataset <span class="math inline">\((x_1, y_1), \ldots, (x_N, y_N), N=100\)</span></li>
-<li><span class="math inline">\(x\)</span> is uniformly distributed in [0,1]</li>
-<li>On average, one data point is located every 1/100 units along 1D feature axis.</li>
+<li>Consider a dataset <span class="math inline">\((x_1, y_1), \ldots,
+(x_N, y_N), N=100\)</span></li>
+<li><span class="math inline">\(x\)</span> is uniformly distributed in
+[0,1]</li>
+<li>On average, one data point is located every 1/100 units along 1D
+feature axis.</li>
 <li>To find 3NN, would expect to cover 3/100 of the feature axis.</li>
 </ul>
 </section>
@@ -421,28 +669,41 @@ Var(\hat{y}) &amp;= E[(f(\mathbf{x_t}) - E[f(\mathbf{x_t})])^2] \\
 <ul>
 <li>Now consider the same dataset with two features.</li>
 <li>Each feature is uniformly distributed in [0,1]</li>
-<li>To find 3NN, would expect to cover <span class="math inline">\(0.03^{\frac{1}{2}}\)</span> of the unit rectangle.</li>
+<li>To find 3NN, would expect to cover <span
+class="math inline">\(0.03^{\frac{1}{2}}\)</span> of the unit
+rectangle.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-dimensionality.png" style="width:45.0%" alt="When d goes from 1 to 2, the density of the training points decreases and we need to cover more of the feature space to find the same number of neighbors." /><figcaption aria-hidden="true">When <span class="math inline">\(d\)</span> goes from 1 to 2, the density of the training points decreases and we need to cover more of the feature space to find the same number of neighbors.</figcaption>
+<img data-src="../images/5-dimensionality.png" style="width:45.0%"
+alt="When d goes from 1 to 2, the density of the training points decreases and we need to cover more of the feature space to find the same number of neighbors." />
+<figcaption aria-hidden="true">When <span
+class="math inline">\(d\)</span> goes from 1 to 2, the density of the
+training points decreases and we need to cover more of the feature space
+to find the same number of neighbors.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="density-of-samples-decreases-with-dimensions" class="slide level3">
+<section id="density-of-samples-decreases-with-dimensions"
+class="slide level3">
 <h3>Density of samples decreases with dimensions</h3>
 <p>To get 3NN,</p>
 <ul>
 <li>need to cover 3% of space in 1D</li>
 <li>need to cover 17% of space in 2D</li>
-<li>need to cover 70% of space in 10D. At this point, the nearest neighbors are not much closer than the rest of the dataset.</li>
+<li>need to cover 70% of space in 10D. At this point, the nearest
+neighbors are not much closer than the rest of the dataset.</li>
 </ul>
 </section>
-<section id="density-of-samples-decreases-with-dimensions---general" class="slide level3">
+<section id="density-of-samples-decreases-with-dimensions---general"
+class="slide level3">
 <h3>Density of samples decreases with dimensions - general</h3>
-<p>The length of the smallest hyper-cube that contains all K-nearest neighbors of a test point:</p>
-<p><span class="math display">\[\left( \frac{K}{N} \right) ^{\frac{1}{d}}\]</span></p>
-<p>for <span class="math inline">\(N\)</span> samples with dimensionality <span class="math inline">\(d\)</span>.</p>
+<p>The length of the smallest hyper-cube that contains all K-nearest
+neighbors of a test point:</p>
+<p><span class="math display">\[\left( \frac{K}{N} \right)
+^{\frac{1}{d}}\]</span></p>
+<p>for <span class="math inline">\(N\)</span> samples with
+dimensionality <span class="math inline">\(d\)</span>.</p>
 <!--
 What happens to this quantity as $d$ increases?
 
@@ -453,15 +714,18 @@ What happens to this quantity as $d$ increases?
 <section id="solutions-to-the-curse-1" class="slide level3">
 <h3>Solutions to the curse (1)</h3>
 <p>Add training data?</p>
-<p><span class="math display">\[\left(\frac{K}{N}\right)^{\frac{1}{d}}\]</span></p>
-<p>As number of dimensions increases linearly, number of training samples must increase exponentially to counter the “curse”.</p>
+<p><span
+class="math display">\[\left(\frac{K}{N}\right)^{\frac{1}{d}}\]</span></p>
+<p>As number of dimensions increases linearly, number of training
+samples must increase exponentially to counter the “curse”.</p>
 </section>
 <section id="solutions-to-the-curse-2" class="slide level3">
 <h3>Solutions to the curse (2)</h3>
 <p>Reduce <span class="math inline">\(d\)</span>?</p>
 <ul>
 <li>Feature selection</li>
-<li>Dimensionality reduction: a type of unsupervised learning that <em>transforms</em> high-d data into lower-d data.</li>
+<li>Dimensionality reduction: a type of unsupervised learning that
+<em>transforms</em> high-d data into lower-d data.</li>
 </ul>
 </section></section>
 <section>
@@ -477,7 +741,8 @@ What happens to this quantity as $d$ increases?
 <li>Don’t do anything else until you have a new point to classify</li>
 </ul>
 <aside class="notes">
-<p>In practice, we will usually store training data in a data structure that makes it faster to compute nearest neighbors.</p>
+<p>In practice, we will usually store training data in a data structure
+that makes it faster to compute nearest neighbors.</p>
 </aside>
 </section>
 <section id="nn-prediction" class="slide level3">
@@ -485,7 +750,8 @@ What happens to this quantity as $d$ increases?
 <p>Prediction:</p>
 <ul>
 <li>Find nearest neighbors using distance metric</li>
-<li>Classification: predict most frequently occuring class among nearest neighbors</li>
+<li>Classification: predict most frequently occuring class among nearest
+neighbors</li>
 <li>Regression: predict mean value of nearest neighbors</li>
 </ul>
 </section>
@@ -514,99 +780,186 @@ What happens to this quantity as $d$ increases?
 </ul>
 </section></section>
 <section>
-<section id="feature-selection-and-feature-weighting" class="title-slide slide level2">
+<section id="feature-selection-and-feature-weighting"
+class="title-slide slide level2">
 <h2>Feature selection and feature weighting</h2>
-<aside class="notes">
 <p>Feature selection is actually two problems:</p>
 <ul>
 <li>best number of features</li>
 <li>best subset of features</li>
 </ul>
-<p>For some models, like KNN, we can also do feature weighting as an alternative to (or in addition to) feature selection.</p>
+<aside class="notes">
+<p>These problems can be solved separately:</p>
+<ul>
+<li>find best subset of feature of every possible size</li>
+<li>then among those, select the best</li>
+</ul>
+<p>or they can be solved together, for example:</p>
+<ul>
+<li>keep adding features until improvement due to another feature is
+less than some threshold <span class="math inline">\(t\)</span></li>
+<li>keep features whose “score” exceeds some threshold <span
+class="math inline">\(t\)</span></li>
+<li>etc.</li>
+</ul>
+<p>For some models, like KNN, we can also do feature weighting (compute
+a weight for each feature, scale feature by that weight) as an
+alternative to (or in addition to) feature selection.</p>
 </aside>
 </section>
-<section id="feature-selection-methods" class="slide level3">
-<h3>Feature selection methods</h3>
+<section id="feature-selection-is-hard" class="slide level3">
+<h3>Feature selection is hard!</h3>
+<aside class="notes">
+<p>Computationally <strong>hard</strong> - even on small problems.</p>
+</aside>
+</section>
+<section id="optimization-in-two-parts" class="slide level3">
+<h3>Optimization in two parts</h3>
 <ul>
-<li><strong>Wrapper methods</strong>: use learning model on training data and different subsets of features.</li>
-<li><strong>Filter methods</strong>: consider only the statistics of the training data, don’t actually fit any learning model.</li>
-<li><strong>Embedded methods</strong>: use something built-in to training algorithm (e.g. LASSO regularization). (Not available for KNN!)</li>
+<li><strong>Search</strong> the space of possible feature subsets</li>
+<li><strong>Evaluate</strong> the goodness of a feature subset</li>
 </ul>
 </section>
-<section id="feature-selection-with-exhaustive-search-1" class="slide level3">
-<h3>Feature selection with exhaustive search (1)</h3>
+<section id="search-exhaustive-search" class="slide level3">
+<h3>Search: exhaustive search</h3>
+<p><strong>Optimal search</strong>: consider every combination of
+features</p>
 <ul>
-<li>Basic <strong>wrapper</strong> method: train model using every possible feature subset.</li>
-<li>Select model with best CV performance.</li>
+<li>Given <span class="math inline">\(d\)</span> features, there are
+<span class="math inline">\(2^d\)</span> possible feature subsets</li>
+<li>Too expensive to try all possibilities for large <span
+class="math inline">\(d\)</span>!</li>
 </ul>
 </section>
-<section id="feature-selection-with-exhaustive-search-2" class="slide level3">
-<h3>Feature selection with exhaustive search (2)</h3>
+<section id="search-naive-heuristic" class="slide level3">
+<h3>Search: naive heuristic</h3>
 <ul>
-<li>Given <span class="math inline">\(d\)</span> features, there are <span class="math inline">\(2^d\)</span> possible feature subsets</li>
-<li>Too expensive to try all possibilities for large <span class="math inline">\(d\)</span>!</li>
-</ul>
-</section>
-<section id="greedy-sequential-forward-feature-selection" class="slide level3">
-<h3>Greedy sequential (forward) feature selection</h3>
-<ul>
-<li>Let <span class="math inline">\(S^{t-1}\)</span> be the set of selected features at time <span class="math inline">\(t-1\)</span></li>
-<li>Train and evaluate model for all combinations of current set + one more feature</li>
-<li>For the next time step <span class="math inline">\(S^t\)</span>, add the feature that gave you the best performance.</li>
+<li>sort <span class="math inline">\(d\)</span> features in order of
+“goodness”</li>
+<li>select top <span class="math inline">\(k\)</span> features from the
+list</li>
 </ul>
 <aside class="notes">
-<p>(“Backward” alternative: start with all features, and “prune” one at a time.)</p>
-<p>This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search.</p>
-<p>This method available in <code>sklearn.feature_selection</code> as <code>SequentialFeatureSelector</code>.</p>
+<p><strong>Problem</strong>: this approach considers each feature
+independently.</p>
+<ul>
+<li>Doesn’t consider redundancy: if you have two copies of an
+informative features, they’ll both score high (but you wouldn’t
+necessarily want to include both in your model).</li>
+<li>Doesn’t consider interaction: if you are going to use a model that
+can learn interactions “natively” (like a tree-based model), this type
+of feature selection may exclude features that are not informative
+themselves but whose combination is informative.</li>
+</ul>
 </aside>
 </section>
-<section id="filter-feature-selectionweighting" class="slide level3">
-<h3>Filter feature selection/weighting</h3>
+<section id="search-sequential-forward-selection" class="slide level3">
+<h3>Search: sequential forward selection</h3>
 <ul>
-<li>Give each feature a score (ideally, something fast to compute!)</li>
-<li>add/select features based on score (can pick a threshold, or use CV)</li>
-<li>alternative: weight features based on score (works for KNN!)</li>
+<li>Let <span class="math inline">\(S^{t-1}\)</span> be the set of
+selected features at time <span class="math inline">\(t-1\)</span></li>
+<li>Train and evaluate model for all combinations of current set + one
+more feature</li>
+<li>For the next time step <span class="math inline">\(S^t\)</span>, add
+the feature that gave you the best performance.</li>
 </ul>
 <aside class="notes">
-<p>Compared to feature selection, feature weighting does not have the benefit of faster inference time, but it does have the advantage of not throwing out useful information.</p>
+<p>(“Backward” alternative: start with all features, and “prune” one at
+a time.)</p>
+<p>This is not necessarily going to find the best feature subset! But,
+it is a lot faster than the exhaustive search, and considers
+relationship between features (which naive approach dose not.)</p>
 </aside>
 </section>
-<section id="scoring-functions" class="slide level3">
-<h3>Scoring functions</h3>
+<section id="evaluation-methods" class="slide level3">
+<h3>Evaluation: methods</h3>
 <ul>
-<li>Correlation coefficient, F-value (captures linear association between feature and target variable)</li>
-<li>Mutual information (captures non-linear associations, too)</li>
+<li><strong>Filter methods</strong>: consider only the statistics of the
+training data, don’t use the model.</li>
+<li><strong>Wrapper methods</strong>: evaluate subsets of features on a
+model.</li>
+</ul>
+</section>
+<section id="evaluation-filter-methods-1" class="slide level3">
+<h3>Evaluation: filter methods (1)</h3>
+<p>Pseudocode:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> X.shape[<span class="dv">1</span>]:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  score[j] <span class="op">=</span> score_fn(X[:,j], y) )</span></code></pre></div>
+<aside class="notes">
+<p>Once you have a score for each feature, pick <span
+class="math inline">\(k\)</span> features that have highest score (use
+CV to choose k?)</p>
+<p>Can also include multivariate scoring functions:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j, feat_set <span class="kw">in</span> <span class="bu">enumerate</span>(feat_sets):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  score[j] <span class="op">=</span> score_fn(X[:,feat_set], y) )</span></code></pre></div>
+<p>You can also use the score for feature weighting: Compared to feature
+selection, feature weighting does not have the benefit of faster
+inference time, but it does have the advantage of not throwing out
+useful information.</p>
+</aside>
+</section>
+<section id="evaluation-filter-methods-2" class="slide level3">
+<h3>Evaluation: filter methods (2)</h3>
+<ul>
+<li>Usually much faster!</li>
+<li>Finds “generally” good features</li>
+<li>Need to choose “scoring” function that is a good fit for the
+model</li>
 </ul>
 <aside class="notes">
-<p>In <code>sklearn.feature_selection</code>, available scoring functions include: <code>f_classif</code>, <code>f_regression</code>, <code>r_regression</code>, <code>mutual_info_classif</code>, <code>mutual_info_regression</code>.</p>
-<p>If we were using a mode that assumes a linear relationship, it would make sense to use F-value, because we want to select features that will be predictive <em>for our model</em>! (MI might recommend features that have a strong non-linear association, but our model wouldn’t be able to learn those associations.)</p>
-<p>If we were using a model that does not assume a linear relationship (like KNN!) then we would be better off using MI.</p>
+<ul>
+<li>Scoring function measures the relationship between <code>X</code>
+and <code>y</code>.</li>
+<li>For example: correlation coefficient, or F-statistic both of which
+measures linear relationship between <code>X</code> and
+<code>y</code>.</li>
+</ul>
+<p><strong>Problem</strong>: correlation coefficient scoring metric only
+captures linear relationship.</p>
+<ul>
+<li>If you expect the relationship to be linear, it’s fine!</li>
+<li>If you are using a model (e.g. linear regression) that is only
+capable of learning linear relationships, it’s fine! You don’t want your
+feature selection method to give a high score to a column if the model
+won’t be able to learn from it anyway.</li>
+</ul>
 </aside>
 </section>
-<section id="illustration-scoring-functions" class="slide level3">
-<h3>Illustration: scoring functions</h3>
+<section id="evaluation-filter-methods-3" class="slide level3">
+<h3>Evaluation: filter methods (3)</h3>
 <figure>
-<img data-src="../images/6-feature-selection-scoring.png" style="width:80.0%" alt="F-test selects x_1 as the most informative feature, MI selects x_2." /><figcaption aria-hidden="true">F-test selects <span class="math inline">\(x_1\)</span> as the most informative feature, MI selects <span class="math inline">\(x_2\)</span>.</figcaption>
+<img data-src="../images/6-feature-selection-scoring.png"
+style="width:80.0%"
+alt="F-test selects x_1 as the most informative feature, MI selects x_2." />
+<figcaption aria-hidden="true">F-test selects <span
+class="math inline">\(x_1\)</span> as the most informative feature, MI
+selects <span class="math inline">\(x_2\)</span>.</figcaption>
 </figure>
 </section>
-<section id="univariate-feature-selection" class="slide level3">
-<h3>Univariate feature selection</h3>
+<section id="evaluation-wrapper-methods-1" class="slide level3">
+<h3>Evaluation: wrapper methods (1)</h3>
 <ul>
-<li>Score each feature <span class="math inline">\(x_i\)</span></li>
-<li>Pick <span class="math inline">\(k\)</span> features that have highest score (use CV to choose k?)</li>
+<li>Tuned to specific interaction of dataset + model!</li>
+<li>Usually much more expensive (especially considering model
+hyperparameter tuning…)</li>
 </ul>
-<aside class="notes">
-<p>This method available in <code>sklearn.feature_selection</code> as <code>SelectKBest</code>.</p>
-<p>The problem with univariate feature selection is that some features may carry redundant information. In that case, we don’t gain much from having both features in our model, but both will have similar scores.</p>
-<p>MI and F-value scores can account for the redundancy in a new feature vs. the ones already in the “set”.</p>
-</aside>
 </section>
-<section id="recursive-feature-selection" class="slide level3">
-<h3>Recursive feature selection</h3>
+<section id="an-option-for-some-models" class="slide level3">
+<h3>An option for some models</h3>
 <ul>
-<li>Let <span class="math inline">\(S^{t-1}\)</span> be the set of selected features at time <span class="math inline">\(t-1\)</span></li>
-<li>Compute score for all combinations of current set + one more feature</li>
-<li>For the next time step <span class="math inline">\(S^t\)</span>, add the feature that gave you the best performance.</li>
+<li><strong>Embedded methods</strong>: use something built-in to
+training algorithm (e.g. LASSO regularization). (Not available for
+KNN!)</li>
+</ul>
+</section>
+<section id="recap" class="slide level3">
+<h3>Recap</h3>
+<ul>
+<li>Feature selection approach should “match” the data, model</li>
+<li>Computation is a concern - it won’t be possible to optimize
+everything</li>
 </ul>
 </section></section>
     </div>
@@ -614,7 +967,7 @@ What happens to this quantity as $d$ increases?
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -625,10 +978,148 @@ What happens to this quantity as $d$ increases?
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

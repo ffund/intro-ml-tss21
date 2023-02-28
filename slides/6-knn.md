@@ -568,34 +568,70 @@ Bad:
 
 ## Feature selection and feature weighting
 
-:::notes
 
 Feature selection is actually two problems:
 
 * best number of features
 * best subset of features
 
-For some models, like KNN, we can also do feature weighting as an alternative to (or in addition to) feature selection.
+
+:::notes
+
+These problems can be solved separately:
+
+* find best subset of feature of every possible size
+* then among those, select the best
+
+or they can be solved together, for example:
+
+* keep adding features until improvement due to another feature is less than some threshold $t$
+* keep features whose "score" exceeds some threshold $t$
+* etc.
+
+
+For some models, like KNN, we can also do feature weighting (compute a weight for each feature, scale feature by that weight) as an alternative to (or in addition to) feature selection.
 
 :::
 
-### Feature selection methods
+### Feature selection is hard!
 
-* **Wrapper methods**: use learning model on training data and different subsets of features.
-* **Filter methods**: consider only the statistics of the training data, don't actually fit any learning model.
-* **Embedded methods**: use something built-in to training algorithm (e.g. LASSO regularization). (Not available for KNN!)
 
-### Feature selection with exhaustive search (1)
+:::notes
 
-* Basic **wrapper** method: train model using every possible feature subset.
-* Select model with best CV performance.
+Computationally **hard** - even on small problems.
 
-### Feature selection with exhaustive search (2)
+:::
+
+
+### Optimization in two parts
+
+* **Search** the space of possible feature subsets
+* **Evaluate** the goodness of a feature subset
+
+### Search: exhaustive search
+
+**Optimal search**: consider every combination of features
 
 * Given $d$ features, there are $2^d$ possible feature subsets
 * Too expensive to try all possibilities for large $d$!
 
-### Greedy sequential (forward) feature selection
+### Search: naive heuristic
+
+* sort $d$ features in order of "goodness"
+* select top $k$ features from the list
+
+
+:::notes
+
+**Problem**: this approach considers each feature independently.
+
+* Doesn't consider redundancy: if you have two copies of an informative features, they'll both score high (but you wouldn't necessarily want to include both in your model).
+* Doesn't consider interaction: if you are going to use a model that can learn interactions "natively" (like a tree-based model), this type of feature selection may exclude features that are not informative themselves but whose combination is informative.
+
+:::
+
+
+### Search: sequential forward selection
 
 * Let $S^{t-1}$ be the set of selected features at time $t-1$
 * Train and evaluate model for all combinations of current set + one more feature
@@ -605,63 +641,79 @@ For some models, like KNN, we can also do feature weighting as an alternative to
 
 ("Backward" alternative: start with all features, and "prune" one at a time.)
 
-This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search.
-
-This method available in `sklearn.feature_selection` as `SequentialFeatureSelector`.
+This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search, and considers relationship between features (which naive approach dose not.)
 
 :::
 
-\newpage
 
-### Filter feature selection/weighting
+### Evaluation: methods
 
-* Give each feature a score (ideally, something fast to compute!)
-* add/select features based on score (can pick a threshold, or use CV)
-* alternative: weight features based on score (works for KNN!)
+* **Filter methods**: consider only the statistics of the training data, don't use the model.
+* **Wrapper methods**: evaluate subsets of features on a model.
+
+
+### Evaluation: filter methods (1)
+
+Pseudocode:
+
+```python
+for j in X.shape[1]:
+  score[j] = score_fn(X[:,j], y) )
+```
 
 :::notes
 
-Compared to feature selection, feature weighting does not have the benefit of faster inference time, but it does have the advantage of not throwing out useful information.
+Once you have a score for each feature, pick $k$ features that have highest score (use CV to choose k?)
+
+Can also include multivariate scoring functions:
+
+```python
+for j, feat_set in enumerate(feat_sets):
+  score[j] = score_fn(X[:,feat_set], y) )
+```
+
+You can also use the score for feature weighting: Compared to feature selection, feature weighting does not have the benefit of faster inference time, but it does have the advantage of not throwing out useful information.
+
 
 :::
-### Scoring functions
 
-* Correlation coefficient, F-value (captures linear association between feature and target variable)
-* Mutual information (captures non-linear associations, too)
+### Evaluation: filter methods (2)
 
+* Usually much faster!
+* Finds "generally" good features
+* Need to choose "scoring" function that is a good fit for the model
 
 :::notes
 
-In `sklearn.feature_selection`, available scoring functions include: `f_classif`, `f_regression`, `r_regression`, `mutual_info_classif`, `mutual_info_regression`.
 
-If we were using a mode that assumes a linear relationship, it would make sense to use F-value, because we want to select features that will be predictive *for our model*! (MI might recommend features that have a strong non-linear association, but our model wouldn't be able to learn those associations.)
+* Scoring function measures the relationship between `X` and `y`.
+* For example: correlation coefficient, or F-statistic both of which measures linear relationship between `X` and `y`.
 
-If we were using a model that does not assume a linear relationship (like KNN!) then we would be better off using MI.
+**Problem**: correlation coefficient scoring metric only captures linear relationship.
+
+* If you expect the relationship to be linear, it's fine!
+* If you are using a model (e.g. linear regression) that is only capable of learning linear relationships, it's fine! You don't want your feature selection method to give a high score to a column if the model won't be able to learn from it anyway.
 
 :::
 
-### Illustration: scoring functions
+
+
+###  Evaluation: filter methods (3)
 
 ![F-test selects $x_1$ as the most informative feature, MI selects $x_2$.](../images/6-feature-selection-scoring.png ){ width=80% }
 
+###  Evaluation: wrapper methods (1)
 
-### Univariate feature selection
+* Tuned to specific interaction of dataset + model!
+* Usually much more expensive (especially considering model hyperparameter tuning...)
 
-* Score each feature $x_i$ 
-* Pick $k$ features that have highest score (use CV to choose k?)
+### An option for some models
 
-:::notes
+* **Embedded methods**: use something built-in to training algorithm (e.g. LASSO regularization). (Not available for KNN!)
 
-This method available in `sklearn.feature_selection` as `SelectKBest`.
 
-The problem with univariate feature selection is that some features may carry redundant information. In that case, we don't gain much from having both features in our model, but both will have similar scores.
+### Recap
 
-MI and F-value scores can account for the redundancy in a new feature vs. the ones already in the "set".
+* Feature selection approach should "match" the data, model
+* Computation is a concern - it won't be possible to optimize everything
 
-:::
-
-### Recursive feature selection
-
-* Let $S^{t-1}$ be the set of selected features at time $t-1$
-* Compute score for all combinations of current set + one more feature
-* For the next time step $S^t$, add the feature that gave you the best performance.
