@@ -802,9 +802,17 @@ less than some threshold <span class="math inline">\(t\)</span></li>
 class="math inline">\(t\)</span></li>
 <li>etc.</li>
 </ul>
-<p>For some models, like KNN, we can also do feature weighting (compute
-a weight for each feature, scale feature by that weight) as an
-alternative to (or in addition to) feature selection.</p>
+<p>For KNN, feature selection:</p>
+<ul>
+<li>reduces inference time (which scales with <span
+class="math inline">\(d\)</span>)</li>
+<li>addresses the “curse of dimensionality”</li>
+<li>makes the distance measure more useful, by considering only the
+features that are most relevant</li>
+</ul>
+<p>For KNN, we can also do feature weighting (compute a weight for each
+feature, scale feature by that weight) as an alternative to (or in
+addition to) feature selection - this helps with the third item.</p>
 </aside>
 </section>
 <section id="feature-selection-is-hard" class="slide level3">
@@ -819,6 +827,13 @@ alternative to (or in addition to) feature selection.</p>
 <li><strong>Search</strong> the space of possible feature subsets</li>
 <li><strong>Evaluate</strong> the goodness of a feature subset</li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/6-feature-selection.png" style="width:30.0%"
+alt="Feature selection problem." />
+<figcaption aria-hidden="true">Feature selection problem.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="search-exhaustive-search" class="slide level3">
 <h3>Search: exhaustive search</h3>
@@ -847,10 +862,17 @@ independently.</p>
 informative features, they’ll both score high (but you wouldn’t
 necessarily want to include both in your model).</li>
 <li>Doesn’t consider interaction: if you are going to use a model that
-can learn interactions “natively” (like a tree-based model), this type
-of feature selection may exclude features that are not informative
-themselves but whose combination is informative.</li>
+can learn interactions “natively” (which KNN can!), this type of feature
+selection may exclude features that are not informative themselves, but
+whose combination is informative.</li>
 </ul>
+<figure>
+<img data-src="../images/6-feature-interaction.png" style="width:18.0%"
+alt="Example of features that are informative in combination (the product x_1 x_2)." />
+<figcaption aria-hidden="true">Example of features that are informative
+in combination (the product <span class="math inline">\(x_1
+x_2\)</span>).</figcaption>
+</figure>
 </aside>
 </section>
 <section id="search-sequential-forward-selection" class="slide level3">
@@ -869,6 +891,12 @@ a time.)</p>
 <p>This is not necessarily going to find the best feature subset! But,
 it is a lot faster than the exhaustive search, and considers
 relationship between features (which naive approach dose not.)</p>
+<figure>
+<img data-src="../images/6-feature-search-strategy.png"
+style="width:75.0%" alt="Feature selection search strategies." />
+<figcaption aria-hidden="true">Feature selection search
+strategies.</figcaption>
+</figure>
 </aside>
 </section>
 <section id="evaluation-methods" class="slide level3">
@@ -909,6 +937,7 @@ useful information.</p>
 model</li>
 </ul>
 <aside class="notes">
+<p><strong>Scoring function</strong>:</p>
 <ul>
 <li>Scoring function measures the relationship between <code>X</code>
 and <code>y</code>.</li>
@@ -931,7 +960,7 @@ won’t be able to learn from it anyway.</li>
 <h3>Evaluation: filter methods (3)</h3>
 <figure>
 <img data-src="../images/6-feature-selection-scoring.png"
-style="width:80.0%"
+style="width:75.0%"
 alt="F-test selects x_1 as the most informative feature, MI selects x_2." />
 <figcaption aria-hidden="true">F-test selects <span
 class="math inline">\(x_1\)</span> as the most informative feature, MI
@@ -945,6 +974,15 @@ selects <span class="math inline">\(x_2\)</span>.</figcaption>
 <li>Usually much more expensive (especially considering model
 hyperparameter tuning…)</li>
 </ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/6-wrapper.png" style="width:40.0%"
+alt="Using a wrapper method to evaluate different feature subsets, on the same/similar objective to the “real” final ML model." />
+<figcaption aria-hidden="true">Using a wrapper method to evaluate
+different feature subsets, on the same/similar objective to the “real”
+final ML model.</figcaption>
+</figure>
+</aside>
 </section>
 <section id="an-option-for-some-models" class="slide level3">
 <h3>An option for some models</h3>

@@ -588,8 +588,13 @@ or they can be solved together, for example:
 * keep features whose "score" exceeds some threshold $t$
 * etc.
 
+For KNN, feature selection:
 
-For some models, like KNN, we can also do feature weighting (compute a weight for each feature, scale feature by that weight) as an alternative to (or in addition to) feature selection.
+* reduces inference time (which scales with $d$)
+* addresses the "curse of dimensionality"
+* makes the distance measure more useful, by considering only the features that are most relevant
+
+For KNN, we can also do feature weighting (compute a weight for each feature, scale feature by that weight) as an alternative to (or in addition to) feature selection - this helps with the third item.
 
 :::
 
@@ -607,6 +612,14 @@ Computationally **hard** - even on small problems.
 
 * **Search** the space of possible feature subsets
 * **Evaluate** the goodness of a feature subset
+
+:::notes
+
+![Feature selection problem.](../images/6-feature-selection.png){ width=30% }
+
+:::
+
+\newpage
 
 ### Search: exhaustive search
 
@@ -626,7 +639,12 @@ Computationally **hard** - even on small problems.
 **Problem**: this approach considers each feature independently.
 
 * Doesn't consider redundancy: if you have two copies of an informative features, they'll both score high (but you wouldn't necessarily want to include both in your model).
-* Doesn't consider interaction: if you are going to use a model that can learn interactions "natively" (like a tree-based model), this type of feature selection may exclude features that are not informative themselves but whose combination is informative.
+* Doesn't consider interaction: if you are going to use a model that can learn interactions "natively" (which KNN can!), this type of feature selection may exclude features that are not informative themselves, but whose combination is informative.
+
+
+
+
+![Example of features that are informative in combination (the product $x_1 x_2$).](../images/6-feature-interaction.png){ width=18% }
 
 :::
 
@@ -643,7 +661,11 @@ Computationally **hard** - even on small problems.
 
 This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search, and considers relationship between features (which naive approach dose not.)
 
+![Feature selection search strategies.](../images/6-feature-search-strategy.png){ width=75% }
+
 :::
+
+\newpage
 
 
 ### Evaluation: methods
@@ -686,6 +708,8 @@ You can also use the score for feature weighting: Compared to feature selection,
 :::notes
 
 
+**Scoring function**: 
+
 * Scoring function measures the relationship between `X` and `y`.
 * For example: correlation coefficient, or F-statistic both of which measures linear relationship between `X` and `y`.
 
@@ -700,12 +724,18 @@ You can also use the score for feature weighting: Compared to feature selection,
 
 ###  Evaluation: filter methods (3)
 
-![F-test selects $x_1$ as the most informative feature, MI selects $x_2$.](../images/6-feature-selection-scoring.png ){ width=80% }
+![F-test selects $x_1$ as the most informative feature, MI selects $x_2$.](../images/6-feature-selection-scoring.png ){ width=75% }
 
 ###  Evaluation: wrapper methods (1)
 
 * Tuned to specific interaction of dataset + model!
 * Usually much more expensive (especially considering model hyperparameter tuning...)
+
+:::notes
+
+![Using a wrapper method to evaluate different feature subsets, on the same/similar objective to the "real" final ML model.](../images/6-wrapper.png){ width=40% }
+
+:::
 
 ### An option for some models
 
