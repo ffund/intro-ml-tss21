@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -43,20 +51,29 @@
 </section>
 <section id="ensemble-methods---the-idea" class="slide level3">
 <h3>Ensemble methods - the idea</h3>
-<p>Combine multiple <strong>weak learners</strong> - having either high bias or high variance - to create an <strong>ensemble</strong> with better prediction</p>
+<p>Combine multiple <strong>weak learners</strong> - having either high
+bias or high variance - to create an <strong>ensemble</strong> with
+better prediction</p>
 </section>
 <section id="ensemble-methods---types-1" class="slide level3">
 <h3>Ensemble methods - types (1)</h3>
 <ul>
-<li>Combine multiple learners with high <strong>variance</strong> in a way that reduces their variance</li>
-<li>Combine multiple learners with high <strong>bias</strong> in a way that reduces their bias</li>
+<li>Combine multiple learners with high <strong>variance</strong> in a
+way that reduces their variance</li>
+<li>Combine multiple learners with high <strong>bias</strong> in a way
+that reduces their bias</li>
 </ul>
 </section>
 <section id="ensemble-methods---types-2" class="slide level3">
 <h3>Ensemble methods - types (2)</h3>
 <ul>
-<li><strong>Averaging methods</strong>: build base estimators <em>independently</em> and then average their predictions. Combined estimator is usually better than any single base estimator because its <em>variance</em> is reduced.</li>
-<li><strong>Boosting methods</strong>: build base estimators <em>sequentially</em> and each one tries to reduce the <em>bias</em> of the combined estimator.</li>
+<li><strong>Parallel</strong>: build base estimators
+<em>independently</em> and then average their predictions. Combined
+estimator is usually better than any single base estimator because its
+<em>variance</em> is reduced.</li>
+<li><strong>Sequential</strong>: (boosting) build base estimators
+<em>sequentially</em> and each one tries to reduce the <em>bias</em> of
+the combined estimator.</li>
 </ul>
 </section></section>
 <section>
@@ -75,23 +92,31 @@
 <h3>Bootstrapping</h3>
 <ul>
 <li>Basic idea: Sampling <strong>with replacement</strong></li>
-<li>Each “bootstrap training set” is <em>same size</em> as full training set, and is created by sampling with replacement</li>
-<li>Some samples will appear more than once, some samples not at all</li>
+<li>Each “bootstrap training set” is <em>same size</em> as full training
+set, and is created by sampling with replacement</li>
+<li>Some samples will appear more than once, some samples not at
+all</li>
 </ul>
 </section>
 <section id="bootstrap-aggregation" class="slide level3">
 <h3>Bootstrap aggregation</h3>
 <ul>
-<li>Create multiple versions <span class="math inline">\(1, \ldots, B\)</span> of training set with bootstrap</li>
-<li>Independently train a model on each bootstrap training set: calculate <span class="math inline">\(\hat{f}_1(x) \ldots, \hat{f}_B(x)\)</span></li>
-<li>Combine output of models by voting (classification) or averaging (regression):</li>
+<li>Create multiple versions <span class="math inline">\(1, \ldots,
+B\)</span> of training set with bootstrap</li>
+<li>Independently train a model on each bootstrap training set:
+calculate <span class="math inline">\(\hat{f}_1(x) \ldots,
+\hat{f}_B(x)\)</span></li>
+<li>Combine output of models by voting (classification) or averaging
+(regression):</li>
 </ul>
-<p><span class="math display">\[\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}_b (x)\]</span></p>
+<p><span class="math display">\[\hat{f}_{bag}(x) = \frac{1}{B}
+\sum_{b=1}^B \hat{f}_b (x)\]</span></p>
 </section>
 <section id="bagging-trees" class="slide level3">
 <h3>Bagging trees</h3>
 <ul>
-<li>Construct <span class="math inline">\(B\)</span> trees using <span class="math inline">\(B\)</span> bootstrapped training sets.</li>
+<li>Construct <span class="math inline">\(B\)</span> trees using <span
+class="math inline">\(B\)</span> bootstrapped training sets.</li>
 <li>Let the trees grow deep, no pruning.</li>
 <li>Each individual tree has low bias, high variance.</li>
 <li>Average the prediction of the trees to reduce variance.</li>
@@ -101,30 +126,41 @@
 <h3>Correlated trees</h3>
 <p>Problem: trees produced by bagging are highly correlated.</p>
 <ul>
-<li>Imagine there is one feature that is strong predictor, several moderate predictors</li>
+<li>Imagine there is one feature that is strong predictor, several
+moderate predictors</li>
 <li>Most/all trees will split on this feature</li>
-<li>Averaging correlated quantities does not reduce variance as much.</li>
+<li>Averaging correlated quantities does not reduce variance as
+much.</li>
 </ul>
 </section>
 <section id="random-forests" class="slide level3">
 <h3>Random forests</h3>
 <p>Grow many decorrelated trees:</p>
 <ul>
-<li><strong>Bootstrap</strong>: grow each tree with bootstrap resampled data set.</li>
-<li><strong>Split-variable randomization</strong>: Force each split to consider <em>only</em> a subset of <span class="math inline">\(m\)</span> of the <span class="math inline">\(p\)</span> predictors.</li>
+<li><strong>Bootstrap</strong>: grow each tree with bootstrap resampled
+data set.</li>
+<li><strong>Split-variable randomization</strong>: Force each split to
+consider <em>only</em> a subset of <span
+class="math inline">\(m\)</span> of the <span
+class="math inline">\(p\)</span> predictors.</li>
 </ul>
-<p>Typically <span class="math inline">\(m = \frac{p}{3}\)</span> but this should be considered a tuning parameter.</p>
+<p>Typically <span class="math inline">\(m = \frac{p}{3}\)</span> but
+this should be considered a tuning parameter.</p>
 </section>
 <section id="bagged-trees-illustration" class="slide level3">
 <h3>Bagged trees illustration</h3>
 <figure>
-<img data-src="../images/5-ensemble-trees.png" style="width:90.0%" alt="Identical data, bootstrapped data, and bootstrapped data with split variable randomization." /><figcaption aria-hidden="true">Identical data, bootstrapped data, and bootstrapped data with split variable randomization.</figcaption>
+<img data-src="../images/5-ensemble-trees.png" style="width:90.0%"
+alt="Identical data, bootstrapped data, and bootstrapped data with split variable randomization." />
+<figcaption aria-hidden="true">Identical data, bootstrapped data, and
+bootstrapped data with split variable randomization.</figcaption>
 </figure>
 </section>
 <section id="a-note-on-computation" class="slide level3">
 <h3>A note on computation</h3>
 <ul>
-<li>Bagged trees and random forests can be fitted in parallel on many cores!</li>
+<li>Bagged trees and random forests can be fitted in parallel on many
+cores!</li>
 <li>Each tree is built independently of the others</li>
 </ul>
 </section></section>
@@ -138,84 +174,122 @@
 <p><strong>Iteratively</strong> build a succession of models:</p>
 <ul>
 <li>Train a weak model. Typically a very shallow tree.</li>
-<li>In training set for <span class="math inline">\(b\)</span>th model, focus on errors made by <span class="math inline">\(b-1\)</span>th model.</li>
+<li>In training set for <span class="math inline">\(b\)</span>th model,
+focus on errors made by <span class="math inline">\(b-1\)</span>th
+model.</li>
 <li>Use (weighted) model output</li>
 <li>Reduces bias <em>and</em> variance!</li>
 </ul>
 </section>
 <section id="adaboost-adaptive-boosting" class="slide level3">
 <h3>AdaBoost (Adaptive Boosting)</h3>
-<p>Adjust <em>weights</em> so that each successive model focuses on more “difficult” samples.</p>
-<p>Consider classification problem, where sign of model output gives estimated class label and magnitude gives confidence in label.</p>
+<p>Adjust <em>weights</em> so that each successive model focuses on more
+“difficult” samples.</p>
+<p>Consider classification problem, where sign of model output gives
+estimated class label and magnitude gives confidence in label.</p>
 </section>
 <section id="adaboost-algorithm" class="slide level3">
 <h3>AdaBoost algorithm</h3>
 <ol type="1">
-<li>Let <span class="math inline">\(w_i = \frac{1}{N}\)</span> for all <span class="math inline">\(i\)</span> in training set.</li>
+<li>Let <span class="math inline">\(w_i = \frac{1}{N}\)</span> for all
+<span class="math inline">\(i\)</span> in training set.</li>
 <li>For <span class="math inline">\(m=1,\ldots,M\)</span>, repeat:</li>
 </ol>
 </section>
 <section id="adaboost-algorithm-inner-loop" class="slide level3">
 <h3>AdaBoost algorithm (inner loop)</h3>
 <ul>
-<li><p>Fit a tree <span class="math inline">\(\hat{f}^m\)</span>, compute weighted error <span class="math inline">\(err_m\)</span> using weights on training samples <span class="math inline">\(w_i\)</span>:</p>
-<p><span class="math display">\[err_m = \frac{\sum_{i=1}^N w_i 1(y_i \neq \hat{f}^m(x_i))}{\sum_{i=1}^N w_i}\]</span></p></li>
-<li><p>Compute coefficient <span class="math inline">\(\alpha_m = \log \left( \frac{1-err_m}{err_m} \right)\)</span></p></li>
-<li><p>Update weights: <span class="math inline">\(w_i \leftarrow w_i e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}\)</span></p></li>
+<li><p>Fit a tree <span class="math inline">\(\hat{f}^m\)</span>,
+compute weighted error <span class="math inline">\(err_m\)</span> using
+weights on training samples <span
+class="math inline">\(w_i\)</span>:</p>
+<p><span class="math display">\[err_m = \frac{\sum_{i=1}^N w_i 1(y_i
+\neq \hat{f}^m(x_i))}{\sum_{i=1}^N w_i}\]</span></p></li>
+<li><p>Compute coefficient <span class="math inline">\(\alpha_m = \log
+\left( \frac{1-err_m}{err_m} \right)\)</span></p></li>
+<li><p>Update weights: <span class="math inline">\(w_i \leftarrow w_i
+e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}\)</span></p></li>
 </ul>
 </section>
 <section id="adaboost-algorithm-final-step" class="slide level3">
 <h3>AdaBoost algorithm (final step)</h3>
 <ol start="3" type="1">
-<li>Output boosted model: <span class="math display">\[\hat{f}(x) = \text{sign} \left[\sum_{m=1}^M \alpha_m \hat{f}^m(x)\right]\]</span></li>
+<li>Output boosted model: <span class="math display">\[\hat{f}(x) =
+\text{sign} \left[\sum_{m=1}^M \alpha_m
+\hat{f}^m(x)\right]\]</span></li>
 </ol>
 </section>
-<section id="boosting---algorithm-for-regression-tree-1" class="slide level3">
+<section id="boosting---algorithm-for-regression-tree-1"
+class="slide level3">
 <h3>Boosting - algorithm for regression tree (1)</h3>
 <ol type="1">
-<li>Let <span class="math inline">\(\hat{f}(x)=0\)</span> and <span class="math inline">\(r_i = y_i\)</span> for all <span class="math inline">\(i\)</span> in training set.</li>
+<li>Let <span class="math inline">\(\hat{f}(x)=0\)</span> and <span
+class="math inline">\(r_i = y_i\)</span> for all <span
+class="math inline">\(i\)</span> in training set.</li>
 <li>For <span class="math inline">\(b=1,\ldots,B\)</span>, repeat:</li>
 </ol>
 <aside class="notes">
-<p>The idea is: we fit trees to the residuals, not the outcome <span class="math inline">\(y\)</span>.</p>
+<p>The idea is: we fit trees to the residuals, not the outcome <span
+class="math inline">\(y\)</span>.</p>
 </aside>
 </section>
-<section id="boosting---algorithm-for-regression-tree-inner-loop" class="slide level3">
+<section id="boosting---algorithm-for-regression-tree-inner-loop"
+class="slide level3">
 <h3>Boosting - algorithm for regression tree (inner loop)</h3>
 <ul>
-<li>Fit a tree <span class="math inline">\(\hat{f}^b\)</span> with <span class="math inline">\(d\)</span> splits (<span class="math inline">\(d+1\)</span> leaf nodes) on training data <span class="math inline">\((X,r)\)</span>.</li>
-<li>Update <span class="math inline">\(\hat{f}\)</span> with a <em>shrunken</em> version of new tree: <span class="math display">\[\hat{f}(x) \leftarrow \hat{f}(x) + \lambda \hat{f}^b(x)\]</span></li>
-<li>Update residuals: <span class="math display">\[r_i \leftarrow r_i - \lambda \hat{f}^b(x)\]</span></li>
+<li>Fit a tree <span class="math inline">\(\hat{f}^b\)</span> with <span
+class="math inline">\(d\)</span> splits (<span
+class="math inline">\(d+1\)</span> leaf nodes) on training data <span
+class="math inline">\((X,r)\)</span>.</li>
+<li>Update <span class="math inline">\(\hat{f}\)</span> with a
+<em>shrunken</em> version of new tree: <span
+class="math display">\[\hat{f}(x) \leftarrow \hat{f}(x) + \lambda
+\hat{f}^b(x)\]</span></li>
+<li>Update residuals: <span class="math display">\[r_i \leftarrow r_i -
+\lambda \hat{f}^b(x)\]</span></li>
 </ul>
 </section>
-<section id="boosting---algorithm-for-regression-tree-final-step" class="slide level3">
+<section id="boosting---algorithm-for-regression-tree-final-step"
+class="slide level3">
 <h3>Boosting - algorithm for regression tree (final step)</h3>
 <ol start="3" type="1">
-<li>Output boosted model: <span class="math display">\[\hat{f}(x) = \sum_{b=1}^B \lambda \hat{f}^b(x)\]</span></li>
+<li>Output boosted model: <span class="math display">\[\hat{f}(x) =
+\sum_{b=1}^B \lambda \hat{f}^b(x)\]</span></li>
 </ol>
 </section>
-<section id="boosting---algorithm-for-regression-tree-tuning" class="slide level3">
+<section id="boosting---algorithm-for-regression-tree-tuning"
+class="slide level3">
 <h3>Boosting - algorithm for regression tree (tuning)</h3>
 <p>Tuning parameters to select by CV:</p>
 <ul>
 <li>Number of trees <span class="math inline">\(B\)</span></li>
-<li>Shrinkage parameter <span class="math inline">\(\lambda\)</span>, controls <em>learning rate</em></li>
-<li><span class="math inline">\(d\)</span>, number of splits in each tree. ( <span class="math inline">\(d=1 \rightarrow\)</span> tree is called a <em>stump</em> )</li>
+<li>Shrinkage parameter <span class="math inline">\(\lambda\)</span>,
+controls <em>learning rate</em></li>
+<li><span class="math inline">\(d\)</span>, number of splits in each
+tree. ( <span class="math inline">\(d=1 \rightarrow\)</span> tree is
+called a <em>stump</em> )</li>
 </ul>
 </section>
 <section id="gradient-boosting" class="slide level3">
 <h3>Gradient Boosting</h3>
 <ul>
-<li><p>General goal of boosting: find the model at each stage that minimizes loss function on ensemble (computationally difficult!)</p></li>
-<li><p>AdaBoost interpretation (discovered years later): Gradient descent algorithm that minimizes exponential loss function.</p></li>
-<li><p>Gradient boosting: works for any differentiable loss function. At each stage, find the local gradient of loss function, and take steps in direction of steepest descent.</p></li>
+<li><p>General goal of boosting: find the model at each stage that
+minimizes loss function on ensemble (computationally
+difficult!)</p></li>
+<li><p>AdaBoost interpretation (discovered years later): Gradient
+descent algorithm that minimizes exponential loss function.</p></li>
+<li><p>Gradient boosting: works for any differentiable loss function. At
+each stage, find the local gradient of loss function, and take steps in
+direction of steepest descent.</p></li>
 </ul>
 </section></section>
-<section id="summary-of-selected-ensemble-methods" class="title-slide slide level2">
+<section id="summary-of-selected-ensemble-methods"
+class="title-slide slide level2">
 <h2>Summary of (selected) ensemble methods</h2>
 <ul>
 <li>Can use a single estimator that has poor performance</li>
-<li>Combining the output of multiple estimators into a single prediction: better predictive accuracy, less interpretability</li>
+<li>Combining the output of multiple estimators into a single
+prediction: better predictive accuracy, less interpretability</li>
 </ul>
 </section>
     </div>
@@ -223,7 +297,7 @@
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -234,10 +308,148 @@
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

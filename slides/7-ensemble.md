@@ -26,8 +26,8 @@ to create an **ensemble** with better prediction
 
 ### Ensemble methods - types (2)
 
-* **Averaging methods**: build base estimators *independently* and then average their predictions. Combined estimator is usually better than any single base estimator because its *variance* is reduced.
-* **Boosting methods**: build base estimators *sequentially* and each one tries to reduce the *bias* of the combined estimator. 
+* **Parallel**: build base estimators *independently* and then average their predictions. Combined estimator is usually better than any single base estimator because its *variance* is reduced.
+* **Sequential**: (boosting) build base estimators *sequentially* and each one tries to reduce the *bias* of the combined estimator. 
 
 
 ## Bagging
