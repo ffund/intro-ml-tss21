@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -42,30 +50,42 @@
 -->
 </section>
 <section>
-<section id="maximal-margin-classifier" class="title-slide slide level2">
+<section id="maximal-margin-classifier"
+class="title-slide slide level2">
 <h2>Maximal margin classifier</h2>
 
 </section>
 <section id="binary-classification-problem" class="slide level3">
 <h3>Binary classification problem</h3>
 <ul>
-<li><span class="math inline">\(n\)</span> training samples, each with <span class="math inline">\(p\)</span> features <span class="math inline">\(\mathbf{x}_1, \ldots, \mathbf{x}_n \in \mathbb{R}^p\)</span></li>
-<li>Class labels <span class="math inline">\(y_1, \ldots, y_n \in \{-1, 1\}\)</span></li>
+<li><span class="math inline">\(n\)</span> training samples, each with
+<span class="math inline">\(p\)</span> features <span
+class="math inline">\(\mathbf{x}_1, \ldots, \mathbf{x}_n \in
+\mathbb{R}^p\)</span></li>
+<li>Class labels <span class="math inline">\(y_1, \ldots, y_n \in \{-1,
+1\}\)</span></li>
 </ul>
 </section>
 <section id="linear-separability" class="slide level3">
 <h3>Linear separability</h3>
-<p>The problem is <strong>perfectly linearly separable</strong> if there exists a <strong>separating hyperplane</strong> <span class="math inline">\(H_i\)</span> such that</p>
+<p>The problem is <strong>perfectly linearly separable</strong> if there
+exists a <strong>separating hyperplane</strong> <span
+class="math inline">\(H_i\)</span> such that</p>
 <ul>
-<li>all <span class="math inline">\(\mathbf{x} \in C_i\)</span> lie on its positive side, and</li>
-<li>all <span class="math inline">\(\mathbf{x} \in C_j, j \neq i\)</span> lie on its negative side.</li>
+<li>all <span class="math inline">\(\mathbf{x} \in C_i\)</span> lie on
+its positive side, and</li>
+<li>all <span class="math inline">\(\mathbf{x} \in C_j, j \neq
+i\)</span> lie on its negative side.</li>
 </ul>
 </section>
 <section id="separating-hyperplane-1" class="slide level3">
 <h3>Separating hyperplane (1)</h3>
-<p>The separating hyperplane has the property that for all <span class="math inline">\(i=1,\ldots,n\)</span>,</p>
-<p><span class="math display">\[w_0 + \sum_{j=1}^p w_j x_{ij} &gt; 0 \text{ if } y_i = 1\]</span></p>
-<p><span class="math display">\[w_0 + \sum_{j=1}^p w_j x_{ij} &lt; 0 \text{ if } y_i = -1\]</span></p>
+<p>The separating hyperplane has the property that for all <span
+class="math inline">\(i=1,\ldots,n\)</span>,</p>
+<p><span class="math display">\[w_0 + \sum_{j=1}^p w_j x_{ij} &gt; 0
+\text{ if } y_i = 1\]</span></p>
+<p><span class="math display">\[w_0 + \sum_{j=1}^p w_j x_{ij} &lt; 0
+\text{ if } y_i = -1\]</span></p>
 </section>
 <section id="separating-hyperplane-2" class="slide level3">
 <h3>Separating hyperplane (2)</h3>
@@ -77,29 +97,44 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 </section>
 <section id="using-the-hyperplane-to-classify" class="slide level3">
 <h3>Using the hyperplane to classify</h3>
-<p>Then, we can classify a new sample <span class="math inline">\(\mathbf{x}\)</span> using the sign of</p>
-<p><span class="math display">\[z = w_0 + \sum_{j=1}^p w_j x_{ij}\]</span></p>
-<p>and we can use the magnitude of <span class="math inline">\(z\)</span> to determine how confident we are about our classification. (Larger <span class="math inline">\(z\)</span> = farther from hyperplane = more confident about classification.)</p>
+<p>Then, we can classify a new sample <span
+class="math inline">\(\mathbf{x}\)</span> using the sign of</p>
+<p><span class="math display">\[z = w_0 + \sum_{j=1}^p w_j
+x_{ij}\]</span></p>
+<p>and we can use the magnitude of <span
+class="math inline">\(z\)</span> to determine how confident we are about
+our classification. (Larger <span class="math inline">\(z\)</span> =
+farther from hyperplane = more confident about classification.)</p>
 </section>
 <section id="which-separating-hyperplane-is-best" class="slide level3">
 <h3>Which separating hyperplane is best?</h3>
 <figure>
-<img data-src="../images/6-many-hyperplanes.png" style="width:25.0%" alt="If the data is linearly separable, there are many separating hyperplanes." /><figcaption aria-hidden="true">If the data is linearly separable, there are many separating hyperplanes.</figcaption>
+<img data-src="../images/6-many-hyperplanes.png" style="width:25.0%"
+alt="If the data is linearly separable, there are many separating hyperplanes." />
+<figcaption aria-hidden="true">If the data is linearly separable, there
+are many separating hyperplanes.</figcaption>
 </figure>
 <aside class="notes">
-<p>Previously, with the logistic regression classifier, we found the maximum likelihood classifier: the hyperplane that maximizes the probability of these particular observations.</p>
+<p>Previously, with the logistic regression classifier, we found the
+maximum likelihood classifier: the hyperplane that maximizes the
+probability of these particular observations.</p>
 </aside>
 </section>
 <section id="margin" class="slide level3">
 <h3>Margin</h3>
 <p>For any “candidate” hyperplane,</p>
 <ul>
-<li>Compute perpendicular distance from each sample to separating hyperplane.</li>
-<li>Smallest distance among all samples is called the <strong>margin</strong>.</li>
+<li>Compute perpendicular distance from each sample to separating
+hyperplane.</li>
+<li>Smallest distance among all samples is called the
+<strong>margin</strong>.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/6-mm-margin.png" style="width:25.0%" alt="For this hyperplane, bold lines show the smallest distance (tie among several samples)." /><figcaption aria-hidden="true">For this hyperplane, bold lines show the smallest distance (tie among several samples).</figcaption>
+<img data-src="../images/6-mm-margin.png" style="width:25.0%"
+alt="For this hyperplane, bold lines show the smallest distance (tie among several samples)." />
+<figcaption aria-hidden="true">For this hyperplane, bold lines show the
+smallest distance (tie among several samples).</figcaption>
 </figure>
 </aside>
 </section>
@@ -112,80 +147,122 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/6-mm-classifier.png" style="width:25.0%" alt="Maximal margin classifier. Width of the “slab” is 2x the margin." /><figcaption aria-hidden="true">Maximal margin classifier. Width of the “slab” is 2x the margin.</figcaption>
+<img data-src="../images/6-mm-classifier.png" style="width:25.0%"
+alt="Maximal margin classifier. Width of the “slab” is 2x the margin." />
+<figcaption aria-hidden="true">Maximal margin classifier. Width of the
+“slab” is 2x the margin.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="support-vectors" class="slide level3">
 <h3>Support vectors</h3>
 <ul>
-<li>Points that lie on the border of maximal margin hyperplane are <strong>support vectors</strong></li>
-<li>They “support” the maximal margin hyperplane: if these points move, then the maximal margin hyperplane moves</li>
-<li>Maximal margin hyperplane is not affected by movement of any other point, as long as it doesn’t cross borders!</li>
+<li>Points that lie on the border of maximal margin hyperplane are
+<strong>support vectors</strong></li>
+<li>They “support” the maximal margin hyperplane: if these points move,
+then the maximal margin hyperplane moves</li>
+<li>Maximal margin hyperplane is not affected by movement of any other
+point, as long as it doesn’t cross borders!</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/6-mm.png" style="width:80.0%" alt="Maximal margin classifier (left) is not affected by movement of a point that is not a support vector (middle) but the hyperplane and/or margin are affected by movement of a support vector (right)." /><figcaption aria-hidden="true">Maximal margin classifier (left) is not affected by movement of a point that is not a support vector (middle) but the hyperplane and/or margin are affected by movement of a support vector (right).</figcaption>
+<img data-src="../images/6-mm.png" style="width:80.0%"
+alt="Maximal margin classifier (left) is not affected by movement of a point that is not a support vector (middle) but the hyperplane and/or margin are affected by movement of a support vector (right)." />
+<figcaption aria-hidden="true">Maximal margin classifier (left) is not
+affected by movement of a point that is not a support vector (middle)
+but the hyperplane and/or margin are affected by movement of a support
+vector (right).</figcaption>
 </figure>
 </aside>
 </section>
-<section id="constructing-the-maximal-margin-classifier" class="slide level3">
+<section id="constructing-the-maximal-margin-classifier"
+class="slide level3">
 <h3>Constructing the maximal margin classifier</h3>
-<p>To construct this classifier, we will set up a <em>constrained optimization</em> problem with:</p>
+<p>To construct this classifier, we will set up a <em>constrained
+optimization</em> problem with:</p>
 <ul>
 <li>an objective</li>
 <li>one or more constraints to satisfy</li>
 </ul>
 <p>What should the objective/constraints be in this scenario?</p>
 </section>
-<section id="constructing-the-maximal-margin-classifier-1" class="slide level3">
+<section id="constructing-the-maximal-margin-classifier-1"
+class="slide level3">
 <h3>Constructing the maximal margin classifier (1)</h3>
 <p><span class="math display">\[\begin{equation}
 \operatorname*{maximize}_{\mathbf{w}, \gamma} \gamma
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-\text{subject to: }\sum_{j=1}^{p} w_j^2 = 1 
+\text{subject to: }\sum_{j=1}^{p} w_j^2 = 1
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i
+\text{and } y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq
+\gamma, \forall i
 \end{equation}\]</span></p>
 <aside class="notes">
 <hr />
 <p>The constraint</p>
-<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma, \forall i \]</span></p>
-<p>guarantees that each observation is on the correct side of the hyperplane <em>and</em> on the correct side of the margin, if margin <span class="math inline">\(\gamma\)</span> is positive. (This is analogous to Equation , but we have added a margin.)</p>
+<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^{p} w_j
+x_{ij} \right) \geq \gamma, \forall i \]</span></p>
+<p>guarantees that each observation is on the correct side of the
+hyperplane <em>and</em> on the correct side of the margin, if margin
+<span class="math inline">\(\gamma\)</span> is positive. (This is
+analogous to Equation <span
+class="math inline">\(\ref{eq:sep-no-margin}\)</span>, but we have added
+a margin.)</p>
 <p>The constraint</p>
-<p><span class="math display">\[\text{and } \sum_{j=1}^{p} w_j^2 = 1\]</span></p>
-<p>is not really a constraint: if a separating hyperplane is defined by <span class="math inline">\(w_0 + \sum_{j=1}^{p} w_j x_{ij} = 0\)</span>, then for any <span class="math inline">\(k \neq 0\)</span>, <span class="math inline">\(k\left( w_0 + \sum_{j=1}^{p} w_j x_{ij}\right) = 0\)</span> is also a separating hyperplane.</p>
-<p>This “constraint” just scales weights so that distance from <span class="math inline">\(i\)</span>th sample to the hyperplane is given by <span class="math inline">\(y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right)\)</span>. This is what make the previous constraint meaningful!</p>
+<p><span class="math display">\[\text{and } \sum_{j=1}^{p} w_j^2 =
+1\]</span></p>
+<p>is not really a constraint: if a separating hyperplane is defined by
+<span class="math inline">\(w_0 + \sum_{j=1}^{p} w_j x_{ij} =
+0\)</span>, then for any <span class="math inline">\(k \neq 0\)</span>,
+<span class="math inline">\(k\left( w_0 + \sum_{j=1}^{p} w_j
+x_{ij}\right) = 0\)</span> is also a separating hyperplane.</p>
+<p>This “constraint” just scales weights so that distance from <span
+class="math inline">\(i\)</span>th sample to the hyperplane is given by
+<span class="math inline">\(y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij}
+\right)\)</span>. This is what make the previous constraint
+meaningful!</p>
 <figure>
-<img data-src="../images/6-mm-simple.png" style="width:30.0%" alt="Maximal margin classifier." /><figcaption aria-hidden="true">Maximal margin classifier.</figcaption>
+<img data-src="../images/6-mm-simple.png" style="width:30.0%"
+alt="Maximal margin classifier." />
+<figcaption aria-hidden="true">Maximal margin classifier.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="constructing-the-maximal-margin-classifier-2" class="slide level3">
+<section id="constructing-the-maximal-margin-classifier-2"
+class="slide level3">
 <h3>Constructing the maximal margin classifier (2)</h3>
 <p>The constraints ensure that</p>
 <ul>
 <li>Each observation is on the correct side of the hyperplane, and</li>
-<li>at least <span class="math inline">\(\gamma\)</span> away from the hyperplane</li>
+<li>at least <span class="math inline">\(\gamma\)</span> away from the
+hyperplane</li>
 </ul>
 <p>and <span class="math inline">\(\gamma\)</span> is maximized.</p>
 </section>
 <section id="problems-with-mm-classifier-1" class="slide level3">
 <h3>Problems with MM classifier (1)</h3>
 <figure>
-<img data-src="../images/6-mm-no-solution.png" style="width:25.0%" alt="When data is not linearly separable, optimization problem has no solution with \gamma &gt;0." /><figcaption aria-hidden="true">When data is not linearly separable, optimization problem has no solution with <span class="math inline">\(\gamma &gt;0\)</span>.</figcaption>
+<img data-src="../images/6-mm-no-solution.png" style="width:25.0%"
+alt="When data is not linearly separable, optimization problem has no solution with \gamma &gt;0." />
+<figcaption aria-hidden="true">When data is not linearly separable,
+optimization problem has no solution with <span
+class="math inline">\(\gamma &gt;0\)</span>.</figcaption>
 </figure>
 </section>
 <section id="problems-with-mm-classifier-2" class="slide level3">
 <h3>Problems with MM classifier (2)</h3>
 <figure>
-<img data-src="../images/6-mm-not-robust.png" style="width:60.0%" alt="The classifier is not robust - one new observation can dramatically shift the hyperplane." /><figcaption aria-hidden="true">The classifier is not robust - one new observation can dramatically shift the hyperplane.</figcaption>
+<img data-src="../images/6-mm-not-robust.png" style="width:60.0%"
+alt="The classifier is not robust - one new observation can dramatically shift the hyperplane." />
+<figcaption aria-hidden="true">The classifier is not robust - one new
+observation can dramatically shift the hyperplane.</figcaption>
 </figure>
 </section></section>
 <section>
-<section id="support-vector-classifier" class="title-slide slide level2">
+<section id="support-vector-classifier"
+class="title-slide slide level2">
 <h2>Support vector classifier</h2>
 
 </section>
@@ -197,7 +274,8 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 <li>“Soft margin”</li>
 </ul>
 </section>
-<section id="constructing-the-support-vector-classifier" class="slide level3">
+<section id="constructing-the-support-vector-classifier"
+class="slide level3">
 <h3>Constructing the support vector classifier</h3>
 <p><span class="math display">\[\begin{equation}
 \operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \gamma
@@ -206,33 +284,52 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 \text{subject to: } \sum_{j=1}^{p} w_j^2 = 1
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i
+y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq
+\gamma(1-\epsilon_i), \forall i
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
 \epsilon_i \geq 0 \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
 \end{equation}\]</span></p>
 <aside class="notes">
 <figure>
-<img data-src="../images/6-svc.png" style="width:40.0%" alt="Support vector classifier. Note: the blue arrows show y_i \gamma \epsilon_i." /><figcaption aria-hidden="true">Support vector classifier. Note: the blue arrows show <span class="math inline">\(y_i \gamma \epsilon_i\)</span>.</figcaption>
+<img data-src="../images/6-svc.png" style="width:40.0%"
+alt="Support vector classifier. Note: the blue arrows show y_i \gamma \epsilon_i." />
+<figcaption aria-hidden="true">Support vector classifier. Note: the blue
+arrows show <span class="math inline">\(y_i \gamma
+\epsilon_i\)</span>.</figcaption>
 </figure>
-<p><span class="math inline">\(K\)</span> is a non-negative tuning parameter.</p>
-<p><strong>Slack variable</strong> <span class="math inline">\(\epsilon_i\)</span> determines where a point lies:</p>
+<p><span class="math inline">\(K\)</span> is a non-negative tuning
+parameter.</p>
+<p><strong>Slack variable</strong> <span
+class="math inline">\(\epsilon_i\)</span> determines where a point
+lies:</p>
 <ul>
-<li>If <span class="math inline">\(\epsilon_i = 0\)</span>, point is on the correct side of margin</li>
-<li>If <span class="math inline">\(\epsilon_i &gt; 0\)</span>, point has <em>violated</em> the margin (wrong side of margin)</li>
-<li>If <span class="math inline">\(\epsilon_i &gt; 1\)</span>, point is on wrong side of hyperplane and is misclassified</li>
+<li>If <span class="math inline">\(\epsilon_i = 0\)</span>, point is on
+the correct side of margin</li>
+<li>If <span class="math inline">\(\epsilon_i &gt; 0\)</span>, point has
+<em>violated</em> the margin (wrong side of margin)</li>
+<li>If <span class="math inline">\(\epsilon_i &gt; 1\)</span>, point is
+on wrong side of hyperplane and is misclassified</li>
 </ul>
-<p><span class="math inline">\(K\)</span> is the <strong>budget</strong> that determines the number and severity of margin violations we will tolerate.</p>
+<p><span class="math inline">\(K\)</span> is the <strong>budget</strong>
+that determines the number and severity of margin violations we will
+tolerate.</p>
 <ul>
-<li><span class="math inline">\(K=0 \rightarrow\)</span> same as MM classifier</li>
-<li><span class="math inline">\(K &gt; 0\)</span>, no more than <span class="math inline">\(K\)</span> observations may be on wrong side of hyperplane</li>
-<li>As <span class="math inline">\(K\)</span> increases, margin widens; as <span class="math inline">\(K\)</span> decreases, margin narrows.</li>
+<li><span class="math inline">\(K=0 \rightarrow\)</span> same as MM
+classifier</li>
+<li><span class="math inline">\(K &gt; 0\)</span>, no more than <span
+class="math inline">\(K\)</span> observations may be on wrong side of
+hyperplane</li>
+<li>As <span class="math inline">\(K\)</span> increases, margin widens;
+as <span class="math inline">\(K\)</span> decreases, margin
+narrows.</li>
 </ul>
 </aside>
 </section>
 <section id="support-vector" class="slide level3">
 <h3>Support vector</h3>
-<p>For a support vector classifier, the only points that affect the classifier are:</p>
+<p>For a support vector classifier, the only points that affect the
+classifier are:</p>
 <ul>
 <li>Points that lie on the margin boundary</li>
 <li>Points that violate margin</li>
@@ -240,44 +337,62 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 <p>These are the <em>support vectors</em>.</p>
 </section>
 <section id="illustration-of-effect-of-k" class="slide level3">
-<h3>Illustration of effect of <span class="math inline">\(K\)</span></h3>
+<h3>Illustration of effect of <span
+class="math inline">\(K\)</span></h3>
 <figure>
-<img data-src="../images/6-svc-c.png" style="width:45.0%" alt="The margin shrinks as K decreases." /><figcaption aria-hidden="true">The margin shrinks as <span class="math inline">\(K\)</span> decreases.</figcaption>
+<img data-src="../images/6-svc-c.png" style="width:45.0%"
+alt="The margin shrinks as K decreases." />
+<figcaption aria-hidden="true">The margin shrinks as <span
+class="math inline">\(K\)</span> decreases.</figcaption>
 </figure>
 <!--
 ![ISLR Fig. 9.7: Margin shrinks as $C$ decreases.](../images/9.7.svg){ width=50% }
 -->
 </section>
 <section id="k-controls-bias-variance-tradeoff" class="slide level3">
-<h3><span class="math inline">\(K\)</span> controls bias-variance tradeoff</h3>
+<h3><span class="math inline">\(K\)</span> controls bias-variance
+tradeoff</h3>
 <ul>
-<li>When <span class="math inline">\(K\)</span> is large: many support vectors, variance is low, but bias may be high.</li>
-<li>When <span class="math inline">\(K\)</span> is small: few support vectors, high variance, but low bias.</li>
+<li>When <span class="math inline">\(K\)</span> is large: many support
+vectors, variance is low, but bias may be high.</li>
+<li>When <span class="math inline">\(K\)</span> is small: few support
+vectors, high variance, but low bias.</li>
 </ul>
 <aside class="notes">
-<p><strong>Important terminology note</strong>: In ISLR and in the first part of these notes, meaning of constant is opposite its meaning in Python <code>sklearn</code>:</p>
+<p><strong>Terminology note</strong>: In ISLR and in the first part of
+these notes, meaning of constant is opposite its meaning in Python
+<code>sklearn</code>:</p>
 <ul>
-<li>ISLR and these notes: Large <span class="math inline">\(K\)</span>, wide margin.</li>
-<li>Python <code>sklearn</code>: Large <span class="math inline">\(C\)</span>, small margin.</li>
+<li>ISLR and these notes: Large <span class="math inline">\(K\)</span>,
+wide margin.</li>
+<li>Python <code>sklearn</code>: Large <span
+class="math inline">\(C\)</span>, small margin.</li>
 </ul>
 </aside>
 </section>
 <section id="loss-function" class="slide level3">
 <h3>Loss function</h3>
 <p>This problem is equivalent to minimizing hinge loss:</p>
-<p><span class="math display">\[\operatorname*{minimize}_{\mathbf{w}} \left( \sum_{i=1}^n \text{max} [0, 1-y_i ( w_0 + \sum_{j=1}^p w_j x_{ij})] + \lambda \sum_{j=1}^p w_j^2 \right)\]</span></p>
-<p>where <span class="math inline">\(\lambda\)</span> is non-negative tuning parameter.</p>
+<p><span class="math display">\[\operatorname*{minimize}_{\mathbf{w}}
+\left( \sum_{i=1}^n \text{max} [0, 1-y_i ( w_0 + \sum_{j=1}^p w_j
+x_{ij})] + \lambda \sum_{j=1}^p w_j^2 \right)\]</span></p>
+<p>where <span class="math inline">\(\lambda\)</span> is non-negative
+tuning parameter.</p>
 <aside class="notes">
 <p>Zero loss for observations where</p>
-<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) \geq 1\]</span></p>
-<p>and width of margin depends on <span class="math inline">\(\sum w_j^2\)</span>.</p>
+<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij}
+\right) \geq 1\]</span></p>
+<p>and width of margin depends on <span class="math inline">\(\sum
+w_j^2\)</span>.</p>
 </aside>
 </section>
 <section id="compared-to-logistic-regression" class="slide level3">
 <h3>Compared to logistic regression</h3>
 <ul>
-<li><strong>Hinge loss</strong>: zero for points on correct side of margin.</li>
-<li><strong>Logistic regression loss</strong>: small for points that are far from decision boundary.</li>
+<li><strong>Hinge loss</strong>: zero for points on correct side of
+margin.</li>
+<li><strong>Logistic regression loss</strong>: small for points that are
+far from decision boundary.</li>
 </ul>
 <!--
 ### Hinge loss vs. logistic regression
@@ -295,23 +410,30 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 <h3>Problem formulation - original</h3>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad &amp;  \gamma \\
+\operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad
+&amp;  \gamma \\
 \text{subject to} \quad &amp;\sum_{j=1}^{p} w_j^2 = 1 \\
-&amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i \\
+&amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq
+\gamma(1-\epsilon_i), \forall i \\
 &amp;  \epsilon_i \geq 0, \quad \forall i \\
-&amp; \sum_{i=1}^n \epsilon_i \leq K 
+&amp; \sum_{i=1}^n \epsilon_i \leq K
 \end{aligned}
 \]</span></p>
 </section>
 <section id="problem-formulation---equivalent" class="slide level3">
 <h3>Problem formulation - equivalent</h3>
 <aside class="notes">
-<p>Remember that any scaled version of the hyperplane is the same line. So let’s make <span class="math inline">\(||w||\)</span> inversely proportional to <span class="math inline">\(\gamma\)</span>. Then we can formulate the equivalent problem:</p>
+<p>Remember that any scaled version of the hyperplane is the same line.
+So let’s make <span class="math inline">\(||w||\)</span> inversely
+proportional to <span class="math inline">\(\gamma\)</span>. Then we can
+formulate the equivalent problem:</p>
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad &amp; \sum_{j=1}^{p} w_j^2 \\
-\text{subject to} \quad &amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq 1-\epsilon_i, \forall i \\
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad &amp;
+\sum_{j=1}^{p} w_j^2 \\
+\text{subject to} \quad &amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij}
+\right) \geq 1-\epsilon_i, \forall i \\
 &amp; \epsilon_i \geq 0, \quad \forall i \\
 &amp; \sum_{i=1}^n \epsilon_i \leq K \\
 \end{aligned}
@@ -324,8 +446,10 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad &amp; \frac{1}{2} \sum_{j=1}^p w_j^2  + C \sum_{i=1}^n \epsilon_i  \\
-\text{subject to} \quad &amp; y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq 1-\epsilon_i, \quad \forall i \\
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \quad &amp;
+\frac{1}{2} \sum_{j=1}^p w_j^2  + C \sum_{i=1}^n \epsilon_i  \\
+\text{subject to} \quad &amp; y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) \geq
+1-\epsilon_i, \quad \forall i \\
 &amp; \epsilon_i \geq 0, \quad \forall i
 \end{aligned}
 \]</span></p>
@@ -334,68 +458,113 @@ y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \fo
 <h3>Background: constrained optimization</h3>
 <p>Basic formulation of contrained optimization problem:</p>
 <ul>
-<li><strong>Objective</strong>: Minimize <span class="math inline">\(f(x)\)</span></li>
-<li><strong>Constraint(s)</strong>: subject to <span class="math inline">\(g(x)\leq 0\)</span></li>
+<li><strong>Objective</strong>: Minimize <span
+class="math inline">\(f(x)\)</span></li>
+<li><strong>Constraint(s)</strong>: subject to <span
+class="math inline">\(g(x)\leq 0\)</span></li>
 </ul>
 <aside class="notes">
-<p>Find <span class="math inline">\({x}^{*}\)</span> that satisfies <span class="math inline">\(g({x}^{*}) \leq 0\)</span> and, for any other <span class="math inline">\(x\)</span> that satisfies <span class="math inline">\(g(x) \leq 0\)</span>, <span class="math inline">\(f(x) \geq f({x}^{*})\)</span>.</p>
+<p>Find <span class="math inline">\({x}^{*}\)</span> that satisfies
+<span class="math inline">\(g({x}^{*}) \leq 0\)</span> and, for any
+other <span class="math inline">\(x\)</span> that satisfies <span
+class="math inline">\(g(x) \leq 0\)</span>, <span
+class="math inline">\(f(x) \geq f({x}^{*})\)</span>.</p>
 </aside>
 </section>
 <section id="background-illustration" class="slide level3">
 <h3>Background: Illustration</h3>
 <figure>
-<img data-src="../images/6-constrained-optimization.png" style="width:80.0%" alt="Minimizing objective function, without (left) and with (right) a constraint." /><figcaption aria-hidden="true">Minimizing objective function, without (left) and with (right) a constraint.</figcaption>
+<img data-src="../images/6-constrained-optimization.png"
+style="width:80.0%"
+alt="Minimizing objective function, without (left) and with (right) a constraint." />
+<figcaption aria-hidden="true">Minimizing objective function, without
+(left) and with (right) a constraint.</figcaption>
 </figure>
 </section>
 <section id="background-solving-with-lagrangian-1" class="slide level3">
 <h3>Background: Solving with Lagrangian (1)</h3>
 <p>To solve, we form the Lagrangian:</p>
 <p><span class="math display">\[
-L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_m g_m(x) 
+L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_m g_m(x)
 \]</span></p>
-<p>where each <span class="math inline">\(\lambda \geq 0\)</span> is a <em>Lagrange multiplier</em>.</p>
+<p>where each <span class="math inline">\(\lambda \geq 0\)</span> is a
+<em>Lagrange multiplier</em>.</p>
 <aside class="notes">
-<p>The <span class="math inline">\(\lambda g(x)\)</span> terms “pull” solution toward feasible set, away from non-feasible set.</p>
+<p>The <span class="math inline">\(\lambda g(x)\)</span> terms “pull”
+solution toward feasible set, away from non-feasible set.</p>
 </aside>
 </section>
 <section id="background-solving-with-lagrangian-2" class="slide level3">
 <h3>Background: Solving with Lagrangian (2)</h3>
-<p>Then, to solve, we use joint optimization over <span class="math inline">\(x\)</span> and <span class="math inline">\(\lambda\)</span>:</p>
-<p><span class="math display">\[\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)\]</span></p>
-<p>over <span class="math inline">\(x\)</span> and <span class="math inline">\(\lambda\)</span>. If for some <span class="math inline">\(x\)</span>,</p>
+<p>Then, to solve, we use joint optimization over <span
+class="math inline">\(x\)</span> and <span
+class="math inline">\(\lambda\)</span>:</p>
+<p><span class="math display">\[\operatorname*{minimize}_{x}
+\operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda
+g(x)\]</span></p>
+<p>over <span class="math inline">\(x\)</span> and <span
+class="math inline">\(\lambda\)</span>. If for some <span
+class="math inline">\(x\)</span>,</p>
 <ul>
-<li><span class="math inline">\(g(x) \leq 0\)</span>: the constraint is not active, <span class="math inline">\(\lambda = 0\)</span>.</li>
-<li><span class="math inline">\(g(x) &gt; 0\)</span>: the constraint is active, <span class="math inline">\(\lambda &gt; 0\)</span>. Then we need to change <span class="math inline">\(x\)</span> to make <span class="math inline">\(g(x)\)</span> smaller.</li>
+<li><span class="math inline">\(g(x) \leq 0\)</span>: the constraint is
+not active, <span class="math inline">\(\lambda = 0\)</span>.</li>
+<li><span class="math inline">\(g(x) &gt; 0\)</span>: the constraint is
+active, <span class="math inline">\(\lambda &gt; 0\)</span>. Then we
+need to change <span class="math inline">\(x\)</span> to make <span
+class="math inline">\(g(x)\)</span> smaller.</li>
 </ul>
 <aside class="notes">
-<p>“Solve” in the usual way if the function is convex: by taking partial derivative of <span class="math inline">\(L(x,\lambda)\)</span> with respect to each argument, and setting it to zero. The solution to the original function will be a saddle point in the Lagrangian.</p>
-<p>This “pull” between the <span class="math inline">\(x\)</span> that minimizes <span class="math inline">\(f(x)\)</span> and the <span class="math inline">\(\lambda g(x)\)</span> ends up making the constraint “tight”: if <span class="math inline">\(\lambda &gt; 0\)</span> then we’ll make <span class="math inline">\(g(x) = 0\)</span>.</p>
-<p>This is called the KKT complementary slackness condition: for every constraint, <span class="math inline">\(\lambda g(x) = 0\)</span>, either because <span class="math inline">\(\lambda = 0\)</span> (inactive constraint) or <span class="math inline">\(g(x) = 0\)</span> (active constraint).</p>
+<p>“Solve” in the usual way if the function is convex: by taking partial
+derivative of <span class="math inline">\(L(x,\lambda)\)</span> with
+respect to each argument, and setting it to zero. The solution to the
+original function will be a saddle point in the Lagrangian.</p>
+<p>This “pull” between the <span class="math inline">\(x\)</span> that
+minimizes <span class="math inline">\(f(x)\)</span> and the <span
+class="math inline">\(\lambda g(x)\)</span> ends up making the
+constraint “tight”: if <span class="math inline">\(\lambda &gt;
+0\)</span> then we’ll make <span class="math inline">\(g(x) =
+0\)</span>.</p>
+<p>This is called the KKT complementary slackness condition: for every
+constraint, <span class="math inline">\(\lambda g(x) = 0\)</span>,
+either because <span class="math inline">\(\lambda = 0\)</span>
+(inactive constraint) or <span class="math inline">\(g(x) = 0\)</span>
+(active constraint).</p>
 </aside>
 </section>
 <section id="background-activeinactive-constraint" class="slide level3">
 <h3>Background: Active/inactive constraint</h3>
 <figure>
-<img data-src="../images/6-active-inactive.png" style="width:80.0%" alt="Optimization with inactive, active constraint." /><figcaption aria-hidden="true">Optimization with inactive, active constraint.</figcaption>
+<img data-src="../images/6-active-inactive.png" style="width:80.0%"
+alt="Optimization with inactive, active constraint." />
+<figcaption aria-hidden="true">Optimization with inactive, active
+constraint.</figcaption>
 </figure>
 </section>
-<section id="background-primal-and-dual-formulation" class="slide level3">
+<section id="background-primal-and-dual-formulation"
+class="slide level3">
 <h3>Background: Primal and dual formulation</h3>
-<p>Under the right conditions, the solution to the <em>primal</em> problem:</p>
-<p><span class="math display">\[\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } L(x, \lambda) \]</span></p>
+<p>Under the right conditions, the solution to the <em>primal</em>
+problem:</p>
+<p><span class="math display">\[\operatorname*{minimize}_{x}
+\operatorname*{maximize}_{\lambda \geq 0 } L(x, \lambda) \]</span></p>
 <p>is the same as the solution to the <em>dual</em> problem:</p>
-<p><span class="math display">\[\operatorname*{maximize}_{\lambda \geq 0 } \operatorname*{minimize}_{x} L(x, \lambda) \]</span></p>
+<p><span class="math display">\[\operatorname*{maximize}_{\lambda \geq 0
+} \operatorname*{minimize}_{x} L(x, \lambda) \]</span></p>
 </section>
-<section id="problem-formulation---lagrangian-primal" class="slide level3">
+<section id="problem-formulation---lagrangian-primal"
+class="slide level3">
 <h3>Problem formulation - Lagrangian primal</h3>
 <aside class="notes">
 <p>Back to our SVC problem - let’s form the Lagrangian and optimize:</p>
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}} \operatorname*{maximize}_{\alpha_i \geq 0, \mu_i \geq 0, \forall i } \quad &amp; \frac{1}{2} \sum_{j=1}^p w_j^2   \\
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}}
+\operatorname*{maximize}_{\alpha_i \geq 0, \mu_i \geq 0, \forall i }
+\quad &amp; \frac{1}{2} \sum_{j=1}^p w_j^2   \\
 &amp; + C \sum_{i=1}^n \epsilon_i \\
-&amp; - \sum_{i=1}^n  \alpha_i \left[ y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) - (1-\epsilon_i) \right]  \\
+&amp; - \sum_{i=1}^n  \alpha_i \left[ y_i(w_0 + \sum_{j=1}^p w_j x_{ij})
+- (1-\epsilon_i) \right]  \\
 &amp; - \sum_{i=1}^n \mu_i \epsilon_i
 \end{aligned}
 \]</span></p>
@@ -403,28 +572,38 @@ L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_m g_m(x)
 <p>This is the <em>primal</em> problem.</p>
 </aside>
 </section>
-<section id="problem-formulation---lagrangian-dual" class="slide level3">
+<section id="problem-formulation---lagrangian-dual"
+class="slide level3">
 <h3>Problem formulation - Lagrangian dual</h3>
 <aside class="notes">
 <p>The equivalent <em>dual</em> problem:</p>
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname*{maximize}_{\alpha_i \geq 0, \mu_i \geq 0, \forall i } \operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}}  \quad &amp; \frac{1}{2} \sum_{j=1}^p w_j^2   \\
+\operatorname*{maximize}_{\alpha_i \geq 0, \mu_i \geq 0, \forall i }
+\operatorname*{minimize}_{\mathbf{w}, \mathbf{\epsilon}}  \quad &amp;
+\frac{1}{2} \sum_{j=1}^p w_j^2   \\
 &amp; + C \sum_{i=1}^n \epsilon_i \\
-&amp; - \sum_{i=1}^n  \alpha_i \left[ y_i(w_0 + \sum_{j=1}^p w_j x_{ij}) - (1-\epsilon_i) \right]  \\
+&amp; - \sum_{i=1}^n  \alpha_i \left[ y_i(w_0 + \sum_{j=1}^p w_j x_{ij})
+- (1-\epsilon_i) \right]  \\
 &amp; - \sum_{i=1}^n \mu_i \epsilon_i
 \end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>We solve this by taking the derivatives with respect to <span class="math inline">\(\mathbf{w}, \mathbf{\epsilon}\)</span> and setting them to zero. Then, we plug those values back into the dual equation…</p>
+<p>We solve this by taking the derivatives with respect to <span
+class="math inline">\(\mathbf{w}, \mathbf{\epsilon}\)</span> and setting
+them to zero. Then, we plug those values back into the dual
+equation…</p>
 </aside>
 </section>
-<section id="problem-formulation---lagrangian-dual-2" class="slide level3">
+<section id="problem-formulation---lagrangian-dual-2"
+class="slide level3">
 <h3>Problem formulation - Lagrangian dual (2)</h3>
 <p><span class="math display">\[
 \begin{aligned}
-\operatorname*{maximize}_{\alpha_i \geq 0, \forall i }  \quad &amp;  \sum_{i=1}^n \alpha_i  - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n \alpha_i \alpha_j y_i y_j \mathbf{x}_i^T \mathbf{x}_j \\
+\operatorname*{maximize}_{\alpha_i \geq 0, \forall i }  \quad
+&amp;  \sum_{i=1}^n \alpha_i  - \frac{1}{2} \sum_{i=1}^n \sum_{j=1}^n
+\alpha_i \alpha_j y_i y_j \mathbf{x}_i^T \mathbf{x}_j \\
 \text{subject to} \quad &amp; \sum_{i=1}^n \alpha_i y_i  = 0 \\
 &amp; 0 \leq \alpha_i \leq C, \quad \forall i
 \end{aligned}
@@ -435,50 +614,71 @@ L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_m g_m(x)
 </section>
 <section id="solution-1" class="slide level3">
 <h3>Solution (1)</h3>
-<p>Optimal coefficients for <span class="math inline">\(j=1,\ldots,p\)</span> are:</p>
-<p><span class="math display">\[\mathbf{w}^* = \sum_{i=1}^n {\alpha_i^*} y_i \mathbf{x}_{i}\]</span></p>
-<p>where <span class="math inline">\({\alpha_i^*}\)</span> come from the solution to the dual problem.</p>
+<p>Optimal coefficients for <span
+class="math inline">\(j=1,\ldots,p\)</span> are:</p>
+<p><span class="math display">\[\mathbf{w}^* = \sum_{i=1}^n {\alpha_i^*}
+y_i \mathbf{x}_{i}\]</span></p>
+<p>where <span class="math inline">\({\alpha_i^*}\)</span> come from the
+solution to the dual problem.</p>
 </section>
 <section id="solution-2" class="slide level3">
 <h3>Solution (2)</h3>
 <ul>
-<li><span class="math inline">\({\alpha_i^*} &gt; 0\)</span> only when <span class="math inline">\(x_i\)</span> is a support vector (active constraint).</li>
-<li>Otherwise, <span class="math inline">\({\alpha_i^*} = 0\)</span> (inactive constraint).</li>
+<li><span class="math inline">\({\alpha_i^*} &gt; 0\)</span> only when
+<span class="math inline">\(x_i\)</span> is a support vector (active
+constraint).</li>
+<li>Otherwise, <span class="math inline">\({\alpha_i^*} = 0\)</span>
+(inactive constraint).</li>
 </ul>
 </section>
 <section id="solution-3" class="slide level3">
 <h3>Solution (3)</h3>
-<p>That leaves <span class="math inline">\(w_0^*\)</span> - we can solve</p>
-<p><span class="math display">\[w_0^* = y_i - \sum_{j=1}^p w_j \mathbf{x}_{i}\]</span></p>
-<p>using any sample <span class="math inline">\(i\)</span> where <span class="math inline">\(\alpha_i^* &gt; 0\)</span>, i.e. any support vector.</p>
+<p>That leaves <span class="math inline">\(w_0^*\)</span> - we can
+solve</p>
+<p><span class="math display">\[w_0^* = y_i - \sum_{j=1}^p w_j
+\mathbf{x}_{i}\]</span></p>
+<p>using any sample <span class="math inline">\(i\)</span> where <span
+class="math inline">\(\alpha_i^* &gt; 0\)</span>, i.e. any support
+vector.</p>
 </section>
 <section id="why-solve-dual-problem" class="slide level3">
 <h3>Why solve dual problem?</h3>
-<p>For high-dimension problems (many features), dual problem can be much faster to solve than primal problem:</p>
+<p>For high-dimension problems (many features), dual problem can be much
+faster to solve than primal problem:</p>
 <ul>
-<li>Primal problem: optimize over <span class="math inline">\(p+1\)</span> coefficients.</li>
-<li>Dual problem: optimize over <span class="math inline">\(n\)</span> dual variables, but there are only as many non-zero ones as there are support vectors.</li>
+<li>Primal problem: optimize over <span
+class="math inline">\(p+1\)</span> coefficients.</li>
+<li>Dual problem: optimize over <span class="math inline">\(n\)</span>
+dual variables, but there are only as many non-zero ones as there are
+support vectors.</li>
 </ul>
 <p>Also: the kernel trick, which we’ll discuss next…</p>
 </section>
 <section id="correlation-interpretation-1" class="slide level3">
 <h3>Correlation interpretation (1)</h3>
-<p>Given a new sample <span class="math inline">\(\mathbf{x}\)</span> to classify, compute</p>
-<p><span class="math display">\[\hat{z}(\mathbf{x}) = w_0 + \sum_{j=1}^p w_j x_{j} = w_0 + \sum_{i=1}^n \alpha_i y_i \sum_{j=1}^p  x_{ij} x_{j}\]</span></p>
-<p>Measures inner product (a kind of “correlation”) between new sample and each support vector.</p>
+<p>Given a new sample <span class="math inline">\(\mathbf{x}\)</span> to
+classify, compute</p>
+<p><span class="math display">\[\hat{z}(\mathbf{x}) = w_0 + \sum_{j=1}^p
+w_j x_{j} = w_0 + \sum_{i=1}^n \alpha_i y_i \sum_{j=1}^p  x_{ij}
+x_{j}\]</span></p>
+<p>Measures inner product (a kind of “correlation”) between new sample
+and each support vector.</p>
 </section>
 <section id="correlation-interpretation-2" class="slide level3">
 <h3>Correlation interpretation (2)</h3>
 <p>Classifier output (assuming -1,1 labels):</p>
-<p><span class="math display">\[\hat{y}(\mathbf{x}) = \text{sign} (\hat{z}(\mathbf{x}))\]</span></p>
-<p>Predicted label is weighted average of labels for support vectors, with weights proportional to “correlation” of test sample and support vector.</p>
+<p><span class="math display">\[\hat{y}(\mathbf{x}) = \text{sign}
+(\hat{z}(\mathbf{x}))\]</span></p>
+<p>Predicted label is weighted average of labels for support vectors,
+with weights proportional to “correlation” of test sample and support
+vector.</p>
 </section></section>
     </div>
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -489,10 +689,148 @@ L(x, \lambda) = f(x) + \lambda_1 g_1(x) + \dots + \lambda_m g_m(x)
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

@@ -259,7 +259,7 @@ These are the *support vectors*.
 
 ::: notes
 
-**Important terminology note**: In ISLR and in the first part of these notes, meaning of constant is opposite its meaning in Python `sklearn`:
+**Terminology note**: In ISLR and in the first part of these notes, meaning of constant is opposite its meaning in Python `sklearn`:
 
 * ISLR and these notes: Large $K$, wide margin.
 * Python `sklearn`: Large $C$, small margin.
