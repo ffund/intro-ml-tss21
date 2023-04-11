@@ -140,9 +140,10 @@ In deep learning, we don't want to use "smaller" (simpler) models, which won't b
 
 It doesn't restrict network capacity - but it helps generalization by increasing the size of your training set! 
 
-Apply rotation, crops, scales, change contrast, brightness, color... etc. during training.
+For image data: apply rotation, crops, scales, change contrast, brightness, color. For text you can replace words with synonyms, for audio you can adjust pitch or speed, etc.
 
 :::
+
 
 ### Transfer learning
 
@@ -220,7 +221,7 @@ Even the maximum value of the gradient is only 0.25 - so the gradient is always 
 
 The network "learns fastest" when the gradient is large. When the sigmoid "saturates", it "kills" the neuron!
 
-Same issue with tanh, although that is slightly better - its output is centered at zero, and its gradient has.
+Same issue with tanh, although that is slightly better - its output is centered at zero, and its gradient has a larger max.
 
 (There is also an analagous "exploding gradient" problem when large gradients are propagated back through the network.)
 

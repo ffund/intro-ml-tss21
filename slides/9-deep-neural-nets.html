@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -37,12 +45,26 @@
 <li>Output layer learns classification/regression tasks</li>
 </ul>
 <aside class="notes">
-<p>With the neural network, the “transformed” feature representation is <em>learned</em> instead of specified by the designer.</p>
+<p>With the neural network, the “transformed” feature representation is
+<em>learned</em> instead of specified by the designer.</p>
 <figure>
-<img data-src="../images/8-deep-learning-motivation.png" style="width:100.0%" alt="Image is based on a figure in Deep learning, by Goodfellow, Bengio, Courville." /><figcaption aria-hidden="true">Image is based on a figure in Deep learning, by Goodfellow, Bengio, Courville.</figcaption>
+<img data-src="../images/8-deep-learning-motivation.png"
+style="width:100.0%"
+alt="Image is based on a figure in Deep learning, by Goodfellow, Bengio, Courville." />
+<figcaption aria-hidden="true">Image is based on a figure in Deep
+learning, by Goodfellow, Bengio, Courville.</figcaption>
 </figure>
-<p>A neural network with non-linear activation, with one hidden layer and many units in it <em>can</em> approximate virtually any continuous real-valued function, with the right weights. (Refer to the <em>Universal Approximation Theorem</em>.) But (1) it may need a very large number of units to represent the function, and (2) those weights might not be learned by gradient descent - the loss surface is very unfriendly.</p>
-<p>Instead of a single hidden layer, if we use multiple hidden layers they can “compose” functions learned by the previous layers into more complex functions - use fewer units, and tends to learn better weights .</p>
+<p>A neural network with non-linear activation, with one hidden layer
+and many units in it <em>can</em> approximate virtually any continuous
+real-valued function, with the right weights. (Refer to the
+<em>Universal Approximation Theorem</em>.) But (1) it may need a very
+large number of units to represent the function, and (2) those weights
+might not be learned by gradient descent - the loss surface is very
+unfriendly.</p>
+<p>Instead of a single hidden layer, if we use multiple hidden layers
+they can “compose” functions learned by the previous layers into more
+complex functions - use fewer units, and tends to learn better weights
+.</p>
 <!--
 
 Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%20ArchitectureDesign.pdf
@@ -56,18 +78,24 @@ Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%2
 <h2>Deep neural networks</h2>
 <aside class="notes">
 <figure>
-<img data-src="../images/8-deep-network.png" style="width:60.0%" alt="Illustration of a deep network, with multiple hidden layers." /><figcaption aria-hidden="true">Illustration of a deep network, with multiple hidden layers.</figcaption>
+<img data-src="../images/8-deep-network.png" style="width:60.0%"
+alt="Illustration of a deep network, with multiple hidden layers." />
+<figcaption aria-hidden="true">Illustration of a deep network, with
+multiple hidden layers.</figcaption>
 </figure>
 <p>Some comments:</p>
 <ul>
 <li>each layer is fully connected to the next layer</li>
-<li>each unit still works the same way: take the weighted sum of inputs, apply an activation function, and that’s the unit output</li>
+<li>each unit still works the same way: take the weighted sum of inputs,
+apply an activation function, and that’s the unit output</li>
 <li>still trained by backpropagation</li>
 </ul>
-<p>We call the number of layers the “depth” of the network and the number of hidden units in a layer its “width.”</p>
+<p>We call the number of layers the “depth” of the network and the
+number of hidden units in a layer its “width.”</p>
 </aside>
 </section>
-<section id="challenges-with-deep-neural-networks-1" class="slide level3">
+<section id="challenges-with-deep-neural-networks-1"
+class="slide level3">
 <h3>Challenges with deep neural networks (1)</h3>
 <ul>
 <li>Efficient learning</li>
@@ -77,50 +105,94 @@ Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%2
 <section id="loss-landscape" class="slide level3">
 <h3>Loss landscape</h3>
 <figure>
-<img data-src="../images/resnet56_noshort_small.jpg" style="width:30.0%" alt="“Loss landscape” of a deep neural network in a “slice” of the high-dimensional feature space." /><figcaption aria-hidden="true">“Loss landscape” of a deep neural network in a “slice” of the high-dimensional feature space.</figcaption>
+<img data-src="../images/resnet56_noshort_small.jpg" style="width:30.0%"
+alt="“Loss landscape” of a deep neural network in a “slice” of the high-dimensional feature space." />
+<figcaption aria-hidden="true">“Loss landscape” of a deep neural network
+in a “slice” of the high-dimensional feature space.</figcaption>
 </figure>
 <aside class="notes">
-<p>Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and Tom Goldstein. Visualizing the Loss Landscape of Neural Nets. NIPS, 2018.</p>
-<p>Neural networks are optimized using backpropagation over the computational graph, where the loss is a very challenging function of <em>all</em> the weights. (Not convex!)</p>
+<p>Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and
+Tom Goldstein. Visualizing the Loss Landscape of Neural Nets. NIPS,
+2018.</p>
+<p>Neural networks are optimized using backpropagation over the
+computational graph, where the loss is a very challenging function of
+<em>all</em> the weights. (Not convex!)</p>
 </aside>
 </section>
 <section id="double-descent-curve" class="slide level3">
 <h3>Double descent curve</h3>
 <figure>
-<img data-src="../images/8-double-descent.png" style="width:100.0%" alt="Double descent curve (left) and realization in a real neural network (right)." /><figcaption aria-hidden="true">Double descent curve (left) and realization in a real neural network (right).</figcaption>
+<img data-src="../images/8-double-descent.png" style="width:100.0%"
+alt="Double descent curve (left) and realization in a real neural network (right)." />
+<figcaption aria-hidden="true">Double descent curve (left) and
+realization in a real neural network (right).</figcaption>
 </figure>
 <aside class="notes">
-<p>Interpolation threshold: where the model is just big enough to fit the training data exactly.</p>
+<p>Interpolation threshold: where the model is just big enough to fit
+the training data exactly.</p>
 <ul>
 <li>too-small models: can’t represent the “true” function well</li>
-<li>too-big models (before interpolation threshold): memorizes the input, doesn’t generalize well to unseen data (very sensitive to noise)</li>
-<li>REALLY big models: many possible weights that memorize the input, but SGD finds weight combination that memorizes the input <em>and</em> does well on unseen data</li>
+<li>too-big models (before interpolation threshold): memorizes the
+input, doesn’t generalize well to unseen data (very sensitive to
+noise)</li>
+<li>REALLY big models: many possible weights that memorize the input,
+but SGD finds weight combination that memorizes the input <em>and</em>
+does well on unseen data</li>
 </ul>
 </aside>
 </section>
 <section id="double-descent-animation" class="slide level3">
 <h3>Double descent: animation</h3>
 <figure>
-<img data-src="../images/8-polynomial-animation.gif" style="width:40.0%" alt="Polynomial model before and after the interpolation threshold. Image source: Boaz Barak, click link to see animation." /><figcaption aria-hidden="true">Polynomial model before and after the interpolation threshold. Image source: <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak, click link to see animation</a>.</figcaption>
+<img data-src="../images/8-polynomial-animation.gif" style="width:40.0%"
+alt="Polynomial model before and after the interpolation threshold. Image source: Boaz Barak, click link to see animation." />
+<figcaption aria-hidden="true">Polynomial model before and after the
+interpolation threshold. Image source: <a
+href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
+Barak, click link to see animation</a>.</figcaption>
 </figure>
 <aside class="notes">
-<p>Explanation (via <a href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz Barak</a>):</p>
+<p>Explanation (via <a
+href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
+Barak</a>):</p>
 <blockquote>
-<p>When <span class="math inline">\(d\)</span> of the model is less than <span class="math inline">\(d_t\)</span> of the polynomial, we are “under-fitting” and will not get good performance. As <span class="math inline">\(d\)</span> increases between <span class="math inline">\(d_t\)</span> and <span class="math inline">\(n\)</span>, we fit more and more of the noise, until for <span class="math inline">\(d=n\)</span> we have a perfect interpolating polynomial that will have perfect training but very poor test performance. When <span class="math inline">\(d\)</span> grows beyond <span class="math inline">\(n\)</span>, more than one polynomial can fit the data, and (under certain conditions) SGD will select the minimal norm one, which will make the interpolation smoother and smoother and actually result in better performance.</p>
+<p>When <span class="math inline">\(d\)</span> of the model is less than
+<span class="math inline">\(d_t\)</span> of the polynomial, we are
+“under-fitting” and will not get good performance. As <span
+class="math inline">\(d\)</span> increases between <span
+class="math inline">\(d_t\)</span> and <span
+class="math inline">\(n\)</span>, we fit more and more of the noise,
+until for <span class="math inline">\(d=n\)</span> we have a perfect
+interpolating polynomial that will have perfect training but very poor
+test performance. When <span class="math inline">\(d\)</span> grows
+beyond <span class="math inline">\(n\)</span>, more than one polynomial
+can fit the data, and (under certain conditions) SGD will select the
+minimal norm one, which will make the interpolation smoother and
+smoother and actually result in better performance.</p>
 </blockquote>
-<p>What this means: in practice, we let the network get big (have capacity to learn complicated data representations!) and use other methods to help select a “good” set of weights from all these candidates.</p>
+<p>What this means: in practice, we let the network get big (have
+capacity to learn complicated data representations!) and use other
+methods to help select a “good” set of weights from all these
+candidates.</p>
 </aside>
 </section>
-<section id="challenges-with-deep-neural-networks-2" class="slide level3">
+<section id="challenges-with-deep-neural-networks-2"
+class="slide level3">
 <h3>Challenges with deep neural networks (2)</h3>
 <ul>
 <li>Efficient learning</li>
 <li>Generalization</li>
 </ul>
 <aside class="notes">
-<p>In deep learning, we don’t want to use “smaller” (simpler) models, which won’t be as capable of learning good feature representations. Instead, lots of work around (1) finding good weights quickly, and (2) finding weights that will generalize.</p>
+<p>In deep learning, we don’t want to use “smaller” (simpler) models,
+which won’t be as capable of learning good feature representations.
+Instead, lots of work around (1) finding good weights quickly, and (2)
+finding weights that will generalize.</p>
 <figure>
-<img data-src="../images/deep-learning-markmap.svg" style="width:60.0%" alt="Image credit: Sebastian Raschka" /><figcaption aria-hidden="true">Image credit: Sebastian Raschka</figcaption>
+<img data-src="../images/deep-learning-markmap.svg" style="width:60.0%"
+alt="Image credit: Sebastian Raschka" />
+<figcaption aria-hidden="true">Image credit: Sebastian
+Raschka</figcaption>
 </figure>
 </aside>
 </section></section>
@@ -132,11 +204,17 @@ Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%2
 <section id="data-augmentation" class="slide level3">
 <h3>Data augmentation</h3>
 <figure>
-<img data-src="../images/cats-augmentation.png" style="width:50.0%" alt="Data augmentation on a cat image." /><figcaption aria-hidden="true">Data augmentation on a cat image.</figcaption>
+<img data-src="../images/cats-augmentation.png" style="width:50.0%"
+alt="Data augmentation on a cat image." />
+<figcaption aria-hidden="true">Data augmentation on a cat
+image.</figcaption>
 </figure>
 <aside class="notes">
-<p>It doesn’t restrict network capacity - but it helps generalization by increasing the size of your training set!</p>
-<p>Apply rotation, crops, scales, change contrast, brightness, color… etc. during training.</p>
+<p>It doesn’t restrict network capacity - but it helps generalization by
+increasing the size of your training set!</p>
+<p>For image data: apply rotation, crops, scales, change contrast,
+brightness, color. For text you can replace words with synonyms, for
+audio you can adjust pitch or speed, etc.</p>
 </aside>
 </section>
 <section id="transfer-learning" class="slide level3">
@@ -146,30 +224,42 @@ Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%2
 <section id="using-pre-trained-networks" class="slide level3">
 <h3>Using pre-trained networks</h3>
 <ul>
-<li>State-of-the-art networks involve millions of parameters, huge datasets, and days of training on GPU clusters</li>
-<li>Idea: share pre-trained networks (network architecture and weights)</li>
-<li>Some famous networks for image classification: Inception, ResNet, and more</li>
+<li>State-of-the-art networks involve millions of parameters, huge
+datasets, and days of training on GPU clusters</li>
+<li>Idea: share pre-trained networks (network architecture and
+weights)</li>
+<li>Some famous networks for image classification: Inception, ResNet,
+and more</li>
 <li>Can be loaded directly in Keras</li>
 </ul>
 </section>
-<section id="transfer-learning-from-pre-trained-networks" class="slide level3">
+<section id="transfer-learning-from-pre-trained-networks"
+class="slide level3">
 <h3>Transfer learning from pre-trained networks</h3>
 <p>Use pre-trained network for a different task</p>
 <ul>
-<li>Use early layers from pre-trained network, freeze their parameters</li>
+<li>Use early layers from pre-trained network, freeze their
+parameters</li>
 <li>Only train small number of parameters at the end</li>
 </ul>
 </section>
 <section id="transfer-learning-illustration-1" class="slide level3">
 <h3>Transfer learning illustration (1)</h3>
 <figure>
-<img data-src="../images/8-transfer-similar.png" style="width:60.0%" alt="When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head." /><figcaption aria-hidden="true">When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head.</figcaption>
+<img data-src="../images/8-transfer-similar.png" style="width:60.0%"
+alt="When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head." />
+<figcaption aria-hidden="true">When the network is trained on a very
+similar task, even the abstract high-level features are probably very
+relevant, so you might tune just the classification head.</figcaption>
 </figure>
 </section>
 <section id="transfer-learning-illustration-2" class="slide level3">
 <h3>Transfer learning illustration (2)</h3>
 <figure>
-<img data-src="../images/8-transfer-less.png" style="width:60.0%" alt="If the original network is not as relevant, may fine-tune more layers." /><figcaption aria-hidden="true">If the original network is not as relevant, may fine-tune more layers.</figcaption>
+<img data-src="../images/8-transfer-less.png" style="width:60.0%"
+alt="If the original network is not as relevant, may fine-tune more layers." />
+<figcaption aria-hidden="true">If the original network is not as
+relevant, may fine-tune more layers.</figcaption>
 </figure>
 </section></section>
 <section>
@@ -180,7 +270,10 @@ Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%2
 <section id="recall-activation-functions" class="slide level3">
 <h3>Recall: activation functions</h3>
 <figure>
-<img data-src="../images/activation-functions.png" style="width:40.0%" alt="Candidate activation functions for a neural network." /><figcaption aria-hidden="true">Candidate activation functions for a neural network.</figcaption>
+<img data-src="../images/activation-functions.png" style="width:40.0%"
+alt="Candidate activation functions for a neural network." />
+<figcaption aria-hidden="true">Candidate activation functions for a
+neural network.</figcaption>
 </figure>
 <!--
 ### Zero-centered outputs
@@ -206,17 +299,25 @@ What happens if the $u_i$ terms are always positive?
 <section id="vanishing-gradient" class="slide level3">
 <h3>Vanishing gradient</h3>
 <aside class="notes">
-<p>What happens when you are in the far left or far right part of the sigmoid?</p>
+<p>What happens when you are in the far left or far right part of the
+sigmoid?</p>
 <ul>
 <li>Gradient is close to zero</li>
 <li>Weight updates are also close to zero</li>
-<li>The “downstream” gradients will also be values close to zero! (Because of backpropagation.)</li>
-<li>And, when you multiply quantities close to zero - they get even smaller.</li>
+<li>The “downstream” gradients will also be values close to zero!
+(Because of backpropagation.)</li>
+<li>And, when you multiply quantities close to zero - they get even
+smaller.</li>
 </ul>
-<p>Even the maximum value of the gradient is only 0.25 - so the gradient is always less than 1, and we know what happens if you multiply many quantities less than 1…</p>
-<p>The network “learns fastest” when the gradient is large. When the sigmoid “saturates”, it “kills” the neuron!</p>
-<p>Same issue with tanh, although that is slightly better - its output is centered at zero, and its gradient has.</p>
-<p>(There is also an analagous “exploding gradient” problem when large gradients are propagated back through the network.)</p>
+<p>Even the maximum value of the gradient is only 0.25 - so the gradient
+is always less than 1, and we know what happens if you multiply many
+quantities less than 1…</p>
+<p>The network “learns fastest” when the gradient is large. When the
+sigmoid “saturates”, it “kills” the neuron!</p>
+<p>Same issue with tanh, although that is slightly better - its output
+is centered at zero, and its gradient has a larger max.</p>
+<p>(There is also an analagous “exploding gradient” problem when large
+gradients are propagated back through the network.)</p>
 </aside>
 </section>
 <section id="dead-relu" class="slide level3">
@@ -229,10 +330,14 @@ What happens if the $u_i$ terms are always positive?
 </ul>
 <p>But, can “die” in the negative region.</p>
 <aside class="notes">
-<p>When input is less than 0, the ReLU (and downstream units) is <em>completely</em> dead (not only very small!)</p>
-<p>Alternative: <strong>leaky ReLU</strong> has small (non-zero) gradient in the negative region - won’t die.</p>
-<p><span class="math display">\[f(x) = \text{max}(\alpha x, x)\]</span></p>
-<p>(<span class="math inline">\(\alpha\)</span> is a hyperparameter.)</p>
+<p>When input is less than 0, the ReLU (and downstream units) is
+<em>completely</em> dead (not only very small!)</p>
+<p>Alternative: <strong>leaky ReLU</strong> has small (non-zero)
+gradient in the negative region - won’t die.</p>
+<p><span class="math display">\[f(x) = \text{max}(\alpha x,
+x)\]</span></p>
+<p>(<span class="math inline">\(\alpha\)</span> is a
+hyperparameter.)</p>
 <p>Many other variations on this…</p>
 </aside>
 <!-- 
@@ -249,40 +354,64 @@ What happens if the $u_i$ terms are always positive?
 <ul>
 <li>zero?</li>
 <li>a constant (non-zero)?</li>
-<li>a normal random value with large <span class="math inline">\(\sigma\)</span>?</li>
-<li>a normal random value with small <span class="math inline">\(\sigma\)</span>?</li>
+<li>a normal random value with large <span
+class="math inline">\(\sigma\)</span>?</li>
+<li>a normal random value with small <span
+class="math inline">\(\sigma\)</span>?</li>
 </ul>
 <aside class="notes">
 <p>Some comments:</p>
 <ul>
-<li>If weights are all initialized to zero, all the outputs are zero (for any input) - the network won’t learn.</li>
-<li>If weights are all initialized to the same constant, we are more prone to “herding” - hidden units all move in the same direction at once, instead of “specializing”.</li>
-<li>Large normal random values are bad - you want to be near the non-linear part of the activation function, and avoid exploding gradients.</li>
-<li>Small normal random values work well for “shallow” networks, but not for deep networks - it makes the activation function outputs “collapse” toward zero.</li>
+<li>If weights are all initialized to zero, all the outputs are zero
+(for any input) - the network won’t learn.</li>
+<li>If weights are all initialized to the same constant, we are more
+prone to “herding” - hidden units all move in the same direction at
+once, instead of “specializing”.</li>
+<li>Large normal random values are bad - you want to be near the
+non-linear part of the activation function, and avoid exploding
+gradients.</li>
+<li>Small normal random values work well for “shallow” networks, but not
+for deep networks - it makes the activation function outputs “collapse”
+toward zero.</li>
 </ul>
 </aside>
 </section>
-<section id="desirable-properties-for-initial-weights" class="slide level3">
+<section id="desirable-properties-for-initial-weights"
+class="slide level3">
 <h3>Desirable properties for initial weights</h3>
 <ul>
 <li>The mean of the intial weights should be right in the middle</li>
-<li>The variance of the activations should stay the same across every layer (<a href="https://www.deeplearning.ai/ai-notes/initialization/index.html">derivation</a>)</li>
+<li>The variance of the activations should stay the same across every
+layer (<a
+href="https://www.deeplearning.ai/ai-notes/initialization/index.html">derivation</a>)</li>
 </ul>
 <p>Xavier initialization for tanh, He initialization for ReLU.</p>
 <aside class="notes">
-<p>Xavier scales by <span class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span>, He by <span class="math inline">\(\frac{2}{\sqrt{N_{in}}}\)</span> where <span class="math inline">\(N_{in}\)</span> is the number of inputs to the layer.</p>
+<p>Xavier scales by <span
+class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span>, He by <span
+class="math inline">\(\frac{2}{\sqrt{N_{in}}}\)</span> where <span
+class="math inline">\(N_{in}\)</span> is the number of inputs to the
+layer.</p>
 </aside>
 </section>
-<section id="desirable-properties---illustration-1" class="slide level3">
+<section id="desirable-properties---illustration-1"
+class="slide level3">
 <h3>Desirable properties - illustration (1)</h3>
 <figure>
-<img data-src="../images/8-init-collapse.png" style="width:70.0%" alt="Activation function outputs with normal initialization of weights. Image source: Justin Johnson." /><figcaption aria-hidden="true">Activation function outputs with normal initialization of weights. Image source: Justin Johnson.</figcaption>
+<img data-src="../images/8-init-collapse.png" style="width:70.0%"
+alt="Activation function outputs with normal initialization of weights. Image source: Justin Johnson." />
+<figcaption aria-hidden="true">Activation function outputs with normal
+initialization of weights. Image source: Justin Johnson.</figcaption>
 </figure>
 </section>
-<section id="desirable-properties---illustration-2" class="slide level3">
+<section id="desirable-properties---illustration-2"
+class="slide level3">
 <h3>Desirable properties - illustration (2)</h3>
 <figure>
-<img data-src="../images/8-init-xavier.png" style="width:70.0%" alt="Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson." /><figcaption aria-hidden="true">Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson.</figcaption>
+<img data-src="../images/8-init-xavier.png" style="width:70.0%"
+alt="Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson." />
+<figcaption aria-hidden="true">Activation function outputs with Xavier
+initialization of weights. Image source: Justin Johnson.</figcaption>
 </figure>
 </section></section>
 <section>
@@ -299,28 +428,38 @@ What happens if the $u_i$ terms are always positive?
 <li>OR decorrelation (whitening/rotation)</li>
 </ul>
 <aside class="notes">
-<p>There are several reasons why this helps. We already discussed the “ravine” in the loss function that is created by correlated features.</p>
+<p>There are several reasons why this helps. We already discussed the
+“ravine” in the loss function that is created by correlated
+features.</p>
 <!-- What about zero-centering and normalization? Think about a binary classification problem of a data cloud that is far from the origin, vs. one close to the origin. In which case will the loss function react more (be more sensitive) to a small change in weights?
 
 ![The classifier on the right is more sensitive to small changes in the weights.](../images/8-pre-processing.png){ width=30% }
 
 -->
-<p>Note: Whitening/decorrelation is not applied to image data. For image data, we sometimes subtract the “mean image” or the per-color mean.</p>
+<p>Note: Whitening/decorrelation is not applied to image data. For image
+data, we sometimes subtract the “mean image” or the per-color mean.</p>
 </aside>
 </section>
 <section id="data-preprocessing-1" class="slide level3">
 <h3>Data preprocessing (1)</h3>
 <figure>
-<img data-src="../images/8-preprocessing-1.jpeg" style="width:50.0%" alt="Image source: Stanford CS231n." /><figcaption aria-hidden="true">Image source: Stanford CS231n.</figcaption>
+<img data-src="../images/8-preprocessing-1.jpeg" style="width:50.0%"
+alt="Image source: Stanford CS231n." />
+<figcaption aria-hidden="true">Image source: Stanford
+CS231n.</figcaption>
 </figure>
 </section>
 <section id="data-preprocessing-2" class="slide level3">
 <h3>Data preprocessing (2)</h3>
 <figure>
-<img data-src="../images/8-preprocessing-2.jpeg" style="width:50.0%" alt="Image source: Stanford CS231n." /><figcaption aria-hidden="true">Image source: Stanford CS231n.</figcaption>
+<img data-src="../images/8-preprocessing-2.jpeg" style="width:50.0%"
+alt="Image source: Stanford CS231n." />
+<figcaption aria-hidden="true">Image source: Stanford
+CS231n.</figcaption>
 </figure>
 <aside class="notes">
-<p>Input standardization helps with the first hidden layer, but what about the hidden layers?</p>
+<p>Input standardization helps with the first hidden layer, but what
+about the hidden layers?</p>
 </aside>
 </section>
 <section id="batch-normalization" class="slide level3">
@@ -506,7 +645,8 @@ Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 </section>
 <section id="l1-or-l2-regularization" class="slide level3">
 <h3>L1 or L2 regularization</h3>
-<p>As with other models, we can add a penalty on the norm of the weights:</p>
+<p>As with other models, we can add a penalty on the norm of the
+weights:</p>
 <ul>
 <li>L1 penalty</li>
 <li>L2 penalty</li>
@@ -526,8 +666,13 @@ Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 <aside class="notes">
 <p>Why does it work? Some ideas:</p>
 <ul>
-<li>The network is effectively “smaller” when we stop training early, because many units still in linear region of activation.</li>
-<li>Earlier layers (which learn simpler features) and late layers (near the output - used for response mapping) converge to their final weights first. See <a href="https://windowsontheory.org/2021/02/17/what-do-deep-networks-learn-and-when-do-they-learn-it/">Boaz Barak</a>.</li>
+<li>The network is effectively “smaller” when we stop training early,
+because many units still in linear region of activation.</li>
+<li>Earlier layers (which learn simpler features) and late layers (near
+the output - used for response mapping) converge to their final weights
+first. See <a
+href="https://windowsontheory.org/2021/02/17/what-do-deep-networks-learn-and-when-do-they-learn-it/">Boaz
+Barak</a>.</li>
 </ul>
 </aside>
 <!-- See "Why early stopping works" https://www.cs.toronto.edu/~guerzhoy/411/lec/W05/overfitting_prevent.pdf -->
@@ -536,20 +681,27 @@ Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 <section id="dropout" class="slide level3">
 <h3>Dropout</h3>
 <figure>
-<img data-src="../images/8-dropout.jpeg" style="width:40.0%" alt="Dropout networks." /><figcaption aria-hidden="true">Dropout networks.</figcaption>
+<img data-src="../images/8-dropout.jpeg" style="width:40.0%"
+alt="Dropout networks." />
+<figcaption aria-hidden="true">Dropout networks.</figcaption>
 </figure>
 <aside class="notes">
 <ul>
-<li>During each training step: some portion of neurons are randomly “dropped”.</li>
-<li>During each test step: don’t “drop” any neurons, but we need to scale activations by dropout probability</li>
+<li>During each training step: some portion of neurons are randomly
+“dropped”.</li>
+<li>During each test step: don’t “drop” any neurons, but we need to
+scale activations by dropout probability</li>
 </ul>
 <p>Why does it work? Some ideas:</p>
 <ul>
-<li>Forces some redundancy, makes neurons learn robust representation</li>
-<li>Effectively training an ensemble of networks (with shared weights)</li>
+<li>Forces some redundancy, makes neurons learn robust
+representation</li>
+<li>Effectively training an ensemble of networks (with shared
+weights)</li>
 </ul>
 <p>Alternative: DropConnect zeros weights, instead of neurons.</p>
-<p>Note: when you use Dropout layers, you may notice that the validation/test loss seems better than the training loss! Why?</p>
+<p>Note: when you use Dropout layers, you may notice that the
+validation/test loss seems better than the training loss! Why?</p>
 </aside>
 <!--
 
@@ -562,7 +714,7 @@ Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -573,10 +725,148 @@ Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
