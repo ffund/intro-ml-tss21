@@ -82,7 +82,7 @@ At a minima (or maxima, or saddle point),
 
 $$\nabla L(\mathbf{w}) = 0$$
 
-At other points, $\nabla L(\mathbf{w})$ points towards direction of maximum (infinitesimal) *increase*.
+At other points, $\nabla L(\mathbf{w})$ points towards direction of maximum (infinitesimal) rate of *increase*.
 
 \newpage
 
