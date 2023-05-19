@@ -64,8 +64,7 @@ some important Python basics in the first week of the course.
 ### Do I need previous experience with machine learning for this course? 
 
 This is an introductory graduate level course and no prior machine
-learning knowledge will be assumed. If you already have significant ML
-experience, there is no need to take this class.
+learning knowledge will be assumed. 
 
 ### Do I need a computer with a GPU? Will I have to install some software on my computer? 
 
@@ -79,6 +78,7 @@ to use Colab - you'll just need a browser.
 You won't need to buy a textbook - all of the materials you'll need
 will be posted on the course site.
 
+<!-- 
 ### The course includes a project. Can I do the project on whatever topic I want? 
 
 Not exactly. For your project, I'm going to ask you to replicate and
@@ -97,7 +97,7 @@ choose from, in various areas of ML:
 -   ML and society: Fairness, privacy, explainability
 
 You'll choose your project from that list of papers.
-
+-->
 
 ### What should I do if I need extra time on an assignment because of illness, religious practice, or a death in the immediate family?
 

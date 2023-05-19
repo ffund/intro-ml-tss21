@@ -9,10 +9,15 @@
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
   <!--[if lt IE 9]>
@@ -24,60 +29,129 @@
 <h1 class="title">Frequently Asked Questions</h1>
 <p class="author">Fraida Fund</p>
 </header>
-<h3 id="will-we-have-live-meetings-is-this-course-synchronous-or-asynchronous">Will we have live meetings? Is this course synchronous or asynchronous?</h3>
-<p>This course includes both synchronous and asynchronous content. We will have a weekly live meeting on Zoom for a “chalk talk”, and you will also have to watch a weekly pre-recorded video of a programming/demo session. Some weeks may also have asynchronous pre-lecture content that you should watch or read <em>before</em> the live meeting.</p>
-<h3 id="am-i-required-to-attend-the-live-meetings-or-can-i-watch-a-recording-later">Am I required to attend the live meetings, or can I watch a recording later?</h3>
-<p>The live meetings will be recorded. However, you will be required to attend the final exam session at the live meeting time.</p>
-<h3 id="how-can-i-get-help-or-ask-questions-about-the-course-material">How can I get help or ask questions about the course material?</h3>
+<h3
+id="will-we-have-live-meetings-is-this-course-synchronous-or-asynchronous">Will
+we have live meetings? Is this course synchronous or asynchronous?</h3>
+<p>This course includes both synchronous and asynchronous content. We
+will have a weekly live meeting on Zoom for a “chalk talk”, and you will
+also have to watch a weekly pre-recorded video of a programming/demo
+session. Some weeks may also have asynchronous pre-lecture content that
+you should watch or read <em>before</em> the live meeting.</p>
+<h3
+id="am-i-required-to-attend-the-live-meetings-or-can-i-watch-a-recording-later">Am
+I required to attend the live meetings, or can I watch a recording
+later?</h3>
+<p>The live meetings will be recorded. However, you will be required to
+attend the final exam session at the live meeting time.</p>
+<h3
+id="how-can-i-get-help-or-ask-questions-about-the-course-material">How
+can I get help or ask questions about the course material?</h3>
 <p>There are two ways to get help:</p>
 <ul>
 <li>Post a question on the Q&amp;A forum for this course.</li>
 <li>Attend a Zoom office hours session with the instructor.</li>
 </ul>
-<p>Note that you can ask questions <strong>anonymously</strong> on the Q&amp;A forum, if you feel more comfortable that way.</p>
-<h3 id="what-are-the-prerequisites-for-this-course">What are the prerequisites for this course?</h3>
-<p>This course is mathematically oriented, and undergraduate-level knowledge of probability and linear algebra is required.</p>
+<p>Note that you can ask questions <strong>anonymously</strong> on the
+Q&amp;A forum, if you feel more comfortable that way.</p>
+<h3 id="what-are-the-prerequisites-for-this-course">What are the
+prerequisites for this course?</h3>
+<p>This course is mathematically oriented, and undergraduate-level
+knowledge of probability and linear algebra is required.</p>
 <p>If you want to brush up, you can review:</p>
 <ul>
-<li><a href="http://cs229.stanford.edu/section/cs229-prob.pdf">Review of probability theory</a> (http://cs229.stanford.edu/section/cs229-prob.pdf)</li>
-<li>In <a href="http://vmls-book.stanford.edu/vmls.pdf">Boyd &amp; Vandenberghe “Introduction to Applied Linear Algebra”</a> (http://vmls-book.stanford.edu/vmls.pdf), these sections:
+<li><a href="http://cs229.stanford.edu/section/cs229-prob.pdf">Review of
+probability theory</a>
+(http://cs229.stanford.edu/section/cs229-prob.pdf)</li>
+<li>In <a href="http://vmls-book.stanford.edu/vmls.pdf">Boyd &amp;
+Vandenberghe “Introduction to Applied Linear Algebra”</a>
+(http://vmls-book.stanford.edu/vmls.pdf), these sections:
 <ul>
-<li>Section I, Chapter 1 (Vectors): vectors, vector addition, scalar-vector multiplication, inner product (dot product)</li>
-<li>Section I, Chapter 3 (Norm and distance):  Norm of a vector, euclidean distance </li>
-<li>Section II, Chapter 5 (Matrices): matrix notation, zero and identity matrices, sparse matrices, matrix transposition, matrix addition, scalar-matrix multiplication, matrix norm, matrix-vector multiplication</li>
-<li>Section II, Chapter 8 (Linear equations): systems of linear equations</li>
-<li>Section II, Chapter 10 (Matrix multiplication): matrix-matrix multiplication</li>
-<li>Section II, Chapter 11 (Matrix inverses): Inverse, solving a system of linear equations</li>
-<li>Also a quick optimization review: Appendix C (Derivatives and optimization)</li>
+<li>Section I, Chapter 1 (Vectors): vectors, vector addition,
+scalar-vector multiplication, inner product (dot product)</li>
+<li>Section I, Chapter 3 (Norm and distance):  Norm of a vector,
+euclidean distance </li>
+<li>Section II, Chapter 5 (Matrices): matrix notation, zero and identity
+matrices, sparse matrices, matrix transposition, matrix addition,
+scalar-matrix multiplication, matrix norm, matrix-vector
+multiplication</li>
+<li>Section II, Chapter 8 (Linear equations): systems of linear
+equations</li>
+<li>Section II, Chapter 10 (Matrix multiplication): matrix-matrix
+multiplication</li>
+<li>Section II, Chapter 11 (Matrix inverses): Inverse, solving a system
+of linear equations</li>
+<li>Also a quick optimization review: Appendix C (Derivatives and
+optimization)</li>
 </ul></li>
 </ul>
-<p>There will be a significant programming component to this course, and class and homework exercises will be in Python. You do not need to know Python a priori, but you should know basic programming concepts and have experience programming in some programming language. We will review some important Python basics in the first week of the course.</p>
-<h3 id="do-i-need-previous-experience-with-machine-learning-for-this-course">Do I need previous experience with machine learning for this course?</h3>
-<p>This is an introductory graduate level course and no prior machine learning knowledge will be assumed. If you already have significant ML experience, there is no need to take this class.</p>
-<h3 id="do-i-need-a-computer-with-a-gpu-will-i-have-to-install-some-software-on-my-computer">Do I need a computer with a GPU? Will I have to install some software on my computer?</h3>
-<p>In this course, we will use the Google Colab environment for practical programming demos and exercises. Colab is a free browser-based environment for Python programming. You don’t need to install anything to use Colab - you’ll just need a browser.</p>
-<h3 id="do-i-need-a-textbook-for-this-course">Do I need a textbook for this course?</h3>
-<p>You won’t need to buy a textbook - all of the materials you’ll need will be posted on the course site.</p>
-<h3 id="the-course-includes-a-project.-can-i-do-the-project-on-whatever-topic-i-want">The course includes a project. Can I do the project on whatever topic I want?</h3>
-<p>Not exactly. For your project, I’m going to ask you to replicate and then build on a recently published result from a top machine learning conference. I’ll give you a list of published papers (with code!) to choose from, in various areas of ML:</p>
-<ul>
-<li>Understanding images</li>
-<li>Generating images</li>
-<li>Understanding text</li>
-<li>Generating text</li>
-<li>Audio (speech)</li>
-<li>Audio (music and other sounds)</li>
-<li>Security and robustness</li>
-<li>Reinforcement learning</li>
-<li>ML and society: Fairness, privacy, explainability</li>
-</ul>
-<p>You’ll choose your project from that list of papers.</p>
-<h3 id="what-should-i-do-if-i-need-extra-time-on-an-assignment-because-of-illness-religious-practice-or-a-death-in-the-immediate-family">What should I do if I need extra time on an assignment because of illness, religious practice, or a death in the immediate family?</h3>
-<p>If you need extra time on an assignment because of illness (including COVID-19), religious practice, or a death in the immediate family, please contact the student advocate.</p>
-<p>The student advocate will reach out to your professors directly to recommend excused absences or extended deadlines, so you do not need to share any details of your personal circumstance with me.</p>
-<h3 id="what-should-i-do-if-i-need-extra-time-on-an-assignment-or-exam-because-of-a-disability">What should I do if I need extra time on an assignment or exam because of a disability?</h3>
-<p>If you need extra time on an assignment or exam because of a disability (for example: you need to take frequent breaks from a computer screen because of a vision problem, or you have an executive function disorder), you will need to work with the Moses Center to request accommodations beyond the “48 free late hours”. Please refer to the “Moses Center Statement of Disability” section.</p>
-<p>(Note that disability accommodations are not retroactive, so you should begin this process at the beginning of the semester if you think you may need it, rather than waiting until you are already struggling.)</p>
-<p>The Moses Center will reach out to your professors directly if your accommodations are approved, so you do not need to share any details of your disability with me.</p>
+<p>There will be a significant programming component to this course, and
+class and homework exercises will be in Python. You do not need to know
+Python a priori, but you should know basic programming concepts and have
+experience programming in some programming language. We will review some
+important Python basics in the first week of the course.</p>
+<h3
+id="do-i-need-previous-experience-with-machine-learning-for-this-course">Do
+I need previous experience with machine learning for this course?</h3>
+<p>This is an introductory graduate level course and no prior machine
+learning knowledge will be assumed.</p>
+<h3
+id="do-i-need-a-computer-with-a-gpu-will-i-have-to-install-some-software-on-my-computer">Do
+I need a computer with a GPU? Will I have to install some software on my
+computer?</h3>
+<p>In this course, we will use the Google Colab environment for
+practical programming demos and exercises. Colab is a free browser-based
+environment for Python programming. You don’t need to install anything
+to use Colab - you’ll just need a browser.</p>
+<h3 id="do-i-need-a-textbook-for-this-course">Do I need a textbook for
+this course?</h3>
+<p>You won’t need to buy a textbook - all of the materials you’ll need
+will be posted on the course site.</p>
+<!-- 
+### The course includes a project. Can I do the project on whatever topic I want? 
+
+Not exactly. For your project, I'm going to ask you to replicate and
+then build on a recently published result from a top machine learning
+conference. I'll give you a list of published papers (with code!) to
+choose from, in various areas of ML:
+
+-   Understanding images
+-   Generating images
+-   Understanding text
+-   Generating text
+-   Audio (speech)
+-   Audio (music and other sounds)
+-   Security and robustness
+-   Reinforcement learning
+-   ML and society: Fairness, privacy, explainability
+
+You'll choose your project from that list of papers.
+-->
+<h3
+id="what-should-i-do-if-i-need-extra-time-on-an-assignment-because-of-illness-religious-practice-or-a-death-in-the-immediate-family">What
+should I do if I need extra time on an assignment because of illness,
+religious practice, or a death in the immediate family?</h3>
+<p>If you need extra time on an assignment because of illness (including
+COVID-19), religious practice, or a death in the immediate family,
+please contact the student advocate.</p>
+<p>The student advocate will reach out to your professors directly to
+recommend excused absences or extended deadlines, so you do not need to
+share any details of your personal circumstance with me.</p>
+<h3
+id="what-should-i-do-if-i-need-extra-time-on-an-assignment-or-exam-because-of-a-disability">What
+should I do if I need extra time on an assignment or exam because of a
+disability?</h3>
+<p>If you need extra time on an assignment or exam because of a
+disability (for example: you need to take frequent breaks from a
+computer screen because of a vision problem, or you have an executive
+function disorder), you will need to work with the Moses Center to
+request accommodations beyond the “48 free late hours”. Please refer to
+the “Moses Center Statement of Disability” section.</p>
+<p>(Note that disability accommodations are not retroactive, so you
+should begin this process at the beginning of the semester if you think
+you may need it, rather than waiting until you are already
+struggling.)</p>
+<p>The Moses Center will reach out to your professors directly if your
+accommodations are approved, so you do not need to share any details of
+your disability with me.</p>
 </body>
 </html>
