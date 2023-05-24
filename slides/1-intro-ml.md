@@ -726,7 +726,7 @@ Our ultimate ML system will be many steps disconnected from this task:
 1. Our **real-world goal** is to improve the reputation of the department.
 2. Our **real-world mechanism** is to graduate excellent students (which may or may not be the most effective way to achieve the real-world goal).
 3. Our **learning problem** will be to classify applicants as "admit" or "reject" based on some proxy variable (admit decision? GPA at Tandon?) that is available to us. This is obviously several steps removed from graduating excellent students; for example, if we admit strong students but do not educate them well, our graduates won't be at that high standard. 
-4. Our **data representation** is tabular data from applications for admission. The data is probably **noisy**, i.e. the features available do not include all of the factors that go into student success. It also includes elements that are not relevant to student excellence, but our ML model may find patterns in these irrelevant elements, regardless.
+4. Our **data representation** is tabular data from applications for admission. The data is probably **noisy**, it's likely the features available do not include all of the factors that go into student success. It also includes elements that are not relevant to student excellence, but our ML model may find patterns in these irrelevant elements, regardless.
 5. Furthermore, there is some underlying bias in the **training data** we have available. 
   * We only have data from students who self-select to apply to NYU Tandon ECE (selection bias), 
   * the profile of applying students will change over time (data drift), 

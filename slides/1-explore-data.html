@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -32,11 +40,14 @@
 <section id="garbage-in-garbage-out" class="title-slide slide level2">
 <h2>Garbage in, garbage out</h2>
 <aside class="notes">
-<p>If you use “garbage” to train a machine learning model, you will only get “garbage” out. (+ Since you are testing on the same data, you might not even realize it is “garbage” until the model is in production!)</p>
+<p>If you use “garbage” to train a machine learning model, you will only
+get “garbage” out. (+ Since you are testing on the same data, you might
+not even realize it is “garbage” until the model is in production!)</p>
 </aside>
 </section>
 
-<section id="exploratory-data-analysis-what-are-we-looking-for" class="title-slide slide level2">
+<section id="exploratory-data-analysis-what-are-we-looking-for"
+class="title-slide slide level2">
 <h2>Exploratory data analysis: what are we looking for?</h2>
 <ul>
 <li>Make and check assumptions</li>
@@ -48,13 +59,15 @@
 </section>
 
 <section>
-<section id="make-and-check-assumptions" class="title-slide slide level2">
+<section id="make-and-check-assumptions"
+class="title-slide slide level2">
 <h2>Make and check assumptions</h2>
 
 </section>
 <section id="example-author-citation-data-1" class="slide level3">
 <h3>Example: author citation data (1)</h3>
-<p>Data analysis: use PubMed, and identify the year of first publication for the 100,000 most cited authors.</p>
+<p>Data analysis: use PubMed, and identify the year of first publication
+for the 100,000 most cited authors.</p>
 <aside class="notes">
 <p>What are our expectations about what this should look like?</p>
 </aside>
@@ -62,60 +75,87 @@
 <section id="example-author-citation-data-2" class="slide level3">
 <h3>Example: author citation data (2)</h3>
 <figure>
-<img data-src="../images/1-pubmed-authors.png" style="width:50.0%" alt="Does this look reasonable?" /><figcaption aria-hidden="true">Does this look reasonable?</figcaption>
+<img data-src="../images/1-pubmed-authors.png" style="width:50.0%"
+alt="Does this look reasonable?" />
+<figcaption aria-hidden="true">Does this look reasonable?</figcaption>
 </figure>
 <aside class="notes">
-<p>We can think of many potential explanations for this pattern, even though it is actually a data artifact.</p>
-<p>The true explanation: in 2002, PubMed started using full first names in authors instead of just initials. The same author is represented in the dataset as a “new” author with a first date of publication in 2002.</p>
+<p>We can think of many potential explanations for this pattern, even
+though it is actually a data artifact.</p>
+<p>The true explanation: in 2002, PubMed started using full first names
+in authors instead of just initials. The same author is represented in
+the dataset as a “new” author with a first date of publication in
+2002.</p>
 </aside>
 </section>
 <section id="example-author-citation-data-3" class="slide level3">
 <h3>Example: author citation data (3)</h3>
 <figure>
-<img data-src="../images/1-pubmed-authors2.png" style="width:50.0%" alt="The real distribution, after name unification. Example via Steven Skiena @ SBU." /><figcaption aria-hidden="true">The real distribution, after name unification. Example via <a href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @ SBU</a>.</figcaption>
+<img data-src="../images/1-pubmed-authors2.png" style="width:50.0%"
+alt="The real distribution, after name unification. Example via Steven Skiena @ SBU." />
+<figcaption aria-hidden="true">The real distribution, after name
+unification. Example via <a
+href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @
+SBU</a>.</figcaption>
 </figure>
+<!-- 
+### Example: anomalous voting data (1)
+
+![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
+
+::: notes
+
+What are our assumptions about election night data, and how are they violated here? 
+
+We expect that per-candidate vote totals (computed by multiplying total votes and vote share) should increase as more votes are counted, but never decrease.
+
+What are possible explanations?
+
+:::
+
+### Example: anomalous voting data (2)
+
+![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=75% }
+
+::: notes
+
+This anomaly makes a lot of sense as a correction of a data entry or duplicate entry error. 
+
+How Edison/AP collects the data for their Election Night feed:
+
+* There are "stringers" (temporary reporters) at various elections offices who call results into their phone center
+* They have people who look at official government websites for new results that they manually enter into the system
+* They have people who monitor results sent by fax from counties and cities
+
+all working as fast as they can! Data entry and duplicate entry errors are not only likely, they are almost guaranteed. When they are corrected, vote totals may decrease.
+
+Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us/topics/politics/elections/counting-the-vote), [Edison](http://www.edisonresearch.com/wp-content/uploads/2020/10/Web-Entry-Team-Handout-2020.pdf)
+
+:::
+
+-->
 </section>
-<section id="example-anomalous-voting-data-1" class="slide level3">
-<h3>Example: anomalous voting data (1)</h3>
-<figure>
-<img data-src="../images/1-election2020.png" style="width:30.0%" alt="Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election." /><figcaption aria-hidden="true">Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.</figcaption>
-</figure>
-<aside class="notes">
-<p>What are our assumptions about election night data, and how are they violated here?</p>
-<p>We expect that per-candidate vote totals (computed by multiplying total votes and vote share) should increase as more votes are counted, but never decrease.</p>
-<p>What are possible explanations?</p>
-</aside>
-</section>
-<section id="example-anomalous-voting-data-2" class="slide level3">
-<h3>Example: anomalous voting data (2)</h3>
-<figure>
-<img data-src="../images/1-election2020-process.png" style="width:75.0%" alt="Process by which data is collected by Edison and AP." /><figcaption aria-hidden="true">Process by which data is collected by Edison and AP.</figcaption>
-</figure>
-<aside class="notes">
-<p>This anomaly makes a lot of sense as a correction of a data entry or duplicate entry error.</p>
-<p>How Edison/AP collects the data for their Election Night feed:</p>
-<ul>
-<li>There are “stringers” (temporary reporters) at various elections offices who call results into their phone center</li>
-<li>They have people who look at official government websites for new results that they manually enter into the system</li>
-<li>They have people who monitor results sent by fax from counties and cities</li>
-</ul>
-<p>all working as fast as they can! Data entry and duplicate entry errors are not only likely, they are almost guaranteed. When they are corrected, vote totals may decrease.</p>
-<p>Source: <a href="https://web.archive.org/web/20210410214207/https://www.ap.org/en-us/topics/politics/elections/counting-the-vote">AP</a>, <a href="http://www.edisonresearch.com/wp-content/uploads/2020/10/Web-Entry-Team-Handout-2020.pdf">Edison</a></p>
-</aside>
-</section>
-<section id="handling-unreasonable-data" class="slide level3 cell markdown">
+<section id="handling-unreasonable-data"
+class="slide level3 cell markdown">
 <h3>Handling unreasonable data</h3>
 <aside class="notes">
 <p>How should you handle unreasonable values or outliers?</p>
 <ul>
-<li>e.g. suppose in a dataset of voter information, some have impossible year of birth - would make the voter a child, or some indicate the voter is 120 years old. (Voters with no known DOB, who registered before DOB was required, are often encoded with a January 1900 DOB.)</li>
-<li><strong>not</strong> a good idea to just remove outliers unless you are sure they are a data entry error or otherwise not a “true” value.</li>
-<li>Even if an outlier is due to some sort of error, if you remove them, you may skew the dataset (as in the 1/1/1900 voters example).</li>
+<li>e.g. suppose in a dataset of voter information, some have impossible
+year of birth - would make the voter a child, or some indicate the voter
+is 120 years old. (Voters with no known DOB, who registered before DOB
+was required, are often encoded with a January 1900 DOB.)</li>
+<li><strong>not</strong> a good idea to just remove outliers unless you
+are sure they are a data entry error or otherwise not a “true”
+value.</li>
+<li>Even if an outlier is due to some sort of error, if you remove them,
+you may skew the dataset (as in the 1/1/1900 voters example).</li>
 </ul>
 <p>Consider the possibility of:</p>
 <ul>
 <li>Different units, time zones, etc. in different rows</li>
-<li>Same value represented several different ways (e.g. names, dates)</li>
+<li>Same value represented several different ways (e.g. names,
+dates)</li>
 <li>Missing data encoded as zero</li>
 </ul>
 </aside>
@@ -125,22 +165,38 @@
 <h2>Missing data</h2>
 
 </section>
-<section id="examples-of-missing-data" class="slide level3 cell markdown">
+<section id="examples-of-missing-data"
+class="slide level3 cell markdown">
 <h3>Examples of missing data</h3>
 <aside class="notes">
 <ul>
-<li>Twitter API terms of use don’t allow researchers to share tweets directly, only message IDs (except for limited distribution, e.g. by email). To reproduce the dataset, you use the Twitter API to download messages using their IDs. But, tweets that have been removed are not available - the distribution of removed tweets is not flat! (For example: you might end up with a dataset that has offensive posts but few “obvious” offensive posts.)</li>
-<li>A dataset of Tweets following Hurricane Sandy makes it looks like Manhattan was the hub of the disaster, because of power blackouts and limited cell service in the most affected areas. <a href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
-<li>The City of Boston released a smartphone app that uses accelerometer and GPS data to detect potholes and report them automatically. But, low income and older residents are less likely to have smartphones, so this dataset presents a skewed view of where potholes are. <a href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
+<li>Twitter API terms of use don’t allow researchers to share tweets
+directly, only message IDs (except for limited distribution, e.g. by
+email). To reproduce the dataset, you use the Twitter API to download
+messages using their IDs. But, tweets that have been removed are not
+available - the distribution of removed tweets is not flat! (For
+example: you might end up with a dataset that has offensive posts but
+few “obvious” offensive posts.)</li>
+<li>A dataset of Tweets following Hurricane Sandy makes it looks like
+Manhattan was the hub of the disaster, because of power blackouts and
+limited cell service in the most affected areas. <a
+href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
+<li>The City of Boston released a smartphone app that uses accelerometer
+and GPS data to detect potholes and report them automatically. But, low
+income and older residents are less likely to have smartphones, so this
+dataset presents a skewed view of where potholes are. <a
+href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
 </ul>
 </aside>
 </section>
-<section id="indications-of-missing-data" class="slide level3 cell markdown">
+<section id="indications-of-missing-data"
+class="slide level3 cell markdown">
 <h3>Indications of missing data</h3>
 <ul>
 <li>Rows that have <code>NaN</code> values</li>
 <li>Rows that are <em>not there</em></li>
 </ul>
+<!-- To do: NYC taxi tip data, NYS thruway data -->
 </section>
 <section id="types-of-missingness" class="slide level3 cell markdown">
 <h3>Types of “missingness”</h3>
@@ -150,25 +206,33 @@
 <li>Correlated with something not in data</li>
 </ul>
 <aside class="notes">
-<p>These are often referred to using this standard terminology (which can be confusing):</p>
+<p>These are often referred to using this standard terminology (which
+can be confusing):</p>
 <ul>
-<li>Missing <em>completely</em> at random: missingness not correlated with any feature or to the target variable.</li>
-<li>Missing at random: missingness correlated with something that is in data.</li>
-<li>Missing not at random: missingness correlated with something that is not in data.</li>
+<li>Missing <em>completely</em> at random: missingness not correlated
+with any feature or to the target variable.</li>
+<li>Missing at random: missingness correlated with something that is in
+data.</li>
+<li>Missing not at random: missingness correlated with something that is
+not in data.</li>
 </ul>
 </aside>
 </section>
 <section id="handling-missing-data" class="slide level3 cell markdown">
 <h3>Handling missing data</h3>
-<p>How should you handle little bits of missing data? It always depends on the data and the circumstances. Some possibilities include:</p>
+<p>How should you handle little bits of missing data? It always depends
+on the data and the circumstances. Some possibilities include:</p>
 <ul>
 <li>omit the row</li>
 <li>fill with mean, median, max, mode…</li>
 <li>fill back/forward (ordered rows)</li>
-<li>train a model on the rest of the data to “predict” the missing value</li>
+<li>train a model on the rest of the data to “predict” the missing
+value</li>
 </ul>
 <aside class="notes">
-<p>For example: suppose we are training a model on Intro ML students’ score and duration on HW questions, to predict their score on related exam questions.</p>
+<p>For example: suppose we are training a model on Intro ML students’
+score and duration on HW questions, to predict their score on related
+exam questions.</p>
 </aside>
 </section></section>
 <section>
@@ -176,7 +240,8 @@
 <h2>Predictive features</h2>
 
 </section>
-<section id="how-do-we-look-for-predictive-features" class="slide level3 cell markdown">
+<section id="how-do-we-look-for-predictive-features"
+class="slide level3 cell markdown">
 <h3>How do we look for predictive features?</h3>
 <ul>
 <li>Numeric (continuous) features</li>
@@ -186,74 +251,118 @@
 </ul>
 </section></section>
 <section>
-<section id="bad-patterns-and-data-leakage" class="title-slide slide level2">
+<section id="bad-patterns-and-data-leakage"
+class="title-slide slide level2">
 <h2>“Bad patterns” (and data leakage)</h2>
 
 </section>
 <section id="covid-19-chest-radiography-1" class="slide level3">
 <h3>COVID-19 chest radiography (1)</h3>
 <ul>
-<li><strong>Problem</strong>: diagnose COVID-19 from chest radiography images</li>
-<li><strong>Input</strong>: image of chest X-ray (or other radiography)</li>
+<li><strong>Problem</strong>: diagnose COVID-19 from chest radiography
+images</li>
+<li><strong>Input</strong>: image of chest X-ray (or other
+radiography)</li>
 <li><strong>Target variable</strong>: COVID or no COVID</li>
 </ul>
 </section>
 <section id="covid-19-chest-radiography-2" class="slide level3">
 <h3>COVID-19 chest radiography (2)</h3>
 <figure>
-<img data-src="../images/1-covid-xrays.png" style="width:60.0%" alt="Neural networks can classify the source dataset of these chest X-ray images, even without lungs! Source" /><figcaption aria-hidden="true">Neural networks can classify the source dataset of these chest X-ray images, even <em>without lungs</em>! <a href="https://arxiv.org/abs/2004.12823">Source</a></figcaption>
+<img data-src="../images/1-covid-xrays.png" style="width:60.0%"
+alt="Neural networks can classify the source dataset of these chest X-ray images, even without lungs! Source" />
+<figcaption aria-hidden="true">Neural networks can classify the source
+dataset of these chest X-ray images, even <em>without lungs</em>! <a
+href="https://arxiv.org/abs/2004.12823">Source</a></figcaption>
 </figure>
 <aside class="notes">
-<p>Between January and October 2020, more than 2000 papers were published that claimed to use machine learning to diagnose COVID-19 patients based on chest X-rays or other radiography. But a later <a href="https://www.nature.com/articles/s42256-021-00307-0">review</a> found that “none of the models identified are of potential clinical use due to methodological flaws and/or underlying biases”.</p>
-<p>To train these models, people used an emerging COVID-19 chest X-ray dataset, along with one or more existing chest X-ray dataset, for example a pre-existing dataset used to try and classify viral vs. bacterial pneumonia.</p>
-<p>The problem is that the chest X-rays for each dataset were so “distinctive” to that dataset, that a neural network could be trained with high accuracy to classify an image into its source dataset, even without the lungs showing!</p>
+<p>Between January and October 2020, more than 2000 papers were
+published that claimed to use machine learning to diagnose COVID-19
+patients based on chest X-rays or other radiography. But a later <a
+href="https://www.nature.com/articles/s42256-021-00307-0">review</a>
+found that “none of the models identified are of potential clinical use
+due to methodological flaws and/or underlying biases”.</p>
+<p>To train these models, people used an emerging COVID-19 chest X-ray
+dataset, along with one or more existing chest X-ray dataset, for
+example a pre-existing dataset used to try and classify viral
+vs. bacterial pneumonia.</p>
+<p>The problem is that the chest X-rays for each dataset were so
+“distinctive” to that dataset, that a neural network could be trained
+with high accuracy to classify an image into its source dataset, even
+without the lungs showing!</p>
 </aside>
 </section>
 <section id="covid-19-chest-radiography-2-1" class="slide level3">
 <h3>COVID-19 chest radiography (2)</h3>
 <p>Findings:</p>
 <ul>
-<li>some non-COVID datasets were pediatric images, COVID images were adult</li>
+<li>some non-COVID datasets were pediatric images, COVID images were
+adult</li>
 <li>there were dataset-level differences in patient positioning</li>
-<li>many COVID images came from screenshots of published papers, which often had text, arrows, or other annotations over the images. (Some non-COVID images did, too.)</li>
+<li>many COVID images came from screenshots of published papers, which
+often had text, arrows, or other annotations over the images. (Some
+non-COVID images did, too.)</li>
 </ul>
 </section>
 <section id="covid-19-chest-radiography-3" class="slide level3">
 <h3>COVID-19 chest radiography (3)</h3>
 <figure>
-<img data-src="../images/1-covid-xrays-saliency.png" style="width:90.0%" alt="Saliency map showing the “important” pixels for classification. Source" /><figcaption aria-hidden="true">Saliency map showing the “important” pixels for classification. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7523163/">Source</a></figcaption>
+<img data-src="../images/1-covid-xrays-saliency.png" style="width:90.0%"
+alt="Saliency map showing the “important” pixels for classification. Source" />
+<figcaption aria-hidden="true">Saliency map showing the “important”
+pixels for classification. <a
+href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7523163/">Source</a></figcaption>
 </figure>
 <aside class="notes">
 <p>These findings are based on techniques like</p>
 <ul>
-<li>saliency maps, where the model is made to highlight the part of the image (the pixels) that it considered most relevant to its decision.</li>
-<li>using generative models and asking it to take a COVID-negative X-ray and make it positive (or v.v.)</li>
+<li>saliency maps, where the model is made to highlight the part of the
+image (the pixels) that it considered most relevant to its
+decision.</li>
+<li>using generative models and asking it to take a COVID-negative X-ray
+and make it positive (or v.v.)</li>
 </ul>
-<p>Many of the findings are not easy to understand without domain knowledge (e.g. knowing what part of the X-ray <em>should</em> be important and what part should not be.) For example: should the diaphragm area be helpful?</p>
+<p>Many of the findings are not easy to understand without domain
+knowledge (e.g. knowing what part of the X-ray <em>should</em> be
+important and what part should not be.) For example: should the
+diaphragm area be helpful?</p>
 </aside>
 </section>
 <section id="data-leakage" class="slide level3">
 <h3>Data leakage</h3>
 <aside class="notes">
-<p>In machine learning, we train models on a training set of data, then evaluate their performance on a set of data that was not used in training.</p>
-<p>Sometimes, information from the training set can “leak” into the evaluation - this is called data leakage.</p>
-<p>Or, information from the target variable (which should not be available during inference) leaks into the feature data.</p>
+<p>In machine learning, we train models on a training set of data, then
+evaluate their performance on a set of data that was not used in
+training.</p>
+<p>Sometimes, information from the training set can “leak” into the
+evaluation - this is called data leakage.</p>
+<p>Or, information from the target variable (which should not be
+available during inference) leaks into the feature data.</p>
+<p>Or, the model learns a “pattern” that will not be present during the
+“real” task.</p>
+<p>Data leakage: the model uses something (a feature, a pattern in the
+data, actual data points) that will not be available during “real”
+inference task.</p>
 </aside>
 </section>
 <section id="some-types-of-data-leakage" class="slide level3">
 <h3>Some types of data leakage</h3>
 <ul>
-<li>Learning from a feature that is a proxy for target variable, but that doesn’t generalize</li>
+<li>Learning from a feature that is a proxy for target variable, but
+that doesn’t generalize</li>
 <li>Learning from adjacent temporal data</li>
 <li>Learning from duplicate data</li>
-<li>Learning from features that are not available at prediction time (e.g. data from the future)</li>
+<li>Learning from features that are not available at prediction time
+(e.g. data from the future)</li>
 </ul>
 </section>
-<section id="signs-of-potential-data-leakage-after-training" class="slide level3">
+<section id="signs-of-potential-data-leakage-after-training"
+class="slide level3">
 <h3>Signs of potential data leakage (after training)</h3>
 <ul>
 <li>Performance is “too good to be true”</li>
-<li>Unexpected behavior of model (e.g. learns from a feature that shouldn’t help)</li>
+<li>Unexpected behavior of model (e.g. learns from a feature that
+shouldn’t help)</li>
 </ul>
 </section>
 <section id="detecting-data-leakage" class="slide level3">
@@ -270,7 +379,8 @@
 <h2>Ethics concerns</h2>
 
 </section>
-<section id="some-types-of-data-ethics-fails" class="slide level3 cell markdown">
+<section id="some-types-of-data-ethics-fails"
+class="slide level3 cell markdown">
 <h3>Some types of data ethics fails</h3>
 <ul>
 <li>Bias</li>
@@ -279,10 +389,28 @@
 </ul>
 <aside class="notes">
 <ul>
-<li>Many social media datasets used for “offensive post” classification have biased labels (especially if they were produced without adequate training procedures in place). For example, they may label posts containing African-American dialects of English as “offensive” much more often. <a href="https://www.aclweb.org/anthology/P19-1163.pdf">Source</a>, <a href="https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter">User-friendly article</a></li>
-<li><a href="http://www.michaelzimmer.org/2008/09/30/on-the-anonymity-of-the-facebook-dataset/">On the anonymity of the Facebook dataset</a></li>
-<li><a href="https://www.vice.com/en_us/art*cle/8q88nx/70000-okcupid-users-just-had-their-data-published">70,000 OkCupid Users Just Had Their Data Published</a>; <a href="https://www.wired.com/2016/05/*kcupid-study-reveals-perils-big-data-science/">OkCupid Study Reveals the Perils of Big-Data Science</a>; <a href="https://ironholds.org/scientific-consent/">Ethics, scientific consent and OKCupid</a></li>
-<li><a href="https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training">IBM didn’t inform people when it used their Flickr photos for facial recognition training</a></li>
+<li>Many social media datasets used for “offensive post” classification
+have biased labels (especially if they were produced without adequate
+training procedures in place). For example, they may label posts
+containing African-American dialects of English as “offensive” much more
+often. <a
+href="https://www.aclweb.org/anthology/P19-1163.pdf">Source</a>, <a
+href="https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter">User-friendly
+article</a></li>
+<li><a
+href="http://www.michaelzimmer.org/2008/09/30/on-the-anonymity-of-the-facebook-dataset/">On
+the anonymity of the Facebook dataset</a></li>
+<li><a
+href="https://www.vice.com/en_us/art*cle/8q88nx/70000-okcupid-users-just-had-their-data-published">70,000
+OkCupid Users Just Had Their Data Published</a>; <a
+href="https://www.wired.com/2016/05/*kcupid-study-reveals-perils-big-data-science/">OkCupid
+Study Reveals the Perils of Big-Data Science</a>; <a
+href="https://ironholds.org/scientific-consent/">Ethics, scientific
+consent and OKCupid</a></li>
+<li><a
+href="https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training">IBM
+didn’t inform people when it used their Flickr photos for facial
+recognition training</a></li>
 </ul>
 </aside>
 </section></section>
@@ -295,7 +423,12 @@
 <li>Data or situation changes over time</li>
 </ul>
 <p>Examples:</p>
-<p>Change over time: Imagine you train a machine learning model to classify loan applications. However, if the economy changes, applicants that were previously considered credit-worthy might not be anymore despite having the same income, as the lender becomes more risk-averse. Similarly, if wages increase across the board, the income standard for a loan would increase.</p>
+<p>Change over time: Imagine you train a machine learning model to
+classify loan applications. However, if the economy changes, applicants
+that were previously considered credit-worthy might not be anymore
+despite having the same income, as the lender becomes more risk-averse.
+Similarly, if wages increase across the board, the income standard for a
+loan would increase.</p>
 </aside>
 </section>
     </div>
@@ -303,7 +436,7 @@
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -314,10 +447,148 @@
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

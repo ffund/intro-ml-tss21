@@ -55,6 +55,7 @@ The true explanation: in 2002, PubMed started using full first names in authors 
 \newpage
 
 
+<!-- 
 ### Example: anomalous voting data (1)
 
 ![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
@@ -89,13 +90,14 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
 
 :::
 
+-->
+
 
 ::: {.cell .markdown}
 
 ### Handling unreasonable data
 
 :::notes
-
 
 How should you handle unreasonable values or outliers?
 
@@ -129,7 +131,6 @@ Consider the possibility of:
 * A dataset of Tweets following Hurricane Sandy makes it looks like Manhattan was the hub of the disaster, because of power blackouts and limited cell service in the most affected areas. [Source](https://hbr.org/2013/04/the-hidden-biases-in-big-data)
 * The City of Boston released a smartphone app that uses accelerometer and GPS data to detect potholes and report them automatically. But, low income and older residents are less likely to have smartphones, so this dataset presents a skewed view of where potholes are. [Source](https://hbr.org/2013/04/the-hidden-biases-in-big-data)
 
-
 :::
 
 :::
@@ -141,6 +142,8 @@ Consider the possibility of:
 
 * Rows that have `NaN` values
 * Rows that are *not there*
+
+<!-- To do: NYC taxi tip data, NYS thruway data -->
 
 :::
 
@@ -258,6 +261,10 @@ In machine learning, we train models on a training set of data, then evaluate th
 Sometimes, information from the training set can "leak" into the evaluation - this is called data leakage.
 
 Or, information from the target variable (which should not be available during inference) leaks into the feature data.
+
+Or, the model learns a "pattern" that will not be present during the "real" task.
+
+Data leakage: the model uses something (a feature, a pattern in the data, actual data points) that will not be available during "real" inference task.
 
 :::
 
