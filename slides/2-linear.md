@@ -4,7 +4,6 @@ author: 'Fraida Fund'
 ---
 
 
-\newpage
 
 ## In this lecture
 
@@ -15,6 +14,22 @@ author: 'Fraida Fund'
 * Interpretation 
 * OLS solution for multiple/LBF regression
 
+:::notes
+
+
+With linear regression, as with all of the supervised learning models in this course, we will consider:
+
+* The parts of the basic "recipe" (loss function, training algorithm, etc.)
+* What kind of relationships (between features and target variable) can be represented by this model?
+* Are the decisions of the model explainable? (Can we infer anything useful from the parameters learned by the model? )
+* What kinds of errors may this model make, and how can we adjust its error performance? 
+* How do we train this model efficiently - without excessive computation? 
+
+For linear regression, we will consider the first two questions in this lesson, and the second two questions in the next lesson.
+
+:::
+
+\newpage
 
 ## Regression
 
