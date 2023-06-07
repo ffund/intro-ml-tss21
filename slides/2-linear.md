@@ -572,8 +572,8 @@ $$\implies \frac{MSE(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigm
 
 ::: notes
 
-* the ratio on the left is the *fraction of unexplained variance*: of all the variance in $y$, how much is still "left" unexplained after our model explains some of it? (best case: 0)
-* the ratio on the right is the *coefficient of determination*, R2 (best case: 1).
+* the ratio on the left in the second line is the *fraction of unexplained variance*: of all the variance in $y$, how much is still "left" unexplained after our model explains some of it? (best case: 0)
+* the ratio on the far right in the second line is the *coefficient of determination*, R2 (best case: 1).
 
 :::
 
@@ -637,6 +637,11 @@ $$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
 ::: notes
 
 In Instructor A's section, a change in average overall course grades is associated with a bigger change in Intro ML course grade than in Instructor B's section; but in Instructor B's section, more of the variance among students is explained by the linear regression on previous overall grades.
+
+Note: the example above was for a simple linear regression (model with one feature).
+
+* The slope coefficient of a linear regression models with one feature tells us, "an increase of one unit in this feature is associated with an increase of the target variable by [the coefficient value]".
+* The coefficients of a multiple regression model with several features tell us, "an increase of one unit in this feature, **while holding the other features that are in the model constant**, is associated with an increase of the target variable by [the value of the coefficient for that feature]".
 
 :::
 

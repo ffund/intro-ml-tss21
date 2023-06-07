@@ -666,12 +666,12 @@ w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2
 \sigma_{y}^2}\]</span></p>
 <aside class="notes">
 <ul>
-<li>the ratio on the left is the <em>fraction of unexplained
-variance</em>: of all the variance in <span
+<li>the ratio on the left in the second line is the <em>fraction of
+unexplained variance</em>: of all the variance in <span
 class="math inline">\(y\)</span>, how much is still “left” unexplained
 after our model explains some of it? (best case: 0)</li>
-<li>the ratio on the right is the <em>coefficient of determination</em>,
-R2 (best case: 1).</li>
+<li>the ratio on the far right in the second line is the <em>coefficient
+of determination</em>, R2 (best case: 1).</li>
 </ul>
 </aside>
 </section></section>
@@ -748,6 +748,18 @@ is associated with a bigger change in Intro ML course grade than in
 Instructor B’s section; but in Instructor B’s section, more of the
 variance among students is explained by the linear regression on
 previous overall grades.</p>
+<p>Note: the example above was for a simple linear regression (model
+with one feature).</p>
+<ul>
+<li>The slope coefficient of a linear regression models with one feature
+tells us, “an increase of one unit in this feature is associated with an
+increase of the target variable by [the coefficient value]”.</li>
+<li>The coefficients of a multiple regression model with several
+features tell us, “an increase of one unit in this feature,
+<strong>while holding the other features that are in the model
+constant</strong>, is associated with an increase of the target variable
+by [the value of the coefficient for that feature]”.</li>
+</ul>
 </aside>
 <!--
 
