@@ -577,7 +577,6 @@ $$\implies \frac{MSE(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigm
 
 :::
 
-
 :::
 
 
