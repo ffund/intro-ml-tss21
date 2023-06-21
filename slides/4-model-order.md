@@ -243,6 +243,7 @@ Refer to [the function documentation](https://scikit-learn.org/stable/modules/cr
 
 \newpage
 
+
 ![Example 3: if we would split this time series data as shown on the left, we would get overly optimistic performance in training/validation/evaluation, but then much worse error in production! (This is also an example of data leakage: the model learns from future data, and from adjacent data points, in training - but that data is not available during production.)](../images/4-bad-split-timeseries.png){ width=77% }
 
 ![A better way would be to train and validate like this (example shown is 3-fold CV).](../images/4-best-split-timeseries.png){ width=77% }
