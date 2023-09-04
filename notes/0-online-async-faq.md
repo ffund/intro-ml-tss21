@@ -5,13 +5,20 @@ author: Fraida Fund
 
 ### Will we have live meetings? Is this course synchronous or asynchronous? 
 
-This course is fully asynchronous, which means that there are no live course meetings. 
+This course is asynchronous, which means that we do not have scheduled course meetings **except for the midterm and final exams**. 
 
 The course is organized into modules. At the beginning of each week, materials for the week's 
 module (including video lessons, slides/notes, and Python notebooks) will be posted 
 on NYU Brightspace. You will work through this material during the week, at whatever
 time is convenient for you. At the end of the week, you'll be assigned some homework 
-related to that week's module, which you'll submit online the following week.
+related to that week's module, which you'll submit online.
+
+The midterm and final exams will be synchronous, and will be held during the week indicated in the course syllabus. Several time slots will be offered during this week, so that you can select the one that does not conflict with your work or course schedule. The exams will be held in person for most students, subject to the following:
+
+* A student who is enrolled in any in-person class in NYC during this semester will take midterm and final exams in person. 
+* A student who is not enrolled in any in-person class in NYC this semester may take the midterm and final exams online. (These students will also take the exam in one of the offered time slots, and will be proctored online.)
+* If you require online exams for another valid reason, you must contact the instructor for permission in advance.
+
 
 ### How can I get help or ask questions about the course material?
 
@@ -32,7 +39,7 @@ Your mastery of the course material will be evaluated by your performance on:
 * **Homework problem sets**: These are computer-graded, and you'll have instant feedback as you work, so you'll know whether your answers are correct or not. If you manage your time well, you'll be able to get help or ask clarifying questions so that you can improve your understanding on questions you did not answer correctly, and re-submit a corrected answer for credit.
 * **"Lab" assignments**: Some modules include a "lab" assignment that expands on the technique you learned that week. You'll be given a Python notebook with some cells missing; you'll have to fill in code or answer questions in the missing cells.
 * **Exams**: The course will include a midterm exam and a final exam. These will be proctored online. You'll have a few choices of dates/times for each exam, so you can select one that does not conflict with your course schedule or other responsibilities.
-* **Project**: For your course project, I'm going to ask you to replicate and then build on a recently published result from a top machine learning conference. I'll give you a list of published papers (with code!) to choose from.
+* **Project**: The course project will require you to go move beyond the fundamentals of Intro ML and apply your new knowledge to something more challenging. It is *not* an open-ended project on an ML topic of your choice. Specific guidelines will be discussed in the second half of the semester.
 
 The relative weight of each of these components will be shared via the course syllabus in the first week of the semester.
 
@@ -117,28 +124,8 @@ Here is a rough outline of the course content (subject to change):
 8. Support vector machines, kernel trick
 9. Neural networks
 10. Deep learning, convolutional networks, transfer learning
-11. Unsupervised learning 
-12. Reinforcement learning
-
-### The course includes a project. Can I do the project on whatever topic I want? 
-
-Not exactly. For your project, I'm going to ask you to replicate and
-then build on a recently published result from a top machine learning
-conference. I'll give you a list of published papers (with code!) to
-choose from, in various areas of ML:
-
--   Understanding images
--   Generating images
--   Understanding text
--   Generating text
--   Audio (speech)
--   Audio (music and other sounds)
--   Security and robustness
--   Reinforcement learning
--   ML and society: Fairness, privacy, explainability
-
-You'll choose your project from that list of papers.
-
+11. Deploying machine learning systems
+12. Unsupervised learning 
 
 ## Other important policies 
 
