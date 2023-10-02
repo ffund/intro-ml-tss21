@@ -38,7 +38,7 @@ Your mastery of the course material will be evaluated by your performance on:
 
 * **Homework problem sets**: These are computer-graded, and you'll have instant feedback as you work, so you'll know whether your answers are correct or not. If you manage your time well, you'll be able to get help or ask clarifying questions so that you can improve your understanding on questions you did not answer correctly, and re-submit a corrected answer for credit.
 * **"Lab" assignments**: Some modules include a "lab" assignment that expands on the technique you learned that week. You'll be given a Python notebook with some cells missing; you'll have to fill in code or answer questions in the missing cells.
-* **Exams**: The course will include a midterm exam and a final exam. These will be proctored online. You'll have a few choices of dates/times for each exam, so you can select one that does not conflict with your course schedule or other responsibilities.
+* **Exams**: The course will include a midterm exam and a final exam. You'll have a few choices of dates/times for each exam, so you can select one that does not conflict with your course schedule or other responsibilities.
 * **Project**: The course project will require you to go move beyond the fundamentals of Intro ML and apply your new knowledge to something more challenging. It is *not* an open-ended project on an ML topic of your choice. Specific guidelines will be discussed in the second half of the semester.
 
 The relative weight of each of these components will be shared via the course syllabus in the first week of the semester.
