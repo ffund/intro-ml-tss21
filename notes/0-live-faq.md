@@ -25,6 +25,7 @@ Your mastery of the course material will be evaluated by your performance on:
 
 * **Homework problem sets**: These are computer-graded, and you'll have instant feedback as you work, so you'll know whether your answers are correct or not. If you manage your time well, you'll be able to get help or ask clarifying questions so that you can improve your understanding on questions you did not answer correctly, and re-submit a corrected answer for credit.
 * **"Lab" assignments**: Some modules include a "lab" assignment that expands on the technique you learned that week. You'll be given a Python notebook with some cells missing; you'll have to fill in code or answer questions in the missing cells.
+* **Project**: Near the end of the course, you will complete a structured project, with criteria to be shared at that time.
 * **Exams**: The course will include a midterm exam and a final exam. 
 
 The relative weight of each of these components will be shared via the course syllabus in the first week of the semester.
@@ -107,8 +108,8 @@ Here is a rough outline of the course content (subject to change):
 8. Support vector machines, kernels
 9. Neural networks
 10. Deep learning, convolutional networks, transfer learning
-11. Unsupervised learning 
-12. Reinforcement learning
+11. Deploying machine learning systems
+12. Unsupervised learning 
 
 
 ## Other important policies 
