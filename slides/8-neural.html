@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -39,110 +47,186 @@
 </section>
 
 <section>
-<section id="from-linear-to-non-linear" class="title-slide slide level2">
+<section id="from-linear-to-non-linear"
+class="title-slide slide level2">
 <h2>From linear to non-linear</h2>
 
 </section>
-<section id="representation-as-a-computational-graph" class="slide level3">
+<section id="representation-as-a-computational-graph"
+class="slide level3">
 <h3>Representation as a computational graph</h3>
 <aside class="notes">
-<p>Let’s represent the linear regression and logistic regression models using a computational graph.</p>
+<p>Let’s represent the linear regression and logistic regression models
+using a computational graph.</p>
 <figure>
-<img data-src="../images/7-reg-comp-graph.png" style="width:60.0%" alt="Regression and classification models." /><figcaption aria-hidden="true">Regression and classification models.</figcaption>
+<img data-src="../images/7-reg-comp-graph.png" style="width:60.0%"
+alt="Regression and classification models." />
+<figcaption aria-hidden="true">Regression and classification
+models.</figcaption>
 </figure>
-<p>We can use also do a linear regression or logistic regression with a basis function transformation applied to the data first. Here, we have one “transformation” node for each basis function, and then the output of those “transformation” nodes become the input to the logistic regression (or linear regression).</p>
+<p>We can use also do a linear regression or logistic regression with a
+basis function transformation applied to the data first. Here, we have
+one “transformation” node for each basis function, and then the output
+of those “transformation” nodes become the input to the logistic
+regression (or linear regression).</p>
 <figure>
-<img data-src="../images/7-lbf-graph-trans.png" style="width:65.0%" alt="With a basis function transformation." /><figcaption aria-hidden="true">With a basis function transformation.</figcaption>
+<img data-src="../images/7-lbf-graph-trans.png" style="width:65.0%"
+alt="With a basis function transformation." />
+<figcaption aria-hidden="true">With a basis function
+transformation.</figcaption>
 </figure>
-<p>We can also represent the SVM with a linear or non-linear kernel using a computational graph.</p>
-<p>Here, we have one “transformation node” for each training sample! (The “transformation” is the kernel function, which is computed over the input sample and the training sample).</p>
-<p>Then the weighted sum of those nodes (weighted by <span class="math inline">\(\alpha_i\)</span>, which is learned by the SVM, and which is zero for every non-support vector training sample and non-zero for every support vector training sample) is used to compute the class label.</p>
+<p>We can also represent the SVM with a linear or non-linear kernel
+using a computational graph.</p>
+<p>Here, we have one “transformation node” for each training sample!
+(The “transformation” is the kernel function, which is computed over the
+input sample and the training sample).</p>
+<p>Then the weighted sum of those nodes (weighted by <span
+class="math inline">\(\alpha_i\)</span>, which is learned by the SVM,
+and which is zero for every non-support vector training sample and
+non-zero for every support vector training sample) is used to compute
+the class label.</p>
 <figure>
-<img data-src="../images/7-svm-graph.png" style="width:65.0%" alt="SVM computational graph." /><figcaption aria-hidden="true">SVM computational graph.</figcaption>
+<img data-src="../images/7-svm-graph.png" style="width:65.0%"
+alt="SVM computational graph." />
+<figcaption aria-hidden="true">SVM computational graph.</figcaption>
 </figure>
-<p>In those regression and classification models, we use a fixed basis function to transform features. We only learned the weights to map the transformed features to a continuous output (regression) or to a class label (classification).</p>
-<p>Would it be possible to instead learn the first part - the mapping of the features to a transformed feature space?</p>
+<p>In those regression and classification models, we use a fixed basis
+function to transform features. We only learned the weights to map the
+transformed features to a continuous output (regression) or to a class
+label (classification).</p>
+<p>Would it be possible to instead learn the first part - the mapping of
+the features to a transformed feature space?</p>
 <figure>
-<img data-src="../images/7-lbf-comp-graph.png" style="width:65.0%" alt="Can we learn this transformation part?" /><figcaption aria-hidden="true">Can we learn this transformation part?</figcaption>
+<img data-src="../images/7-lbf-comp-graph.png" style="width:65.0%"
+alt="Can we learn this transformation part?" />
+<figcaption aria-hidden="true">Can we learn this transformation
+part?</figcaption>
 </figure>
 </aside>
 </section>
 <section id="example-synthetic-data" class="slide level3">
 <h3>Example: synthetic data</h3>
 <figure>
-<img data-src="../images/two-class-nn-synthetic.png" style="width:30.0%" alt="Example via Sundeep Rangan" /><figcaption aria-hidden="true">Example via <a href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep Rangan</a></figcaption>
+<img data-src="../images/two-class-nn-synthetic.png" style="width:30.0%"
+alt="Example via Sundeep Rangan" />
+<figcaption aria-hidden="true">Example via <a
+href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep
+Rangan</a></figcaption>
 </figure>
 </section>
 <section id="model-of-example-two-stage-network-1" class="slide level3">
 <h3>Model of example two-stage network (1)</h3>
 <p>First step (<em>hidden layer</em>):</p>
 <ul>
-<li>Take <span class="math inline">\(N_H=4\)</span> “logistic regression” nodes.</li>
-<li>Use <span class="math inline">\(\mathbf(x)\)</span> as input to each node.</li>
-<li>At each node <span class="math inline">\(m\)</span>, first compute: <span class="math inline">\(z_{H,m} = \mathbf{w}_{H,m}^T \mathbf{x}\)</span></li>
-<li>Then, at each node, apply a sigmoid: <span class="math inline">\(u_{H,m} = g_H(z_{H,m}) = \frac{1}{1+e^{-z_{H,m}}}\)</span></li>
+<li>Take <span class="math inline">\(N_H=4\)</span> “logistic
+regression” nodes.</li>
+<li>Use <span class="math inline">\(\mathbf(x)\)</span> as input to each
+node.</li>
+<li>At each node <span class="math inline">\(m\)</span>, first compute:
+<span class="math inline">\(z_{H,m} = \mathbf{w}_{H,m}^T
+\mathbf{x}\)</span></li>
+<li>Then, at each node, apply a sigmoid: <span
+class="math inline">\(u_{H,m} = g_H(z_{H,m}) =
+\frac{1}{1+e^{-z_{H,m}}}\)</span></li>
 </ul>
 <aside class="notes">
-<p>Note: assume a 1s column was added to the data matrix, so we don’t need a separate intercept term.</p>
+<p>Note: assume a 1s column was added to the data matrix, so we don’t
+need a separate intercept term.</p>
 <figure>
-<img data-src="../images/7-computational-graph-H1.png" style="width:30.0%" alt="Computation at one hidden node." /><figcaption aria-hidden="true">Computation at one hidden node.</figcaption>
+<img data-src="../images/7-computational-graph-H1.png"
+style="width:30.0%" alt="Computation at one hidden node." />
+<figcaption aria-hidden="true">Computation at one hidden
+node.</figcaption>
 </figure>
 <figure>
-<img data-src="../images/7-computational-graph-H4.png" style="width:50.0%" alt="Computation at four hidden nodes." /><figcaption aria-hidden="true">Computation at four hidden nodes.</figcaption>
+<img data-src="../images/7-computational-graph-H4.png"
+style="width:50.0%" alt="Computation at four hidden nodes." />
+<figcaption aria-hidden="true">Computation at four hidden
+nodes.</figcaption>
 </figure>
-<p>At this point, we have some representation of the data in <span class="math inline">\(\mathbb{R}^4\)</span>.</p>
+<p>At this point, we have some representation of the data in <span
+class="math inline">\(\mathbb{R}^4\)</span>.</p>
 </aside>
 </section>
 <section id="model-of-example-two-stage-network-2" class="slide level3">
 <h3>Model of example two-stage network (2)</h3>
 <p>Second step (<em>output layer</em>):</p>
 <ul>
-<li>At output node, first compute: <span class="math inline">\(z_O = \mathbf{w}^T_O [1, \mathbf{u}_H]\)</span></li>
-<li>Then, compute: <span class="math inline">\(u_O = g_O(z_O) = \frac{1}{1+e^{-z_{O}}}\)</span></li>
-<li>(Not in the graph): apply a threshold to get <span class="math inline">\(\hat{y}\)</span></li>
+<li>At output node, first compute: <span class="math inline">\(z_O =
+\mathbf{w}^T_O [1, \mathbf{u}_H]\)</span></li>
+<li>Then, compute: <span class="math inline">\(u_O = g_O(z_O) =
+\frac{1}{1+e^{-z_{O}}}\)</span></li>
+<li>(Not in the graph): apply a threshold to get <span
+class="math inline">\(\hat{y}\)</span></li>
 </ul>
 <aside class="notes">
 <p>Notes:</p>
 <ul>
 <li>we use the output of the previous layer as input to this layer</li>
-<li>as with the first layer, we add a 1s column to the input, to take care of the intercept term.</li>
+<li>as with the first layer, we add a 1s column to the input, to take
+care of the intercept term.</li>
 </ul>
 <figure>
-<img data-src="../images/7-computational-graph-output.png" style="width:55.0%" alt="Two-stage network." /><figcaption aria-hidden="true">Two-stage network.</figcaption>
+<img data-src="../images/7-computational-graph-output.png"
+style="width:55.0%" alt="Two-stage network." />
+<figcaption aria-hidden="true">Two-stage network.</figcaption>
 </figure>
-<p>What does the output look like (over the feature space) at each node?</p>
+<p>What does the output look like (over the feature space) at each
+node?</p>
 </aside>
 </section>
 <section id="example-output-of-each-hidden-node" class="slide level3">
 <h3>Example: output of each hidden node</h3>
 <figure>
-<img data-src="../images/two-class-nn-neurons.png" style="width:60.0%" alt="Example via Sundeep Rangan" /><figcaption aria-hidden="true">Example via <a href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep Rangan</a></figcaption>
+<img data-src="../images/two-class-nn-neurons.png" style="width:60.0%"
+alt="Example via Sundeep Rangan" />
+<figcaption aria-hidden="true">Example via <a
+href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep
+Rangan</a></figcaption>
 </figure>
 </section>
 <section id="example-output-of-output-node" class="slide level3">
 <h3>Example: output of output node</h3>
 <figure>
-<img data-src="../images/two-class-nn-avgout.png" style="width:20.0%" alt="Via Sundeep Rangan" /><figcaption aria-hidden="true">Via <a href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep Rangan</a></figcaption>
+<img data-src="../images/two-class-nn-avgout.png" style="width:20.0%"
+alt="Via Sundeep Rangan" />
+<figcaption aria-hidden="true">Via <a
+href="https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb">Sundeep
+Rangan</a></figcaption>
 </figure>
 </section>
 <section id="matrix-form-of-two-stage-network" class="slide level3">
 <h3>Matrix form of two stage network</h3>
 <ul>
-<li>Hidden layer: <span class="math inline">\(\mathbf{z}_H = \mathbf{W}_H^T \mathbf{x}, \quad \mathbf{u}_H = g_H(\mathbf{z}_H)\)</span></li>
-<li>Output layer: <span class="math inline">\(z_O = \mathbf{W}_O^T [1, \mathbf{u}_H], \quad u_O = g_O(\mathbf{z}_O)\)</span></li>
+<li>Hidden layer: <span class="math inline">\(\mathbf{z}_H =
+\mathbf{W}_H^T \mathbf{x}, \quad \mathbf{u}_H =
+g_H(\mathbf{z}_H)\)</span></li>
+<li>Output layer: <span class="math inline">\(z_O = \mathbf{W}_O^T [1,
+\mathbf{u}_H], \quad u_O = g_O(\mathbf{z}_O)\)</span></li>
 </ul>
 </section>
-<section id="training-the-two-stage-network-for-binary-classification" class="slide level3">
+<section id="training-the-two-stage-network-for-binary-classification"
+class="slide level3">
 <h3>Training the two-stage network for binary classification</h3>
 <ul>
-<li>From final stage: <span class="math inline">\(z_o = F(\mathbf{x}, \mathbf{W})\)</span> where parameters <span class="math inline">\(\mathbf{W} = (\mathbf{W}_H, \mathbf{W}_o)\)</span></li>
-<li>Given training data <span class="math inline">\((\mathbf{x}_i, y_i), i = 1, \ldots, n\)</span></li>
-<li>Loss function <span class="math inline">\(L(\mathbf{W}) := -\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W})\)</span></li>
-<li>Choose parameters to minimize loss: <span class="math inline">\(\hat{\mathbf{W}} = \operatorname*{argmin}_{\mathbf{W}} L(\mathbf{W})\)</span></li>
+<li>From final stage: <span class="math inline">\(z_o = F(\mathbf{x},
+\mathbf{W})\)</span> where parameters <span
+class="math inline">\(\mathbf{W} = (\mathbf{W}_H,
+\mathbf{W}_o)\)</span></li>
+<li>Given training data <span class="math inline">\((\mathbf{x}_i, y_i),
+i = 1, \ldots, n\)</span></li>
+<li>Loss function <span class="math inline">\(L(\mathbf{W}) :=
+-\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W})\)</span></li>
+<li>Choose parameters to minimize loss: <span
+class="math inline">\(\hat{\mathbf{W}} =
+\operatorname*{argmin}_{\mathbf{W}} L(\mathbf{W})\)</span></li>
 </ul>
 <aside class="notes">
-<p>(Using negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )</p>
-<p>How do we choose the parameters in the last step? We’ll use <em>gradient descent</em> on the computational graph. More on that soon…</p>
+<p>(Using negative log likelihood/binary cross-entropy loss function
+from the logistic regression lesson. )</p>
+<p>How do we choose the parameters in the last step? We’ll use
+<em>gradient descent</em> on the computational graph. More on that
+soon…</p>
 </aside>
 </section></section>
 <section>
@@ -153,16 +237,28 @@
 <section id="biological-inspiration" class="slide level3">
 <h3>Biological inspiration</h3>
 <figure>
-<img data-src="../images/biological-neuron.png" style="width:55.0%" alt="A biological neuron accepts inputs via dendrites, “adds” them together within cell body, and once some electrical potential is reached, “fires” via axons. Synaptic weight (the influence the firing of one neuron has on another) changes over time (“learning”). Image via: http://http://doi.org/10.5772/51275" /><figcaption aria-hidden="true">A biological neuron accepts inputs via dendrites, “adds” them together within cell body, and once some electrical potential is reached, “fires” via axons. Synaptic weight (the influence the firing of one neuron has on another) changes over time (“learning”). Image via: <a href="http://http://doi.org/10.5772/51275">http://http://doi.org/10.5772/51275</a></figcaption>
+<img data-src="../images/biological-neuron.png" style="width:55.0%"
+alt="A biological neuron accepts inputs via dendrites, “adds” them together within cell body, and once some electrical potential is reached, “fires” via axons. Synaptic weight (the influence the firing of one neuron has on another) changes over time (“learning”). Image via: http://http://doi.org/10.5772/51275" />
+<figcaption aria-hidden="true">A biological neuron accepts inputs via
+dendrites, “adds” them together within cell body, and once some
+electrical potential is reached, “fires” via axons. Synaptic weight (the
+influence the firing of one neuron has on another) changes over time
+(“learning”). Image via: <a
+href="http://http://doi.org/10.5772/51275">http://http://doi.org/10.5772/51275</a></figcaption>
 </figure>
 </section>
 <section id="terminology" class="slide level3">
 <h3>Terminology</h3>
 <ul>
-<li><strong>Hidden variables</strong>: the variables <span class="math inline">\(\mathbf{z}_H, \mathbf{u}_H\)</span>, which are not directly observed.</li>
-<li><strong>Hidden units</strong>: the nodes that compute the hidden variables.</li>
-<li><strong>Activation function</strong>: the function <span class="math inline">\(g(z)\)</span></li>
-<li><strong>Output units</strong>: the node(s) that compute <span class="math inline">\(z_{O}\)</span>.</li>
+<li><strong>Hidden variables</strong>: the variables <span
+class="math inline">\(\mathbf{z}_H, \mathbf{u}_H\)</span>, which are not
+directly observed.</li>
+<li><strong>Hidden units</strong>: the nodes that compute the hidden
+variables.</li>
+<li><strong>Activation function</strong>: the function <span
+class="math inline">\(g(z)\)</span></li>
+<li><strong>Output units</strong>: the node(s) that compute <span
+class="math inline">\(z_{O}\)</span>.</li>
 </ul>
 </section>
 <section id="activation-function-at-output-layer" class="slide level3">
@@ -174,63 +270,95 @@
 <li>Multi-class classification?</li>
 </ul>
 <aside class="notes">
-<p>For binary classification, <span class="math inline">\(y \in [0,1]\)</span>:</p>
+<p>For binary classification, <span class="math inline">\(y \in
+[0,1]\)</span>:</p>
 <ul>
-<li><span class="math inline">\(z_O\)</span> is scalar - need one output node</li>
-<li>Soft decision: <span class="math inline">\(P(y=1| x)=\frac{1}{1+e^{-z_O}}\)</span></li>
-<li>Then you can apply threshold to get <span class="math inline">\(\hat{y}\)</span></li>
+<li><span class="math inline">\(z_O\)</span> is scalar - need one output
+node</li>
+<li>Soft decision: <span class="math inline">\(P(y=1|
+x)=\frac{1}{1+e^{-z_O}}\)</span></li>
+<li>Then you can apply threshold to get <span
+class="math inline">\(\hat{y}\)</span></li>
 </ul>
-<p>For multi-class classification, <span class="math inline">\(y=1,\ldots, K\)</span>:</p>
+<p>For multi-class classification, <span
+class="math inline">\(y=1,\ldots, K\)</span>:</p>
 <ul>
-<li><span class="math inline">\(\mathbf{z}_O = [z_{O,1}, \ldots, z_{O,K}]\)</span> is a vector - need <span class="math inline">\(K\)</span> output nodes</li>
-<li>Soft decision: <span class="math inline">\(P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_\ell e^{-z_\ell}}\)</span> (softmax)</li>
-<li>Then you can select label by <span class="math inline">\(\hat{y} = \operatorname*{argmax}_k z_{O,k}\)</span></li>
+<li><span class="math inline">\(\mathbf{z}_O = [z_{O,1}, \ldots,
+z_{O,K}]\)</span> is a vector - need <span
+class="math inline">\(K\)</span> output nodes</li>
+<li>Soft decision: <span class="math inline">\(P(y=k|
+x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K e^{z_\ell}}\)</span>
+(softmax)</li>
+<li>Then you can select label by <span class="math inline">\(\hat{y} =
+\operatorname*{argmax}_k z_{O,k}\)</span></li>
 </ul>
 <p>For regression, <span class="math inline">\(y \in R^{K}\)</span>:</p>
 <ul>
-<li>Can be a vector - need <span class="math inline">\(K\)</span> output nodes</li>
-<li>Linear activation: <span class="math inline">\(\hat{y}=z_O\)</span></li>
+<li>Can be a vector - need <span class="math inline">\(K\)</span> output
+nodes</li>
+<li>Linear activation: <span
+class="math inline">\(\hat{y}=z_O\)</span></li>
 </ul>
 </aside>
 </section>
-<section id="activation-functions-at-hidden-layer-identity" class="slide level3">
+<section id="activation-functions-at-hidden-layer-identity"
+class="slide level3">
 <h3>Activation functions at hidden layer: identity?</h3>
 <ul>
-<li>Suppose we use <span class="math inline">\(g(z) = z\)</span> (identity function) as activation function throughout the network.</li>
+<li>Suppose we use <span class="math inline">\(g(z) = z\)</span>
+(identity function) as activation function throughout the network.</li>
 <li>The network can only achieve linear decision boundary!</li>
-<li>To get non-linear decision boundary, need non-linear activation functions.</li>
+<li>To get non-linear decision boundary, need non-linear activation
+functions.</li>
 </ul>
 <aside class="notes">
-<p>Universal approximation theorem: under certain conditions, with enough (finite) hidden nodes, can approximate <em>any</em> continuous real-valued function, to any degree of precision. But only with non-linear decision boundary! (See <a href="http://neuralnetworksanddeeplearning.com/chap4.html">this post</a> for a convincing demonstration.)</p>
-<p>By scaling, shifting, and adding a bunch of “step” or “step-like” functions, you can approximate a complicated function. What step-like function can you use?</p>
+<p>Universal approximation theorem: under certain conditions, with
+enough (finite) hidden nodes, can approximate <em>any</em> continuous
+real-valued function, to any degree of precision. But only with
+non-linear decision boundary! (See <a
+href="http://neuralnetworksanddeeplearning.com/chap4.html">this post</a>
+for a convincing demonstration.)</p>
+<p>By scaling, shifting, and adding a bunch of “step” or “step-like”
+functions, you can approximate a complicated function. What step-like
+function can you use?</p>
 </aside>
 </section>
-<section id="activation-functions-at-hidden-layer-binary-step" class="slide level3">
+<section id="activation-functions-at-hidden-layer-binary-step"
+class="slide level3">
 <h3>Activation functions at hidden layer: binary step</h3>
 <ul>
-<li>Not differentiable at <span class="math inline">\(x=0\)</span>, has <span class="math inline">\(0\)</span> derivative everywhere else.</li>
+<li>Not differentiable at <span class="math inline">\(x=0\)</span>, has
+<span class="math inline">\(0\)</span> derivative everywhere else.</li>
 <li>Not useful for gradient-based optimization methods.</li>
 </ul>
 </section>
-<section id="activation-functions-at-hidden-layer-some-choices" class="slide level3">
+<section id="activation-functions-at-hidden-layer-some-choices"
+class="slide level3">
 <h3>Activation functions at hidden layer: some choices</h3>
 <figure>
-<img data-src="../images/activation-functions.png" style="width:50.0%" alt="Most common activation functions" /><figcaption aria-hidden="true">Most common activation functions</figcaption>
+<img data-src="../images/activation-functions.png" style="width:50.0%"
+alt="Most common activation functions" />
+<figcaption aria-hidden="true">Most common activation
+functions</figcaption>
 </figure>
 <aside class="notes">
 <p>What do they have in common?</p>
 <ul>
 <li>Differentiable (at least from one side)</li>
-<li>Non-linear (except for the linear one, which is only used as the output function for a regression)</li>
+<li>Non-linear (except for the linear one, which is only used as the
+output function for a regression)</li>
 </ul>
 </aside>
 </section>
 <section id="dimension-1" class="slide level3">
 <h3>Dimension (1)</h3>
 <ul>
-<li><span class="math inline">\(N_I\)</span> = input dimension, number of features</li>
-<li><span class="math inline">\(N_H\)</span> = number of hidden units</li>
-<li><span class="math inline">\(N_O\)</span> = output dimension, number of outputs</li>
+<li><span class="math inline">\(N_I\)</span> = input dimension, number
+of features</li>
+<li><span class="math inline">\(N_H\)</span> = number of hidden
+units</li>
+<li><span class="math inline">\(N_O\)</span> = output dimension, number
+of outputs</li>
 </ul>
 </section>
 <section id="dimension-2" class="slide level3">
@@ -246,18 +374,23 @@
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Hidden layer: weights</td>
-<td style="text-align: left;"><span class="math inline">\(W_H\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(N_H (N_I + 1)\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(W_H\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(N_H (N_I +
+1)\)</span></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Output layer: weights</td>
-<td style="text-align: left;"><span class="math inline">\(W_O\)</span></td>
-<td style="text-align: left;"><span class="math inline">\(N_O (N_H + 1)\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(W_O\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(N_O (N_H +
+1)\)</span></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Total</td>
 <td style="text-align: left;"></td>
-<td style="text-align: left;"><span class="math inline">\(N_H(N_I+1)+N_O(N_H+1)\)</span></td>
+<td style="text-align: left;"><span
+class="math inline">\(N_H(N_I+1)+N_O(N_H+1)\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -265,61 +398,91 @@
 <section id="loss-function-regression" class="slide level3">
 <h3>Loss function: regression</h3>
 <ul>
-<li><span class="math inline">\(y_i\)</span> is scalar target variable for sample <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(z_{Oi}\)</span> is estimate of <span class="math inline">\(y_i\)</span></li>
+<li><span class="math inline">\(y_i\)</span> is scalar target variable
+for sample <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(z_{Oi}\)</span> is estimate of <span
+class="math inline">\(y_i\)</span></li>
 <li>Use L2 loss:</li>
 </ul>
-<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n (y_i - z_{Oi})^2\]</span></p>
+<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n (y_i -
+z_{Oi})^2\]</span></p>
 </section>
-<section id="loss-function-regression-with-vector-output" class="slide level3">
+<section id="loss-function-regression-with-vector-output"
+class="slide level3">
 <h3>Loss function: regression with vector output</h3>
 <ul>
-<li>For vector <span class="math inline">\(\mathbf{y}_i = (y_{i1}, \ldots, y_{iK})\)</span>, use vector L2 loss:</li>
+<li>For vector <span class="math inline">\(\mathbf{y}_i = (y_{i1},
+\ldots, y_{iK})\)</span>, use vector L2 loss:</li>
 </ul>
-<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n \sum_{i=1}^K (y_{iK} - z_{OiK})^2\]</span></p>
+<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n
+\sum_{i=1}^K (y_{iK} - z_{OiK})^2\]</span></p>
 </section>
-<section id="loss-function-binary-classification-1" class="slide level3">
+<section id="loss-function-binary-classification-1"
+class="slide level3">
 <h3>Loss function: binary classification (1)</h3>
 <ul>
-<li><span class="math inline">\(y_i = {0, 1}\)</span> is target variable for sample <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(z_{Oi}\)</span> is scalar, called “logit score”</li>
+<li><span class="math inline">\(y_i = {0, 1}\)</span> is target variable
+for sample <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(z_{Oi}\)</span> is scalar, called “logit
+score”</li>
 <li>Negative log likelihood loss:</li>
 </ul>
-<p><span class="math display">\[L(\mathbf{W}) = -\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W}), \quad P(y_i=1|\mathbf{x}_i, \mathbf{W}) = \frac{1}{1+e^{-z_{Oi}}}\]</span></p>
+<p><span class="math display">\[L(\mathbf{W}) = -\sum_{i=1}^n \text{ln}
+P(y_i | \mathbf{x}_i, \mathbf{W}), \quad P(y_i=1|\mathbf{x}_i,
+\mathbf{W}) = \frac{1}{1+e^{-z_{Oi}}}\]</span></p>
 </section>
-<section id="loss-function-binary-classification-2" class="slide level3">
+<section id="loss-function-binary-classification-2"
+class="slide level3">
 <h3>Loss function: binary classification (2)</h3>
 <p>Loss (binary cross entropy):</p>
-<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n -y_i z_{Oi} + \text{ln}(1+e^{y_i z_Oi})\]</span></p>
+<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n -y_i z_{Oi}
++ \text{ln}(1+e^{y_i z_Oi})\]</span></p>
 </section>
-<section id="loss-function-multi-class-classification-1" class="slide level3">
+<section id="loss-function-multi-class-classification-1"
+class="slide level3">
 <h3>Loss function: multi-class classification (1)</h3>
 <ul>
-<li><span class="math inline">\(y_i = {1, \ldots, K}\)</span> is target variable for sample <span class="math inline">\(i\)</span></li>
-<li><span class="math inline">\(\mathbf{z}_{Oi} = (z_{Oi1}, \ldots, z_{OiK})\)</span> is vector with one entry per class</li>
-<li>Likelihood given by softmax function, class with highest score has highest probability:</li>
+<li><span class="math inline">\(y_i = {1, \ldots, K}\)</span> is target
+variable for sample <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\mathbf{z}_{Oi} = (z_{Oi1}, \ldots,
+z_{OiK})\)</span> is vector with one entry per class</li>
+<li>Likelihood given by softmax function, class with highest score has
+highest probability:</li>
 </ul>
-<p><span class="math display">\[P(y_i  = k | \mathbf{x}_i, \mathbf{W}) = g_k(\mathbf{z}_{Oi}), \quad g_k(\mathbf{z}_{Oi}) = \frac{e^{z_{OiK}}}{\sum_\ell e^{z_{Oi\ell}}}\]</span></p>
+<p><span class="math display">\[P(y_i  = k | \mathbf{x}_i, \mathbf{W}) =
+g_k(\mathbf{z}_{Oi}), \quad g_k(\mathbf{z}_{Oi}) =
+\frac{e^{z_{OiK}}}{\sum_\ell e^{z_{Oi\ell}}}\]</span></p>
 </section>
-<section id="loss-function-multi-class-classification-2" class="slide level3">
+<section id="loss-function-multi-class-classification-2"
+class="slide level3">
 <h3>Loss function: multi-class classification (2)</h3>
-<p>Define “one-hot” vector - for a sample from class <span class="math inline">\(k\)</span>, all entries in the vector are <span class="math inline">\(0\)</span> except for the <span class="math inline">\(k\)</span>th entry which is <span class="math inline">\(1\)</span>:</p>
-<p><span class="math display">\[r_{ik} = 
+<p>Define “one-hot” vector - for a sample from class <span
+class="math inline">\(k\)</span>, all entries in the vector are <span
+class="math inline">\(0\)</span> except for the <span
+class="math inline">\(k\)</span>th entry which is <span
+class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[r_{ik} =
 \begin{cases}
 1 \quad y_i = k \\
 0 \quad y_i \neq k
 \end{cases}
 \]</span></p>
 </section>
-<section id="loss-function-multi-class-classification-3" class="slide level3">
+<section id="loss-function-multi-class-classification-3"
+class="slide level3">
 <h3>Loss function: multi-class classification (3)</h3>
 <p>Negative log likelihood</p>
-<p><span class="math display">\[\text{ln} P(y_i = k | \mathbf{x}_i, \mathbf{W}) = \sum_{k=1}^K \text{ln} P(y_i = k | \mathbf{x}_i, \mathbf{W})\]</span></p>
+<p><span class="math display">\[\text{ln} P(y_i = k | \mathbf{x}_i,
+\mathbf{W}) = \sum_{k=1}^K \text{ln} P(y_i = k | \mathbf{x}_i,
+\mathbf{W})\]</span></p>
 </section>
-<section id="loss-function-multi-class-classification-4" class="slide level3">
+<section id="loss-function-multi-class-classification-4"
+class="slide level3">
 <h3>Loss function: multi-class classification (4)</h3>
 <p>Loss (categorical cross entropy):</p>
-<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{Oik}}\right) - \sum_k  r_{ik} z_{Oik}\right]\]</span></p>
+<p><span class="math display">\[L(\mathbf{W}) = \sum_{i=1}^n \left[ \ln
+\left(\sum_k e^{z_{Oik}}\right) - \sum_k  r_{ik}
+z_{Oik}\right]\]</span></p>
 </section></section>
 <section>
 <section id="neural-network---summary" class="title-slide slide level2">
@@ -347,7 +510,9 @@
 <section id="training-the-network" class="slide level3">
 <h3>Training the network</h3>
 <ul>
-<li>Still need to find the <span class="math inline">\(\mathbf{W}\)</span> that minimizes <span class="math inline">\(L(\mathbf{W})\)</span>.</li>
+<li>Still need to find the <span
+class="math inline">\(\mathbf{W}\)</span> that minimizes <span
+class="math inline">\(L(\mathbf{W})\)</span>.</li>
 <li>How?</li>
 </ul>
 </section></section>
@@ -359,18 +524,24 @@
 <section id="how-to-compute-gradients" class="slide level3">
 <h3>How to compute gradients?</h3>
 <ul>
-<li>Gradient descent requires computation of the gradient <span class="math inline">\(\nabla L(\mathbf{W})\)</span></li>
+<li>Gradient descent requires computation of the gradient <span
+class="math inline">\(\nabla L(\mathbf{W})\)</span></li>
 <li>Backpropagation is key to efficient computation of gradients</li>
 </ul>
 </section>
-<section id="composite-functions-and-computation-graphs" class="slide level3">
+<section id="composite-functions-and-computation-graphs"
+class="slide level3">
 <h3>Composite functions and computation graphs</h3>
-<p>Suppose we have a composite function <span class="math inline">\(f(g(h(x)))\)</span></p>
-<p>We can represent it as a computational graph, where each connection is an input and each node performs a function or operation:</p>
+<p>Suppose we have a composite function <span
+class="math inline">\(f(g(h(x)))\)</span></p>
+<p>We can represent it as a computational graph, where each connection
+is an input and each node performs a function or operation:</p>
 </section>
 <section id="forward-pass-on-computational-graph" class="slide level3">
 <h3>Forward pass on computational graph</h3>
-<p>To compute the output <span class="math inline">\(f(g(h(x)))\)</span>, we do a <em>forward pass</em> on the computational graph:</p>
+<p>To compute the output <span
+class="math inline">\(f(g(h(x)))\)</span>, we do a <em>forward pass</em>
+on the computational graph:</p>
 <ul>
 <li>Compute <span class="math inline">\(v=h(x)\)</span></li>
 <li>Compute <span class="math inline">\(u=g(v)\)</span></li>
@@ -380,15 +551,20 @@
 <section id="derivative-of-composite-function" class="slide level3">
 <h3>Derivative of composite function</h3>
 <ul>
-<li><p>Suppose need to compute the derivative of the composite function <span class="math inline">\(f(g(h(x)))\)</span> with respect to <span class="math inline">\(x\)</span></p></li>
+<li><p>Suppose need to compute the derivative of the composite function
+<span class="math inline">\(f(g(h(x)))\)</span> with respect to <span
+class="math inline">\(x\)</span></p></li>
 <li><p>We will use the chain rule.</p></li>
 </ul>
 </section>
 <section id="backward-pass-on-computational-graph" class="slide level3">
 <h3>Backward pass on computational graph</h3>
-<p>We can compute this chain rule derivative by doing a <em>backward pass</em> on the computational graph:</p>
-<p>We just need to get the derivative of each node with respect to its inputs:</p>
-<p><span class="math display">\[\frac{df}{dx} = \frac{df}{du} \frac{dg}{dv} \frac{dh}{dx}\]</span></p>
+<p>We can compute this chain rule derivative by doing a <em>backward
+pass</em> on the computational graph:</p>
+<p>We just need to get the derivative of each node with respect to its
+inputs:</p>
+<p><span class="math display">\[\frac{df}{dx} = \frac{df}{du}
+\frac{dg}{dv} \frac{dh}{dx}\]</span></p>
 </section>
 <section id="neural-network-computation-graph" class="slide level3">
 <h3>Neural network computation graph</h3>
@@ -396,111 +572,181 @@
 </section>
 <section id="backpropagation-error-definition" class="slide level3">
 <h3>Backpropagation error: definition</h3>
-<p>Denote the backpropagation error of node <span class="math inline">\(j\)</span> as</p>
-<p><span class="math display">\[\delta_j = \frac{\partial L}{\partial z_j}\]</span></p>
-<p>the derivative of the loss function, with respect to the input to the activation function at that node.</p>
+<p>Denote the backpropagation error of node <span
+class="math inline">\(j\)</span> as</p>
+<p><span class="math display">\[\delta_j = \frac{\partial L}{\partial
+z_j}\]</span></p>
+<p>the derivative of the loss function, with respect to the input to the
+activation function at that node.</p>
 </section>
 <section id="backpropagation-error-output-unit" class="slide level3">
 <h3>Backpropagation error: output unit</h3>
-<p>For output unit in <em>regression</em> network, where <span class="math inline">\(u_{O} = z_{O}\)</span>,</p>
-<p><span class="math display">\[L =  \frac{1}{2}\sum_n (y_n - z_{O,n})^2\]</span></p>
-<p>Then <span class="math inline">\(\delta_O = \frac{\partial L}{\partial z_O} = - (y - z_{O})\)</span></p>
+<p>For output unit in <em>regression</em> network, where <span
+class="math inline">\(u_{O} = z_{O}\)</span>,</p>
+<p><span class="math display">\[L =  \frac{1}{2}\sum_n (y_n -
+z_{O,n})^2\]</span></p>
+<p>Then <span class="math inline">\(\delta_O = \frac{\partial
+L}{\partial z_O} = - (y - z_{O})\)</span></p>
 <aside class="notes">
-<p>Note: this is the error of the model, the difference between true value and network output!</p>
-<p>More generally, if not using the identity activation function at the output, you compute <span class="math inline">\(\delta_O = \frac{\partial L}{\partial u_O}\frac{\partial u_O}{\partial z_O}\)</span>.</p>
+<p>Note: this is the error of the model, the difference between true
+value and network output!</p>
+<p>More generally, if not using the identity activation function at the
+output, you compute <span class="math inline">\(\delta_O =
+\frac{\partial L}{\partial u_O}\frac{\partial u_O}{\partial
+z_O}\)</span>.</p>
 </aside>
 </section>
-<section id="backpropagation-error-unit-with-inputs-illustration" class="slide level3">
+<section id="backpropagation-error-unit-with-inputs-illustration"
+class="slide level3">
 <h3>Backpropagation error: unit with inputs illustration</h3>
-<p>At a node <span class="math inline">\(j\)</span>, <span class="math inline">\(z_j = \sum_i w_{j,i} u_{i}\)</span></p>
+<p>At a node <span class="math inline">\(j\)</span>, <span
+class="math inline">\(z_j = \sum_i w_{j,i} u_{i}\)</span></p>
 </section>
-<section id="backpropagation-error-unit-with-inputs" class="slide level3">
+<section id="backpropagation-error-unit-with-inputs"
+class="slide level3">
 <h3>Backpropagation error: unit with inputs</h3>
 <ul>
-<li><p>Backpropagation error of node <span class="math inline">\(j\)</span> is <span class="math inline">\(\delta_j = \frac{\partial L}{\partial z_j}\)</span></p></li>
-<li><p>Chain rule: <span class="math inline">\(\frac{\partial L}{\partial w_{j,i}} = \frac{\partial L}{\partial z_{j}} \frac{\partial z_{j}}{\partial w_{j,i}}\)</span></p></li>
-<li><p>Since <span class="math inline">\(z_j = \sum_i w_{j,i} u_{i}\)</span>, <span class="math inline">\(\frac{\partial z_j}{\partial w_{j,i}} = u_i\)</span></p></li>
-<li><p>Then <span class="math inline">\(\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i\)</span></p></li>
+<li><p>Backpropagation error of node <span
+class="math inline">\(j\)</span> is <span class="math inline">\(\delta_j
+= \frac{\partial L}{\partial z_j}\)</span></p></li>
+<li><p>Chain rule: <span class="math inline">\(\frac{\partial
+L}{\partial w_{j,i}} = \frac{\partial L}{\partial z_{j}} \frac{\partial
+z_{j}}{\partial w_{j,i}}\)</span></p></li>
+<li><p>Since <span class="math inline">\(z_j = \sum_i w_{j,i}
+u_{i}\)</span>, <span class="math inline">\(\frac{\partial z_j}{\partial
+w_{j,i}} = u_i\)</span></p></li>
+<li><p>Then <span class="math inline">\(\frac{\partial L}{\partial
+w_{j,i}} = \delta_j u_i\)</span></p></li>
 </ul>
 </section>
-<section id="backpropagation-error-unit-with-inputs-and-outputs-illustration" class="slide level3">
-<h3>Backpropagation error: unit with inputs and outputs illustration</h3>
+<section
+id="backpropagation-error-unit-with-inputs-and-outputs-illustration"
+class="slide level3">
+<h3>Backpropagation error: unit with inputs and outputs
+illustration</h3>
 
 </section>
-<section id="backpropagation-error-unit-with-inputs-and-outputs-1" class="slide level3">
+<section id="backpropagation-error-unit-with-inputs-and-outputs-1"
+class="slide level3">
 <h3>Backpropagation error: unit with inputs and outputs (1)</h3>
 <p>For a hidden unit,</p>
-<p><span class="math display">\[\delta_j = \frac{\partial L}{\partial z_j} = \sum_k \frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial z_j}\]</span></p>
-<p><span class="math display">\[\delta_j = \sum_k \delta_k \frac{\partial z_k}{\partial z_j} =  \sum_k \delta_k w_{k,j} g&#39;(z_j) = g&#39;(z_j) \sum_k \delta_k w_{k,j} \]</span></p>
-<p>using <span class="math inline">\(\delta_k = \frac{\partial L}{\partial z_k}\)</span>.</p>
+<p><span class="math display">\[\delta_j = \frac{\partial L}{\partial
+z_j} = \sum_k \frac{\partial L}{\partial z_k}\frac{\partial
+z_k}{\partial z_j}\]</span></p>
+<p><span class="math display">\[\delta_j = \sum_k \delta_k
+\frac{\partial z_k}{\partial z_j} =  \sum_k \delta_k w_{k,j} g&#39;(z_j)
+= g&#39;(z_j) \sum_k \delta_k w_{k,j} \]</span></p>
+<p>using <span class="math inline">\(\delta_k = \frac{\partial
+L}{\partial z_k}\)</span>.</p>
 </section>
-<section id="backpropagation-error-unit-with-inputs-and-outputs-2" class="slide level3">
+<section id="backpropagation-error-unit-with-inputs-and-outputs-2"
+class="slide level3">
 <h3>Backpropagation error: unit with inputs and outputs (2)</h3>
-<p>And because <span class="math inline">\(z_k = \sum_l w_{k,l} u_l = \sum_l w_{k,l} g(z_l)\)</span>,</p>
-<p><span class="math inline">\(\frac{\partial z_k}{\partial z_j} = w_{k,j}g&#39;(z_j)\)</span>.</p>
+<p>And because <span class="math inline">\(z_k = \sum_l w_{k,l} u_l =
+\sum_l w_{k,l} g(z_l)\)</span>,</p>
+<p><span class="math inline">\(\frac{\partial z_k}{\partial z_j} =
+w_{k,j}g&#39;(z_j)\)</span>.</p>
 </section>
-<section id="backpropagation-gradient-descent-algorithm-1" class="slide level3">
+<section id="backpropagation-gradient-descent-algorithm-1"
+class="slide level3">
 <h3>Backpropagation + gradient descent algorithm (1)</h3>
 <ol type="1">
-<li>Start with random (small) weights. Apply input <span class="math inline">\(x_n\)</span> to network and propagate values forward using <span class="math inline">\(z_j = \sum_i w_{j,i} u_i\)</span> and <span class="math inline">\(u_j = g(z_j)\)</span>. (Sum is over all inputs to node <span class="math inline">\(j\)</span>.)</li>
-<li>Evaluate <span class="math inline">\(\delta_k\)</span> for all output units.</li>
+<li>Start with random (small) weights. Apply input <span
+class="math inline">\(x_n\)</span> to network and propagate values
+forward using <span class="math inline">\(z_j = \sum_i w_{j,i}
+u_i\)</span> and <span class="math inline">\(u_j = g(z_j)\)</span>. (Sum
+is over all inputs to node <span class="math inline">\(j\)</span>.)</li>
+<li>Evaluate <span class="math inline">\(\delta_k\)</span> for all
+output units.</li>
 </ol>
 </section>
-<section id="backpropagation-gradient-descent-algorithm-2" class="slide level3">
+<section id="backpropagation-gradient-descent-algorithm-2"
+class="slide level3">
 <h3>Backpropagation + gradient descent algorithm (2)</h3>
 <ol start="3" type="1">
-<li>Backpropagate the <span class="math inline">\(\delta\)</span>s to get <span class="math inline">\(\delta_j\)</span> for each hidden unit. (Sum is over all outputs of node <span class="math inline">\(j\)</span>.)</li>
+<li>Backpropagate the <span class="math inline">\(\delta\)</span>s to
+get <span class="math inline">\(\delta_j\)</span> for each hidden unit.
+(Sum is over all outputs of node <span
+class="math inline">\(j\)</span>.)</li>
 </ol>
-<p><span class="math display">\[\delta_j = g&#39;(z_j) \sum_k w_{k,j} \delta_k\]</span></p>
+<p><span class="math display">\[\delta_j = g&#39;(z_j) \sum_k w_{k,j}
+\delta_k\]</span></p>
 </section>
-<section id="backpropagation-gradient-descent-algorithm-3" class="slide level3">
+<section id="backpropagation-gradient-descent-algorithm-3"
+class="slide level3">
 <h3>Backpropagation + gradient descent algorithm (3)</h3>
 <ol start="4" type="1">
-<li>Use <span class="math inline">\(\frac{\partial L_n}{\partial w_{j,i}} = \delta_j u_i\)</span> to evaluate derivatives.</li>
+<li>Use <span class="math inline">\(\frac{\partial L_n}{\partial
+w_{j,i}} = \delta_j u_i\)</span> to evaluate derivatives.</li>
 <li>Update weights using gradient descent.</li>
 </ol>
 </section>
-<section id="derivatives-for-common-loss-functions" class="slide level3">
+<section id="derivatives-for-common-loss-functions"
+class="slide level3">
 <h3>Derivatives for common loss functions</h3>
 <p>Squared/L2 loss:</p>
-<p><span class="math display">\[L = \sum_i (y_i - z_{O,i})^2, \quad \frac{\partial L}{\partial z_{O,i}} = \sum_i -(y_i - z_{O,i})\]</span></p>
+<p><span class="math display">\[L = \sum_i (y_i - z_{O,i})^2, \quad
+\frac{\partial L}{\partial z_{O,i}} = \sum_i -(y_i -
+z_{O,i})\]</span></p>
 <p>Binary cross entropy loss:</p>
-<p><span class="math display">\[L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partial L}{\partial z_{O,i}} = y_i - \frac{ e^{y_i z_{O,i}} }{1 + e^{y_i z_{O,i}} }\]</span></p>
+<p><span class="math display">\[L = \sum_i -y_i z_{O,i} + \text{ln} (1 +
+e^{y_i z_{O,i}}), \quad \frac{\partial L}{\partial z_{O,i}} = y_i -
+\frac{ e^{y_i z_{O,i}} }{1 + e^{y_i z_{O,i}} }\]</span></p>
 </section>
-<section id="derivatives-for-common-activation-functions" class="slide level3">
+<section id="derivatives-for-common-activation-functions"
+class="slide level3">
 <h3>Derivatives for common activation functions</h3>
 <ul>
-<li>Sigmoid activation: <span class="math inline">\(g&#39;(x) = \sigma(x) (1-\sigma(x))\)</span></li>
-<li>Tanh activation: <span class="math inline">\(g&#39;(x) = \frac{1}{\text{cosh}^2(x)}\)</span></li>
+<li>Sigmoid activation: <span class="math inline">\(g&#39;(x) =
+\sigma(x) (1-\sigma(x))\)</span></li>
+<li>Tanh activation: <span class="math inline">\(g&#39;(x) =
+\frac{1}{\text{cosh}^2(x)}\)</span></li>
 </ul>
 </section></section>
 <section>
-<section id="why-is-backpropagation-so-important" class="title-slide slide level2">
+<section id="why-is-backpropagation-so-important"
+class="title-slide slide level2">
 <h2>Why is backpropagation so important?</h2>
-<p>Example: <span class="math inline">\(e = (a + b) \times (b+1)\)</span></p>
+<p>Example: <span class="math inline">\(e = (a + b) \times
+(b+1)\)</span></p>
 <figure>
-<img data-src="../images/tree-eval-derivs.png" style="width:60.0%" alt="Derivatives on a computational graph" /><figcaption aria-hidden="true">Derivatives on a computational graph</figcaption>
+<img data-src="../images/tree-eval-derivs.png" style="width:60.0%"
+alt="Derivatives on a computational graph" />
+<figcaption aria-hidden="true">Derivatives on a computational
+graph</figcaption>
 </figure>
 <aside class="notes">
-<p>Image via <a href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
+<p>Image via <a
+href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
 </aside>
 </section>
 <section id="forward-mode-differentiation" class="slide level3">
 <h3>Forward-mode differentiation</h3>
 <figure>
-<img data-src="../images/tree-forwradmode.png" style="width:60.0%" alt="Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input." /><figcaption aria-hidden="true">Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input.</figcaption>
+<img data-src="../images/tree-forwradmode.png" style="width:60.0%"
+alt="Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input." />
+<figcaption aria-hidden="true">Forward-mode differentiation from input
+to output gives us derivative of every node with respect to each input.
+Then we can compute the derivative of output with respect to
+input.</figcaption>
 </figure>
 <aside class="notes">
-<p>Image via <a href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
+<p>Image via <a
+href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
 </aside>
 </section>
 <section id="reverse-mode-differentiation" class="slide level3">
 <h3>Reverse-mode differentiation</h3>
 <figure>
-<img data-src="../images/tree-backprop.png" style="width:60.0%" alt="Reverse-mode differentiation from output to input gives us derivative of output with respect to every node." /><figcaption aria-hidden="true">Reverse-mode differentiation from output to input gives us derivative of output with respect to every node.</figcaption>
+<img data-src="../images/tree-backprop.png" style="width:60.0%"
+alt="Reverse-mode differentiation from output to input gives us derivative of output with respect to every node." />
+<figcaption aria-hidden="true">Reverse-mode differentiation from output
+to input gives us derivative of output with respect to every
+node.</figcaption>
 </figure>
 <aside class="notes">
-<p>Image via <a href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
+<p>Image via <a
+href="https://colah.github.io/posts/2015-08-Backprop">https://colah.github.io/posts/2015-08-Backprop/</a>.</p>
 </aside>
 </section></section>
     </div>
@@ -508,7 +754,7 @@
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -519,10 +765,148 @@
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

@@ -168,7 +168,7 @@ For binary classification, $y \in [0,1]$:
 For multi-class classification, $y=1,\ldots, K$:
 
 - $\mathbf{z}_O = [z_{O,1}, \ldots, z_{O,K}]$ is a vector - need $K$ output nodes
-- Soft decision: $P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_\ell e^{-z_\ell}}$ (softmax)
+- Soft decision: $P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}$ (softmax)
 - Then you can select label by $\hat{y} = \operatorname*{argmax}_k z_{O,k}$
 
 For regression, $y \in R^{K}$:
