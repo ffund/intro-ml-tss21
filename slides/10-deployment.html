@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Fraida Fund">
+  <title>Deploying machine learning systems</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
+  <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
+  <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Deploying machine learning systems</h1>
+  <p class="author">Fraida Fund</p>
+</section>
+
+<section>
+<section id="deploying-machine-learning-systems"
+class="title-slide slide level2">
+<h2>Deploying machine learning systems</h2>
+
+</section>
+<section id="until-now---model-development" class="slide level3">
+<h3>Until now - model development</h3>
+<figure>
+<img data-src="../images/deploy/ml-dev.png" style="width:85.0%"
+alt="Machine learning model development." />
+<figcaption aria-hidden="true">Machine learning model
+development.</figcaption>
+</figure>
+<aside class="notes">
+<p>Note: we know that these are not separate, isolated steps - for
+example, if data exploration shows a non-linear relationship between
+feature and target, we might add a non-linear transformation in the data
+preparation step, <em>if</em> the model we will train is not already
+capable of learning non-linear relationships.</p>
+</aside>
+</section>
+<section id="next-step---model-deployment" class="slide level3">
+<h3>Next step - model deployment</h3>
+<figure>
+<img data-src="../images/deploy/ml-dev-plus-ops.png" style="width:95.0%"
+alt="Machine learning model development + deployment." />
+<figcaption aria-hidden="true">Machine learning model development +
+deployment.</figcaption>
+</figure>
+<aside class="notes">
+<p>In production, a model might be behind an API that can be called on
+demand by online services, be deployed on an edge or mobile device, or
+do batch prediction.</p>
+</aside>
+</section>
+<section id="thinking-about-production-before-model-development"
+class="slide level3">
+<h3>Thinking about production: before model development</h3>
+<figure>
+<img data-src="../images/deploy/ml-before-dev.png" style="width:95.0%"
+alt="Thinking about production service before model development." />
+<figcaption aria-hidden="true">Thinking about production service
+<em>before</em> model development.</figcaption>
+</figure>
+<aside class="notes">
+<p>Check out <a
+href="https://developers.google.com/machine-learning/problem-framing">Introduction
+to Machine Learning Problem Framing</a> for more on this!</p>
+</aside>
+</section>
+<section id="re-thinking-model-development-after-model-deployment-1"
+class="slide level3">
+<h3>Re-thinking model development: After model deployment (1)</h3>
+<figure>
+<img data-src="../images/deploy/ml-after-deploy.png" style="width:50.0%"
+alt="Re-thinking after model deployment." />
+<figcaption aria-hidden="true">Re-thinking <em>after</em> model
+deployment.</figcaption>
+</figure>
+<aside class="notes">
+<p>Two sets of metrics for models deployed “in production”:</p>
+<ul>
+<li>optimizing metrics, e.g.: how accurate is it, how fair are its
+predictions.</li>
+<li>operational metrics, e.g.: how long does it take to return a
+prediction (inference latency), how much does it cost (energy,
+infrastructure rental) to return one result.</li>
+</ul>
+</aside>
+</section>
+<section id="re-thinking-model-development-after-model-deployment-2"
+class="slide level3">
+<h3>Re-thinking model development: After model deployment (2)</h3>
+<figure>
+<img data-src="../images/deploy/ml-after-deploy-label.png"
+style="width:55.0%" alt="Re-thinking after model deployment." />
+<figcaption aria-hidden="true">Re-thinking <em>after</em> model
+deployment.</figcaption>
+</figure>
+<aside class="notes">
+<p>Evaluating a model in production (optimizing metrics) is often not
+straightforward, we often don’t have ground truth -</p>
+<ul>
+<li>Some problems have <strong>natural ground truth labels</strong>: for
+example, you can predict how long a customer will wait on hold, then
+time how long they actually waited.</li>
+<li>Sometimes you can get labels from users, explicitly or implicitly:
+for example, you can add a “report not spam” button on emails that were
+classified as spam, or you can infer that they are not spam if a user
+moves it from spam folder to inbox. (But, response rates may be low.)
+(Users labels may not be good - will a user know whether a translation
+is acceptable or not?)</li>
+</ul>
+<p>But, getting labels in production is often problematic -</p>
+<ul>
+<li><strong>ML system itself influences outcome</strong>: for example,
+you use an ML system to identify students at risk of failing end-of-year
+reading exams, to get extra resources to them. At the end of the year,
+some students who got extra help passed the exam. Was your prediction
+wrong? (In some cases, we might sacrifice some performance with a “held
+out” set - e.g. mark 1% of email as “held out” and send <em>all</em> to
+user, even those classified as spam, and see what the user does with
+it!)</li>
+<li><strong>Feedback loop may be long</strong>: for example, you use an
+ML system to show users a movie that they may like, and you consider a
+recommendation successful if the user then watches the movie. But, they
+may watch it hours, days, weeks after it is first recommended! Your
+initial inferred label may be premature.</li>
+</ul>
+<p>We want labeled production data for evaluation, <em>and</em>
+potentially for future re-training!</p>
+</aside>
+</section></section>
+<section>
+<section id="training-serving-skew" class="title-slide slide level2">
+<h2>Training-serving skew</h2>
+
+</section>
+<section id="data-distribution-shift" class="slide level3">
+<h3>Data distribution shift</h3>
+<p>Between training and production (or later in production), things may
+change e.g.:</p>
+<ul>
+<li>the environment in which your service operates, changes (sudden or
+gradual)</li>
+<li>feedback loop: your production service changes the environment</li>
+<li>something in the “other pieces” changes</li>
+</ul>
+<aside class="notes">
+<p>Example of “something in the other pieces” changing:</p>
+<ul>
+<li>Your model uses a weather API to get temperature as a feature for
+input to model. The API changes its default reporting format from
+Farenheit to Celsius.</li>
+<li>Your credit card expires, so the weather API refuses your requests
+and your data processing code automatically fills in a NaN for
+temperature features.</li>
+</ul>
+</aside>
+</section>
+<section id="types-of-data-distribution-shift" class="slide level3">
+<h3>Types of data distribution shift</h3>
+<p>Given model input <span class="math inline">\(X\)</span>, target
+<span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[P(X, y) = P(y | X)P(X) = P(X|y)
+P(y)\]</span></p>
+<p>Three types of “shifts”: covariate, label, concept.</p>
+</section>
+<section id="covariate-shift" class="slide level3">
+<h3>Covariate shift</h3>
+<p>Using <span class="math inline">\(P(X, y) = P(y | X)P(X)\)</span>
+-</p>
+<ul>
+<li><span class="math inline">\(P(X)\)</span> changes</li>
+<li><span class="math inline">\(P(y | X)\)</span> stays the same</li>
+</ul>
+<aside class="notes">
+<p>Example: you are predicting breast cancer risk given an input feature
+<code>age</code>. Your training data comes from a clinic where patients
+are evaluated for breast cancer, so that “source” distribution trends
+older. However, your model is deployed in a smartphone app and users
+trend younger. (But, the probability of a young/old sample getting
+breast cancer has not changed.)</p>
+<figure>
+<img data-src="../images/deploy/bc-covariate-shift.png"
+style="width:45.0%"
+alt="Breast cancer risk vs. age with covariate shift." />
+<figcaption aria-hidden="true">Breast cancer risk vs. age with covariate
+shift.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="label-shift" class="slide level3">
+<h3>Label shift</h3>
+<p>Using <span class="math inline">\(P(X, y) = P(X|y) P(y)\)</span>
+-</p>
+<ul>
+<li><span class="math inline">\(P(y)\)</span> changes</li>
+<li><span class="math inline">\(P(X|y)\)</span> stays the same</li>
+</ul>
+<aside class="notes">
+<p>In the previous example (breast cancer risk), we would also see label
+shift - with younger users, you would see fewer positive samples.</p>
+<p>But, we could also have a scenario with label shift but no covariate
+shift. Example: a medicine is developed that reduces breast cancer risk
+among all age groups. <span class="math inline">\(P(y)\)</span> is
+smaller (less breast cancer), but given a positive sample, the
+likelihood of being old/young has not changed.</p>
+<figure>
+<img data-src="../images/deploy/bc-label-shift.png" style="width:45.0%"
+alt="Breast cancer risk vs. age with label shift." />
+<figcaption aria-hidden="true">Breast cancer risk vs. age with label
+shift.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="concept-drift" class="slide level3">
+<h3>Concept drift</h3>
+<p>Using <span class="math inline">\(P(X, y) = P(y | X)P(X)\)</span>
+-</p>
+<ul>
+<li><span class="math inline">\(P(y | X)\)</span> changes</li>
+<li><span class="math inline">\(P(X)\)</span> has not changed</li>
+</ul>
+<aside class="notes">
+<p>Example: a vaccine is developed that, if given to teenagers, reduces
+their risk of developing breast cancer in their lifetime. Since the
+availability of the vaccine depends on age, the relationship between age
+and cancer risk will change.</p>
+<figure>
+<img data-src="../images/deploy/bc-concept-shift.png"
+style="width:45.0%"
+alt="Breast cancer risk vs. age with concept drift." />
+<figcaption aria-hidden="true">Breast cancer risk vs. age with concept
+drift.</figcaption>
+</figure>
+<p>Example: predicted price for a non-stop red-eye flight from NYC to
+Paris changes -</p>
+<ul>
+<li>may be cyclic/seasonal: more expensive during summer months, or
+around holidays</li>
+<li>or not: more expensive around Paris 2024 Olympics</li>
+</ul>
+</aside>
+</section></section>
+<section>
+<section id="deploying-better-machine-learning-systems"
+class="title-slide slide level2">
+<h2>Deploying <em>better</em> machine learning systems</h2>
+
+</section>
+<section id="model-re-training" class="slide level3">
+<h3>Model re-training</h3>
+<figure>
+<img data-src="../images/deploy/model-retrain.png" style="width:55.0%"
+alt="To address training-serving skew, we need to re-train when performance drops." />
+<figcaption aria-hidden="true">To address training-serving skew, we need
+to re-train when performance drops.</figcaption>
+</figure>
+</section>
+<section id="level-zero" class="slide level3">
+<h3>“Level zero”</h3>
+<figure>
+<img data-src="../images/deploy/ml-level-zero.png" style="width:95.0%"
+alt="An ML deployment at maturity/automation “level zero”." />
+<figcaption aria-hidden="true">An ML deployment at maturity/automation
+“level zero”.</figcaption>
+</figure>
+</section>
+<section id="improving-on-level-zero" class="slide level3">
+<h3>Improving on level zero</h3>
+<figure>
+<img data-src="../images/deploy/ml-level-automation.png"
+style="width:95.0%"
+alt="A more mature/automated deployment pipeline." />
+<figcaption aria-hidden="true">A more mature/automated deployment
+pipeline.</figcaption>
+</figure>
+<aside class="notes">
+<p>With our previous workflow, it would be very expensive (in
+person-hours) to re-train model, so we wouldn’t want to do it as often
+as necessary. To make it less “expensive”, we need to:</p>
+<ul>
+<li>close the feedback loop: collect data from production</li>
+<li>monitor for data/performance problems</li>
+<li>automate data → model → service pipeline</li>
+</ul>
+<p>The trigger to re-train model can be time-based, performance-based,
+or data-drift-based.</p>
+<p>Note that the “deliverable” that the ML team hands off is no longer a
+trained model - now it’s source code and/or configuration files defining
+a pipeline, that generates the trained model.</p>
+</aside>
+</section></section>
+<section>
+<section id="operations" class="title-slide slide level2">
+<h2>Operations!</h2>
+<!-- https://huyenchip.com/2020/12/27/real-time-machine-learning.html#fast_inference -->
+</section>
+<section id="operational-metrics-for-training" class="slide level3">
+<h3>Operational metrics for training</h3>
+<p>Training is expensive!</p>
+<aside class="notes">
+<p>There may be multiple ways a given “optimizing metric” target
+(e.g. “achieve 99% validation accuracy”), with different costs. e.g.,
+the metrics</p>
+<ul>
+<li>time to accuracy (TTA)</li>
+<li>energy to accuracy (ETA)</li>
+</ul>
+<p>may depend on batch size, learning rate, network
+size/architecture…</p>
+</aside>
+</section>
+<section id="operational-metrics-for-inference" class="slide level3">
+<h3>Operational metrics for inference</h3>
+<ul>
+<li>prediction serving latency (how long to return one result for one
+input?)</li>
+<li>throughput (when running on a large batch, how many outputs per unit
+time?)</li>
+<li>model size (especially if it will be deployed on mobile device/at
+edge)</li>
+<li>energy, cost…</li>
+</ul>
+<aside class="notes">
+<p>Batch vs. online inference</p>
+<ul>
+<li>Batch/offline: inference on large dataset, need high throughput</li>
+<li>Online: inference for one sample at a time, typically user is
+waiting for response, need low latency</li>
+</ul>
+</aside>
+</section>
+<section id="minimizing-prediction-serving-latency"
+class="slide level3">
+<h3>Minimizing prediction serving latency</h3>
+<figure>
+<img data-src="../images/deploy/inference-time-elements.png"
+style="width:65.0%"
+alt="There are several separate, but related, elements that make up prediction serving latency." />
+<figcaption aria-hidden="true">There are several separate, but related,
+elements that make up prediction serving latency.</figcaption>
+</figure>
+<aside class="notes">
+<p>To minimize the overall prediction serving latency, we would want to
+reduce the time:</p>
+<ul>
+<li>to get input features (retrieve data, compute features)</li>
+<li><strong>to compute one prediction (inference latency)</strong></li>
+<li>to get query from/deliver the result to user</li>
+</ul>
+</aside>
+</section>
+<section id="idea-1-model-architecture" class="slide level3">
+<h3>Idea 1: Model architecture</h3>
+<ul>
+<li>Use base model that’s small/specifically designed for efficient
+inference (e.g. MobileNet)</li>
+<li>Use big model, but prune activations that are usually zero</li>
+<li>Use knowledge distillation: train a small model to match “soft”
+predictions of big model</li>
+<li>Potentially some impact on “optimizing metrics”</li>
+</ul>
+</section>
+<section id="idea-2-model-compression" class="slide level3">
+<h3>Idea 2: Model compression</h3>
+<ul>
+<li>Reduced precision/quantization: use 16-bit floats (half precision)
+or 8-bit integers (fixed-point) instead of 32-bit floats (full
+precision)</li>
+<li>Can fit more numbers (weights, etc.) in “fast” memory</li>
+<li>Can perform faster computation</li>
+<li>Potentially some impact on “optimizing metrics” (quantization
+error)</li>
+</ul>
+</section>
+<section id="idea-3-hardware-acceleration" class="slide level3">
+<h3>Idea 3: Hardware acceleration</h3>
+<ul>
+<li>Use chips that are “good at” basic ML operations (matrix
+multiplication, convolution)</li>
+<li>Add specialized memory/data paths for ML (e.g. local fast cache for
+network weights)</li>
+</ul>
+<aside class="notes">
+<p>How did GPUs become so important for machine learning?</p>
+<ul>
+<li>GPUs were originally designed to do graphics e.g. for video games -
+most of the computations in graphic rendering are linear algebra,
+e.g. matrix operations.</li>
+<li>Also designed for high <em>data</em> parallelism - compute same
+thing on many data elements (e.g. same shading function on many
+polygons). (Not like multi-core CPUs which have task parallelism -
+compute different functions.)</li>
+<li>In early 2000s: shift toward <em>programmable</em> GPUs - NVIDIA
+released APIs for general purpose computation on GPU.</li>
+</ul>
+<p>Summary of tradeoffs:</p>
+<p>CPU: low cost, low power general computation. GPU: can quickly do a
+big linear algebra operation on a bunch of data samples at once.</p>
+</aside>
+</section>
+<section id="where-should-inference-happen-cloud" class="slide level3">
+<h3>Where should inference happen: Cloud</h3>
+<ul>
+<li>lots of compute</li>
+<li>potentially costly</li>
+<li>can dynamically adapt to workload</li>
+<li>subject to network performance</li>
+<li>don’t need to distribute model</li>
+</ul>
+</section>
+<section id="where-should-inference-happen-edge" class="slide level3">
+<h3>Where should inference happen: Edge</h3>
+<ul>
+<li>less compute,</li>
+<li>limited memory/disk</li>
+<li>good for user data privacy</li>
+<li>not subject to network performance</li>
+<li>but not good for model privacy</li>
+</ul>
+<!-- https://www.cs.cornell.edu/courses/cs4787/2022fa/lectures/lecture27.pdf -->
+</section></section>
+<section id="summary" class="title-slide slide level2">
+<h2>Summary</h2>
+<ul>
+<li>Consider ML model development + deployment together</li>
+<li>In practice, ML engineers develop pipelines, not models</li>
+<li>Often tension between optimizing metrics + operational metrics</li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js-master/dist/reveal.js"></script>
+
+  <!-- reveal.js plugins -->
+  <script src="reveal.js-master/plugin/notes/notes.js"></script>
+  <script src="reveal.js-master/plugin/search/search.js"></script>
+  <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
+  <script src="reveal.js-master/plugin/math/math.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
