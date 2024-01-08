@@ -5,6 +5,7 @@ _Fraida Fund_
 
 ## Week 0: Course Intro
 
+* [Notes: FAQ for in person section](notes/0-live-faq) <a href="notes/0-live-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * [Notes: FAQ for online section with scheduled meeting time](notes/0-online-faq) <a href="notes/0-online-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * [Notes: FAQ for online section with no scheduled meeting time](notes/0-online-async-faq) <a href="notes/0-online-async-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Python + numpy tutorial <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/1-python-numpy-tutorial.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-python-numpy-tutorial.ipynb)
@@ -107,16 +108,19 @@ _Fraida Fund_
 * Notebook: Transfer learning on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-fine-tune-rock-paper-scissors.ipynb)
 * Notebook: Deep neural nets from 1989 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/teaching-on-testbeds/deep-nets-reproducing/blob/main/Deep_Neural_Nets_33_years_ago.ipynb)
 
-## Week 11: Unsupervised learning
+## Week 11: Deploying machine learning systems
+
+* Handout: Deploying machine learning systems <a href="slides/10-deployment.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Learning activity: <a href="https://github.com/teaching-on-testbeds/k8s-ml/blob/main/README.md">Deploying machine learning systems on Kubernetes</a>
+
+## Week 12: Unsupervised learning
 
 * Handout: Unsupervised learning <a href="slides/10-unsupervised.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Clustering [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1bYGtfCpb3UCqfVHo_x06oKlwgjjhN7zl)
 * Notebook: PCA on handwritten digits [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EU3YyE94ghKyxmmmuRNygZLAfTQ-6jwb)
 * Notebook: PCA on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xOppWFpoaQbbU9mE5KuxNFPSiuxfMoRB)
 
-
-## Week 12: Reinforcement learning
+## Week 13: Reinforcement learning
 
 * Handout: Reinforcement learning <a href="slides/10-rl.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Reinforcement learning [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1MnFeOnv3AlTRX_fAxVz-M2ZckOHp_C_T?usp=sharing)
-
