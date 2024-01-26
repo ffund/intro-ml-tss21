@@ -4,6 +4,17 @@ author: 'Fraida Fund'
 
 ---
 
+::: {.cell .markdown}
+
+:::notes
+
+**Math prerequisites for this specific lecture**: None
+
+:::
+
+
+:::
+
 
 ::: {.cell .markdown}
 
@@ -248,7 +259,7 @@ What are some benefits of predicting course grade using the data-driven approach
 
 ::: notes
 
-Now that we understand the difference between rule-based problem solving and ML-based problem solving, which is data driven, we can think about *what types of problems* are best solved with each approach.
+Now that we understand the difference between rule-based problem solving and ML-based problem solving, which is data driven, we can think about *what types of problems* are best solved with each approach (or by humans!).
 
 :::
 
@@ -396,6 +407,8 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 :::
 
+<!--
+
 
 ::: {.cell .markdown}
 
@@ -404,6 +417,9 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 [https://quickdraw.withgoogle.com/](https://quickdraw.withgoogle.com/)
 
 :::
+
+-->
+
 
 
 ::: {.cell .markdown}
@@ -767,7 +783,7 @@ We described limitations -
 * ML system is part of a "leaky pipeline", where all along the path there are disconnects between what we want and what we can realize.
 
 
-Now we'll look more closely at the *data*, which is often the culprit in either case.
+Now we'll look more closely at the *data*, which is key in either case.
 :::
 
 :::
