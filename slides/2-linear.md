@@ -3,7 +3,21 @@ title:  'Linear Regression'
 author: 'Fraida Fund'
 ---
 
+::: {.cell .markdown}
 
+:::notes
+
+**Math prerequisites for this lecture**: You should know
+
+* matrix notation, matrix-vector multiplication (Section II, Chapter 5 in Boyd and Vandenberghe)
+* inner product/dot product (Section I, Chapter 1 in Boyd and Vandenberghe)
+* derivatives and optimization (Appendix C in Boyd and Vandenberghe)
+* norm of a vector (Section I, Chapter 3 in Boyd and Vandenberghe)
+* matrix inverse (Section II, Chapter 11 in Boyd and Vandenberghe)
+
+:::
+
+:::
 
 ## In this lecture
 
@@ -303,7 +317,13 @@ $$
 
 Then, $\hat{\mathbf{y}} = \mathbf{A}\mathbf{w}$.
 
-And given a new sample with feature vector $\mathbf{x_i}$, predicted value is $\hat{y_i} = [1, \mathbf{x_i}^T] \mathbf{w}$.
+And given a new sample with feature vector $\mathbf{x_i}$, predicted value is $\hat{y_i} = \langle [1, \mathbf{x_i}] , \mathbf{w} \rangle = [1, \mathbf{x_i}^T] \mathbf{w}$.
+
+::: notes
+
+(The angle brackets denote a dot product.)
+
+:::
 
 
 \newpage

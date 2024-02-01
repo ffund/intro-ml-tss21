@@ -37,6 +37,27 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section class="slide level3">
+
+<div class="cell markdown">
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: You should
+know</p>
+<ul>
+<li>matrix notation, matrix-vector multiplication (Section II, Chapter 5
+in Boyd and Vandenberghe)</li>
+<li>inner product/dot product (Section I, Chapter 1 in Boyd and
+Vandenberghe)</li>
+<li>derivatives and optimization (Appendix C in Boyd and
+Vandenberghe)</li>
+<li>norm of a vector (Section I, Chapter 3 in Boyd and
+Vandenberghe)</li>
+<li>matrix inverse (Section II, Chapter 11 in Boyd and
+Vandenberghe)</li>
+</ul>
+</aside>
+</div>
+</section>
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
@@ -372,8 +393,11 @@ class="slide level3">
 \mathbf{A}\mathbf{w}\)</span>.</p>
 <p>And given a new sample with feature vector <span
 class="math inline">\(\mathbf{x_i}\)</span>, predicted value is <span
-class="math inline">\(\hat{y_i} = [1, \mathbf{x_i}^T]
-\mathbf{w}\)</span>.</p>
+class="math inline">\(\hat{y_i} = \langle [1, \mathbf{x_i}] , \mathbf{w}
+\rangle = [1, \mathbf{x_i}^T] \mathbf{w}\)</span>.</p>
+<aside class="notes">
+<p>(The angle brackets denote a dot product.)</p>
+</aside>
 <aside class="notes">
 <p>Here is an example showing the computation:</p>
 <figure>
