@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -41,13 +49,19 @@
 <section id="when-learning-fails" class="title-slide slide level2">
 <h2>When learning fails</h2>
 <aside class="notes">
-<p>Consider the following scenario: You were given a learning task and have approached it with a choice of model, a training algorithm, and parameters. You used some of the data to fit the parameters and tested the fitted model on a test set. The test results, unfortunately, turn out to be unsatisfactory.</p>
+<p>Consider the following scenario: You were given a learning task and
+have approached it with a choice of model, a training algorithm, and
+parameters. You used some of the data to fit the parameters and tested
+the fitted model on a test set. The test results, unfortunately, turn
+out to be unsatisfactory.</p>
 <p>What went wrong then, and what should you do next?</p>
-<p>There are many elements that can be “fixed.” The main approaches are listed as follows:</p>
+<p>There are many elements that can be “fixed.” The main approaches are
+listed as follows:</p>
 <ul>
 <li>Fix a data problem</li>
 <li>Get more data</li>
-<li>Change the model (i.e. the function that maps input data to target variable) by:
+<li>Change the model (i.e. the function that maps input data to target
+variable) by:
 <ul>
 <li>Making it more flexible</li>
 <li>Making it less flexible</li>
@@ -56,8 +70,13 @@
 <li>Change the feature representation of the data</li>
 <li>Change the training algorithm used to fit the model</li>
 </ul>
-<p>In order to find the best remedy, it is essential first to understand the cause of the bad performance.</p>
-<p>Note: this scenario is closely paraphrased from <em>Section 11.3 What to Do If Learning Fails</em> in <a href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/">Understanding Machine Learning: From Theory to Algorithms</a> (Shalev-Shwartz and Ben-David).</p>
+<p>In order to find the best remedy, it is essential first to understand
+the cause of the bad performance.</p>
+<p>Note: this scenario is closely paraphrased from <em>Section 11.3 What
+to Do If Learning Fails</em> in <a
+href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/">Understanding
+Machine Learning: From Theory to Algorithms</a> (Shalev-Shwartz and
+Ben-David).</p>
 </aside>
 </section>
 
@@ -68,21 +87,34 @@
 </section>
 <section id="ml-premise-fit-a-function" class="slide level3">
 <h3>ML premise: fit a function</h3>
-<p>Given as <em>training</em> data a set of feature vector-label pairs</p>
-<p><span class="math display">\[(\mathbf{x_i}, y_i), \quad i = 1,\ldots n\]</span></p>
-<p>we want to fit a function <span class="math inline">\(f\)</span> (parameterized by <span class="math inline">\(\mathbf{w}\)</span>, which we’ll estimate as <span class="math inline">\(\mathbf{\hat{w}}\)</span>) such that</p>
-<p><span class="math display">\[y_i \approx f(\mathbf{x_i}, \mathbf{w})\]</span></p>
-<p>(i.e. <span class="math inline">\(y_i \approx \hat{y_i}\)</span>.)</p>
+<p>Given as <em>training</em> data a set of feature vector-label
+pairs</p>
+<p><span class="math display">\[(\mathbf{x_i}, y_i), \quad i = 1,\ldots
+n\]</span></p>
+<p>we want to fit a function <span class="math inline">\(f\)</span>
+(parameterized by <span class="math inline">\(\mathbf{w}\)</span>, which
+we’ll estimate as <span class="math inline">\(\mathbf{\hat{w}}\)</span>)
+such that</p>
+<p><span class="math display">\[y_i \approx f(\mathbf{x_i},
+\mathbf{w})\]</span></p>
+<p>(i.e. <span class="math inline">\(y_i \approx
+\hat{y_i}\)</span>.)</p>
 </section>
 <section id="ml-premise-true-function" class="slide level3">
 <h3>ML premise: true function</h3>
-<p>Suppose our data is sampled from some <em>unknown</em> “true” function <span class="math inline">\(t\)</span> so that</p>
-<p><span class="math display">\[y_i = t(\mathbf{x_i}) + \epsilon_i \]</span></p>
-<p>where <span class="math inline">\(\epsilon \sim N(0, \sigma_\epsilon^2)\)</span> is some <em>unknowable</em> stochastic error.</p>
+<p>Suppose our data is sampled from some <em>unknown</em> “true”
+function <span class="math inline">\(t\)</span> so that</p>
+<p><span class="math display">\[y_i = t(\mathbf{x_i}) + \epsilon_i
+\]</span></p>
+<p>where <span class="math inline">\(\epsilon \sim N(0,
+\sigma_\epsilon^2)\)</span> is some <em>unknowable</em> stochastic
+error.</p>
 </section>
 <section id="ml-premise-minimize-error" class="slide level3">
 <h3>ML premise: minimize error</h3>
-<p>Our goal is to minimize a squared error loss function on some <em>test</em> point, <span class="math inline">\((\mathbf{x_t}, y_t)\)</span>:</p>
+<p>Our goal is to minimize a squared error loss function on some
+<em>test</em> point, <span class="math inline">\((\mathbf{x_t},
+y_t)\)</span>:</p>
 <p><span class="math display">\[E[ (y_t - \hat{y_t})^2]\]</span></p>
 <p>where the expectation is over the sampled data, and the noise.</p>
 </section>
@@ -90,57 +122,95 @@
 <h3>ML premise: illustration</h3>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-error.png" style="width:35.0%" alt="Imagine an infinite population of data, from which we sample training data and a test point." /><figcaption aria-hidden="true">Imagine an infinite population of data, from which we sample training data and a test point.</figcaption>
+<img data-src="../images/3-error.png" style="width:35.0%"
+alt="Imagine an infinite population of data, from which we sample training data and a test point." />
+<figcaption aria-hidden="true">Imagine an infinite population of data,
+from which we sample training data and a test point.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="source-of-prediction-error-noise" class="slide level3">
 <h3>Source of prediction error: noise</h3>
-<p>In the best case scenario, even if the model is exactly the true function</p>
-<p><span class="math display">\[ f(\mathbf{x}, \mathbf{w}) = t(\mathbf{x}) \quad  \forall x\]</span></p>
+<p>In the best case scenario, even if the model is exactly the true
+function</p>
+<p><span class="math display">\[ f(\mathbf{x}, \mathbf{w}) =
+t(\mathbf{x}) \quad  \forall x\]</span></p>
 <p>we still have some prediction error due to the stochastic noise!</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-error-noise.png" style="width:35.0%" alt="In the best case scenario, we still expect some error due to noise." /><figcaption aria-hidden="true">In the best case scenario, we still expect some error due to noise.</figcaption>
+<img data-src="../images/3-error-noise.png" style="width:35.0%"
+alt="In the best case scenario, we still expect some error due to noise." />
+<figcaption aria-hidden="true">In the best case scenario, we still
+expect some error due to noise.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="source-of-prediction-error-parameter-estimate" class="slide level3">
+<section id="source-of-prediction-error-parameter-estimate"
+class="slide level3">
 <h3>Source of prediction error: parameter estimate</h3>
 <p>Perhaps the true function is</p>
-<p><span class="math display">\[ t(\mathbf{x}) = f(\mathbf{x}, \mathbf{w_t}) \quad  \forall x\]</span></p>
-<p>but because of the random sample of training data + noise in the data, our parameter estimate is not exactly correct: <span class="math inline">\(\mathbf{\hat{w}} \neq \mathbf{w_t}\)</span>.</p>
+<p><span class="math display">\[ t(\mathbf{x}) = f(\mathbf{x},
+\mathbf{w_t}) \quad  \forall x\]</span></p>
+<p>but because of the random sample of training data + noise in the
+data, our parameter estimate is not exactly correct: <span
+class="math inline">\(\mathbf{\hat{w}} \neq \mathbf{w_t}\)</span>.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-error-parameter.png" style="width:35.0%" alt="We may have an error in our parameter estimate (due to sample of training data + noise)." /><figcaption aria-hidden="true">We may have an error in our parameter estimate (due to sample of training data + noise).</figcaption>
+<img data-src="../images/3-error-parameter.png" style="width:35.0%"
+alt="We may have an error in our parameter estimate (due to sample of training data + noise)." />
+<figcaption aria-hidden="true">We may have an error in our parameter
+estimate (due to sample of training data + noise).</figcaption>
 </figure>
 </aside>
 </section>
-<section id="source-of-prediction-error-assumed-model-class-1" class="slide level3">
+<section id="source-of-prediction-error-assumed-model-class-1"
+class="slide level3">
 <h3>Source of prediction error: assumed model class (1)</h3>
 <p>Maybe</p>
-<p><span class="math display">\[ t(\mathbf{x}) \neq f(\mathbf{x}, \mathbf{w})\]</span></p>
+<p><span class="math display">\[ t(\mathbf{x}) \neq f(\mathbf{x},
+\mathbf{w})\]</span></p>
 <p>for any <span class="math inline">\(\mathbf{w}\)</span>!</p>
-<p>Our assumed <em>model class</em> (or <em>hypothesis class</em>) may not be complex enough to model the true function.</p>
+<p>Our assumed <em>model class</em> (or <em>hypothesis class</em>) may
+not be complex enough to model the true function.</p>
 <aside class="notes">
-<p><strong>Note</strong>: the <em>model class</em> is the set of possible models we could fit, parameterized by the parameter vector.</p>
-<p><strong>Note</strong>: the set of assumptions we make - such as selecting a model class <span class="math inline">\(f\)</span> - introduce what’s known as <em>inductive bias</em> into our model.</p>
+<p><strong>Note</strong>: the <em>model class</em> is the set of
+possible models we could fit, parameterized by the parameter vector.</p>
+<p><strong>Note</strong>: the set of assumptions we make - such as
+selecting a model class <span class="math inline">\(f\)</span> -
+introduce what’s known as <em>inductive bias</em> into our model.</p>
 <figure>
-<img data-src="../images/3-error-model.png" style="width:35.0%" alt="Our model class is not flexible enough." /><figcaption aria-hidden="true">Our model class is not flexible enough.</figcaption>
+<img data-src="../images/3-error-model.png" style="width:35.0%"
+alt="Our model class is not flexible enough." />
+<figcaption aria-hidden="true">Our model class is not flexible
+enough.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="source-of-prediction-error-assumed-model-class-2" class="slide level3">
+<section id="source-of-prediction-error-assumed-model-class-2"
+class="slide level3">
 <h3>Source of prediction error: assumed model class (2)</h3>
 <p>What if we use a model class that is <em>too</em> complex?</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-error-overfit-no-noise.png" style="width:35.0%" alt="If there was no noise, a too-complex model class wouldn’t necessarily be a problem." /><figcaption aria-hidden="true">If there was no noise, a too-complex model class wouldn’t necessarily be a problem.</figcaption>
+<img data-src="../images/3-error-overfit-no-noise.png"
+style="width:35.0%"
+alt="If there was no noise, a too-complex model class wouldn’t necessarily be a problem." />
+<figcaption aria-hidden="true">If there was no noise, a too-complex
+model class wouldn’t necessarily be a problem.</figcaption>
 </figure>
 <figure>
-<img data-src="../images/3-error-overfit.png" style="width:40.0%" alt="But the combination of too-complex model + noise in training data is a problem! The too-complex model “overfits” to the unknowable stochastic noise in the training data - which will increase expected error on the test data." /><figcaption aria-hidden="true">But the combination of too-complex model + noise in training data <em>is</em> a problem! The too-complex model “overfits” to the unknowable stochastic noise in the <em>training</em> data - which will increase expected error on the <em>test</em> data.</figcaption>
+<img data-src="../images/3-error-overfit.png" style="width:40.0%"
+alt="But the combination of too-complex model + noise in training data is a problem! The too-complex model “overfits” to the unknowable stochastic noise in the training data - which will increase expected error on the test data." />
+<figcaption aria-hidden="true">But the combination of too-complex model
++ noise in training data <em>is</em> a problem! The too-complex model
+“overfits” to the unknowable stochastic noise in the <em>training</em>
+data - which will increase expected error on the <em>test</em>
+data.</figcaption>
 </figure>
-<p>This is not specific to polynomial models - there are many situations where a training algorithm will “learn” a parameter value that should be zero, because it fits the noise. For example, if you have irrelevant features used as input to the model.</p>
+<p>This is not specific to polynomial models - there are many situations
+where a training algorithm will “learn” a parameter value that should be
+zero, because it fits the noise. For example, if you have irrelevant
+features used as input to the model.</p>
 </aside>
 </section>
 <section id="sources-of-prediction-error-summary" class="slide level3">
@@ -148,7 +218,8 @@
 <ul>
 <li>Stochastic noise which is fundamentally unpredictable</li>
 <li>Parameter estimate has some error due to noise in training data</li>
-<li>Assumed model class is not complex enough (<strong>under-modeling</strong>)</li>
+<li>Assumed model class is not complex enough
+(<strong>under-modeling</strong>)</li>
 </ul>
 <aside class="notes">
 <p>Note: the “parameter estimate” error also includes overfitting!</p>
@@ -163,51 +234,79 @@
 <h3>A note on this decomposition</h3>
 <p>We will derive the expected error on the test <em>point</em>:</p>
 <ul>
-<li>first, assuming the training sample is fixed, so the expectation is only over <span class="math inline">\(\epsilon_t\)</span></li>
-<li>then, relaxing this assumption, so the expectation is over the training set sampled from <span class="math inline">\(\mathcal{D}\)</span></li>
+<li>first, assuming the training sample is fixed, so the expectation is
+only over <span class="math inline">\(\epsilon_t\)</span></li>
+<li>then, relaxing this assumption, so the expectation is over the
+training set sample <span
+class="math inline">\(\mathcal{D}\)</span></li>
 </ul>
 <aside class="notes">
-<p>This is allowed because <span class="math inline">\(\epsilon_t\)</span> is independent of <span class="math inline">\(\mathcal{D}\)</span>; so</p>
-<p><span class="math display">\[E_{\mathcal{D}, \epsilon}[\ldots] = E_{\mathcal{D}}[E_{\epsilon}[\ldots]]\]</span></p>
+<p>This is allowed because of independence of <span
+class="math inline">\(\epsilon_t\)</span> and <span
+class="math inline">\(\mathcal{D}\)</span>; so</p>
+<p><span class="math display">\[E_{\mathcal{D}, \epsilon}[\ldots] =
+E_{\mathcal{D}}[E_{\epsilon}[\ldots]]\]</span></p>
 <p>Finally, we’ll take that expectation over all the test points.</p>
 </aside>
 </section>
 <section id="first-assuming-fixed-training-sample" class="slide level3">
 <h3>First: assuming fixed training sample</h3>
-<p>For convenience, denote <span class="math inline">\(f(\mathbf{x_t}, \mathbf{\hat{w}})\)</span> as <span class="math inline">\(f\)</span> and <span class="math inline">\(t(\mathbf{x_t})\)</span> as <span class="math inline">\(t\)</span>.</p>
+<p>For convenience, denote <span class="math inline">\(f(\mathbf{x_t},
+\mathbf{\hat{w}})\)</span> as <span class="math inline">\(f\)</span> and
+<span class="math inline">\(t(\mathbf{x_t})\)</span> as <span
+class="math inline">\(t\)</span>.</p>
 <p><span class="math display">\[
 \begin{aligned}
-E_{\epsilon} [(y_t-\hat{y_t})^2] &amp;= E_{\epsilon}[(t + \epsilon_t - f)^2] \\
- &amp;= E_{\epsilon}[(t - f)^2 + \epsilon_t^2 + 2\epsilon_t(t - f)] \\
- &amp;= (t-f)^2 + E_\epsilon[\epsilon_t^2] + 0 \\
- &amp;= (t-f)^2 + \sigma_\epsilon^2
-\end{aligned} 
+E_{\epsilon} [(y_t-\hat{y_t})^2] &amp;= E_{\epsilon}[(t + \epsilon_t -
+f)^2] \\
+&amp;= E_{\epsilon}[(t - f)^2 + \epsilon_t^2 + 2\epsilon_t(t - f)] \\
+&amp;= (t-f)^2 + E_\epsilon[\epsilon_t^2] + 0 \\
+&amp;= (t-f)^2 + \sigma_\epsilon^2
+\end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>The expected value (over the <span class="math inline">\(\epsilon\)</span>) of squared error is because:</p>
+<p>The expected value (over the <span
+class="math inline">\(\epsilon\)</span>) of squared error is
+because:</p>
 <ul>
-<li>under the assumption that training sample is fixed, <span class="math inline">\(f\)</span> and <span class="math inline">\(t\)</span> are constant</li>
+<li>under the assumption that training sample is fixed, <span
+class="math inline">\(f\)</span> and <span
+class="math inline">\(t\)</span> are constant</li>
 <li><span class="math inline">\(E[\epsilon_t] = 0\)</span></li>
 </ul>
-<p>The last term is not affected when we then take the expectation over <span class="math inline">\({\mathcal{D}}\)</span>. This term is called the <em>irreducible error</em>, and it not under our control.</p>
-<p>The first term (<span class="math inline">\((t-f)^2\)</span>) is the model estimation error, and this <em>is</em> under our control - it is <em>reducible</em> error - so next we will turn to <span class="math inline">\(E_{\mathcal{D}}[(t-f)^2]\)</span>.</p>
+<p>The last term is not affected when we then take the expectation over
+<span class="math inline">\({\mathcal{D}}\)</span>, either. This term is
+called the <em>irreducible error</em>, and it not under our control.</p>
+<p>The first term (<span class="math inline">\((t-f)^2\)</span>) is the
+model estimation error, and this <em>is</em> under our control - it is
+<em>reducible</em> error - so next we will turn to <span
+class="math inline">\(E_{\mathcal{D}}[(t-f)^2]\)</span>.</p>
 </aside>
 </section>
 <section id="second-expectation-over-mathcald" class="slide level3">
-<h3>Second: expectation over <span class="math inline">\({\mathcal{D}}\)</span></h3>
-<p>We again denote <span class="math inline">\(f(\mathbf{x_t}, \mathbf{\hat{w}})\)</span> as <span class="math inline">\(f\)</span> and <span class="math inline">\(t(\mathbf{x_t})\)</span> as <span class="math inline">\(t\)</span>.</p>
+<h3>Second: expectation over <span
+class="math inline">\({\mathcal{D}}\)</span></h3>
+<p>We again denote <span class="math inline">\(f(\mathbf{x_t},
+\mathbf{\hat{w}})\)</span> as <span class="math inline">\(f\)</span> and
+<span class="math inline">\(t(\mathbf{x_t})\)</span> as <span
+class="math inline">\(t\)</span>.</p>
 <p><span class="math display">\[
 \begin{aligned}
-E_{\mathcal{D}} [(t-f)^2 + \sigma_\epsilon^2] &amp;= E_{\mathcal{D}}[(t-f)^2] + \sigma_\epsilon^2 \\
- &amp;= E_{\mathcal{D}}[t^2 + f^2 -2tf] + \sigma_\epsilon^2 \\
- &amp;= t^2 + E_{\mathcal{D}}[f^2] -2t E_{\mathcal{D}}[f] + \sigma_\epsilon^2 \\
- &amp;= (t - E_{\mathcal{D}}[f])^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) + \sigma_\epsilon^2 
-\end{aligned} 
+E_{\mathcal{D}} [(t-f)^2 + \sigma_\epsilon^2] &amp;=
+E_{\mathcal{D}}[(t-f)^2] + \sigma_\epsilon^2 \\
+&amp;= E_{\mathcal{D}}[t^2 + f^2 -2tf] + \sigma_\epsilon^2 \\
+&amp;= t^2 + E_{\mathcal{D}}[f^2] -2t E_{\mathcal{D}}[f] +
+\sigma_\epsilon^2 \\
+&amp;= (t - E_{\mathcal{D}}[f])^2 + (E_{\mathcal{D}}[f^2] -
+E_{\mathcal{D}}[f]^2) + \sigma_\epsilon^2
+\end{aligned}
 \]</span></p>
 <aside class="notes">
 <p>because:</p>
 <ul>
-<li>the true value <span class="math inline">\(t(\mathbf{x_t})\)</span> is independent of the training sample drawn from <span class="math inline">\(\mathcal{D}\)</span>.</li>
+<li>the true value <span class="math inline">\(t(\mathbf{x_t})\)</span>
+is independent of the training sample drawn from <span
+class="math inline">\(\mathcal{D}\)</span>.</li>
 </ul>
 <!-- 
 
@@ -219,9 +318,11 @@ TODO: refer to https://stats.stackexchange.com/questions/164378/bias-variance-de
 <section id="a-hypothetical-impossible-experiment" class="slide level3">
 <h3>A hypothetical (impossible) experiment</h3>
 <aside class="notes">
-<p>To understand this decomposition, it helps to think about this experiment.</p>
+<p>To understand this decomposition, it helps to think about this
+experiment.</p>
 </aside>
-<p>Suppose we would get many independent training sets (from same process).</p>
+<p>Suppose we would get many independent training sets (from same
+process).</p>
 <p>For each training set,</p>
 <ul>
 <li>train our model (estimate parameters), and</li>
@@ -229,55 +330,87 @@ TODO: refer to https://stats.stackexchange.com/questions/164378/bias-variance-de
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/3-hypothetical.png" style="width:35.0%" alt="Hypothetical experiment, showing many trained models, and the mean of all those trained models." /><figcaption aria-hidden="true">Hypothetical experiment, showing many trained models, and the mean of all those trained models.</figcaption>
+<img data-src="../images/3-hypothetical.png" style="width:35.0%"
+alt="Hypothetical experiment, showing many trained models, and the mean of all those trained models." />
+<figcaption aria-hidden="true">Hypothetical experiment, showing many
+trained models, and the mean of all those trained models.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="error-decomposition-bias" class="slide level3">
 <h3>Error decomposition: bias</h3>
 <p>In the first term in</p>
-<p><span class="math display">\[(\textcolor{red}{t - E_{\mathcal{D}}[f]})^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) + \sigma_\epsilon^2\]</span></p>
-<p><span class="math inline">\(\textcolor{red}{t - E_{\mathcal{D}}[f]}\)</span> is called the <strong>bias</strong>.</p>
+<p><span class="math display">\[(\textcolor{red}{t -
+E_{\mathcal{D}}[f]})^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) +
+\sigma_\epsilon^2\]</span></p>
+<p><span class="math inline">\(\textcolor{red}{t -
+E_{\mathcal{D}}[f]}\)</span> is called the <strong>bias</strong>.</p>
 <aside class="notes">
-<p>The bias is the difference between the <em>true value</em> and the <em>mean prediction of the model</em> (over many different random samples of training data.)</p>
-<p>Informally: it tells us to what extent the model is <em>systematically</em> wrong!</p>
+<p>The bias is the difference between the <em>true value</em> and the
+<em>mean prediction of the model</em> (over many different random
+samples of training data.)</p>
+<p>Informally: it tells us to what extent the model is
+<em>systematically</em> wrong!</p>
 <figure>
-<img data-src="../images/3-hypothetical-bias.png" style="width:35.0%" alt="The bias term is the difference between the mean model and true function." /><figcaption aria-hidden="true">The bias term is the difference between the mean model and true function.</figcaption>
+<img data-src="../images/3-hypothetical-bias.png" style="width:35.0%"
+alt="The bias term is the difference between the mean model and true function." />
+<figcaption aria-hidden="true">The bias term is the difference between
+the mean model and true function.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="error-decomposition-variance" class="slide level3">
 <h3>Error decomposition: variance</h3>
 <p>The second term in</p>
-<p><span class="math display">\[(t - E_{\mathcal{D}}[f])^2 + \textcolor{blue}{(E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2)} + \sigma_\epsilon^2\]</span></p>
-<p><span class="math inline">\(\textcolor{blue}{E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2}\)</span> is the <strong>variance</strong> of the model prediction over <span class="math inline">\(\mathcal{D}\)</span>.</p>
+<p><span class="math display">\[(t - E_{\mathcal{D}}[f])^2 +
+\textcolor{blue}{(E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2)} +
+\sigma_\epsilon^2\]</span></p>
+<p><span class="math inline">\(\textcolor{blue}{E_{\mathcal{D}}[f^2] -
+E_{\mathcal{D}}[f]^2}\)</span> is the <strong>variance</strong> of the
+model prediction over <span
+class="math inline">\(\mathcal{D}\)</span>.</p>
 <aside class="notes">
-<p>Informally: it tells us: if you train many of these models, with a new sample of training data each time, how much variation is there in the model output?</p>
+<p>Informally: it tells us: if you train many of these models, with a
+new sample of training data each time, how much variation is there in
+the model output?</p>
 <p>Or: how much does the model output depend on the training data?</p>
 <figure>
-<img data-src="../images/3-hypothetical-variance.png" style="width:35.0%" alt="The variance term is the difference between the mean model and the individual models." /><figcaption aria-hidden="true">The variance term is the difference between the mean model and the individual models.</figcaption>
+<img data-src="../images/3-hypothetical-variance.png"
+style="width:35.0%"
+alt="The variance term is the difference between the mean model and the individual models." />
+<figcaption aria-hidden="true">The variance term is the difference
+between the mean model and the individual models.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="error-decomposition-irreducible-error" class="slide level3">
+<section id="error-decomposition-irreducible-error"
+class="slide level3">
 <h3>Error decomposition: irreducible error</h3>
 <p>We already said that the third term in</p>
-<p><span class="math display">\[(t - E_{\mathcal{D}}[f])^2 + (E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) + \textcolor{brown}{\sigma_\epsilon^2}\]</span></p>
+<p><span class="math display">\[(t - E_{\mathcal{D}}[f])^2 +
+(E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2) +
+\textcolor{brown}{\sigma_\epsilon^2}\]</span></p>
 <p>is called the <strong>irreducible errror</strong>.</p>
 <aside class="notes">
 <p>This term is a <em>lower bound</em> on the MSE.</p>
 <figure>
-<img data-src="../images/3-bias-irreducible.png" style="width:35.0%" alt="The irreducible error is the difference between data points and the output of the true function." /><figcaption aria-hidden="true">The irreducible error is the difference between data points and the output of the true function.</figcaption>
+<img data-src="../images/3-bias-irreducible.png" style="width:35.0%"
+alt="The irreducible error is the difference between data points and the output of the true function." />
+<figcaption aria-hidden="true">The irreducible error is the difference
+between data points and the output of the true function.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="error-decomposition-summary" class="slide level3">
 <h3>Error decomposition: summary</h3>
 <p>Putting it together, the expected test point error</p>
-<p><span class="math display">\[(\textcolor{red}{t - E_{\mathcal{D}}[f]})^2 + \textcolor{blue}{(E_{\mathcal{D}}[f^2] - E_{\mathcal{D}}[f]^2)} + \textcolor{brown}{\sigma_\epsilon^2}\]</span></p>
+<p><span class="math display">\[(\textcolor{red}{t -
+E_{\mathcal{D}}[f]})^2 + \textcolor{blue}{(E_{\mathcal{D}}[f^2] -
+E_{\mathcal{D}}[f]^2)} +
+\textcolor{brown}{\sigma_\epsilon^2}\]</span></p>
 <p>is</p>
-<p><span class="math display">\[(\textcolor{red}{\text{Bias}})^2 + 
-\textcolor{blue}{\text{Variance over } \mathcal{D}} + 
+<p><span class="math display">\[(\textcolor{red}{\text{Bias}})^2 +
+\textcolor{blue}{\text{Variance over } \mathcal{D}} +
 \textcolor{brown}{\text{Irreducible Error}}\]</span></p>
 </section></section>
 <section>
@@ -285,17 +418,22 @@ TODO: refer to https://stats.stackexchange.com/questions/164378/bias-variance-de
 <h2>Bias-variance tradeoff</h2>
 
 </section>
-<section id="intuition-behind-bias-variance-and-model-complexity" class="slide level3">
+<section id="intuition-behind-bias-variance-and-model-complexity"
+class="slide level3">
 <h3>Intuition behind bias-variance and model complexity</h3>
-<p>It’s often the case that changing the model to reduce bias, increases variance (and vice versa). Why?</p>
+<p>It’s often the case that changing the model to reduce bias, increases
+variance (and vice versa). Why?</p>
 </section>
 <section id="bias-variance-tradeoff-1" class="slide level3">
 <h3>Bias variance tradeoff</h3>
 <figure>
-<img data-src="../images/bias-variance-tradeoff.png" style="width:50.0%" alt="Bias variance tradeoff" /><figcaption aria-hidden="true">Bias variance tradeoff</figcaption>
+<img data-src="../images/bias-variance-tradeoff.png" style="width:50.0%"
+alt="Bias variance tradeoff" />
+<figcaption aria-hidden="true">Bias variance tradeoff</figcaption>
 </figure>
 <aside class="notes">
-<p>Note: this is a “classic” view of the bias-variance tradeoff. Recent results suggest that this is only part of the picture.</p>
+<p>Note: this is a “classic” view of the bias-variance tradeoff. Recent
+results suggest that this is only part of the picture.</p>
 </aside>
 </section>
 <section id="updated-view-double-descent" class="slide level3">
@@ -303,8 +441,10 @@ TODO: refer to https://stats.stackexchange.com/questions/164378/bias-variance-de
 <aside class="notes">
 <p>For an intuitive explanation of “double descent”, see:</p>
 <ul>
-<li><a href="https://mlu-explain.github.io/double-descent/">Double Descent</a> (Jared Wilber, Brent Werness)</li>
-<li><a href="https://mlu-explain.github.io/double-descent2/">Double Descent 2</a> (Brent Werness, Jared Wilber)</li>
+<li><a href="https://mlu-explain.github.io/double-descent/">Double
+Descent</a> (Jared Wilber, Brent Werness)</li>
+<li><a href="https://mlu-explain.github.io/double-descent2/">Double
+Descent 2</a> (Brent Werness, Jared Wilber)</li>
 </ul>
 </aside>
 <!--
@@ -324,7 +464,7 @@ https://colab.research.google.com/github/aslanides/aslanides.github.io/blob/mast
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -335,10 +475,148 @@ https://colab.research.google.com/github/aslanides/aslanides.github.io/blob/mast
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

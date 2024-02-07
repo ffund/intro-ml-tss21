@@ -178,12 +178,12 @@ Note: the "parameter estimate" error also includes overfitting!
 We will derive the expected error on the test *point*:
 
 * first, assuming the training sample is fixed, so the expectation is only over $\epsilon_t$
-* then, relaxing this assumption, so the expectation is over the training set sampled from $\mathcal{D}$
+* then, relaxing this assumption, so the expectation is over the training set sample $\mathcal{D}$
 
 
 ::: notes
 
-This is allowed because $\epsilon_t$ is independent of $\mathcal{D}$; so
+This is allowed because of independence of $\epsilon_t$ and $\mathcal{D}$; so
 
 $$E_{\mathcal{D}, \epsilon}[\ldots] = E_{\mathcal{D}}[E_{\epsilon}[\ldots]]$$
 
@@ -212,7 +212,7 @@ The expected value (over the $\epsilon$) of squared error is because:
 * under the assumption that training sample is fixed, $f$ and $t$ are constant
 * $E[\epsilon_t] = 0$
 
-The last term is not affected when we then take the expectation over ${\mathcal{D}}$. This term is called the *irreducible error*, and it not under our control. 
+The last term is not affected when we then take the expectation over ${\mathcal{D}}$, either. This term is called the *irreducible error*, and it not under our control. 
 
 The first term ($(t-f)^2$) is the model estimation error, and this *is* under our control - it is *reducible* error - so next we will turn to $E_{\mathcal{D}}[(t-f)^2]$.
 
