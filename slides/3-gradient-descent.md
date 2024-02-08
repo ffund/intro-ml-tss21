@@ -3,8 +3,19 @@ title:  'Gradient descent'
 author: 'Fraida Fund'
 ---
 
+::: {.cell .markdown}
 
-\newpage
+:::notes
+
+**Math prerequisites for this lecture**: You should know about:
+
+* derivatives and optimization (Appendix C in Boyd and Vandenberghe)
+* complexity of algorithms (Big O notation)
+
+:::
+
+:::
+
 
 ## In this lecture
 
@@ -12,6 +23,7 @@ author: 'Fraida Fund'
 * Solution using gradient descent 
 * Variations on main idea
 
+\newpage
 
 ## Runtime of OLS solution
 
@@ -19,6 +31,15 @@ author: 'Fraida Fund'
 
 * Specific to linear regression, L2 loss
 * For extremely large datasets: runtime, memory
+
+### Background: Big O notation
+
+Approximate the number of operations required, as a function of input size.
+
+* Ignore constant terms, constant factors
+* Ignore all but the dominant term
+
+Example: $3n^3 + 100n^2 + 1000$?
 
 
 ### Computing OLS solution
@@ -65,16 +86,10 @@ For infinite $t$, we'd eventually find optimal weights - but clearly we could do
 
 :::
 
-
-### Background: convexity, gradients
-
-::: notes
+\newpage
 
 
-:::
-
-
-### Gradients and optimization 
+### Background: Gradients and optimization 
 
 Gradient has *two* important properties for optimization:
 
@@ -84,7 +99,6 @@ $$\nabla L(\mathbf{w}) = 0$$
 
 At other points, $\nabla L(\mathbf{w})$ points towards direction of maximum (infinitesimal) rate of *increase*.
 
-\newpage
 
 ### Gradient descent idea
 
@@ -319,10 +333,32 @@ Note: $v_{t+1} = w_{t+1} - w_t$ is $\Delta w$.
 
 ### RMSProp
 
-Idea: Track per-parameter EWMA of *square* of gradient, and use to normalize parameter update step. 
+Idea: Track per-parameter EWMA of square of gradient, to normalize parameter update step. 
+
+
+$$w_{t+1} = w_t  - \frac{\eta}{\sqrt{ v_{t+1} + \epsilon } } \nabla L\left(w_t\right) $$
+
+where
+
+$$v_{t} = \gamma v_{t-1} + (1 - \gamma) \nabla L\left(w_{t}\right) ^2$$
+
+
+::: notes
 
 Weights with recent gradients of large magnitude have smaller learning rate, weights with small recent gradients have larger learning rates.
 
+:::
+### Adam: Adaptive Moment Estimation
+
+* Uses ideas from momentum (first moment) and RMSProp (second moment)!
+* plus bias correction 
+<!-- https://web.eecs.umich.edu/~justincj/slides/eecs498/498_FA2019_lecture04.pdf -->
+
+::: notes
+
+Bias correction accounts for the fact that first and second moment estimates start at zero.
+
+:::
 
 \newpage
 

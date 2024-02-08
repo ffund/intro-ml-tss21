@@ -3,11 +3,20 @@ title:  'Error decomposition, bias-variance tradeoff'
 author: 'Fraida Fund'
 ---
 
+::: {.cell .markdown}
+
+:::notes
+
 **Math prerequisites for this lecture**: You should know about these concepts from probability:
 
-* Expectation of a random variable, including the property of linearity of expectation, expectation of a constant
+* Expectation of a random variable, including linearity of expectation, expectation of a constant
 * Variance of a random variable
 * Independence of two random variables
+
+:::
+
+:::
+
 
 ## In this lecture
 

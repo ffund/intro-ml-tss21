@@ -37,6 +37,20 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section class="slide level3">
+
+<div class="cell markdown">
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: You should know
+about:</p>
+<ul>
+<li>derivatives and optimization (Appendix C in Boyd and
+Vandenberghe)</li>
+<li>complexity of algorithms (Big O notation)</li>
+</ul>
+</aside>
+</div>
+</section>
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
@@ -57,6 +71,17 @@
 <li>Specific to linear regression, L2 loss</li>
 <li>For extremely large datasets: runtime, memory</li>
 </ul>
+</section>
+<section id="background-big-o-notation" class="slide level3">
+<h3>Background: Big O notation</h3>
+<p>Approximate the number of operations required, as a function of input
+size.</p>
+<ul>
+<li>Ignore constant terms, constant factors</li>
+<li>Ignore all but the dominant term</li>
+</ul>
+<p>Example: <span class="math inline">\(3n^3 + 100n^2 +
+1000\)</span>?</p>
 </section>
 <section id="computing-ols-solution" class="slide level3">
 <h3>Computing OLS solution</h3>
@@ -108,14 +133,9 @@ iteratively (for <span class="math inline">\(t\)</span> rounds):</p>
 find optimal weights - but clearly we could do better.</p>
 </aside>
 </section>
-<section id="background-convexity-gradients" class="slide level3">
-<h3>Background: convexity, gradients</h3>
-<aside class="notes">
-
-</aside>
-</section>
-<section id="gradients-and-optimization" class="slide level3">
-<h3>Gradients and optimization</h3>
+<section id="background-gradients-and-optimization"
+class="slide level3">
+<h3>Background: Gradients and optimization</h3>
 <p>Gradient has <em>two</em> important properties for optimization:</p>
 <p>At a minima (or maxima, or saddle point),</p>
 <p><span class="math display">\[\nabla L(\mathbf{w}) = 0\]</span></p>
@@ -369,11 +389,31 @@ class="math inline">\(w_1\)</span>.</figcaption>
 </section>
 <section id="rmsprop" class="slide level3">
 <h3>RMSProp</h3>
-<p>Idea: Track per-parameter EWMA of <em>square</em> of gradient, and
-use to normalize parameter update step.</p>
+<p>Idea: Track per-parameter EWMA of square of gradient, to normalize
+parameter update step.</p>
+<p><span class="math display">\[w_{t+1} = w_t  - \frac{\eta}{\sqrt{
+v_{t+1} + \epsilon } } \nabla L\left(w_t\right) \]</span></p>
+<p>where</p>
+<p><span class="math display">\[v_{t} = \gamma v_{t-1} + (1 - \gamma)
+\nabla L\left(w_{t}\right) ^2\]</span></p>
+<aside class="notes">
 <p>Weights with recent gradients of large magnitude have smaller
 learning rate, weights with small recent gradients have larger learning
 rates.</p>
+</aside>
+</section>
+<section id="adam-adaptive-moment-estimation" class="slide level3">
+<h3>Adam: Adaptive Moment Estimation</h3>
+<ul>
+<li>Uses ideas from momentum (first moment) and RMSProp (second
+moment)!</li>
+<li>plus bias correction
+<!-- https://web.eecs.umich.edu/~justincj/slides/eecs498/498_FA2019_lecture04.pdf --></li>
+</ul>
+<aside class="notes">
+<p>Bias correction accounts for the fact that first and second moment
+estimates start at zero.</p>
+</aside>
 </section>
 <section id="illustration-beales-function" class="slide level3">
 <h3>Illustration (Beale’s function)</h3>
