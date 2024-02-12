@@ -9,10 +9,15 @@
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
   <!--[if lt IE 9]>
@@ -24,40 +29,98 @@
 <h1 class="title">Textbooks and other resources</h1>
 <p class="author">Fraida Fund</p>
 </header>
-<h2 id="machine-learning-concepts-and-theory">Machine Learning Concepts and Theory</h2>
+<h2 id="machine-learning-concepts-and-theory">Machine Learning Concepts
+and Theory</h2>
 <ul>
-<li>The Elements of Statistical Learning, (Hastie, Friedman, and Tibshirani), 2013. <a href="https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph006482758">NYU Library</a>, <a href="https://web.stanford.edu/~hastie/ElemStatLearn//">PDF</a></li>
-<li>An Introduction to Statistical Learning, (James, Witten, Hastie, and Tibshirani), 2013. <a href="https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph004655521">NYU Library</a>, <a href="https://hastie.su.domains/ISLR2/ISLRv2_website.pdf">PDF 2nd ed</a></li>
-<li>Pattern Recognition and Machine Learning, (Bishop), 2006. <a href="https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf">PDF</a></li>
-<li>Machine Learning: A Probabilistic Perspective, (Murphy). <a href="http://noiselab.ucsd.edu/ECE228/Murphy_Machine_Learning.pdf">PDF</a></li>
-<li>Understanding Machine Learning: From Theory to Algorithms, (Shalev-Shwartz, Ben-David), 2014. <a href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/index.html">Website</a>, <a href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/copy.html">Download</a></li>
+<li>The Elements of Statistical Learning, (Hastie, Friedman, and
+Tibshirani), 2013. <a
+href="https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph006482758">NYU
+Library</a>, <a
+href="https://web.stanford.edu/~hastie/ElemStatLearn//">PDF</a></li>
+<li>An Introduction to Statistical Learning, (James, Witten, Hastie, and
+Tibshirani), 2013. <a
+href="https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph004655521">NYU
+Library</a>, <a
+href="https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.view-in-google.html">PDF
+2nd ed</a></li>
+<li>Pattern Recognition and Machine Learning, (Bishop), 2006. <a
+href="https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf">PDF</a></li>
+<li>Machine Learning: A Probabilistic Perspective, (Murphy). <a
+href="http://noiselab.ucsd.edu/ECE228/Murphy_Machine_Learning.pdf">PDF</a></li>
+<li>Understanding Machine Learning: From Theory to Algorithms,
+(Shalev-Shwartz, Ben-David), 2014. <a
+href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/index.html">Website</a>,
+<a
+href="https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/copy.html">Download</a></li>
 </ul>
-<h2 id="python-and-programming-for-machine-learning">Python and Programming for Machine Learning</h2>
+<h2 id="python-and-programming-for-machine-learning">Python and
+Programming for Machine Learning</h2>
 <ul>
-<li>Python Data Science Handbook, (VanderPlas), 2016. <a href="https://jakevdp.github.io/PythonDataScienceHandbook/">Github</a></li>
-<li>Hands-on Machine Learning with Scikit-Learn, Keras, and TensorFlow (Géron), 2019. <a href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008011603">NYU Library 1</a>, <a href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph005589560">NYU Library 2</a>, <a href="https://github.com/ageron/handson-ml2">Notebooks on Github</a></li>
-<li>Machine Learning with PyTorch and Scikit-Learn (Raschka, Liu, Mirjalili), 2022. <a href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008654761">NYU Library</a>, <a href="https://github.com/rasbt/machine-learning-book">Notebooks on Github</a></li>
-<li>Python Machine Learning, (Raschka, Mirjalili), 2017. <a href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008027112">NYU Library</a>, <a href="https://github.com/rasbt/python-machine-learning-book-3rd-edition">Notebooks on Github</a></li>
+<li>Python Data Science Handbook, (VanderPlas), 2016. <a
+href="https://jakevdp.github.io/PythonDataScienceHandbook/">Github</a></li>
+<li>Hands-on Machine Learning with Scikit-Learn, Keras, and TensorFlow
+(Géron), 2019. <a
+href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008011603">NYU
+Library 1</a>, <a
+href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph005589560">NYU
+Library 2</a>, <a href="https://github.com/ageron/handson-ml2">Notebooks
+on Github</a></li>
+<li>Machine Learning with PyTorch and Scikit-Learn (Raschka, Liu,
+Mirjalili), 2022. <a
+href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008654761">NYU
+Library</a>, <a
+href="https://github.com/rasbt/machine-learning-book">Notebooks on
+Github</a></li>
+<li>Python Machine Learning, (Raschka, Mirjalili), 2017. <a
+href="https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008027112">NYU
+Library</a>, <a
+href="https://github.com/rasbt/python-machine-learning-book-3rd-edition">Notebooks
+on Github</a></li>
 </ul>
 <h2 id="backgroundprerequisites">Background/Prerequisites</h2>
 <ul>
-<li><p>Introduction to Applied Linear Algebra, (Boyd, Vandenberghe). <a href="http://vmls-book.stanford.edu/vmls.pdf">PDF</a></p></li>
-<li><p>Summary notes on Linear Algebra (Stanford). <a href="http://cs229.stanford.edu/section/cs229-linalg.pdf">PDF</a></p></li>
-<li><p>Convex Opimization, (Boyd, Vandenberghe). <a href="https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf">PDF</a></p></li>
-<li><p>Summary notes on Convex Optimization (NYU CDS). <a href="https://davidrosenberg.github.io/mlcourse/Notes/convex-optimization.pdf">PDF</a></p></li>
-<li><p>Probability and Statistics for Data Science notes (Carlos Fernandez-Granda, NYU CDS). <a href="https://cims.nyu.edu/~cfgranda/pages/stuff/probability_stats_for_DS.pdf">PDF</a></p></li>
-<li><p>Summary notes on Probability (Stanford). <a href="http://cs229.stanford.edu/section/cs229-prob.pdf">PDF</a></p></li>
+<li><p>Introduction to Applied Linear Algebra, (Boyd, Vandenberghe). <a
+href="http://vmls-book.stanford.edu/vmls.pdf">PDF</a></p></li>
+<li><p>Summary notes on Linear Algebra (Stanford). <a
+href="http://cs229.stanford.edu/section/cs229-linalg.pdf">PDF</a></p></li>
+<li><p>Convex Opimization, (Boyd, Vandenberghe). <a
+href="https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf">PDF</a></p></li>
+<li><p>Summary notes on Convex Optimization (NYU CDS). <a
+href="https://davidrosenberg.github.io/mlcourse/Notes/convex-optimization.pdf">PDF</a></p></li>
+<li><p>Probability and Statistics for Data Science notes (Carlos
+Fernandez-Granda, NYU CDS). <a
+href="https://cims.nyu.edu/~cfgranda/pages/stuff/probability_stats_for_DS.pdf">PDF</a></p></li>
+<li><p>Summary notes on Probability (Stanford). <a
+href="http://cs229.stanford.edu/section/cs229-prob.pdf">PDF</a></p></li>
 </ul>
-<h2 id="beyond-intro-machine-learning">Beyond Intro Machine Learning</h2>
+<h2 id="beyond-intro-machine-learning">Beyond Intro Machine
+Learning</h2>
 <ul>
-<li>AI for Good Seminar Series. <a href="https://www.youtube.com/playlist?list=PLn62CdVLnT-dTqQdn8xb4KK8ioFTR1Z1d">YouTube Playlist</a></li>
-<li>NYU CDS DS-GA 1008: Deep Learning. <a href="https://cds.nyu.edu/deep-learning/">Course Site</a></li>
-<li>Textbook: Deep Learning, (Goodfellow, Bengio, Courville). <a href="https://www.deeplearningbook.org/">Website</a></li>
-<li>Stanford CS231N: Convolutional Neural Networks for Visual Recognition. <a href="https://cs231n.github.io/">Course Notes</a>, <a href="https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv">YouTube</a></li>
-<li>Stanford CS224N: Natural Language Processing with Deep Learning. <a href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/index.html#schedule">Course Site</a>, <a href="https://www.youtube.com/playlist?list=PLoROMvodv4rOhcuXMZkNm7j3fVwBBY42z">YouTube Playlist</a></li>
-<li>Harvard CS229br: Advanced Topics in Theory of Machine Learning (Boaz Barak). <a href="https://boazbk.github.io/mltheoryseminar/cs229br">Course Site</a></li>
-<li>UCL (David Silver) Reinforcement Learning. <a href="https://www.davidsilver.uk/teaching/">Course Site</a>, <a href="https://www.youtube.com/watch?v=2pWv7GOvuf0&amp;list=RDCMUCP7jMXSY2xbc3KCAE0MHQ-A">YouTube</a></li>
-<li>Textbook: Reinforcement Learning (Sutton, Barto). <a href="http://incompleteideas.net/book/the-book-2nd.html">Website</a>, <a href="http://incompleteideas.net/book/RLbook2020.pdf">PDF</a></li>
+<li>AI for Good Seminar Series. <a
+href="https://www.youtube.com/playlist?list=PLn62CdVLnT-dTqQdn8xb4KK8ioFTR1Z1d">YouTube
+Playlist</a></li>
+<li>NYU CDS DS-GA 1008: Deep Learning. <a
+href="https://cds.nyu.edu/deep-learning/">Course Site</a></li>
+<li>Textbook: Deep Learning, (Goodfellow, Bengio, Courville). <a
+href="https://www.deeplearningbook.org/">Website</a></li>
+<li>Stanford CS231N: Convolutional Neural Networks for Visual
+Recognition. <a href="https://cs231n.github.io/">Course Notes</a>, <a
+href="https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv">YouTube</a></li>
+<li>Stanford CS224N: Natural Language Processing with Deep Learning. <a
+href="https://web.stanford.edu/class/archive/cs/cs224n/cs224n.1194/index.html#schedule">Course
+Site</a>, <a
+href="https://www.youtube.com/playlist?list=PLoROMvodv4rOhcuXMZkNm7j3fVwBBY42z">YouTube
+Playlist</a></li>
+<li>Harvard CS229br: Advanced Topics in Theory of Machine Learning (Boaz
+Barak). <a
+href="https://boazbk.github.io/mltheoryseminar/cs229br">Course
+Site</a></li>
+<li>UCL (David Silver) Reinforcement Learning. <a
+href="https://www.davidsilver.uk/teaching/">Course Site</a>, <a
+href="https://www.youtube.com/watch?v=2pWv7GOvuf0&amp;list=RDCMUCP7jMXSY2xbc3KCAE0MHQ-A">YouTube</a></li>
+<li>Textbook: Reinforcement Learning (Sutton, Barto). <a
+href="http://incompleteideas.net/book/the-book-2nd.html">Website</a>, <a
+href="http://incompleteideas.net/book/RLbook2020.pdf">PDF</a></li>
 </ul>
 </body>
 </html>

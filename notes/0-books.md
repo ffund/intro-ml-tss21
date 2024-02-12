@@ -7,7 +7,7 @@ author: Fraida Fund
 ## Machine Learning Concepts and Theory
 
 * The Elements of Statistical Learning, (Hastie, Friedman, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph006482758), [PDF](https://web.stanford.edu/~hastie/ElemStatLearn//)
-* An Introduction to Statistical Learning, (James, Witten, Hastie, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph004655521), [PDF 2nd ed](https://hastie.su.domains/ISLR2/ISLRv2_website.pdf)
+* An Introduction to Statistical Learning, (James, Witten, Hastie, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph004655521), [PDF 2nd ed](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.view-in-google.html)
 * Pattern Recognition and Machine Learning, (Bishop), 2006. [PDF](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf)
 * Machine Learning: A Probabilistic Perspective, (Murphy). [PDF](http://noiselab.ucsd.edu/ECE228/Murphy_Machine_Learning.pdf)
 * Understanding Machine Learning: From Theory to Algorithms, (Shalev-Shwartz, Ben-David), 2014. [Website](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/index.html), [Download](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/copy.html)
