@@ -37,6 +37,17 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section class="slide level3">
+
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: You should know
+about:</p>
+<ul>
+<li>derivatives and optimization (Appendix C in Boyd and
+Vandenberghe)</li>
+</ul>
+</aside>
+</section>
 <section>
 <section id="regularization" class="title-slide slide level2">
 <h2>Regularization</h2>
@@ -135,6 +146,16 @@ variance:</p>
 <li>With mean removal, no longer need <span
 class="math inline">\(w_0\)</span>, so regularization term is just L1 or
 L2 norm of coefficient vector</li>
+</ul>
+</section>
+<section id="standardization-3" class="slide level3">
+<h3>Standardization (3)</h3>
+<p>Important note:</p>
+<ul>
+<li>Use mean, variance of <em>training data</em> to transform training
+data</li>
+<li><strong>Also</strong> use mean, variance of <em>training data</em>
+to transform <strong>test data</strong></li>
 </ul>
 </section>
 <section id="l1-and-l2-norm-with-standardization-1"

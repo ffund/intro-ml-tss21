@@ -3,7 +3,13 @@ title:  'Regularization'
 author: 'Fraida Fund'
 ---
 
+:::notes
 
+**Math prerequisites for this lecture**: You should know about:
+
+* derivatives and optimization (Appendix C in Boyd and Vandenberghe)
+
+:::
 
 ## Regularization
 
@@ -81,6 +87,13 @@ Why?
 
 * Without scaling, regularization depends on data range
 * With mean removal, no longer need $w_0$, so regularization term is just L1 or L2 norm of coefficient vector
+
+### Standardization (3)
+
+Important note:
+
+* Use mean, variance of *training data* to transform training data
+* **Also** use mean, variance of *training data* to transform **test data**
 
 ### L1 and L2 norm with standardization (1)
 

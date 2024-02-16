@@ -37,6 +37,12 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section class="slide level3">
+
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: None.</p>
+</aside>
+</section>
 <section id="a-supervised-machine-learning-recipe"
 class="title-slide slide level2 cell markdown">
 <h2>A supervised machine learning “recipe”</h2>
@@ -90,9 +96,9 @@ called <strong>model order</strong></li>
 class="math inline">\(d\)</span></li>
 </ul>
 </section>
-<section id="using-loss-function-for-model-order-selection"
+<section id="using-training-loss-for-model-order-selection"
 class="slide level3">
-<h3>Using loss function for model order selection?</h3>
+<h3>Using training loss for model order selection?</h3>
 <p>Suppose we would “search” over each possible <span
 class="math inline">\(d\)</span>:</p>
 <ul>
@@ -102,21 +108,116 @@ training data, get <span class="math inline">\(\mathbf{w}\)</span></li>
 <li>Compute loss function on training data: <span
 class="math inline">\(MSE = \frac{1}{n}\sum_{i=1}^n (y_i -
 \hat{y_i})^2\)</span></li>
-<li>Select <span class="math inline">\(d\)</span> that minimizes
-loss</li>
+<li>Select <span class="math inline">\(d\)</span> that minimizes loss on
+training set</li>
 </ul>
 <aside class="notes">
 <figure>
 <img data-src="../images/3-validation-select.png" style="width:80.0%"
-alt="Selecting the best of multiple models - this approach does not work, because the loss function always decreasing with d (training error decreases with model complexity!)" />
-<figcaption aria-hidden="true">Selecting the best of multiple models -
-this approach does <em>not</em> work, because the loss function always
-decreasing with <span class="math inline">\(d\)</span> (training error
-decreases with model complexity!)</figcaption>
+alt="This approach does not work, because the loss function always decreases with d (training error decreases with model complexity!)" />
+<figcaption aria-hidden="true">This approach does <em>not</em> work,
+because the loss function always decreases with <span
+class="math inline">\(d\)</span> (training error decreases with model
+complexity!)</figcaption>
 </figure>
 <p>Note that we shouldn’t use the test data to select a model either -
-then we wouldn’t have an “unused” data set on which to evaluate how well
-the model generalizes.</p>
+the test set must be left as an “unused” data set on which to evaluate
+how well the model generalizes.</p>
+</aside>
+</section>
+<section id="model-order-selection-for-spline-features-1"
+class="slide level3">
+<h3>Model order selection for spline features (1)</h3>
+<p>Polynomial models of high <span class="math inline">\(d\)</span> are
+actually bad, usually -</p>
+<figure>
+<img data-src="../images/4-polynomial-regressions-one-plot.png"
+style="width:80.0%"
+alt="Polynomial model - note the boundary behavior. (Image source)" />
+<figcaption aria-hidden="true">Polynomial model - note the boundary
+behavior. (<a
+href="https://madrury.github.io/jekyll/update/statistics/2017/08/04/basis-expansions.html">Image
+source</a>)</figcaption>
+</figure>
+<aside class="notes">
+<ul>
+<li>tends to get kind of weird at the boundaries of the data (Runge’s
+phenomenon)</li>
+<li>really bad if you need to extrapolate past the range of the training
+data</li>
+<li>acts <em>globally</em> when different regions of the data might have
+different behavior</li>
+</ul>
+</aside>
+</section>
+<section id="model-order-selection-for-spline-features-2"
+class="slide level3">
+<h3>Model order selection for spline features (2)</h3>
+<p>Instead, we tend to prefer lower-<span
+class="math inline">\(d\)</span> piecewise functions, so we can fit
+<em>local</em> behavior:</p>
+<figure>
+<img data-src="../images/4-piecewise.png" style="width:50.0%"
+alt="The blue line is a true function we are trying to approximate. The black lines are piecewise polynomials of increasing order. (Image source)" />
+<figcaption aria-hidden="true">The blue line is a true function we are
+trying to approximate. The black lines are piecewise polynomials of
+increasing order. (<a
+href="https://bayesiancomputationbook.com/markdown/chp_05.html">Image
+source</a>)</figcaption>
+</figure>
+<aside class="notes">
+<p>The feature axis is divided into breakpoints - we call each one a
+“knot” - and then we define basis functions that are equal to a
+polynomial function of the feature between two knots.</p>
+<p>If we constrain the piecewise function to meet at the knots, we call
+these splines - basis splines or “B splines”.</p>
+</aside>
+</section>
+<section id="model-order-selection-for-spline-features-3"
+class="slide level3">
+<h3>Model order selection for spline features (3)</h3>
+<p>For constant functions (degree 0) - given “knots” at positions <span
+class="math inline">\(k_t, k_{t+1}\)</span>:</p>
+<p><span class="math display">\[
+\phi_{t,0}(x_{i,j}) = \begin{cases}
+1, \quad  k_t \leq x &lt; k_{t+1} \\
+0, \quad  \text{otherwise}
+\end{cases}
+\]</span></p>
+</section>
+<section id="model-order-selection-for-spline-features-4"
+class="slide level3">
+<h3>Model order selection for spline features (4)</h3>
+<p>For degree <span class="math inline">\(p&gt;0\)</span>, defined
+recursively:</p>
+<p><span class="math display">\[
+\phi_{t, p}( x ) := \dfrac{ x - k_t }{k_{t+p} - k_t} \phi_{t,p-1}( x ) +
+\dfrac{k_{t+p+1} - x }{k_{t+p+1} - k_{t+1}} \phi_{t+1,p-1}( x )
+\]</span></p>
+<aside class="notes">
+<p>You won’t need to compute this yourself - use <a
+href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.SplineTransformer.html"><code>SplineTransformer</code></a>
+in <code>sklearn</code>.</p>
+</aside>
+</section>
+<section id="model-order-selection-for-spline-features-5"
+class="slide level3">
+<h3>Model order selection for spline features (5)</h3>
+<figure>
+<img data-src="../images/4-bins-various-n-cuts.png" style="width:80.0%"
+alt="Increasing number of knots makes the model more complex. (Image source.)" />
+<figcaption aria-hidden="true">Increasing number of knots makes the
+model more complex. (<a
+href="https://madrury.github.io/jekyll/update/statistics/2017/08/04/basis-expansions.html">Image
+source</a>.)</figcaption>
+</figure>
+<aside class="notes">
+<p>Now we have two “knobs” for tuning model complexity:</p>
+<ul>
+<li>the degree of the splines,</li>
+<li>and the number of knots!</li>
+</ul>
+<p>The number of features will be: number of knots + degree - 1</p>
 </aside>
 </section>
 <section id="feature-selection-problem-1" class="slide level3">
@@ -146,8 +247,6 @@ class="math inline">\(y\)</span>.</p>
 <p>Why use a subset of features?</p>
 <ul>
 <li>High risk of overfitting if you use all features!</li>
-<li>For linear regression, there’s a unique OLS solution only if <span
-class="math inline">\(n \geq d\)</span></li>
 <li>For linear regression, when <span class="math inline">\(N \geq
 p\)</span>, variance increases linearly with number of parameters,
 inversely with number of samples. (Not derived in class, but read extra
@@ -259,7 +358,7 @@ class="math inline">\(p_{max}\)</span>,</p>
 class="math inline">\(\hat{y}_{v_i,p} = \text{pred}(X_{v_i},
 \hat{w}_{p,i})\)</span></li>
 <li><strong>Score</strong>: <span class="math inline">\(S_{p,i} =
-score(y_{v_i}, \hat{y}_{v_i,p})\)</span></li>
+\text{score}(y_{v_i}, \hat{y}_{v_i,p})\)</span></li>
 </ul></li>
 </ul>
 </section>
@@ -326,14 +425,23 @@ match to the model (KNN).</p>
 <section id="k-fold-cv---how-to-split" class="slide level3">
 <h3>K-fold CV - how to split?</h3>
 <figure>
-<img data-src="../images/3-kfold-variations.png" style="width:75.0%"
+<img data-src="../images/3-kfold-variations.png" style="width:65.0%"
 alt="K-fold CV variations." />
 <figcaption aria-hidden="true">K-fold CV variations.</figcaption>
 </figure>
 <aside class="notes">
 <p>Selecting the right K-fold CV is very important for avoiding data
 leakage! (Also for training/test split.)</p>
-<p>Refer to <a
+<ul>
+<li>if there is no structure in the data - shuffle split (avoid
+accidental patterns)</li>
+<li>if there is group structure - use a split that keeps members of each
+group in either training set, or validation set, but not both</li>
+<li>for time series data - use a split that keeps validation data in the
+future, relative to training data</li>
+</ul>
+<p>Think about the task that the model will be asked to do in
+“production,” relative to the data it is trained on! Refer to <a
 href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation">the
 function documentation</a> for more examples.</p>
 <figure>
@@ -492,17 +600,97 @@ variable?</li>
 <p>Note: the order of the loops (first loop over models, then over
 splits; or first loop over splits, then over models) is up to us - we
 can select the order that is most efficient for computation.</p>
+<figure>
+<img data-src="../images/4-kfold-loop-order.png" style="width:60.0%"
+alt="Possible arrangements of inner vs outer loop." />
+<figcaption aria-hidden="true">Possible arrangements of inner vs outer
+loop.</figcaption>
+</figure>
 <p>Data pre-processing should be considered part of model training, so
-steps that depend on the data should not come before the train/test
-split. Examples:</p>
+steps where the value after pre-processing depends on the data, should
+use <em>only</em> the training data. For example -</p>
 <ul>
 <li>filling missing values with some statistic from the data (mean,
 median, max, etc.)</li>
 <li>standardizing (removing mean and scaling to unit variance) or other
 scaling</li>
 </ul>
-<p>The test data should never be used to compute these statistics.</p>
 </aside>
+</section>
+<section id="example-design-matrix-for-n-way-interactions"
+class="slide level3">
+<h3>Example: design matrix for n-way interactions</h3>
+<p>Suppose we want to evaluate models for increasing <span
+class="math inline">\(n\)</span>, where the model of <span
+class="math inline">\(n\)</span> includes <span
+class="math inline">\(n\)</span>-way interaction features. For
+example:</p>
+<ul>
+<li>Model 1: <span class="math inline">\(x_1, x_2, x_3\)</span></li>
+<li>Model 2: <span class="math inline">\(x_1, x_2, x_3, x_1 \times x_2,
+x_1 \times x_3, x_2 \times x_3\)</span></li>
+<li>Model 3: <span class="math inline">\(x_1, x_2, x_3, x_1 \times x_2,
+x_1 \times x_3, x_2 \times x_3, x_1 \times x_2 \times x_3\)</span></li>
+</ul>
+<aside class="notes">
+<p>If we place the computation of the interaction features in the
+innermost loop, we will compute the same values repeatedly - and we
+don’t need to! We can actually compute the entire design matrix
+<em>outside</em> the entire K-fold CV, and inside the K-fold CV -</p>
+<ul>
+<li>select from this overall matrix, the columns corresponding to the
+current model</li>
+<li>select from this overall matrix, the rows corresponding to the
+training/validation data for this split</li>
+</ul>
+<figure>
+<img data-src="../images/4-kfold-slicing.png" style="width:40.0%"
+alt="Slicing rows and columns from an “overall” matrix." />
+<figcaption aria-hidden="true">Slicing rows and columns from an
+“overall” matrix.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="example-design-matrix-for-models-with-spline-features"
+class="slide level3">
+<h3>Example: design matrix for models with spline features</h3>
+<p>Suppose we want to evaluate models on a spline transformation of the
+data, with a fixed degree (e.g. <span
+class="math inline">\(d=2\)</span>) and an increasing number of “knots”.
+For example:</p>
+<ul>
+<li>Model 1: 3 knots</li>
+<li>Model 2: 4 knots</li>
+<li>Model 3: 5 knots</li>
+</ul>
+<p>(we will specify the positions of the knots ourselves, rather than
+having them be inferred from the data.)</p>
+<aside class="notes">
+<p>In this example, we cannot put the computation of the spline features
+outside the K-fold CV - <em>all</em> the values in the “transformed”
+dataset are different in each model. (Unlike the previous example, there
+is no “repetition” of features from one model to the next.)</p>
+<p>However, we can consider two <em>valid</em> ways to place the
+computation of spline features:</p>
+<figure>
+<img data-src="../images/4-kfold-spline.png" style="width:40.0%"
+alt="Either of these are valid ways to compute the spline features." />
+<figcaption aria-hidden="true">Either of these are valid ways to compute
+the spline features.</figcaption>
+</figure>
+<ul>
+<li>In the first (left) case, however, we re-compute the spline features
+repeatedly for the same samples - we don’t need to!</li>
+<li>Instead, we should use the second (right) loop order, and then in
+the inner loop, just select the rows corresponding to training and
+validation from the design matrix <em>for the given model</em>.</li>
+</ul>
+</aside>
+<ul>
+<li>pre-processing: fill missing values with median?</li>
+<li>compute design matrix: n-way interactions?</li>
+<li>compute design matrix: splines with increasing number of knots?</li>
+</ul>
 </section>
     </div>
   </div>

@@ -3,6 +3,12 @@ title:  'Model selection'
 author: 'Fraida Fund'
 ---
 
+:::notes
+
+**Math prerequisites for this lecture**: None.
+
+:::
+
 
 \newpage
 
@@ -48,23 +54,97 @@ We'll look at two examples of model selection problems, but there are many more.
 * $d$ is degree of polynomial, called **model order**
 * **Model order selection problem**: choosing $d$
 
-### Using loss function for model order selection?
+### Using training loss for model order selection?
 
 Suppose we would "search" over each possible $d$:
 
 * Fit model of order $d$ on training data, get $\mathbf{w}$
 * Compute predictions on training data
 * Compute loss function on training data: $MSE = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2$
-* Select $d$ that minimizes loss
+* Select $d$ that minimizes loss on training set
 
 ::: notes
 
-![Selecting the best of multiple models - this approach does *not* work, because the  loss function always decreasing with $d$ (training error decreases with model complexity!)](../images/3-validation-select.png){ width=80%  }
+![This approach does *not* work, because the  loss function always decreases with $d$ (training error decreases with model complexity!)](../images/3-validation-select.png){ width=80%  }
 
-Note that we shouldn't use the test data to select a model either - then we wouldn't have an "unused" data set on which to evaluate how well the model generalizes.
+Note that we shouldn't use the test data to select a model either - the test set must be left as an "unused" data set on which to evaluate how well the model generalizes.
 
 :::
 
+
+
+\newpage
+
+### Model order selection for spline features (1)
+
+Polynomial models of high $d$ are actually bad, usually - 
+
+![Polynomial model - note the boundary behavior. ([Image source](https://madrury.github.io/jekyll/update/statistics/2017/08/04/basis-expansions.html))](../images/4-polynomial-regressions-one-plot.png){ width=80%  }
+
+::: notes
+
+* tends to get kind of weird at the boundaries of the data (Runge's phenomenon)
+* really bad if you need to extrapolate past the range of the training data
+* acts *globally* when different regions of the data might have different behavior
+
+:::
+
+### Model order selection for spline features (2)
+
+Instead, we tend to prefer lower-$d$ piecewise functions, so we can fit *local* behavior:
+
+![The blue line is a true function we are trying to approximate. The black lines are piecewise polynomials of increasing order. ([Image source](https://bayesiancomputationbook.com/markdown/chp_05.html))](../images/4-piecewise.png){ width=50%  }
+
+::: notes
+
+The feature axis is divided into breakpoints - we call each one a "knot" - and then we define basis functions that are equal to a polynomial function of the feature between two knots.
+
+If we constrain the piecewise function to meet at the knots, we call these splines - basis splines or "B splines".
+
+:::
+
+\newpage
+
+### Model order selection for spline features (3)
+
+For constant functions (degree 0) - given "knots" at positions $k_t, k_{t+1}$:
+
+$$
+\phi_{t,0}(x_{i,j}) = \begin{cases}
+1, \quad  k_t \leq x < k_{t+1} \\
+0, \quad  \text{otherwise}
+\end{cases}
+$$
+
+### Model order selection for spline features (4)
+
+For degree $p>0$, defined recursively:
+
+$$
+\phi_{t, p}( x ) := \dfrac{ x - k_t }{k_{t+p} - k_t} \phi_{t,p-1}( x ) + \dfrac{k_{t+p+1} - x }{k_{t+p+1} - k_{t+1}} \phi_{t+1,p-1}( x )
+$$
+
+::: notes
+
+You won't need to compute this yourself - use [`SplineTransformer`](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.SplineTransformer.html) in `sklearn`.
+
+:::
+
+### Model order selection for spline features (5)
+
+![Increasing number of knots makes the model more complex. ([Image source](https://madrury.github.io/jekyll/update/statistics/2017/08/04/basis-expansions.html).)](../images/4-bins-various-n-cuts.png){ width=80% }
+
+::: notes
+
+
+Now we have two "knobs" for tuning model complexity: 
+
+* the degree of the splines, 
+* and the number of knots!
+
+The number of features will be: number of knots + degree - 1
+
+:::
 
 \newpage
 
@@ -95,7 +175,6 @@ Linear model: $\hat{y} = w_0 + \sum_{x \in \mathbf{X}_S} w_j x_j$
 Why use a subset of features?
 
 * High risk of overfitting if you use all features!
-* For linear regression, there's a unique OLS solution only if $n \geq d$
 * For linear regression, when $N \geq p$, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)
 
 :::
@@ -171,7 +250,7 @@ Alternative to simple split:
 * **Inner loop** over models of increasing complexity: For $p=1$ to $p_{max}$,
   * **Fit**: $\hat{w}_{p,i} = \text{fit}_p(X_{tr_i}, y_{tr_i})$
   * **Predict**: $\hat{y}_{v_i,p} = \text{pred}(X_{v_i}, \hat{w}_{p,i})$
-  * **Score**: $S_{p,i} = score(y_{v_i}, \hat{y}_{v_i,p})$
+  * **Score**: $S_{p,i} = \text{score}(y_{v_i}, \hat{y}_{v_i,p})$
 
 
 ### K-fold CV - algorithm (2)
@@ -222,16 +301,20 @@ K iterations, in each:
  - train on $n-n/k$ samples
  - score on $n/k$ samples
 
-### K-fold CV - how to split?
+### K-fold CV - how to split? 
 
-![K-fold CV variations.](../images/3-kfold-variations.png){ width=75% }
+![K-fold CV variations.](../images/3-kfold-variations.png){ width=65% }
 
 ::: notes
 
 
 Selecting the right K-fold CV is very important for avoiding data leakage! (Also for training/test split.)
 
-Refer to [the function documentation](https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation) for more examples.
+* if there is no structure in the data - shuffle split (avoid accidental patterns)
+* if there is group structure - use a split that keeps members of each group in either training set, or validation set, but not both
+* for time series data - use a split that keeps validation data in the future, relative to training data
+
+Think about the task that the model will be asked to do in "production," relative to the data it is trained on! Refer to [the function documentation](https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation) for more examples.
 
 \newpage
 
@@ -327,17 +410,70 @@ We want to place each "step" in the appropriate position to minimize the computa
 * does the result of this computation depend on the first loop variable?
 * does the result of this computation depend on the second loop variable?
 
+\newpage
+
 Note: the order of the loops (first loop over models, then over splits; or first loop over splits, then over models) is up to us - we can select the order that is most efficient for computation.
 
-Data pre-processing should be considered part of model training, so steps that depend on the data should not come before the train/test split. Examples:
+
+![Possible arrangements of inner vs outer loop.](../images/4-kfold-loop-order.png){width=60%}
+
+
+Data pre-processing should be considered part of model training, so steps where the value after pre-processing depends on the data, should use *only* the training data. For example - 
 
 * filling missing values with some statistic from the data (mean, median, max, etc.)
 * standardizing (removing mean and scaling to unit variance) or other scaling
 
-The test data should never be used to compute these statistics.
-
 :::
 
 :::
+
+
+### Example: design matrix for n-way interactions
+
+Suppose we want to evaluate models for increasing $n$, where the model of $n$ includes $n$-way interaction features. For example:
+
+* Model 1: $x_1, x_2, x_3$
+* Model 2: $x_1, x_2, x_3, x_1 \times x_2, x_1 \times x_3, x_2 \times x_3$
+* Model 3: $x_1, x_2, x_3, x_1 \times x_2, x_1 \times x_3, x_2 \times x_3, x_1 \times x_2 \times x_3$
+
+
+::: notes
+
+If we place the computation of the interaction features in the innermost loop, we will compute the same values repeatedly - and we don't need to! We can actually compute the entire design matrix *outside* the entire K-fold CV, and inside the K-fold CV - 
+
+* select from this overall matrix, the columns corresponding to the current model
+* select from this overall matrix, the rows corresponding to the training/validation data for this split
+
+![Slicing rows and columns from an "overall" matrix.](../images/4-kfold-slicing.png){width=40%}
+
+:::
+
+### Example: design matrix for models with spline features
+
+Suppose we want to evaluate models on a spline transformation of the data, with a fixed degree (e.g. $d=2$) and an increasing number of "knots". For example:
+
+* Model 1: 3 knots
+* Model 2: 4 knots
+* Model 3: 5 knots
+
+(we will specify the positions of the knots ourselves, rather than having them be inferred from the data.)
+
+::: notes
+
+In this example, we cannot put the computation of the spline features outside the K-fold CV - *all* the values in the "transformed" dataset are different in each model. (Unlike the previous example, there is no "repetition" of features from one model to the next.)
+
+However, we can consider two *valid* ways to place the computation of spline features: 
+
+![Either of these are valid ways to compute the spline features.](../images/4-kfold-spline.png){width=40%}
+
+* In the first (left) case, however, we re-compute the spline features repeatedly for the same samples - we don't need to!
+* Instead, we should use the second (right) loop order, and then in the inner loop, just select the rows corresponding to training and validation from the design matrix *for the given model*.
+
+:::
+
+
+* pre-processing: fill missing values with median?
+* compute design matrix: n-way interactions?
+* compute design matrix: splines with increasing number of knots?
 
 
