@@ -71,7 +71,8 @@ _Fraida Fund_
 
 ## Week 6: K nearest neighbor, feature selection
 
-* Handout: K nearest neighbor, feature selection <a href="slides/6-knn.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: K nearest neighbor <a href="slides/6-knn.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Feature selection <a href="slides/6-feature.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: K nearest neighbor in depth <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/6-k-nearest-neighbors-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-k-nearest-neighbors-in-depth.ipynb)
 * Notebook: Voter classification with K nearest neighbor (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-knn-voter-classification-hw.ipynb)
 

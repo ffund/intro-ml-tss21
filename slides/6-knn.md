@@ -3,6 +3,17 @@ title:  'K Nearest Neighbor'
 author: 'Fraida Fund'
 ---
 
+:::notes
+
+**Math prerequisites for this lecture**: You should know about
+
+
+* probabilities, conditional probabilities, 
+* norm of a vector (Section I, Chapter 3 in Boyd and Vandenberghe)
+* expectation of a random variable
+
+:::
+
 
 
 ## In this lecture
@@ -12,7 +23,6 @@ author: 'Fraida Fund'
 * Model choices
 * Bias and variance of KNN
 * The Curse of Dimensionality
-* Feature selection and feature weighting
 
 \newpage
 
@@ -141,7 +151,7 @@ Then, we can estimate the per-class conditional probability given the sample $x_
 
 For each class $m \in M$:
 
-$$ P(y=m | \mathbf{x_0} ) = \frac{1}{K} \sum_{ (\mathbf{x}_i, y_i) \in N_0} I(y_i = k) $$
+$$ P(y=m | \mathbf{x_0} ) = \frac{1}{K} \sum_{ (\mathbf{x}_i, y_i) \in N_0} I(y_i = m) $$
 
 where $I(y_i = m)$ is 1 if $(\mathbf{x}_i, y_i) \in N_0$ is a member of class $m$, 0 otherwise. 
 
@@ -563,187 +573,4 @@ Bad:
 
 * Slow prediction (especially with large N)
 * Curse of dimensionality
-
-\newpage
-
-## Feature selection and feature weighting
-
-
-Feature selection is actually two problems:
-
-* best number of features
-* best subset of features
-
-
-:::notes
-
-These problems can be solved separately:
-
-* find best subset of feature of every possible size
-* then among those, select the best
-
-or they can be solved together, for example:
-
-* keep adding features until improvement due to another feature is less than some threshold $t$
-* keep features whose "score" exceeds some threshold $t$
-* etc.
-
-For KNN, feature selection:
-
-* reduces inference time (which scales with $d$)
-* addresses the "curse of dimensionality"
-* makes the distance measure more useful, by considering only the features that are most relevant
-
-For KNN, we can also do feature weighting (compute a weight for each feature, scale feature by that weight) as an alternative to (or in addition to) feature selection - this helps with the third item.
-
-:::
-
-### Feature selection is hard!
-
-
-:::notes
-
-Computationally **hard** - even on small problems.
-
-:::
-
-
-### Optimization in two parts
-
-* **Search** the space of possible feature subsets
-* **Evaluate** the goodness of a feature subset
-
-:::notes
-
-![Feature selection problem.](../images/6-feature-selection.png){ width=30% }
-
-:::
-
-\newpage
-
-### Search: exhaustive search
-
-**Optimal search**: consider every combination of features
-
-* Given $d$ features, there are $2^d$ possible feature subsets
-* Too expensive to try all possibilities for large $d$!
-
-### Search: naive heuristic
-
-* sort $d$ features in order of "goodness"
-* select top $k$ features from the list
-
-
-:::notes
-
-**Problem**: this approach considers each feature independently.
-
-* Doesn't consider redundancy: if you have two copies of an informative features, they'll both score high (but you wouldn't necessarily want to include both in your model).
-* Doesn't consider interaction: if you are going to use a model that can learn interactions "natively" (which KNN can!), this type of feature selection may exclude features that are not informative themselves, but whose combination is informative.
-
-
-
-
-![Example of features that are informative in combination (the product $x_1 x_2$).](../images/6-feature-interaction.png){ width=18% }
-
-:::
-
-
-### Search: sequential forward selection
-
-* Let $S^{t-1}$ be the set of selected features at time $t-1$
-* Train and evaluate model for all combinations of current set + one more feature
-* For the next time step $S^t$, add the feature that gave you the best performance.
-
-:::notes
-
-("Backward" alternative: start with all features, and "prune" one at a time.)
-
-This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search, and considers relationship between features (which naive approach dose not.)
-
-![Feature selection search strategies.](../images/6-feature-search-strategy.png){ width=75% }
-
-:::
-
-\newpage
-
-
-### Evaluation: methods
-
-* **Filter methods**: consider only the statistics of the training data, don't use the model.
-* **Wrapper methods**: evaluate subsets of features on a model.
-
-
-### Evaluation: filter methods (1)
-
-Pseudocode:
-
-```python
-for j in X.shape[1]:
-  score[j] = score_fn(X[:,j], y) )
-```
-
-:::notes
-
-Once you have a score for each feature, pick $k$ features that have highest score (use CV to choose k?)
-
-Can also include multivariate scoring functions:
-
-```python
-for j, feat_set in enumerate(feat_sets):
-  score[j] = score_fn(X[:,feat_set], y) )
-```
-
-You can also use the score for feature weighting: Compared to feature selection, feature weighting does not have the benefit of faster inference time, but it does have the advantage of not throwing out useful information.
-
-
-:::
-
-### Evaluation: filter methods (2)
-
-* Usually much faster!
-* Finds "generally" good features
-* Need to choose "scoring" function that is a good fit for the model
-
-:::notes
-
-
-**Scoring function**: 
-
-* Scoring function measures the relationship between `X` and `y`.
-* For example: correlation coefficient, or F-statistic both of which measures linear relationship between `X` and `y`.
-
-**Problem**: correlation coefficient scoring metric only captures linear relationship.
-
-* If you expect the relationship to be linear, it's fine!
-* If you are using a model (e.g. linear regression) that is only capable of learning linear relationships, it's fine! You don't want your feature selection method to give a high score to a column if the model won't be able to learn from it anyway.
-
-:::
-
-
-
-###  Evaluation: filter methods (3)
-
-![F-test selects $x_1$ as the most informative feature, MI selects $x_2$.](../images/6-feature-selection-scoring.png ){ width=75% }
-
-###  Evaluation: wrapper methods (1)
-
-* Tuned to specific interaction of dataset + model!
-* Usually much more expensive (especially considering model hyperparameter tuning...)
-
-:::notes
-
-![Using a wrapper method to evaluate different feature subsets, on the same/similar objective to the "real" final ML model.](../images/6-wrapper.png){ width=40% }
-
-:::
-
-### An option for some models
-
-* **Embedded methods**: use something built-in to training algorithm (e.g. LASSO regularization). (Not available for KNN!)
-
-
-### Recap
-
-* Feature selection approach should "match" the data, model
-* Computation is a concern - it won't be possible to optimize everything
 
