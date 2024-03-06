@@ -2,6 +2,7 @@
 
 _Fraida Fund_
 
+_These materials are for your personal use. Please do not redistribute (e.g. post online) without permission._
 
 ## Week 0: Course Intro
 
