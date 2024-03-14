@@ -37,6 +37,12 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section class="slide level3">
+
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: None</p>
+</aside>
+</section>
 <section>
 <section id="ensemble-methods" class="title-slide slide level2">
 <h2>Ensemble methods</h2>
@@ -218,57 +224,44 @@ e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}\)</span></p></li>
 \text{sign} \left[\sum_{m=1}^M \alpha_m
 \hat{f}^m(x)\right]\]</span></li>
 </ol>
-</section>
-<section id="boosting---algorithm-for-regression-tree-1"
-class="slide level3">
-<h3>Boosting - algorithm for regression tree (1)</h3>
-<ol type="1">
-<li>Let <span class="math inline">\(\hat{f}(x)=0\)</span> and <span
-class="math inline">\(r_i = y_i\)</span> for all <span
-class="math inline">\(i\)</span> in training set.</li>
-<li>For <span class="math inline">\(b=1,\ldots,B\)</span>, repeat:</li>
-</ol>
-<aside class="notes">
-<p>The idea is: we fit trees to the residuals, not the outcome <span
-class="math inline">\(y\)</span>.</p>
-</aside>
-</section>
-<section id="boosting---algorithm-for-regression-tree-inner-loop"
-class="slide level3">
-<h3>Boosting - algorithm for regression tree (inner loop)</h3>
-<ul>
-<li>Fit a tree <span class="math inline">\(\hat{f}^b\)</span> with <span
-class="math inline">\(d\)</span> splits (<span
-class="math inline">\(d+1\)</span> leaf nodes) on training data <span
-class="math inline">\((X,r)\)</span>.</li>
-<li>Update <span class="math inline">\(\hat{f}\)</span> with a
-<em>shrunken</em> version of new tree: <span
-class="math display">\[\hat{f}(x) \leftarrow \hat{f}(x) + \lambda
-\hat{f}^b(x)\]</span></li>
-<li>Update residuals: <span class="math display">\[r_i \leftarrow r_i -
-\lambda \hat{f}^b(x)\]</span></li>
-</ul>
-</section>
-<section id="boosting---algorithm-for-regression-tree-final-step"
-class="slide level3">
-<h3>Boosting - algorithm for regression tree (final step)</h3>
-<ol start="3" type="1">
-<li>Output boosted model: <span class="math display">\[\hat{f}(x) =
-\sum_{b=1}^B \lambda \hat{f}^b(x)\]</span></li>
-</ol>
-</section>
-<section id="boosting---algorithm-for-regression-tree-tuning"
-class="slide level3">
-<h3>Boosting - algorithm for regression tree (tuning)</h3>
-<p>Tuning parameters to select by CV:</p>
-<ul>
-<li>Number of trees <span class="math inline">\(B\)</span></li>
-<li>Shrinkage parameter <span class="math inline">\(\lambda\)</span>,
-controls <em>learning rate</em></li>
-<li><span class="math inline">\(d\)</span>, number of splits in each
-tree. ( <span class="math inline">\(d=1 \rightarrow\)</span> tree is
-called a <em>stump</em> )</li>
-</ul>
+<!-- 
+
+### Boosting - algorithm for regression tree (1)
+
+1. Let $\hat{f}(x)=0$ and $r_i = y_i$ for all $i$ in training set.
+2. For $b=1,\ldots,B$, repeat:
+
+
+::: notes
+
+The idea is: we fit trees to the residuals, not the outcome $y$. 
+
+:::
+
+
+### Boosting - algorithm for regression tree (inner loop)
+
+* Fit a tree $\hat{f}^b$ with $d$ splits ($d+1$ leaf nodes) on training data $(X,r)$.
+* Update $\hat{f}$ with a *shrunken* version of new tree:
+  $$\hat{f}(x) \leftarrow \hat{f}(x) + \lambda \hat{f}^b(x)$$
+* Update residuals:
+  $$r_i \leftarrow r_i - \lambda \hat{f}^b(x)$$
+
+
+### Boosting - algorithm for regression tree (final step)
+
+3. Output boosted model:
+$$\hat{f}(x) = \sum_{b=1}^B \lambda \hat{f}^b(x)$$
+
+### Boosting - algorithm for regression tree (tuning)
+
+Tuning parameters to select by CV:
+
+* Number of trees $B$
+* Shrinkage parameter $\lambda$, controls *learning rate*
+* $d$, number of splits in each tree. ( $d=1 \rightarrow$ tree is called a *stump* )
+
+-->
 </section>
 <section id="gradient-boosting" class="slide level3">
 <h3>Gradient Boosting</h3>

@@ -3,6 +3,12 @@ title:  'Ensemble methods'
 author: 'Fraida Fund'
 ---
 
+:::notes
+
+**Math prerequisites for this lecture**: None
+
+:::
+
 
 \newpage
 
@@ -129,6 +135,8 @@ Consider classification problem, where sign of model output gives estimated clas
 $$\hat{f}(x) = \text{sign} \left[\sum_{m=1}^M \alpha_m \hat{f}^m(x)\right]$$
 
 
+<!-- 
+
 ### Boosting - algorithm for regression tree (1)
 
 1. Let $\hat{f}(x)=0$ and $r_i = y_i$ for all $i$ in training set.
@@ -163,6 +171,8 @@ Tuning parameters to select by CV:
 * Number of trees $B$
 * Shrinkage parameter $\lambda$, controls *learning rate*
 * $d$, number of splits in each tree. ( $d=1 \rightarrow$ tree is called a *stump* )
+
+-->
 
 ### Gradient Boosting
 

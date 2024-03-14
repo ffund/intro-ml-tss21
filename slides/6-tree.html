@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -29,6 +37,12 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section class="slide level3">
+
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: None</p>
+</aside>
+</section>
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
@@ -96,10 +110,25 @@
 
 -->
 </section>
-<section id="flexible-decisions-with-cheap-prediction" class="slide level3">
+<section id="flexible-decisions-with-cheap-prediction"
+class="slide level3">
 <h3>Flexible decisions with cheap prediction?</h3>
 <p>KNN was very flexible, but prediction is <strong>slow</strong>.</p>
-<p>Next: flexible decisions, non-parametric approach, fast prediction</p>
+<p>Next: flexible decisions, non-parametric approach, fast
+prediction</p>
+<aside class="notes">
+<p><strong>Idea</strong>: In KNN, we find the “neighborhood” of a test
+point and then give it the value of training points in that
+“neighborhood” - but it takes too long at inference time to define the
+“neighborhood”.</p>
+<p>What if we define “neighborhoods” and their values in advance, at
+training time? Then at inference time, we only need to determine which
+“neighborhood” a test point belongs in.</p>
+<p>However, we run into another <strong>computationally hard</strong>
+problem! To <em>partition</em> the feature space into optimal
+neighborhoods is too expensive. Instead, we will rely on some heuristics
+and get a non-optimal, but good enough, partition.</p>
+</aside>
 </section></section>
 <section>
 <section id="decision-tree" class="title-slide slide level2">
@@ -110,62 +139,85 @@
 <h3>Tree terminology</h3>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tree-terminology.png" style="width:50.0%" alt="A binary tree." /><figcaption aria-hidden="true">A binary tree.</figcaption>
+<img data-src="../images/5-tree-terminology.png" style="width:50.0%"
+alt="A binary tree." />
+<figcaption aria-hidden="true">A binary tree.</figcaption>
 </figure>
+<ul>
+<li>size of tree <span class="math inline">\(|T|\)</span> (number of
+leaf nodes)</li>
+<li>depth (max length from root node to a leaf node)</li>
+</ul>
 </aside>
 </section>
 <section id="note-on-notation" class="slide level3">
 <h3>Note on notation</h3>
 <p>Following notation of ISLR, Chapter 8:</p>
 <ul>
-<li><span class="math inline">\(X_j\)</span> is feature <span class="math inline">\(j\)</span></li>
-<li><span class="math inline">\(x_i\)</span> is sample <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(X_j\)</span> is feature <span
+class="math inline">\(j\)</span></li>
+<li><span class="math inline">\(x_i\)</span> is sample <span
+class="math inline">\(i\)</span></li>
 </ul>
 </section>
 <section id="stratification-of-feature-space-1" class="slide level3">
 <h3>Stratification of feature space (1)</h3>
 <ul>
-<li>Given set of possible predictors, <span class="math inline">\(X_1, \ldots, X_p\)</span></li>
-<li>Training: Divide predictor space (set of possible values of <span class="math inline">\(X\)</span>) into <span class="math inline">\(J\)</span> non-overlapping regions: <span class="math inline">\(R_1, \ldots, R_J\)</span>, by splitting sequentially on one feature at a time.</li>
+<li>Given set of possible predictors, <span class="math inline">\(X_1,
+\ldots, X_p\)</span></li>
+<li>Training: Divide predictor space (set of possible values of <span
+class="math inline">\(X\)</span>) into <span
+class="math inline">\(J\)</span> non-overlapping regions: <span
+class="math inline">\(R_1, \ldots, R_J\)</span>, by splitting
+sequentially on one feature at a time.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tree-stratification.png" style="width:80.0%" alt="Dividing the feature space with a decision tree." /><figcaption aria-hidden="true">Dividing the feature space with a decision tree.</figcaption>
+<img data-src="../images/5-tree-stratification-detailed.png"
+style="width:100.0%"
+alt="Dividing the feature space with a decision tree." />
+<figcaption aria-hidden="true">Dividing the feature space with a
+decision tree.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="stratification-of-feature-space-2" class="slide level3">
 <h3>Stratification of feature space (2)</h3>
 <ul>
-<li>Prediction: For each observation that falls in region <span class="math inline">\(R_j\)</span>, predict
+<li>Prediction: For each observation that falls in region <span
+class="math inline">\(R_j\)</span>, predict
 <ul>
-<li>mean of labels of training points in <span class="math inline">\(R_j\)</span> (regression)</li>
-<li>mode of labels of training points in <span class="math inline">\(R_j\)</span> (classification)</li>
+<li>mean of labels of training points in <span
+class="math inline">\(R_j\)</span> (regression)</li>
+<li>mode of labels of training points in <span
+class="math inline">\(R_j\)</span> (classification)</li>
 </ul></li>
 </ul>
 </section>
 <section id="tree-representation" class="slide level3">
 <h3>Tree representation</h3>
 <ul>
-<li>At node that is not a leaf: test one feature <span class="math inline">\(X_i\)</span></li>
-<li>Branch from node depending on value of <span class="math inline">\(X_i\)</span></li>
-<li>Each leaf node: predict <span class="math inline">\(\hat{y}_{R_m}\)</span></li>
+<li>At node that is not a leaf: test one feature <span
+class="math inline">\(X_i\)</span></li>
+<li>Branch from node depending on value of <span
+class="math inline">\(X_i\)</span></li>
+<li>Each leaf node: predict <span
+class="math inline">\(\hat{y}_{R_m}\)</span></li>
 </ul>
 </section>
-<section id="tree-characterization" class="slide level3">
-<h3>Tree characterization</h3>
-<ul>
-<li>size of tree <span class="math inline">\(|T|\)</span> (number of leaf nodes)</li>
-<li>depth (max length from root node to a leaf node)</li>
-</ul>
-</section>
-<section id="stratification-of-feature-space---illustration" class="slide level3">
+<section id="stratification-of-feature-space---illustration"
+class="slide level3">
 <h3>Stratification of feature space - illustration</h3>
 <figure>
-<img data-src="../images/8.3.svg" style="width:50.0%" alt="ISLR, Fig. 8.3." /><figcaption aria-hidden="true">ISLR, Fig. 8.3.</figcaption>
+<img data-src="../images/8.3.svg" style="width:50.0%"
+alt="ISLR, Fig. 8.3." />
+<figcaption aria-hidden="true">ISLR, Fig. 8.3.</figcaption>
 </figure>
 <aside class="notes">
-<p>The stratification on the top left cannot be produced by a decision tree using recursive binary splitting. The other three subfigures represent a single stratification.</p>
+<p>The stratification on the top left cannot be produced by a decision
+tree using recursive binary splitting. The other three subfigures
+represent a single stratification. Note that the decision tree fits a
+piecewise step function!</p>
 </aside>
 </section></section>
 <section>
@@ -184,58 +236,94 @@
 <h3>Basic idea (2)</h3>
 <ul>
 <li>Instead: recursive binary splitting (top-down, greedy approach)</li>
-<li>Greedy: at each step, make the best decision at that step, without looking ahead and making a decision that might yield better results at future steps</li>
+<li>Greedy: at each step, make the best decision at that step, without
+looking ahead and making a decision that might yield better results at
+future steps</li>
 </ul>
-</section>
-<section id="recursive-binary-splitting" class="slide level3">
-<h3>Recursive binary splitting</h3>
-<p>For any feature <span class="math inline">\(j\)</span> and <em>cutpoint</em> <span class="math inline">\(s\)</span>, define the regions</p>
-<p><span class="math display">\[R_1(j, s) = \{X|X_j &lt; s\}, \quad R_2(j, s) = \{X|X_j \geq s\}\]</span></p>
-<p>where <span class="math inline">\(\{X|X_j &lt; s\}\)</span> is the region of predictor space in which <span class="math inline">\(X_j\)</span> takes on a value less than <span class="math inline">\(s\)</span>.</p>
 </section>
 <section id="recursive-binary-splitting-steps" class="slide level3">
 <h3>Recursive binary splitting steps</h3>
 <p>Start at root of the tree, considering all training samples.</p>
 <ol type="1">
 <li>At the current node,</li>
-<li>Find feature <span class="math inline">\(X_j\)</span> and cutpoint <span class="math inline">\(s\)</span> that minimizes some loss function (?)</li>
+<li>Find feature <span class="math inline">\(X_j\)</span> and
+<em>cutpoint</em> <span class="math inline">\(s\)</span> that minimizes
+some loss function (?)</li>
 <li>Split training samples at that node into two leaf nodes</li>
 <li>Stop when no training error (?)</li>
 <li>Otherwise, repeat at leaf nodes</li>
 </ol>
+<aside class="notes">
+<p>At step 2, we apply a greedy heuristic - we are choosing the feature
+that minimizes a loss function in <em>this</em> iteration only.</p>
+</aside>
+</section>
+<section id="recursive-binary-splitting" class="slide level3">
+<h3>Recursive binary splitting</h3>
+<p>For any feature <span class="math inline">\(j\)</span> and
+<em>cutpoint</em> <span class="math inline">\(s\)</span>, define the
+regions</p>
+<p><span class="math display">\[R_1(j, s) = \{X|X_j &lt; s\}, \quad
+R_2(j, s) = \{X|X_j \geq s\}\]</span></p>
+<p>where <span class="math inline">\(\{X|X_j &lt; s\}\)</span> is the
+region of predictor space in which <span
+class="math inline">\(X_j\)</span> takes on a value less than <span
+class="math inline">\(s\)</span>.</p>
 </section>
 <section id="loss-function-for-regression-tree" class="slide level3">
 <h3>Loss function for regression tree</h3>
-<p>For regression: look for feature <span class="math inline">\(j\)</span> and cutpoint <span class="math inline">\(s\)</span> that leads to the greatest possible reduction in squared error, where the “new” squared error is:</p>
-<p><span class="math display">\[\sum_{i: x_i \in R_1(j,s)} (y_i - \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i - \hat{y}_{R_2})^2\]</span></p>
-<p>(<span class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction for the samples in <span class="math inline">\(R_j\)</span>.)</p>
+<p>For regression: look for feature <span
+class="math inline">\(j\)</span> and cutpoint <span
+class="math inline">\(s\)</span> that leads to the greatest possible
+reduction in squared error, where the “new” squared error is:</p>
+<p><span class="math display">\[\sum_{i: x_i \in R_1(j,s)} (y_i -
+\hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i -
+\hat{y}_{R_2})^2\]</span></p>
+<p>(<span class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction
+for the samples in <span class="math inline">\(R_j\)</span>.)</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-train-regression-tree.png" style="width:60.0%" alt="Training a regression tree." /><figcaption aria-hidden="true">Training a regression tree.</figcaption>
+<img data-src="../images/5-train-regression-tree.png"
+style="width:70.0%" alt="Training a regression tree." />
+<figcaption aria-hidden="true">Training a regression tree.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="loss-function-for-classification-tree" class="slide level3">
+<section id="loss-function-for-classification-tree"
+class="slide level3">
 <h3>Loss function for classification tree</h3>
-<p>For classification, find a split that minimizes some measure of node <em>impurity</em>:</p>
+<p>For classification, find a split that minimizes some measure of node
+<em>impurity</em>:</p>
 <ul>
-<li>A node whose samples all belong to the same class - most <em>pure</em></li>
-<li>A node whose samples are evenly distributed among all classes - highly <em>impure</em></li>
+<li>A node whose samples all belong to the same class - most
+<em>pure</em></li>
+<li>A node whose samples are evenly distributed among all classes -
+highly <em>impure</em></li>
 </ul>
 </section>
 <section id="classification-error-rate" class="slide level3">
 <h3>Classification error rate</h3>
-<p>For classification: one possible way is to split on <em>0-1 loss</em> or <em>misclassification rate</em>:</p>
-<p><span class="math display">\[\sum_{x_i \in  R_m} 1 (y_i \neq \hat{y}_{R_m})\]</span></p>
-<p>Not used often.</p>
+<p>For classification: one possible way is to split on <em>0-1 loss</em>
+or <em>misclassification rate</em>:</p>
+<p><span class="math display">\[\sum_{x_i \in  R_m} 1 (y_i \neq
+\hat{y}_{R_m})\]</span></p>
+<aside class="notes">
+<p>Not used often (less sensitive than the others), but used for
+<em>pruning</em>.</p>
+</aside>
 </section>
 <section id="gini-index" class="slide level3">
 <h3>GINI index</h3>
 <p>The GINI index is:</p>
-<p><span class="math display">\[ \sum_{k=1}^K \hat{p}_{mk} (1 - \hat{p}_{mk})\]</span></p>
-<p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training samples in <span class="math inline">\(R_m\)</span> belonging to class <span class="math inline">\(k\)</span>.</p>
+<p><span class="math display">\[ \sum_{k=1}^K \hat{p}_{mk} (1 -
+\hat{p}_{mk})\]</span></p>
+<p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the
+proportion of training samples in <span
+class="math inline">\(R_m\)</span> belonging to class <span
+class="math inline">\(k\)</span>.</p>
 <aside class="notes">
-<p>You can see that this is small when all values of <span class="math inline">\(\hat{p}_{mk}\)</span> are around 0 or 1.</p>
+<p>You can see that this is small when all values of <span
+class="math inline">\(\hat{p}_{mk}\)</span> are around 0 or 1.</p>
 </aside>
 </section>
 <section id="entropy" class="slide level3">
@@ -250,83 +338,144 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 
 -->
 <p>Entropy as a measure of impurity on subset of samples:</p>
-<p><span class="math display">\[ - \sum_{k=1}^K \hat{p}_{mk} \log_2 \hat{p}_{mk}\]</span></p>
-<p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the proportion of training samples in <span class="math inline">\(R_m\)</span> belonging to class <span class="math inline">\(k\)</span>.</p>
+<p><span class="math display">\[ - \sum_{k=1}^K \hat{p}_{mk} \log_2
+\hat{p}_{mk}\]</span></p>
+<p>where <span class="math inline">\(\hat{p}_{mk}\)</span> is the
+proportion of training samples in <span
+class="math inline">\(R_m\)</span> belonging to class <span
+class="math inline">\(k\)</span>.</p>
 </section>
-<section id="comparison---measures-of-node-impurity" class="slide level3">
+<section id="comparison---measures-of-node-impurity"
+class="slide level3">
 <h3>Comparison - measures of node impurity</h3>
 <figure>
-<img data-src="../images/impurity.png" style="width:30.0%" alt="Measures of node “impurity”." /><figcaption aria-hidden="true">Measures of node “impurity”.</figcaption>
+<img data-src="../images/impurity.png" style="width:40.0%"
+alt="Measures of node “impurity”." />
+<figcaption aria-hidden="true">Measures of node “impurity”.</figcaption>
 </figure>
 </section>
 <section id="conditional-entropy" class="slide level3">
 <h3>Conditional entropy</h3>
 <ul>
-<li>Splitting on feature <span class="math inline">\(X\)</span> creates subsets <span class="math inline">\(S_1\)</span> and <span class="math inline">\(S_2\)</span> with different entropies</li>
+<li>Splitting on feature <span class="math inline">\(X\)</span> creates
+subsets <span class="math inline">\(S_1\)</span> and <span
+class="math inline">\(S_2\)</span> with different entropies</li>
 <li>Conditional entropy:</li>
 </ul>
-<p><span class="math display">\[\text{Entropy}(S|X) = \sum_v \frac{|S_v|}{|S|} \text{Entropy}(S_v)\]</span></p>
+<p><span class="math display">\[\text{Entropy}(S|X) = \sum_v
+\frac{|S_v|}{|S|} \text{Entropy}(S_v)\]</span></p>
 </section>
 <section id="information-gain" class="slide level3">
 <h3>Information gain</h3>
 <ul>
-<li>Choose feature to split so as to maximize information gain, the expected reduction in entropy due to splitting on <span class="math inline">\(X\)</span>:</li>
+<li>Choose feature to split so as to maximize information gain, the
+expected reduction in entropy due to splitting on <span
+class="math inline">\(X\)</span>:</li>
 </ul>
-<p><span class="math display">\[\text{Gain}(S, X) := \text{Entropy}(S) - \text{Entropy}(S|X)\]</span></p>
+<p><span class="math display">\[\text{Gain}(S, X) := \text{Entropy}(S) -
+\text{Entropy}(S|X)\]</span></p>
 </section>
 <section id="example-should-i-play-tennis-1" class="slide level3">
 <h3>Example: should I play tennis? (1)</h3>
 <figure>
-<img data-src="../images/play-tennis-dt.png" style="width:60.0%" alt="Via Tom Mitchell." /><figcaption aria-hidden="true">Via Tom Mitchell.</figcaption>
+<img data-src="../images/play-tennis-dt.png" style="width:60.0%"
+alt="Via Tom Mitchell." />
+<figcaption aria-hidden="true">Via Tom Mitchell.</figcaption>
 </figure>
 </section>
 <section id="example-should-i-play-tennis-2" class="slide level3">
 <h3>Example: should I play tennis? (2)</h3>
-<p>For top node: <span class="math inline">\(S = \{9+, 5-\}, |S| = 14\)</span></p>
-<p><span class="math display">\[\text{Entropy}(S) = -\frac{9}{14}\log_2 \frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94\]</span></p>
+<p>For top node: <span class="math inline">\(S = \{9+, 5-\}, |S| =
+14\)</span></p>
+<p><span class="math display">\[\text{Entropy}(S) = -\frac{9}{14}\log_2
+\frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94\]</span></p>
 </section>
 <section id="example-should-i-play-tennis-3" class="slide level3">
 <h3>Example: should I play tennis? (3)</h3>
 <p>If we split on Wind:</p>
 <p>Considering the Weak branch:</p>
 <ul>
-<li><span class="math inline">\(S_{\text{weak}} = \{6+, 2-\}, |S_{\text{weak}}| = 8\)</span></li>
-<li><span class="math inline">\(\text{Entropy}(S_{\text{weak}}) = -\frac{6}{8}\log_2 (\frac{6}{8}) - \frac{2}{8}\log_2 (\frac{2}{8}) = 0.81\)</span></li>
+<li><span class="math inline">\(S_{\text{weak}} = \{6+, 2-\},
+|S_{\text{weak}}| = 8\)</span></li>
+<li><span class="math inline">\(\text{Entropy}(S_{\text{weak}}) =
+-\frac{6}{8}\log_2 (\frac{6}{8}) - \frac{2}{8}\log_2 (\frac{2}{8}) =
+0.81\)</span></li>
 </ul>
 <p>Considering the Strong branch:</p>
 <ul>
-<li><span class="math inline">\(S_{\text{strong}} = \{3+, 3-\}, |S_{\text{strong}}| = 6\)</span></li>
-<li><span class="math inline">\(\text{Entropy}(S_{\text{strong}}) = 1\)</span></li>
+<li><span class="math inline">\(S_{\text{strong}} = \{3+, 3-\},
+|S_{\text{strong}}| = 6\)</span></li>
+<li><span class="math inline">\(\text{Entropy}(S_{\text{strong}}) =
+1\)</span></li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tennis-example.png" style="width:45.0%" alt="Considering the split on Wind." /><figcaption aria-hidden="true">Considering the split on Wind.</figcaption>
+<img data-src="../images/5-tennis-example.png" style="width:45.0%"
+alt="Considering the split on Wind." />
+<figcaption aria-hidden="true">Considering the split on
+Wind.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="example-should-i-play-tennis-4" class="slide level3">
 <h3>Example: should I play tennis? (4)</h3>
-<p><span class="math inline">\(\text{Entropy}(S) = -\frac{9}{14}\log_2 \frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94\)</span></p>
-<p><span class="math inline">\(\text{Entropy}(S | \text{Wind}) = \frac{8}{14} \text{Entropy}(S_{\text{weak}}) + \frac{6}{14} \text{Entropy}(S_{\text{strong}}) = 0.89\)</span></p>
-<p><span class="math inline">\(\text{Gain}(S, \text{Wind}) = 0.94-0.89 = 0.05\)</span></p>
+<p><span class="math inline">\(\text{Entropy}(S) = -\frac{9}{14}\log_2
+\frac{9}{14} - \frac{5}{14}\log_2 \frac{5}{14} = 0.94\)</span></p>
+<p><span class="math inline">\(\text{Entropy}(S | \text{Wind}) =
+\frac{8}{14} \text{Entropy}(S_{\text{weak}}) + \frac{6}{14}
+\text{Entropy}(S_{\text{strong}}) = 0.89\)</span></p>
+<p><span class="math inline">\(\text{Gain}(S, \text{Wind}) = 0.94-0.89 =
+0.05\)</span></p>
 </section>
 <section id="example-should-i-play-tennis-5" class="slide level3">
 <h3>Example: should I play tennis? (5)</h3>
 <ul>
-<li><span class="math inline">\(\text{Gain}(S, \text{Outlook}) = 0.246\)</span></li>
-<li><span class="math inline">\(\text{Gain}(S, \text{Humidity}) = 0.151\)</span></li>
-<li><span class="math inline">\(\text{Gain}(S, \text{Wind}) = 0.048\)</span></li>
-<li><span class="math inline">\(\text{Gain}(S, \text{Temperature}) = 0.029\)</span></li>
+<li><span class="math inline">\(\text{Gain}(S, \text{Outlook}) =
+0.246\)</span></li>
+<li><span class="math inline">\(\text{Gain}(S, \text{Humidity}) =
+0.151\)</span></li>
+<li><span class="math inline">\(\text{Gain}(S, \text{Wind}) =
+0.048\)</span></li>
+<li><span class="math inline">\(\text{Gain}(S, \text{Temperature}) =
+0.029\)</span></li>
 </ul>
-<p><span class="math inline">\(\rightarrow\)</span> Split on Outlook!</p>
+<p><span class="math inline">\(\rightarrow\)</span> Split on
+Outlook!</p>
+<aside class="notes">
+<p>In this example, the data had only categorical variables, and no
+missing values.</p>
+<p>What if we had a continuous (not categorical) variable? We would need
+to also decide how to partition the continous feature into a discrete
+set of intervals.</p>
+<p>There are a few well-known algorithms for fitting decision trees -
+CART, ID3, C4.5 - that have different capabilities with respect to
+continuous features, features with missing values, and what measure of
+node impurity is used.</p>
+<p>e.g. C4.5 introduces the idea that if a sample has a missing value
+for a feature,</p>
+<ul>
+<li>when training, compute information gain using only samples where the
+feature is defined</li>
+<li>when using, we decide which branch to follow based on which is more
+probable</li>
+</ul>
+</aside>
 </section>
 <section id="feature-importance" class="slide level3">
 <h3>Feature importance</h3>
 <ul>
-<li>For each feature <span class="math inline">\(X_j\)</span>, find all nodes where the feature was used as the split variable</li>
-<li>Add up information gain due to split (or for GINI index, difference in loss weighted by number of samples.)</li>
+<li>For each feature <span class="math inline">\(X_j\)</span>, find all
+nodes where the feature was used as the split variable</li>
+<li>Add up information gain due to split (or for GINI index, difference
+in loss weighted by number of samples.)</li>
 <li>This sum reflects feature importance</li>
 </ul>
+<aside class="notes">
+<p>This feature importance can be used for feature selection or feature
+weighting!</p>
+<p>It tends to do reasonable things both with (1) features that are only
+useful in combination and (2) features that are highly correlated.</p>
+</aside>
 </section></section>
 <section>
 <section id="bias-and-variance" class="title-slide slide level2">
@@ -341,13 +490,18 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tree-bias-variance.png" style="width:60.0%" alt="The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff." /><figcaption aria-hidden="true">The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff.</figcaption>
+<img data-src="../images/5-tree-bias-variance.png" style="width:60.0%"
+alt="The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff." />
+<figcaption aria-hidden="true">The depth/size of the tree (number of
+regions) controls the complexity of the regression line or decision
+boundaries, and the bias variance tradeoff.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="stopping-criteria" class="slide level3">
 <h3>Stopping criteria</h3>
-<p>If we build tree until there is zero error on training set, we have “memorized” training data.</p>
+<p>If we build tree until there is zero error on training set, we have
+“memorized” training data.</p>
 <p>Other stopping criteria:</p>
 <ul>
 <li>Max depth</li>
@@ -361,45 +515,60 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 <section id="pruning" class="slide level3">
 <h3>Pruning</h3>
 <ul>
-<li><p>Alternative to stopping criteria: build entire tree, then <em>prune</em></p></li>
-<li><p>With greedy algorithm - a very good split may descend from a less-good split</p></li>
+<li><p>Alternative to stopping criteria: build entire tree, then
+<em>prune</em></p></li>
+<li><p>With greedy algorithm - a very good split may descend from a
+less-good split</p></li>
 </ul>
 </section>
 <section id="pruning-classification-trees" class="slide level3">
 <h3>Pruning classification trees</h3>
-<p>We usually prune classification trees using classification error rate as loss function, even if tree was built using GINI or entropy.</p>
+<p>We usually prune classification trees using classification error rate
+as loss function, even if tree was built using GINI or entropy.</p>
 </section>
 <section id="weakest-link-pruning-1" class="slide level3">
 <h3>Weakest link pruning (1)</h3>
 <p>Prune a large tree from leaves to root:</p>
 <ul>
 <li>Start with full tree <span class="math inline">\(T_0\)</span></li>
-<li>Merge two adjacent leaf nodes into their parent to obtain <span class="math inline">\(T_1\)</span> by minimizing:</li>
+<li>Merge two adjacent leaf nodes into their parent to obtain <span
+class="math inline">\(T_1\)</span> by minimizing:</li>
 </ul>
-<p><span class="math display">\[\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}\]</span></p>
+<p><span class="math display">\[\frac{Err(T_1)-Err(T_0)}{|T_0| -
+|T_1|}\]</span></p>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tree-pruning.png" style="width:60.0%" alt="Weakest link pruning." /><figcaption aria-hidden="true">Weakest link pruning.</figcaption>
+<img data-src="../images/5-tree-pruning.png" style="width:60.0%"
+alt="Weakest link pruning." />
+<figcaption aria-hidden="true">Weakest link pruning.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="weakest-link-pruning-2" class="slide level3">
 <h3>Weakest link pruning (2)</h3>
 <ul>
-<li>Iterate to produce a sequence of trees <span class="math inline">\(T_0, T_1, \ldots, T_m\)</span> where <span class="math inline">\(T_m\)</span> is a tree of minimum size.</li>
+<li>Iterate to produce a sequence of trees <span
+class="math inline">\(T_0, T_1, \ldots, T_m\)</span> where <span
+class="math inline">\(T_m\)</span> is a tree of minimum size.</li>
 <li>Select optimal tree by CV</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-best-pruned-tree.png" style="width:90.0%" alt="Selecting tree from the set of candidate trees." /><figcaption aria-hidden="true">Selecting tree from the set of candidate trees.</figcaption>
+<img data-src="../images/5-best-pruned-tree.png" style="width:90.0%"
+alt="Selecting tree from the set of candidate trees." />
+<figcaption aria-hidden="true">Selecting tree from the set of candidate
+trees.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="cost-complexity-pruning" class="slide level3">
 <h3>Cost complexity pruning</h3>
 <p>Equivalent to: Minimize</p>
-<p><span class="math display">\[ \sum_{m=1}^{|T|} \sum_{x_i \in R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|\]</span></p>
-<p>Choose <span class="math inline">\(\alpha\)</span> by CV, 1-SE rule (<span class="math inline">\(\uparrow \alpha, \downarrow |T|\)</span>).</p>
+<p><span class="math display">\[ \sum_{m=1}^{|T|} \sum_{x_i \in R_m}
+(y_i - \hat{y}_{R_m})^2 + \alpha |T|\]</span></p>
+<p>Choose <span class="math inline">\(\alpha\)</span> by CV, 1-SE rule
+(<span class="math inline">\(\uparrow \alpha, \downarrow
+|T|\)</span>).</p>
 </section></section>
 <section>
 <section id="summary---so-far" class="title-slide slide level2">
@@ -422,7 +591,8 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 <ul>
 <li>Need deep tree to overcome bias</li>
 <li>Deep trees have large variance</li>
-<li>Non-robust: Small change in data can cause large change in estimated tree</li>
+<li>Non-robust: Small change in data can cause large change in estimated
+tree</li>
 </ul>
 </section></section>
     </div>
@@ -430,7 +600,7 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -441,10 +611,148 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

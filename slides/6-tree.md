@@ -3,7 +3,15 @@ title:  'Decision trees'
 author: 'Fraida Fund'
 ---
 
+
+
 \newpage
+
+:::notes
+
+**Math prerequisites for this lecture**: None
+
+:::
 
 ## In this lecture
 
@@ -75,6 +83,16 @@ KNN was very flexible, but prediction is **slow**.
 
 Next: flexible decisions, non-parametric approach, fast prediction
 
+::: notes
+
+**Idea**: In KNN, we find the "neighborhood" of a test point and then give it the value of training points in that "neighborhood" - but it takes too long at inference time to define the "neighborhood".
+
+What if we define "neighborhoods" and their values in advance, at training time? Then at inference time, we only need to determine which "neighborhood" a test point belongs in.
+
+However, we run into another **computationally hard** problem! To *partition* the feature space into optimal neighborhoods is too expensive. Instead, we will rely on some heuristics and get a non-optimal, but good enough, partition.
+
+:::
+
 
 ## Decision tree
 
@@ -84,6 +102,9 @@ Next: flexible decisions, non-parametric approach, fast prediction
 ::: notes
 
 ![A binary tree.](../images/5-tree-terminology.png){ width=50% }
+
+* size of tree $|T|$ (number of leaf nodes) 
+* depth (max length from root node to a leaf node)
 
 
 :::
@@ -103,7 +124,7 @@ Following notation of ISLR, Chapter 8:
 
 ::: notes
 
-![Dividing the feature space with a decision tree.](../images/5-tree-stratification.png){ width=80% }
+![Dividing the feature space with a decision tree.](../images/5-tree-stratification-detailed.png){ width=100% }
 
 :::
 
@@ -122,10 +143,8 @@ Following notation of ISLR, Chapter 8:
 * Each leaf node: predict $\hat{y}_{R_m}$ 
 
 
-### Tree characterization
 
-* size of tree $|T|$ (number of leaf nodes) 
-* depth (max length from root node to a leaf node)
+\newpage
 
 ### Stratification of feature space - illustration
 
@@ -133,11 +152,9 @@ Following notation of ISLR, Chapter 8:
 
 ::: notes
 
-The stratification on the top left cannot be produced by a decision tree using recursive binary splitting. The other three subfigures represent a single stratification.
+The stratification on the top left cannot be produced by a decision tree using recursive binary splitting. The other three subfigures represent a single stratification. Note that the decision tree fits a piecewise step function!
 
 :::
-
-\newpage
 
 ## Training a decision tree
 
@@ -152,6 +169,23 @@ The stratification on the top left cannot be produced by a decision tree using r
 * Instead: recursive binary splitting (top-down, greedy approach) 
 * Greedy: at each step, make the best decision at that step, without looking ahead and making a decision that might yield better results at future steps
 
+
+### Recursive binary splitting steps
+
+Start at root of the tree, considering all training samples.
+
+1. At the current node,
+2. Find feature $X_j$ and *cutpoint* $s$ that minimizes some loss function (?)
+3. Split training samples at that node into two leaf nodes
+4. Stop when no training error (?)
+5. Otherwise, repeat at leaf nodes
+
+::: notes
+
+At step 2, we apply a greedy heuristic - we are choosing the feature that minimizes a loss function in *this* iteration only.
+
+:::
+
 ### Recursive binary splitting
 
 For any feature $j$ and *cutpoint* $s$, define the regions
@@ -160,15 +194,6 @@ $$R_1(j, s) = \{X|X_j < s\}, \quad R_2(j, s) = \{X|X_j \geq s\}$$
 
 where $\{X|X_j < s\}$ is the region of predictor space in which $X_j$ takes on a value less than $s$.
 
-### Recursive binary splitting steps
-
-Start at root of the tree, considering all training samples.
-
-1. At the current node,
-2. Find feature $X_j$ and cutpoint $s$ that minimizes some loss function (?)
-3. Split training samples at that node into two leaf nodes
-4. Stop when no training error (?)
-5. Otherwise, repeat at leaf nodes
 
 ### Loss function for regression tree 
 
@@ -180,9 +205,7 @@ $$\sum_{i: x_i \in R_1(j,s)} (y_i - \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_
 
 ::: notes
 
-![Training a regression tree.](../images/5-train-regression-tree.png){ width=60% }
-
-\newpage
+![Training a regression tree.](../images/5-train-regression-tree.png){ width=70% }
 
 :::
 
@@ -199,7 +222,11 @@ For classification: one possible way is to split on *0-1 loss* or *misclassifica
 
 $$\sum_{x_i \in  R_m} 1 (y_i \neq \hat{y}_{R_m})$$
 
-Not used often.
+::: notes
+
+Not used often (less sensitive than the others), but used for *pruning*. 
+
+:::
 
 ### GINI index
 
@@ -238,9 +265,8 @@ where $\hat{p}_{mk}$ is the proportion of training samples in $R_m$ belonging to
 
 ### Comparison - measures of node impurity
 
-![Measures of node "impurity".](../images/impurity.png){ width=30% }
+![Measures of node "impurity".](../images/impurity.png){ width=40% }
 
-\newpage
 
 ### Conditional entropy
 
@@ -254,6 +280,8 @@ $$\text{Entropy}(S|X) = \sum_v \frac{|S_v|}{|S|} \text{Entropy}(S_v)$$
 * Choose feature to split so as to maximize information gain, the expected reduction in entropy due to splitting on $X$:
 
 $$\text{Gain}(S, X) := \text{Entropy}(S) - \text{Entropy}(S|X)$$
+
+\newpage
 
 
 ### Example: should I play tennis? (1)
@@ -307,13 +335,34 @@ $\text{Gain}(S, \text{Wind}) = 0.94-0.89 = 0.05$
 
 $\rightarrow$ Split on Outlook!
 
+::: notes
+
+In this example, the data had only categorical variables, and no missing values.
+
+What if we had a continuous (not categorical) variable? We would need to also decide how to partition the continous feature into a discrete set of intervals.
+
+There are a few well-known algorithms for fitting decision trees - CART, ID3, C4.5 - that have different capabilities with respect to continuous features, features with missing values, and what measure of node impurity is used.
+
+e.g. C4.5 introduces the idea that if a sample has a missing value for a feature,
+
+* when training, compute information gain using only samples where the feature is defined
+* when using, we decide which branch to follow based on which is more probable
+
+:::
+
 ### Feature importance
 
 * For each feature $X_j$, find all nodes where the feature was used as the split variable
 * Add up information gain due to split (or for GINI index, difference in loss weighted by number of samples.)
 * This sum reflects feature importance
 
+::: notes
 
+This feature importance can be used for feature selection or feature weighting!
+
+It tends to do reasonable things both with (1) features that are only useful in combination and (2) features that are highly correlated.
+
+:::
 
 ## Bias and variance
 
