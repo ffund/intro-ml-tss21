@@ -3,6 +3,13 @@ title:  'Support vector machines with non-linear kernels'
 author: 'Fraida Fund'
 ---
 
+:::notes
+
+
+**Math prerequisites for this lecture**: You should know about complexity of algorithms (Big O notation).
+
+:::
+
 \newpage
 
 
@@ -46,7 +53,7 @@ Note: the output of $\mathbf{\phi}(\mathbf{x})$ is a vector that may or may not 
 
 :::
 
-### Example (from SVM HW) (1)
+### Example (1)
 
 Suppose we are given a dataset of feature-label pairs in $\mathbb{R}^1$:
 
@@ -55,7 +62,7 @@ $$(-1, -1), (0, -1), (1, -1), (-3, +1), (-2, +1), (3, +1)$$
 This data is not linearly separable.
 
 
-### Example (from SVM HW) (2)
+### Example (2)
 
 Now suppose we map from $\mathbb{R}^1$ to $\mathbb{R}^2$ using $\mathbf{\phi}(x)=(x,x^2)$:
 
@@ -65,7 +72,7 @@ $$((-3, 9) +1), ((-2, 4) +1), ((3, 9) +1)$$
 This data *is* linearly separable in $\mathbb{R}^2$.
 
 
-### Example (from SVM HW) (3)
+### Example (3)
 
 Suppose we compute $\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle$ directly:
 
@@ -86,7 +93,7 @@ For each computation of $\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t})  \
 :::
 
 
-### Example (from SVM HW) (4)
+### Example (4)
 
 What if we express $\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle$ as 
 
@@ -118,10 +125,28 @@ $$z =   w_0 + \sum_{i \in S} \alpha_i y_i K(\mathbf{x}_i, \mathbf{x}_t) $$
 
 Note that the expression we use to find the $\alpha_i$ values also only depends on the inner product, so the kernel works there as well.
 
+\newpage
+
+Another example:
+
+$$
+\begin{aligned}
+    K(x,z) & = (x^Tz + c )^2
+    \\
+    & =  \sum_{i,j}^n (x_i x_j )(z_i z_j) + \sum_i^n (\sqrt{2c} x_i) (\sqrt{2c} x_i) + c^2
+\end{aligned}
+$$
+
+corresponds to the feature mapping:
+
+$$\phi(x) = \begin{bmatrix} x_1 x_1 \\ x_1 x_2 \\ x_2x_1 \\ x_2 x_2 \\  \sqrt{2c} x_1 \\ \sqrt{2c} x_2\end{bmatrix}$$
+
+More generally: $K(x,z) = (x^Tz + c)^d$ is the polynomial kernel of degreee $d$. If each sample has $p$ features, it corresponds to a feature mapping to an $\binom{p + d}{d}$ feature space. Although it works in $O(p^d)$ feature space, computing the kernel is just an inner product which is $O(p)$.
+
 :::
 <!--
 
-### Kernel trick example 
+### Kernel trick: another example 
 
 Kernel can be inexpensive to compute, even if basis function itself is expensive. For example, consider:
 
@@ -261,6 +286,25 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 
 <!-- http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf -->
 
+
+### Feature mapping vs kernel
+
+
+* **First approach**: basis function transformation AKA feature mapping
+
+* **Current approach**: kernel - work in transformed space without explicit transformation
+
+* **Next lesson**: wait and see!
+
+::: notes
+
+A basis function transformation can be expensive if the dimensionality of the transformed feature space is large. With a kernel approach, we can work very efficiently in high dimensional feature space.
+
+<!-- https://xavierbourretsicotte.github.io/Kernel_feature_map.html -->
+
+:::
+
+\newpage
 
 ## Summary: SVM
 
