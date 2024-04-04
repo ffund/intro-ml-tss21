@@ -9,6 +9,14 @@ author: 'Fraida Fund'
 * Structure of a neural network
 * Training a neural network
 
+::: notes
+
+**Math prerequisites for this lecture**: You should know about:
+
+* derivatives and especially the chain rule (Appendix C in Boyd and Vandenberghe)
+
+:::
+
 \newpage
 
 ## From linear to non-linear
@@ -38,9 +46,9 @@ Then the weighted sum of those nodes (weighted by $\alpha_i$, which is learned b
 
 In those regression and classification models, we use a fixed basis function to transform features. We only learned the weights to map the transformed features to a continuous output (regression) or to a class label (classification).
 
-Would it be possible to instead learn the first part - the mapping of the features to a transformed feature space?
+Would it be possible to also learn the first part - the mapping of the features to a transformed feature space?
 
-![Can we learn this transformation part?](../images/7-lbf-comp-graph.png){ width=65% }
+![Can we learn this mapping to transformed feature space?](../images/7-lbf-comp-graph.png){ width=65% }
 
 :::
 
@@ -57,7 +65,7 @@ Would it be possible to instead learn the first part - the mapping of the featur
 First step (*hidden layer*): 
 
 * Take $N_H=4$ "logistic regression" nodes. 
-* Use $\mathbf(x)$ as input to each node.
+* Use $\mathbf{x}$ as input to each node.
 * At each node $m$, first compute: $z_{H,m} = \mathbf{w}_{H,m}^T \mathbf{x}$
 * Then, at each node, apply a sigmoid: $u_{H,m} = g_H(z_{H,m}) = \frac{1}{1+e^{-z_{H,m}}}$
 
@@ -108,36 +116,26 @@ What does the output look like (over the feature space) at each node?
 
 \newpage
 
+
 ### Matrix form of two stage network
 
 * Hidden layer: $\mathbf{z}_H = \mathbf{W}_H^T \mathbf{x}, \quad \mathbf{u}_H = g_H(\mathbf{z}_H)$
 * Output layer: $z_O = \mathbf{W}_O^T [1, \mathbf{u}_H], \quad u_O = g_O(\mathbf{z}_O)$
 
 
-
-### Training the two-stage network for binary classification
-
-* From final stage: $z_o = F(\mathbf{x}, \mathbf{W})$ where parameters $\mathbf{W} = (\mathbf{W}_H, \mathbf{W}_o)$
-* Given training data $(\mathbf{x}_i, y_i), i = 1, \ldots, n$ 
-* Loss function $L(\mathbf{W}) := -\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W})$
-* Choose parameters to minimize loss: $\hat{\mathbf{W}} = \operatorname*{argmin}_{\mathbf{W}} L(\mathbf{W})$
-
-
-::: notes
-
-(Using negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )
-
-How do we choose the parameters in the last step? We'll use *gradient descent* on the computational graph. More on that soon...
-
-:::
-
-\newpage
-
 ## Neural networks
 
+
+<!-- 
 ### Biological inspiration
 
 ![A biological neuron accepts inputs via dendrites, "adds" them together within cell body, and once some electrical potential is reached, "fires" via axons. Synaptic weight (the influence the firing of one neuron has on another) changes over time ("learning"). Image via: [http://http://doi.org/10.5772/51275](http://http://doi.org/10.5772/51275) ](../images/biological-neuron.png){width=55%}
+
+-->
+
+
+
+
 
 ### Terminology
 
@@ -146,39 +144,116 @@ How do we choose the parameters in the last step? We'll use *gradient descent* o
 * **Activation function**: the function $g(z)$
 * **Output units**: the node(s) that compute $z_{O}$.
 
-### Activation function at output layer
 
-What $g_O(z)$ to use for...
+### Setting up a neural network - givens
 
-* Regression?
-* Binary classification?
-* Multi-class classification?
+
+For a particular problem, these are "given":
+
+* the number of inputs
+* the number of outputs
+* the activation function to use at the output
+* the loss function
 
 ::: notes
 
+The number of inputs comes from the data - what is the size of each training sample?
 
+The number of outputs is dictated by the type of problem - 
 
- 
+* binary classification: we need to predict $P(y=1)$ which is a single quantity, so we have one output unit.
+* multi-class classification: we will predict $P(y=k)$ for each class $k$, so we need an output unit for each class.
+* regression: if we need to predict a single target, we will have one output unit. If we need to predict multiple values in the same problem (vector output), we will have as many output units as there are values in the output.
+
+Similarly, the activation function at the output unit and the loss function are dictated by the problem!
+
+:::
+
+### Binary classification...
+
 For binary classification, $y \in [0,1]$: 
 
-- $z_O$ is scalar - need one output node
-- Soft decision: $P(y=1| x)=\frac{1}{1+e^{-z_O}}$
-- Then you can apply threshold to get $\hat{y}$
+- Use sigmoid activation, output will be: $u_O = P(y=1| x)=\frac{1}{1+e^{-z_O}}$
+- $u_O$ is scalar - need one output node
+- Use binary cross entropy loss:
 
-For multi-class classification, $y=1,\ldots, K$:
+$$L(\mathbf{W}) = \sum_{i=1}^n -y_i z_{Oi} + \text{ln}(1+e^{z_{Oi}})$$
 
-- $\mathbf{z}_O = [z_{O,1}, \ldots, z_{O,K}]$ is a vector - need $K$ output nodes
-- Soft decision: $P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}$ (softmax)
-- Then you can select label by $\hat{y} = \operatorname*{argmax}_k z_{O,k}$
 
-For regression, $y \in R^{K}$:
+:::notes
 
-- Can be a vector - need $K$ output nodes
-- Linear activation: $\hat{y}=z_O$
+Then you select the predicted label by applying a threshold to the output $u_O$.
+
+The mapping from transformed feature space to output is just like a logistic regression - we haven't changed *that* part!
 
 :::
 
 \newpage
+### Multi-class classification...
+
+
+For multi-class classification, $y=1,\ldots, K$:
+
+- Use softmax activation, output will be: $u_{O, k} = P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}$
+- $u_O$ is vector $[u_0, \ldots, u_K]$ - need $K$ output nodes
+- Use categorical cross entropy loss:
+
+$$L(\mathbf{W}) = \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{Oik}}\right) - \sum_k  r_{ik} z_{Oik}\right]$$
+
+
+::: notes
+
+Then you can select predicted label by $\hat{y} = \operatorname*{argmax}_k u_{O,k}$
+
+:::
+### Regression with one output...
+
+For regression, $y \in R^{1}$:
+
+- Use linear activation, output will be: $u_O = z_O$
+- $u_O$ is scalar - need one output node
+- Use L2 loss:
+
+$$L(\mathbf{W}) = \sum_{i=1}^n (y_i - z_{Oi})^2$$
+
+### Regression with multiple outputs...
+
+For regression, $y \in R^{K}$:
+
+- Use linear activation, output will be: $u_{O,k} = z_{O,k}$
+- $u_O$ is vector $[u_0, \ldots, u_K]$ - need $K$ output nodes
+- Use vector L2 loss:
+
+
+$$L(\mathbf{W}) = \sum_{i=1}^n \sum_{k=1}^K (y_{ik} - z_{Oik})^2$$
+
+
+
+
+
+
+### Setting up a neural network - decisions
+
+We still need to decide:
+
+* the number of hidden units
+* the activation function to use at hidden units
+
+
+### Dimension (1)
+
+* $N_I$ = input dimension, number of features
+* $N_H$ = number of hidden units, you decide!
+* $N_O$ = output dimension, number of outputs
+
+\newpage
+### Dimension (2)
+
+Parameter               Symbol  Number of parameters
+----------------------- ------- ---------------------
+Hidden layer: weights   $W_H$   $N_H (N_I + 1)$
+Output layer: weights   $W_O$   $N_O (N_H + 1)$
+Total                           $N_H(N_I+1)+N_O(N_H+1)$
 
 ### Activation functions at hidden layer: identity?
 
@@ -189,6 +264,8 @@ For regression, $y \in R^{K}$:
 ::: notes
 
 Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear decision boundary! (See [this post](http://neuralnetworksanddeeplearning.com/chap4.html) for a convincing demonstration.)
+
+(The more hidden units we have, the more complex a function we can represent.)
 
 By scaling, shifting, and adding a bunch of "step" or "step-like" functions, you can approximate a complicated function. What step-like function can you use?
 
@@ -212,84 +289,8 @@ What do they have in common?
 * Non-linear (except for the linear one, which is only used as the output function for a regression)
 
 :::
-### Dimension (1)
-
-* $N_I$ = input dimension, number of features
-* $N_H$ = number of hidden units 
-* $N_O$ = output dimension, number of outputs
-
-### Dimension (2)
-
-Parameter               Symbol  Number of parameters
------------------------ ------- ---------------------
-Hidden layer: weights   $W_H$   $N_H (N_I + 1)$
-Output layer: weights   $W_O$   $N_O (N_H + 1)$
-Total                           $N_H(N_I+1)+N_O(N_H+1)$
-
-
-### Loss function: regression
-
-* $y_i$ is scalar target variable for sample $i$
-* $z_{Oi}$ is estimate of $y_i$
-* Use L2 loss:
-
-$$L(\mathbf{W}) = \sum_{i=1}^n (y_i - z_{Oi})^2$$
-
-### Loss function: regression with vector output
-
-* For vector $\mathbf{y}_i = (y_{i1}, \ldots, y_{iK})$, use vector L2 loss:
-
-$$L(\mathbf{W}) = \sum_{i=1}^n \sum_{i=1}^K (y_{iK} - z_{OiK})^2$$
-
-
-### Loss function: binary classification (1)
-
-* $y_i = {0, 1}$ is target variable for sample $i$
-* $z_{Oi}$ is scalar, called "logit score"
-* Negative log likelihood loss:
-
-$$L(\mathbf{W}) = -\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W}), \quad P(y_i=1|\mathbf{x}_i, \mathbf{W}) = \frac{1}{1+e^{-z_{Oi}}}$$
-
-### Loss function: binary classification (2)
-
-Loss (binary cross entropy):
-
-
-$$L(\mathbf{W}) = \sum_{i=1}^n -y_i z_{Oi} + \text{ln}(1+e^{y_i z_Oi})$$
-
-### Loss function: multi-class classification (1)
-
-* $y_i = {1, \ldots, K}$ is target variable for sample $i$
-* $\mathbf{z}_{Oi} = (z_{Oi1}, \ldots, z_{OiK})$ is vector with one entry per class
-* Likelihood given by softmax function, class with highest score has highest probability:
-
-$$P(y_i  = k | \mathbf{x}_i, \mathbf{W}) = g_k(\mathbf{z}_{Oi}), \quad g_k(\mathbf{z}_{Oi}) = \frac{e^{z_{OiK}}}{\sum_\ell e^{z_{Oi\ell}}}$$
 
 \newpage
-
-### Loss function: multi-class classification (2)
-
-Define "one-hot" vector - for a sample from class $k$, all entries in the vector are $0$ except for the $k$th entry which is $1$:
-
-$$r_{ik} = 
-\begin{cases}
-1 \quad y_i = k \\
-0 \quad y_i \neq k
-\end{cases}
-$$
-
-### Loss function: multi-class classification (3)
-
-Negative log likelihood 
-
-$$\text{ln} P(y_i = k | \mathbf{x}_i, \mathbf{W}) = \sum_{k=1}^K \text{ln} P(y_i = k | \mathbf{x}_i, \mathbf{W})$$
-
-### Loss function: multi-class classification (4)
-
-Loss (categorical cross entropy):
-
-$$L(\mathbf{W}) = \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{Oik}}\right) - \sum_k  r_{ik} z_{Oik}\right]$$
-
 
 ## Neural network - summary
 
@@ -320,19 +321,55 @@ We still need to decide:
 
 \newpage
 
+
 ## Backpropagation
+
+<!-- 
+
+
+### Training the two-stage network for binary classification
+
+* From final stage: $z_o = F(\mathbf{x}, \mathbf{W})$ where parameters $\mathbf{W} = (\mathbf{W}_H, \mathbf{W}_o)$
+* Given training data $(\mathbf{x}_i, y_i), i = 1, \ldots, n$ 
+* Loss function $L(\mathbf{W}) := -\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W})$
+* Choose parameters to minimize loss: $\hat{\mathbf{W}} = \operatorname*{argmin}_{\mathbf{W}} L(\mathbf{W})$
+
+
+::: notes
+
+(Using negative log likelihood/binary cross-entropy loss function from the logistic regression lesson. )
+
+How do we choose the parameters in the last step? We'll use *gradient descent* on the computational graph.
+
+:::
+
+-->
+
 
 ### How to compute gradients?
 
 * Gradient descent requires computation of the gradient $\nabla L(\mathbf{W})$
 * Backpropagation is key to efficient computation of gradients
 
-### Composite functions and computation graphs
+:::notes
+
+We need to compute the gradient of the loss function with respect to *every* weight, and there are $N_H(N_I+1)+N_O(N_H+1)$ weights!
+
+The key to efficient computation will be:
+
+* saving all the intermediate (hidden) variables on the forward pass, to reuse in the computation of gradients
+* computing the gradients in a *backwards* pass - going from output to input, and accumulating local derivatives along the path (you'll see!)
+
+:::
+### Composite functions and computational graphs
 
 Suppose we have a composite function $f(g(h(x)))$
 
 We can represent it as a computational graph, where each connection is an input and each node performs a function or operation:
 
+![Composite function.](../images/9-composite-function.png){width=50%}
+
+<!-- 
 \begin{tikzpicture}
   \node[circle] (n1) at (1,1) {$x$};
   \node[circle,fill=blue!20] (n2) at (4,1)  {$v=h(x)$};
@@ -342,6 +379,7 @@ We can represent it as a computational graph, where each connection is an input 
   \draw [->] (n2) -- (n3) node[midway, above] {};
   \draw [->] (n3) -- (n4) node[midway, above] {};
 \end{tikzpicture}
+-->
 
 
 ### Forward pass on computational graph
@@ -352,20 +390,51 @@ To compute the output $f(g(h(x)))$, we do a *forward pass* on the computational 
 * Compute $u=g(v)$
 * Compute $f(u)$
 
+![Forward pass.](../images/9-composite-forward.png){width=50%}
+
+:::notes
+
+Note that we *accumulate* results in the forward direction - at each node, we use the output of the previous node, which depends on the output of *all* the previous nodes. But, we don't need to repeat the steps of *all* the previous nodes each time, since the output is "accumulated" forward.
+
+:::
+
 ### Derivative of composite function
 
-* Suppose need to compute the derivative of the composite function $f(g(h(x)))$ with respect to $x$  
+Suppose we need to compute the derivative of the composite function $f(g(h(x)))$ with respect to $x$.
 
-* We will use the chain rule.
+We will use the chain rule:
+
+
+$$\frac{df}{dx} = \frac{df}{du} \frac{dg}{dv} \frac{dh}{dx}$$
+
 
 ### Backward pass on computational graph
 
 We can compute this chain rule derivative by doing a *backward pass* on the computational graph:
 
-We just need to get the derivative of each node with respect to its inputs: 
 
-$$\frac{df}{dx} = \frac{df}{du} \frac{dg}{dv} \frac{dh}{dx}$$
 
+![Backward pass.](../images/9-composite-backward.png){width=55%}
+
+:::notes
+
+As in the forward pass, in the backward pass, we do a "local" operation at each node: the "local" derivative of each node with respect to its inputs (shown in rectangles on each edge).
+
+As in the forward pass, we *accumulate* results, but now in the backward direction. At each node, the derivative of the output with respect to the value computed at that node is:
+
+* The product of all the "local" derivatives along the path between the node and the output.
+* or equivalently, the product of the derivative at the previous node in the backward pass, and the "local" derivative along the path from that node.
+
+For example: when we compute $\frac{df}{dx}$ at the last "stop" along the backwards pass, we don't need to compute all the parts of $\frac{df}{du}\frac{dg}{dv}\frac{du}{dx}$ *again*. We just need:
+
+* compute "local" gradient $\frac{dh}{dx}$
+* and multiply it by the "accumulated" gradient computed at the previous node, $\frac{df}{dv}$
+
+This seems obvious... but when we apply it to a neural network, we will see why it is so important.
+
+:::
+
+<!-- 
 
 \begin{tikzpicture}
   \node[circle] (n1) at (1,1) {$x$};
@@ -377,11 +446,19 @@ $$\frac{df}{dx} = \frac{df}{du} \frac{dg}{dv} \frac{dh}{dx}$$
   \draw [<-] (n3) -- (n4) node[midway, above] {$\frac{df}{du}$};
 \end{tikzpicture}
 
+-->
+### Neural network computational graph
 
-### Neural network computation graph
+![Neural network as a computational graph.](../images/9-neural-computational.png){width=60%}
+
+:::notes
+
+What about when we have multiple inputs, multiple hidden units?
+
+:::
 
 
-
+<!-- 
 \begin{tikzpicture}
   \node[circle, fill=green!20] (n1) at (1,1) {$x_i$};
   \node[circle,fill=purple!20] (n2) at (3,1)  {$z_{H,i}$};
@@ -402,7 +479,9 @@ $$\frac{df}{dx} = \frac{df}{du} \frac{dg}{dv} \frac{dh}{dx}$$
   \draw [->] (n8) -- (n4) node[midway, above] {};
 
 \end{tikzpicture}
+-->
 
+\newpage
 
 ### Backpropagation error: definition
 
@@ -412,25 +491,36 @@ $$\delta_j = \frac{\partial L}{\partial z_j}$$
 
 the derivative of the loss function, with respect to the input to the activation function at that node.
 
-### Backpropagation error: output unit
+:::notes
 
-For output unit in *regression* network, where $u_{O} = z_{O}$,
-
-$$L =  \frac{1}{2}\sum_n (y_n - z_{O,n})^2$$
-
-Then $\delta_O =  \frac{\partial L}{\partial z_O} = -  (y - z_{O})$
-
-::: notes
-
-Note: this is the error of the model, the difference between true value and network output!
-
-More generally, if not using the identity activation function at the output, you compute $\delta_O =  \frac{\partial L}{\partial u_O}\frac{\partial u_O}{\partial z_O}$.
-
+Spoiler: this $\delta_j$ is going to be the "accumulated" part of the derivative.
 
 :::
 
-### Backpropagation error: unit with inputs illustration
+### Output unit: backpropagation error (accumulated)
 
+
+Generally, for output unit $j$:
+
+$$\delta_j = \frac{\partial L}{\partial z_j} = \frac{\partial L}{\partial u_j}\frac{\partial u_j}{\partial z_j}$$
+
+
+::: notes
+
+![Computing backpropagation error at output unit.](../images/9-output-backprop.png){width=50%}
+
+
+For example, in a regression network:
+
+
+$$L =  \frac{1}{2}\sum_n (y_n - z_{O,n})^2$$
+
+Then $\delta_O = \frac{\partial L}{\partial z_O} = -  (y - z_{O})$.
+
+:::
+
+
+<!-- 
 \begin{tikzpicture}
   \node[circle, fill=purple!20,minimum size=1cm] (n1) at (1,1) {};
   \node[circle,fill=purple!20,minimum size=1cm] (n2) at (1,5)  {};
@@ -440,22 +530,97 @@ More generally, if not using the identity activation function at the output, you
   \draw [->] (n2) -- (n3) node[midway, above] {$ u_i w_{j,i}$};
 \end{tikzpicture}
 
-At a node $j$, $z_j = \sum_i w_{j,i} u_{i}$
+-->
 
-### Backpropagation error: unit with inputs
+\newpage
+
+### Output unit: derivative vs input weights (local)
+
+- At a node $j$, $z_j = \sum_i w_{j,i} u_{i} = w_{j,i} u_i + \ldots$ (sum over inputs to the node)
+- When taking $\frac{\partial z_j}{\partial w_{j,i}}$ the only term left is $w_{j,i} u_i$
+- So $\frac{\partial z_j}{\partial w_{j,i} } = u_i$
+
+:::notes
+
+![Computing gradient with respect to weight at output unit.](../images/9-output-weights.png){width=55%}
 
 
-* Backpropagation error of node $j$ is $\delta_j = \frac{\partial L}{\partial z_j}$
+The derivative of the loss with respect to a weight $w_{j,i}$ input to the node, $\frac{\partial L}{\partial w_{j,i}}$, is the product of:
 
-* Chain rule: $\frac{\partial L}{\partial w_{j,i}} = \frac{\partial L}{\partial z_{j}} \frac{\partial z_{j}}{\partial w_{j,i}}$
+* $\delta_j = \frac{\partial L}{\partial z_j}$ (the "accumulated" part)
+* $u_i = \frac{\partial z_j}{\partial w_{j,i}}$ (the "local" part)
 
-* Since $z_j = \sum_i w_{j,i} u_{i}$, $\frac{\partial z_j}{\partial w_{j,i}} = u_i$
+so finally, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
 
-* Then $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
+:::
+
+\newpage
+
+
+### Hidden unit: backpropagation error (accumulated)
+
+Sum the accumulated gradient along output paths:
+
+
+$$
+\begin{aligned}
+\delta_j \quad &  =   \frac{\partial L}{\partial z_j} \\
+         \quad &  =  \sum_k \frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial z_j} \\
+         \quad &  =  \sum_k \delta_k \frac{\partial z_k}{\partial z_j} \\
+         \quad &  =  \sum_k \delta_k w_{k,j}g_j'(z_j)
+ \end{aligned}
+ $$
+
+
+:::notes
+
+![Computing backpropagation error at hidden unit.](../images/9-hidden-backprop.png){width=60%}
+
+
+Note: since we move from the output end of the network toward its input, we have already accumulated $\delta_k$ when we "visited" node $k$. So we the "new" computation is just $\frac{\partial z_k}{\partial z_j}$.
+
+We compute the next "accumulated" gradient using the previous "accumulated" gradient and a "local" derivative.
+
+Since
+
+$$z_k = \sum_l w_{k,l} u_l$$
+
+(sum over inputs to node $k$), but for the derivative with respect to $z_j$ the only term left is $w_{k,j} u_j$. So,
+
+$$
+\begin{aligned}
+\frac{\partial z_k}{\partial z_j} \quad &  =  \frac{\partial}{\partial z_j} w_{k,j} u_j \\
+                                  \quad & = \frac{\partial}{\partial z_j} w_{k,j} g_j(z_j) \\
+                                  \quad &  =  w_{k,j}g_j'(z_j)
+ \end{aligned}
+ $$
+
+where $g_j'()$ is the derivative of the activation function.
+
+:::
+
+
+### Hidden unit: derivative vs input weights (local)
+
+Same as output unit - $\frac{\partial z_j}{\partial w_{j,i} } = u_i$
+
+:::notes
+
+
+![Computing gradient with respect to weight at hidden unit.](../images/9-hidden-weights.png){width=65%}
+
+As at output unit, the derivative of the loss with respect to a weight $w_{j,i}$ input to the node, $\frac{\partial L}{\partial w_{j,i}}$, is the product of:
+
+* $\delta_j = \frac{\partial L}{\partial z_j}$ (the "accumulated" part)
+* $u_i = \frac{\partial z_j}{\partial w_{j,i}}$ (the "local" part)
+
+so for a hidden unit, too, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
+
+:::
 
 
 
-
+<!-- 
 ### Backpropagation error: unit with inputs and outputs illustration
 
 
@@ -473,29 +638,15 @@ At a node $j$, $z_j = \sum_i w_{j,i} u_{i}$
   \draw [->] (n3) -- (n5) node[midway, above] {$ u_j w_{k,j}$};
 \end{tikzpicture}
 
-### Backpropagation error: unit with inputs and outputs (1)
+-->
 
-For a hidden unit,
-
-$$\delta_j = \frac{\partial L}{\partial z_j} = \sum_k \frac{\partial L}{\partial z_k}\frac{\partial z_k}{\partial z_j}$$
-
-$$\delta_j = \sum_k \delta_k \frac{\partial z_k}{\partial z_j} =  \sum_k \delta_k w_{k,j} g'(z_j) = g'(z_j) \sum_k \delta_k w_{k,j} $$
-
-using $\delta_k = \frac{\partial L}{\partial z_k}$. 
-
-
-### Backpropagation error: unit with inputs and outputs (2)
-
-And because $z_k = \sum_l w_{k,l} u_l = \sum_l w_{k,l} g(z_l)$, 
-
-$\frac{\partial z_k}{\partial z_j}  = w_{k,j}g'(z_j)$.
 
 \newpage
 
 ### Backpropagation + gradient descent algorithm (1)
 
 1. Start with random (small) weights. Apply input $x_n$ to network and propagate values forward using $z_j = \sum_i w_{j,i} u_i$ and $u_j = g(z_j)$. (Sum is over all inputs to node $j$.)
-2. Evaluate $\delta_k$ for all output units.
+2. Evaluate $\delta_j$ for all output units.
 
 ### Backpropagation + gradient descent algorithm (2)
 
@@ -509,7 +660,7 @@ $$\delta_j = g'(z_j) \sum_k w_{k,j} \delta_k$$
 4. Use $\frac{\partial L_n}{\partial w_{j,i}} = \delta_j u_i$ to evaluate derivatives.
 5. Update weights using gradient descent.
 
-
+<!-- 
 
 ### Derivatives for common loss functions
 
@@ -526,6 +677,7 @@ $$L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partia
 * Sigmoid activation: $g'(x) = \sigma(x) (1-\sigma(x))$
 * Tanh activation: $g'(x) = \frac{1}{\text{cosh}^2(x)}$
 
+-->
 
 \newpage
 
@@ -533,21 +685,24 @@ $$L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partia
 
 Example: $e = (a + b) \times (b+1)$
 
-![Derivatives on a computational graph](../images/tree-eval-derivs.png){width=60%}
+![Derivatives on a computational graph](../images/tree-eval-derivs.png){width=40%}
 
 
 ::: notes
 
-Image via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github.io/posts/2015-08-Backprop).
+Example via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github.io/posts/2015-08-Backprop).
 
 :::
 ### Forward-mode differentiation
 
-![Forward-mode differentiation from input to output gives us derivative of every node with respect to each input. Then we can compute the derivative of output with respect to input. ](../images/tree-forwradmode.png){width=60%}
+![Forward-mode differentiation. ](../images/tree-forwradmode.png){width=40%}
 
 ::: notes
 
-Image via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github.io/posts/2015-08-Backprop).
+With forward-mode differentiation, we take the derivative of the outupt with respect to one input (e.g. $\frac{de}{db}$), by starting at the *input* and "accumulating" the gradients toward the output.
+
+However, if we want to take derivatives with respect to a *different* input (e.g. input $a$), these accumulated gradients don't help - we need to compute all of the derivatives again.
+
 
 :::
 
@@ -555,12 +710,13 @@ Image via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github
 
 ### Reverse-mode differentiation
 
-![Reverse-mode differentiation from output to input gives us derivative of output with respect to every node.](../images/tree-backprop.png){width=60%}
+![Reverse-mode differentiation.](../images/tree-backprop.png){width=40%}
 
 ::: notes
 
-Image via [https://colah.github.io/posts/2015-08-Backprop/](https://colah.github.io/posts/2015-08-Backprop).
+With reverse mode differentiation, we take the derivative of the outupt with respect to one input (e.g. $\frac{de}{db}$), by starting at the *output* and "accumulating" the gradients toward the input.
+
+If we want to take derivatives with respect to a *different* input (e.g. input $a$), we already have most of the accumulated gradients - we would just need to compute one more local derivative near that input ($\frac{dc}{da}$).
 
 :::
 
-\newpage
