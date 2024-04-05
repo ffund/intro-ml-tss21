@@ -550,7 +550,9 @@ The derivative of the loss with respect to a weight $w_{j,i}$ input to the node,
 * $\delta_j = \frac{\partial L}{\partial z_j}$ (the "accumulated" part)
 * $u_i = \frac{\partial z_j}{\partial w_{j,i}}$ (the "local" part)
 
-so finally, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
+so finally, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$.
+
+(We save the computations of all the $u_i$ values from the forward pass, so that we can reuse them for backpropagation.)
 
 :::
 
@@ -595,7 +597,7 @@ $$
  \end{aligned}
  $$
 
-where $g_j'()$ is the derivative of the activation function.
+where $g_j'()$ is the derivative of the activation function. (We save $z_j$ from the forward pass, so we can reuse it here to compute $g_j'(z_j)$.)
 
 :::
 
@@ -717,6 +719,8 @@ However, if we want to take derivatives with respect to a *different* input (e.g
 With reverse mode differentiation, we take the derivative of the outupt with respect to one input (e.g. $\frac{de}{db}$), by starting at the *output* and "accumulating" the gradients toward the input.
 
 If we want to take derivatives with respect to a *different* input (e.g. input $a$), we already have most of the accumulated gradients - we would just need to compute one more local derivative near that input ($\frac{dc}{da}$).
+
+For a problem where you need derivative of one output (loss) with respect to many inputs (many weights), reverse mode differentiation is very efficient because the accumulated gradients ($\delta$ values) are computed once and then reused many times.
 
 :::
 

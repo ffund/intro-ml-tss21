@@ -736,7 +736,10 @@ z_j}\)</span> (the “accumulated” part)</li>
 w_{j,i}}\)</span> (the “local” part)</li>
 </ul>
 <p>so finally, <span class="math inline">\(\frac{\partial L}{\partial
-w_{j,i}} = \delta_j u_i\)</span></p>
+w_{j,i}} = \delta_j u_i\)</span>.</p>
+<p>(We save the computations of all the <span
+class="math inline">\(u_i\)</span> values from the forward pass, so that
+we can reuse them for backpropagation.)</p>
 </aside>
 </section>
 <section id="hidden-unit-backpropagation-error-accumulated"
@@ -784,7 +787,10 @@ z_j} w_{k,j} g_j(z_j) \\
 \end{aligned}
 \]</span></p>
 <p>where <span class="math inline">\(g_j&#39;()\)</span> is the
-derivative of the activation function.</p>
+derivative of the activation function. (We save <span
+class="math inline">\(z_j\)</span> from the forward pass, so we can
+reuse it here to compute <span
+class="math inline">\(g_j&#39;(z_j)\)</span>.)</p>
 </aside>
 </section>
 <section id="hidden-unit-derivative-vs-input-weights-local"
@@ -938,6 +944,11 @@ input (e.g. input <span class="math inline">\(a\)</span>), we already
 have most of the accumulated gradients - we would just need to compute
 one more local derivative near that input (<span
 class="math inline">\(\frac{dc}{da}\)</span>).</p>
+<p>For a problem where you need derivative of one output (loss) with
+respect to many inputs (many weights), reverse mode differentiation is
+very efficient because the accumulated gradients (<span
+class="math inline">\(\delta\)</span> values) are computed once and then
+reused many times.</p>
 </aside>
 </section></section>
     </div>
