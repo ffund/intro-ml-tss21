@@ -55,7 +55,7 @@ This is a 3-credit course.  During a fall or spring semester, the median student
 A typical week will include the following:
 
  - pre-lecture reading (some weeks) or study time (30-60 minutes)
- - a "chalkboard lecture" video about 120 minutes long
+ - a "chalkboard lecture" about 120 minutes long
  - a "Python notebook" video about 90-120 minutes long
  - a homework problem set (estimated time: 1-2 hours)
  - a lab assignment (estimated time: 2-3 hours)
