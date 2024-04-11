@@ -37,6 +37,17 @@
   <p class="author">Fraida Fund</p>
 </section>
 
+<section id="in-this-lecture" class="title-slide slide level2">
+<h2>In this lecture</h2>
+<ul>
+<li>Deep neural networks</li>
+<li>Challenges and tricks</li>
+</ul>
+<aside class="notes">
+<p><strong>Math prerequisites for this lesson</strong>: None.</p>
+</aside>
+</section>
+
 <section id="recap" class="title-slide slide level2">
 <h2>Recap</h2>
 <p>Last week: neural networks with one hidden layer</p>
@@ -94,9 +105,8 @@ apply an activation function, and that’s the unit output</li>
 number of hidden units in a layer its “width.”</p>
 </aside>
 </section>
-<section id="challenges-with-deep-neural-networks-1"
-class="slide level3">
-<h3>Challenges with deep neural networks (1)</h3>
+<section id="challenges-with-deep-neural-networks" class="slide level3">
+<h3>Challenges with deep neural networks</h3>
 <ul>
 <li>Efficient learning</li>
 <li>Generalization</li>
@@ -176,9 +186,8 @@ methods to help select a “good” set of weights from all these
 candidates.</p>
 </aside>
 </section>
-<section id="challenges-with-deep-neural-networks-2"
-class="slide level3">
-<h3>Challenges with deep neural networks (2)</h3>
+<section id="addressing-the-challenges" class="slide level3">
+<h3>Addressing the challenges</h3>
 <ul>
 <li>Efficient learning</li>
 <li>Generalization</li>
@@ -199,7 +208,40 @@ Raschka</figcaption>
 <section>
 <section id="dataset" class="title-slide slide level2">
 <h2>Dataset</h2>
-
+<ul>
+<li>Get more data</li>
+<li><strong>Data augmentation</strong></li>
+<li><strong>Use related data (transfer learning)</strong></li>
+<li>Use unlabeled data (self-supervised, semi-supervised)</li>
+</ul>
+<aside class="notes">
+<p>We won’t talk much about getting more data, but if it’s possible to
+get more labeled data, it is almost always the most helpful thing you
+can do!</p>
+<ul>
+<li>Example: JFT-300M, a Google internal dataset for training image
+models, has 300M images</li>
+<li>Example: GTP-3 trained on 45TB of compressed plaintext, about 570GB
+after filtering</li>
+</ul>
+<p><em>Reference: Revisiting Unreasonable Effectiveness of Data in Deep
+Learning Era. Chen Sun, Abhinav Shrivastava, Saurabh Singh, Abhinav
+Gupta; Proceedings of the IEEE International Conference on Computer
+Vision (ICCV), 2017, pp. 843-852.</em></p>
+<p>It’s not always possible to get a lot of <em>labeled</em> data for
+training a supervised learning model. But sometimes we can use
+<em>unlabeled</em> data, which is much easier to get. For example:</p>
+<ul>
+<li>In self-supervised learning, the label can be inferred automatically
+from the unlabeled data. e.g. GPT is trained to predict “next
+word”.</li>
+<li>In semi-supervised/weakly-supervised learning learining, we generate
+labels (probably imperfectly) for unlabeled data (maybe using a smaller
+volume of labeled data to train a model!)</li>
+</ul>
+<p>These are mostly out of scope of this course. But we <em>will</em>
+talk about data augmentation and transfer learning…</p>
+</aside>
 </section>
 <section id="data-augmentation" class="slide level3">
 <h3>Data augmentation</h3>
@@ -212,9 +254,13 @@ image.</figcaption>
 <aside class="notes">
 <p>It doesn’t restrict network capacity - but it helps generalization by
 increasing the size of your training set!</p>
-<p>For image data: apply rotation, crops, scales, change contrast,
-brightness, color. For text you can replace words with synonyms, for
-audio you can adjust pitch or speed, etc.</p>
+<ul>
+<li>For image data: apply rotation, crops, scales, change contrast,
+brightness, color.</li>
+<li>For text you can replace words with synonyms, simulate typos.</li>
+<li>For audio you can adjust pitch or speed, add background noise
+etc.</li>
+</ul>
 </aside>
 </section>
 <section id="transfer-learning" class="slide level3">
@@ -242,11 +288,21 @@ class="slide level3">
 parameters</li>
 <li>Only train small number of parameters at the end</li>
 </ul>
+<aside class="notes">
+<p>Base model is a powerful feature extractor (learns transformation
+into a more useful feature space), then you just have to train for the
+mapping from this feature space to the target variable.</p>
+<p>In practice: when applying deep learning, we almost always use a
+pre-trained base model! It saves time, energy, and cost.</p>
+<p>Example: To pre-train the 7B parameter (smallest) Llama 2, Meta’s
+open source language model, takes 184,320 GPU hours (21 GPU YEARS!) and
+anywhere from $100,000-800,000 (depending on cost of GPU instance).</p>
+</aside>
 </section>
 <section id="transfer-learning-illustration-1" class="slide level3">
 <h3>Transfer learning illustration (1)</h3>
 <figure>
-<img data-src="../images/8-transfer-similar.png" style="width:60.0%"
+<img data-src="../images/8-transfer-similar.png" style="width:80.0%"
 alt="When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head." />
 <figcaption aria-hidden="true">When the network is trained on a very
 similar task, even the abstract high-level features are probably very
@@ -256,7 +312,7 @@ relevant, so you might tune just the classification head.</figcaption>
 <section id="transfer-learning-illustration-2" class="slide level3">
 <h3>Transfer learning illustration (2)</h3>
 <figure>
-<img data-src="../images/8-transfer-less.png" style="width:60.0%"
+<img data-src="../images/8-transfer-less.png" style="width:80.0%"
 alt="If the original network is not as relevant, may fine-tune more layers." />
 <figcaption aria-hidden="true">If the original network is not as
 relevant, may fine-tune more layers.</figcaption>
@@ -265,7 +321,17 @@ relevant, may fine-tune more layers.</figcaption>
 <section>
 <section id="architecturesetup" class="title-slide slide level2">
 <h2>Architecture/setup</h2>
-
+<ul>
+<li><strong>Activation functions</strong></li>
+<li><strong>Weight initialization</strong></li>
+<li><strong>Convolutional units</strong></li>
+<li>Recurrent units</li>
+<li>… many more ideas</li>
+</ul>
+<aside class="notes">
+<p>Again, this is mostly out of scope of this course, but we’ll talk
+about the first three items very briefly.</p>
+</aside>
 </section>
 <section id="recall-activation-functions" class="slide level3">
 <h3>Recall: activation functions</h3>
@@ -296,8 +362,37 @@ What happens if the $u_i$ terms are always positive?
 
 -->
 </section>
-<section id="vanishing-gradient" class="slide level3">
-<h3>Vanishing gradient</h3>
+<section id="sigmoid-vanishing-gradient-1" class="slide level3">
+<h3>Sigmoid: vanishing gradient (1)</h3>
+<figure>
+<img data-src="../images/deep-vanishing-network.png" style="width:80.0%"
+alt="Computing gradients by backpropagation. At a hidden unit, \delta_j = g&#39;(z_j) \sum_k w_{k,j} \delta_k." />
+<figcaption aria-hidden="true">Computing gradients by backpropagation.
+At a hidden unit, <span class="math inline">\(\delta_j = g&#39;(z_j)
+\sum_k w_{k,j} \delta_k\)</span>.</figcaption>
+</figure>
+<aside class="notes">
+<p>Suppose we want to compute the gradient of the loss with respect to
+the weight shown in pink.</p>
+<ul>
+<li>We will <em>multiply</em> local gradients (pink) all along each path
+between weight and loss function, starting from the end and moving
+toward the input.</li>
+<li>Then we <em>add</em> up the products of all the paths.</li>
+<li>With <span class="math inline">\(\sigma\)</span> activation,
+gradient along each path includes the product of a LOT of <span
+class="math inline">\(\sigma &#39;\)</span> terms.</li>
+</ul>
+</aside>
+</section>
+<section id="sigmoid-vanishing-gradient-2" class="slide level3">
+<h3>Sigmoid: vanishing gradient (2)</h3>
+<figure>
+<img data-src="../images/deep-vanishing-sigmoid.png" style="width:60.0%"
+alt="Sigmoid function and its derivative." />
+<figcaption aria-hidden="true">Sigmoid function and its
+derivative.</figcaption>
+</figure>
 <aside class="notes">
 <p>What happens when you are in the far left or far right part of the
 sigmoid?</p>
@@ -309,37 +404,65 @@ sigmoid?</p>
 <li>And, when you multiply quantities close to zero - they get even
 smaller.</li>
 </ul>
+<p>The network “learns fastest” when the gradient is large. When the
+sigmoid “saturates”, it “kills” the neuron!</p>
 <p>Even the maximum value of the gradient is only 0.25 - so the gradient
 is always less than 1, and we know what happens if you multiply many
 quantities less than 1…</p>
-<p>The network “learns fastest” when the gradient is large. When the
-sigmoid “saturates”, it “kills” the neuron!</p>
-<p>Same issue with tanh, although that is slightly better - its output
-is centered at zero, and its gradient has a larger max.</p>
-<p>(There is also an analagous “exploding gradient” problem when large
-gradients are propagated back through the network.)</p>
+<p>(tanh is slightly better - gradient has a larger max + some other
+advantages - still has vanishing gradient.)</p>
 </aside>
 </section>
-<section id="dead-relu" class="slide level3">
-<h3>Dead ReLU</h3>
+<section id="relu-dead-relu" class="slide level3">
+<h3>ReLU: Dead ReLU</h3>
+<figure>
+<img data-src="../images/deep-dead-relu.png" style="width:60.0%"
+alt="ReLU function and its derivative." />
+<figcaption aria-hidden="true">ReLU function and its
+derivative.</figcaption>
+</figure>
+<aside class="notes">
 <p>ReLU is a much better non-linear function:</p>
 <ul>
 <li>does not saturate in positive region</li>
 <li>very very fast to compute</li>
-<li>often converges faster than sigmoid/tanh</li>
 </ul>
-<p>But, can “die” in the negative region.</p>
+<p>But, can “die” in the negative region. Once we end up there (e.g. by
+learning negative bias weight) we cannot recover - since gradient is
+also zero, gradient descent will not update the weights.</p>
+<p>(ReLU is also more subject to “exploding” gradient than
+sigmoid/tanh.)</p>
+</aside>
+</section>
+<section id="relu-leaky-relu" class="slide level3">
+<h3>ReLU: Leaky ReLU</h3>
+<figure>
+<img data-src="../images/deep-leaky-relu.png" style="width:60.0%"
+alt="Leaky ReLU function and its derivative." />
+<figcaption aria-hidden="true">Leaky ReLU function and its
+derivative.</figcaption>
+</figure>
 <aside class="notes">
 <p>When input is less than 0, the ReLU (and downstream units) is
 <em>completely</em> dead (not only very small!)</p>
 <p>Alternative: <strong>leaky ReLU</strong> has small (non-zero)
-gradient in the negative region - won’t die.</p>
+gradient in the negative region - can recover.</p>
 <p><span class="math display">\[f(x) = \text{max}(\alpha x,
 x)\]</span></p>
 <p>(<span class="math inline">\(\alpha\)</span> is a
 hyperparameter.)</p>
-<p>Many other variations on this…</p>
 </aside>
+</section>
+<section id="other-activations" class="slide level3">
+<h3>Other activations</h3>
+<figure>
+<img data-src="../images/sample-activation-functions-square.png"
+style="width:60.0%"
+alt="Other activations. Image via Sefik Ilkin Serengil." />
+<figcaption aria-hidden="true">Other activations. Image via <a
+href="https://sefiks.com/2020/02/02/dance-moves-of-deep-learning-activation-functions/">Sefik
+Ilkin Serengil</a>.</figcaption>
+</figure>
 <!-- 
 ### Skip connections
 
@@ -350,74 +473,109 @@ hyperparameter.)</p>
 </section>
 <section id="weight-initialization" class="slide level3">
 <h3>Weight initialization</h3>
+<figure>
+<img data-src="../images/deep-network-initialization.png"
+style="width:80.0%"
+alt="One path in forward pass on a neural network." />
+<figcaption aria-hidden="true">One path in forward pass on a neural
+network.</figcaption>
+</figure>
+<aside class="notes">
 <p>What if we initialize weights to:</p>
 <ul>
-<li>zero?</li>
-<li>a constant (non-zero)?</li>
-<li>a normal random value with large <span
-class="math inline">\(\sigma\)</span>?</li>
-<li>a normal random value with small <span
-class="math inline">\(\sigma\)</span>?</li>
-</ul>
-<aside class="notes">
-<p>Some comments:</p>
-<ul>
-<li>If weights are all initialized to zero, all the outputs are zero
-(for any input) - the network won’t learn.</li>
-<li>If weights are all initialized to the same constant, we are more
-prone to “herding” - hidden units all move in the same direction at
-once, instead of “specializing”.</li>
-<li>Large normal random values are bad - you want to be near the
-non-linear part of the activation function, and avoid exploding
-gradients.</li>
-<li>Small normal random values work well for “shallow” networks, but not
-for deep networks - it makes the activation function outputs “collapse”
-toward zero.</li>
+<li><strong>zero?</strong> If weights are all initialized to zero, all
+the outputs are zero (for any input) - won’t learn.</li>
+<li><strong>a constant (non-zero)?</strong> If weights are all
+initialized to the same constant, we are more prone to “herding” -
+hidden units all move in the same direction at once, instead of
+“specializing”.</li>
+<li><strong>a normal random value with small <span
+class="math inline">\(\sigma\)</span>?</strong> Small normal random
+values work well for “shallow” networks, but not for deep networks - it
+makes the outputs “collapse” toward zero at later layers.</li>
+<li><strong>a normal random value with large <span
+class="math inline">\(\sigma\)</span>?</strong> Large normal random
+values are bad - it makes the outputs “explode” at later layers.</li>
 </ul>
 </aside>
 </section>
-<section id="desirable-properties-for-initial-weights"
-class="slide level3">
-<h3>Desirable properties for initial weights</h3>
+<section id="weight-initialization---normal" class="slide level3">
+<h3>Weight initialization - normal</h3>
+<figure>
+<img data-src="../images/deep-weight-init-normal.png"
+style="width:80.0%"
+alt="Initial weights and ReLU unit outputs for each layer in a network." />
+<figcaption aria-hidden="true">Initial weights and ReLU unit outputs for
+each layer in a network.</figcaption>
+</figure>
+<aside class="notes">
 <ul>
-<li>The mean of the intial weights should be right in the middle</li>
+<li>top row: too-small initial weights, by the last layer the weights
+“collapse” toward zero</li>
+<li>middle row: good initial weights, distribution is similar from input
+to output</li>
+<li>bottom row: too-large initial weights, by the last layer the weights
+“explode”</li>
+</ul>
+<!-- Image via [Andre Perunicic](https://intoli.com/blog/neural-network-initialization/) -->
+</aside>
+</section>
+<section id="desirable-properties-for-initial-weights---principle"
+class="slide level3">
+<h3>Desirable properties for initial weights - principle</h3>
+<ul>
+<li>The mean of the intial weights should be around 0</li>
 <li>The variance of the activations should stay the same across every
-layer (<a
-href="https://www.deeplearning.ai/ai-notes/initialization/index.html">derivation</a>)</li>
+layer</li>
 </ul>
-<p>Xavier initialization for tanh, He initialization for ReLU.</p>
 <aside class="notes">
-<p>Xavier scales by <span
-class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span>, He by <span
-class="math inline">\(\frac{2}{\sqrt{N_{in}}}\)</span> where <span
-class="math inline">\(N_{in}\)</span> is the number of inputs to the
-layer.</p>
+<p>If you are interested, <a
+href="https://www.deeplearning.ai/ai-notes/initialization/index.html">here’s
+a derivation</a>.</p>
 </aside>
 </section>
-<section id="desirable-properties---illustration-1"
+<section id="desirable-properties-for-initial-weights---practice"
 class="slide level3">
-<h3>Desirable properties - illustration (1)</h3>
-<figure>
-<img data-src="../images/8-init-collapse.png" style="width:70.0%"
-alt="Activation function outputs with normal initialization of weights. Image source: Justin Johnson." />
-<figcaption aria-hidden="true">Activation function outputs with normal
-initialization of weights. Image source: Justin Johnson.</figcaption>
-</figure>
+<h3>Desirable properties for initial weights - practice</h3>
+<ul>
+<li>For tanh: Xavier scales by <span
+class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span></li>
+<li>For ReLU: He by <span
+class="math inline">\(\frac{2}{\sqrt{N_{in}}}\)</span></li>
+</ul>
+<p><span class="math inline">\(N_{in}\)</span> is the number of inputs
+to the layer (“fan-in”).</p>
 </section>
-<section id="desirable-properties---illustration-2"
-class="slide level3">
-<h3>Desirable properties - illustration (2)</h3>
+<section id="weight-initialization---he" class="slide level3">
+<h3>Weight initialization - He</h3>
 <figure>
-<img data-src="../images/8-init-xavier.png" style="width:70.0%"
-alt="Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson." />
-<figcaption aria-hidden="true">Activation function outputs with Xavier
-initialization of weights. Image source: Justin Johnson.</figcaption>
+<img data-src="../images/deep-weight-init-he.png" style="width:80.0%"
+alt="Initial weights and ReLU unit outpus for each layer in a network, He initialization. In this example, the size of the layers is: 100, 150, 200, 250, 300." />
+<figcaption aria-hidden="true">Initial weights and ReLU unit outpus for
+each layer in a network, He initialization. In this example, the size of
+the layers is: 100, 150, 200, 250, 300.</figcaption>
 </figure>
+<!--
+
+### Desirable properties - illustration (1)
+
+![Activation function outputs with normal initialization of weights. Image source: Justin Johnson.](../images/8-init-collapse.png){ width=70% }
+
+
+
+### Desirable properties - illustration (2)
+
+![Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson.](../images/8-init-xavier.png){ width=70% }
+
+-->
 </section></section>
 <section>
 <section id="normalization" class="title-slide slide level2">
 <h2>Normalization</h2>
-
+<ul>
+<li><strong>Input standardization</strong></li>
+<li><strong>Batch normalization</strong></li>
+</ul>
 </section>
 <section id="data-pre-processing" class="slide level3">
 <h3>Data pre-processing</h3>
@@ -436,8 +594,7 @@ features.</p>
 ![The classifier on the right is more sensitive to small changes in the weights.](../images/8-pre-processing.png){ width=30% }
 
 -->
-<p>Note: Whitening/decorrelation is not applied to image data. For image
-data, we sometimes subtract the “mean image” or the per-color mean.</p>
+<!-- Note: Whitening/decorrelation is not applied to image data. For image data, we sometimes subtract the "mean image" or the per-color mean. -->
 </aside>
 </section>
 <section id="data-preprocessing-1" class="slide level3">
@@ -641,42 +798,49 @@ Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 <section>
 <section id="regularization" class="title-slide slide level2">
 <h2>Regularization</h2>
-
+<ul>
+<li><strong>L2 or L1 regularization</strong></li>
+<li><strong>Early stopping</strong></li>
+<li><strong>Dropout</strong></li>
+</ul>
 </section>
 <section id="l1-or-l2-regularization" class="slide level3">
 <h3>L1 or L2 regularization</h3>
-<p>As with other models, we can add a penalty on the norm of the
-weights:</p>
-<ul>
-<li>L1 penalty</li>
-<li>L2 penalty</li>
-<li>Combination (ElasticNet)</li>
-</ul>
 <aside class="notes">
-<p>Not so common with neural networks.</p>
+<p>As with other models, we can add a penalty on the norm of the
+weights.</p>
+<p>Normal gradient descent update rule:</p>
+<p><span class="math display">\[w_{i,j}^{t+1} = w_{i,j}^t - \alpha
+\frac{\partial L}{\partial w_{i,j}^t} \]</span></p>
+<p>With L2 regularization:</p>
+<p><span class="math display">\[w_{i,j}^{t+1} = w_{i,j}^t - \alpha (
+\frac{\partial L}{\partial w_{i,j}^t} + \frac{2 \lambda}{n}  w_{i,j}^t
+)\]</span></p>
+<p>Often called “weight decay” in the context of neural nets.</p>
 </aside>
 </section>
 <section id="early-stopping" class="slide level3">
 <h3>Early stopping</h3>
+<aside class="notes">
 <ul>
 <li>Compute validation loss each performance</li>
 <li>Stop training when validation loss hasn’t improved in a while</li>
 <li>Risk of stopping <em>too</em> early</li>
 </ul>
-<aside class="notes">
-<p>Why does it work? Some ideas:</p>
-<ul>
-<li>The network is effectively “smaller” when we stop training early,
-because many units still in linear region of activation.</li>
-<li>Earlier layers (which learn simpler features) and late layers (near
-the output - used for response mapping) converge to their final weights
-first. See <a
-href="https://windowsontheory.org/2021/02/17/what-do-deep-networks-learn-and-when-do-they-learn-it/">Boaz
-Barak</a>.</li>
-</ul>
-</aside>
+<p>Important: <em>must</em> divide data into training, validation, and
+test data - use validation data (not test data!) to decide when to stop
+training.</p>
+<!-- 
+
+Why does it work? Some ideas:
+
+* The network is effectively "smaller" when we stop training early, because many units still in linear region of activation.
+* Earlier layers (which learn simpler features) and late layers (near the output - used for response mapping) converge to their final weights first. See [Boaz Barak](https://windowsontheory.org/2021/02/17/what-do-deep-networks-learn-and-when-do-they-learn-it/).
+
+-->
 <!-- See "Why early stopping works" https://www.cs.toronto.edu/~guerzhoy/411/lec/W05/overfitting_prevent.pdf -->
 <!-- See https://windowsontheory.org/2021/02/17/what-do-deep-networks-learn-and-when-do-they-learn-it/ -->
+</aside>
 </section>
 <section id="dropout" class="slide level3">
 <h3>Dropout</h3>
@@ -699,7 +863,6 @@ representation</li>
 <li>Effectively training an ensemble of networks (with shared
 weights)</li>
 </ul>
-<p>Alternative: DropConnect zeros weights, instead of neurons.</p>
 <p>Note: when you use Dropout layers, you may notice that the
 validation/test loss seems better than the training loss! Why?</p>
 </aside>
@@ -709,6 +872,34 @@ Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo
 
 -->
 </section></section>
+<section
+id="example-deep-neural-nets-33-years-ago-and-33-years-from-now"
+class="title-slide slide level2">
+<h2>Example: Deep Neural Nets: 33 years ago and 33 years from now</h2>
+<figure>
+<img data-src="../images/deep-nets-markmap-example.png"
+style="width:50.0%" alt="Techniques we will apply in this example." />
+<figcaption aria-hidden="true">Techniques we will apply in this
+example.</figcaption>
+</figure>
+<aside class="notes">
+<p>In the Colab lesson, we will reproduce a 1989 paper about a neural
+network for handwritten digit classification, that was used in the late
+90s to process 10-20% of all checks in the US.</p>
+<ul>
+<li>The original paper had 5% error</li>
+<li>Our realization has about 4.14%</li>
+<li>With a bunch of these changes (but keeping the basic network the
+same) we get to 2.09%</li>
+<li>The original model without any changes, but with more training data,
+gets to 3.05%</li>
+<li>With our changes + more data, we get to 1.31%</li>
+</ul>
+<p>What does it mean that we can do this without changing the basic
+network? It means the network always had the <em>capacity</em> to do
+this well, but wasn’t learning the best weights.</p>
+</aside>
+</section>
     </div>
   </div>
 

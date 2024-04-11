@@ -9,15 +9,18 @@ SOURCES += 4-model-order.md
 SOURCES += 4-regularization.md
 SOURCES += 5-logistic-regression.md
 SOURCES += 6-knn.md
+SOURCES += 6-feature.md
 SOURCES += 6-tree.md
 SOURCES += 7-ensemble.md
 SOURCES += 7-svm.md
 SOURCES += 8-svm-kernel.md
 SOURCES += 8-neural.md
+SOURCES += 8-hyperparameter.md
 SOURCES += 9-deep-neural-nets.md
 SOURCES += 9-convolutional.md
 SOURCES += 10-unsupervised.md
 SOURCES += 10-rl.md
+SOURCES += 10-deployment.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
