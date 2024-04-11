@@ -3,6 +3,8 @@ title:  'Deep learning'
 author: 'Fraida Fund'
 ---
 
+\newpage
+
 ## In this lecture
 
 * Deep neural networks
@@ -13,9 +15,6 @@ author: 'Fraida Fund'
 **Math prerequisites for this lesson**: None.
 
 :::
-
-
-\newpage
 
 
 
