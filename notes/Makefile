@@ -1,4 +1,4 @@
-SOURCES := 0-online-faq.md 0-tss-faq.md 0-online-async-faq.md 0-prerequisite-review.md 0-books.md
+SOURCES := 0-online-faq.md 0-tss-faq.md 0-online-async-faq.md 0-live-faq.md 0-prerequisite-review.md 0-books.md
 SOURCES += 0-project-background.md
 SOURCES += 1-handwritten-digits.md
 SOURCES += 2-gd-background-videos.md
@@ -7,6 +7,7 @@ SOURCES += 2-linear-extended-derivation.md
 SOURCES += 3-cubic-model.md
 SOURCES += 3-linear-regression-bias-variance.md
 SOURCES += 5-classifier-metrics.md
+SOURCES += 10-gpu.md
 
 #SOURCES += 3-when-learning-fails.md
 

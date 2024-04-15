@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>Running a Colab notebook on our private GPU instance</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Running a Colab notebook on our private GPU
+instance</h1>
+<p class="author">Fraida Fund</p>
+</header>
+<p>These notes describe how you can connect your Colab notebook to a
+“private” GPU instance that is hosted specifically for this course.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You will need an SSH client.</p>
+<ul>
+<li>On Mac or Linux, you can use the default <code>Terminal</code> which
+already has a built-in <code>ssh</code> command.</li>
+<li>On Windows, you can download <a href="https://cmder.app/">cmder</a>
+and run the <code>ssh</code> command inside a <code>cmder</code>
+terminal.</li>
+</ul>
+<p>You will also need two “private” pieces of information:</p>
+<ul>
+<li>The IP address of the GPU instance</li>
+<li>and the key you can use to access it</li>
+</ul>
+<p>These will be in the GPU reservation calendar.</p>
+<p>Save the private key in a plaintext file with the name
+<code>id_rsa_chameleon</code> (no file extension!) on your laptop.</p>
+<p>Your private key must have appropriate permissions set -</p>
+<ul>
+<li>On Mac or Linux, open the terminal in the same directory that you
+have saved the key in, then run</li>
+</ul>
+<pre><code>chmod 600 id_rsa_chameleon</code></pre>
+<ul>
+<li>On Windows, you can follow <a
+href="https://superuser.com/a/1296046">these instructions</a> to set the
+key permissions using the GUI.</li>
+</ul>
+<p>Save the public key in a plaintext file in the same directory with
+the name <code>id_rsa_chameleon.pub</code>.</p>
+<h2 id="reserve-gpu-time">Reserve GPU time</h2>
+<p>A separate calendar link is provided for reserving GPU time.</p>
+<p>Please consider these guidelines when reserving GPU time:</p>
+<ul>
+<li>Most students will not need extra GPU time! You should be able to
+complete all of the work in this course without exceeding the “free” GPU
+time in Google Colab, unless you are <em>also</em> using Google Colab
+for other projects outside of this course. If you <em>can</em> complete
+the work using Colab’s free hosted runtime, you should.</li>
+<li>You may reserve time at least 2 hours, and up to 3 days, in
+advance.</li>
+<li>You may not reserve more than 1 hour per day.</li>
+</ul>
+<p>You should make sure that your code is “ready to run” before the
+beginning of your reserved GPU time. Then you can use your reserved time
+to just run your notebook from beginning to end, and save the
+results.</p>
+<h2 id="connecting-to-the-gpu-instance">Connecting to the GPU
+instance</h2>
+<p>At your reserved time (not earlier!), run</p>
+<pre>
+ssh -i id_rsa_chameleon -L 127.0.0.1:<mark>PORT</mark>:127.0.0.1:<mark>PORT</mark> cc@<mark>IP_ADDRESS</mark>
+</pre>
+<p>where</p>
+<ul>
+<li>in place of <code>IP_ADDRESS</code>, substitute the IP address of
+the GPU instance.</li>
+<li>in place of <code>PORT</code> use: 50000 + the numeric part of your
+net ID. For example, if my net ID is <code>ab123</code>, I will use:
+50123.</li>
+</ul>
+<p>This will set up a tunnel between your local sytem and the GPU
+instance. Leave this SSH session running.</p>
+<p>Inside the SSH session, run:</p>
+<pre>
+/home/cc/.local/bin/jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=<mark>PORT</mark> --NotebookApp.port_retries=0
+</pre>
+<p>(again substituting your <code>PORT</code> number) and leave it
+running.</p>
+<p>In the output of the cell above, look for a URL in this format, with
+the word “localhost” in it:</p>
+<pre>
+http://localhost:<mark>PORT</mark>/?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+</pre>
+<p>Copy this URL - you will need it in the next step.</p>
+<p>Now, you can open Colab in a browser. Click on the drop-down menu for
+“Connect” in the top right and select “Connect to a local runtime”.
+Paste the URL you copied earlier into the space and click “Connect”.
+Your notebook should now be running on our GPU instance.</p>
+<h2 id="when-you-are-finished">When you are finished</h2>
+<p>When you are finished working OR at the end of your reserved time
+slot, whichever comes first -</p>
+<ul>
+<li>use Ctrl+C in your terminal session to stop the Jupyter notebook
+server</li>
+<li>when prompted, type <code>y</code> and hit Enter to confirm</li>
+<li>type <code>exit</code> and hit Enter to close the SSH tunnel</li>
+</ul>
+<h2 id="addressing-common-problems">Addressing common problems</h2>
+<h4 id="could-not-request-local-forwarding">“Could not request local
+forwarding”</h4>
+<p><strong>Q</strong>: When I use the SSH command</p>
+<pre>
+ssh -i id_rsa_chameleon -L 127.0.0.1:<mark>PORT</mark>:127.0.0.1:<mark>PORT</mark> cc@IP_ADDRESS
+</pre>
+<p>it says:</p>
+<pre>
+bind [127.0.0.1]:<mark>PORT</mark>: Address already in use
+channel_setup_fwd_listener_tcpip: cannot listen to port: <mark>PORT</mark>
+Could not request local forwarding.
+</pre>
+<hr />
+<p><strong>A</strong>: This will happen if you already have something
+else running on this port on your laptop. You can change the port in the
+command, e.g. use 51000 + numeric part of net ID.</p>
+<h4 id="warnings-when-using-tensorflow">Warnings when using
+Tensorflow</h4>
+<p>When I import <code>tensorflow</code>, I see the following
+warnings:</p>
+<pre>
+2024-04-15 17:18:17.943887: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2024-04-15 17:18:17.943917: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2024-04-15 17:18:17.945316: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2024-04-15 17:18:17.952572: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-04-15 17:18:18.643115: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+</pre>
+<p>and when I try to <code>fit</code> a model, I see:</p>
+<pre>
+2024-04-15 17:20:25.275428: I external/local_xla/xla/service/service.cc:168] XLA service 0x7fe430337610 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2024-04-15 17:20:25.275483: I external/local_xla/xla/service/service.cc:176]   StreamExecutor device (0): Quadro RTX 6000, Compute Capability 7.5
+2024-04-15 17:20:25.290127: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+2024-04-15 17:20:25.323029: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:454] Loaded cuDNN version 8907
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1713201625.466265    3250 device_compiler.h:186] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+</pre>
+<p>Is this bad?</p>
+<hr />
+<p>This server has different library versions and a different GPU type
+than the Colab hosted runtime, so you may see some
+warnings/notifications that you wouldn’t see in Colab. It’s not a cause
+for concern, and you can safely ignore the notifications shown
+above.</p>
+</body>
+</html>
