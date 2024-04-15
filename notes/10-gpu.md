@@ -69,7 +69,7 @@ Inside the SSH session, run:
 
 (again substituting your `PORT` number) and leave it running. 
 
-In the output of the cell above, look for a URL in this format, with the word "localhost" in it:
+In the output of the command above, look for a URL in this format, with the word "localhost" in it:
 
 <pre>
 http://localhost:<mark>PORT</mark>/?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
