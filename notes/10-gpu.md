@@ -29,7 +29,7 @@ Your private key must have appropriate permissions set -
 chmod 600 id_rsa_chameleon
 ```
 
-* On Windows, you can follow [these instructions](https://superuser.com/a/1296046) to set the key permissions using the GUI.
+* On Windows, you can follow [these instructions](https://superuser.com/a/1296046) to set the key permissions on `id_rsa_chameleon` using the GUI.
 
 Save the public key in a plaintext file in the same directory with the name `id_rsa_chameleon.pub`.
 
