@@ -305,6 +305,49 @@ GPU: can quickly do a big linear algebra operation on a bunch of data samples at
 
 <!-- https://www.cs.cornell.edu/courses/cs4787/2022fa/lectures/lecture27.pdf -->
 
+<!--
+
+CASE STUDY: TWITTER/X TIMELINE
+
+
+This case study comes from the Twitter/X Engineering blog: https://blog.twitter.com/engineering/en_us/topics/insights/2017/using-deep-learning-at-scale-in-twitters-timelines
+
+Problem framing:
+
+Goal: get users to visit/engage with Twitter more (translates to ad revenue!)
+Mechanism: show users a set of the most relevant Tweets first
+Model: predict relevance of each tweet to the user
+Note the “leaky pipeline” we brought up in Week 1 - the real-world mechanism may not achieve real-world goal to a meaningful extent, the target of learning problem is not exactly the variable we care about.
+
+Features used as input:
+
+from the Tweet itself (not personal): how recent it is, whether it has image or video, number of retweets or likes
+from you (personal): how often and how heavily you use Twitter, what Tweets you engaged with (like, RT) in the past
+from you + the author (personal): strength of your connection to the author, your past interactions with them
+(which of these features can be pre-computed? How frequently must they be updated?)
+
+When and where the model runs:
+
+every time you open the app or refresh timeline, they score every Tweet (since your last visit) from people you follow
+service must score large number of Tweets per second
+must be fast enough to “instantly” serve Tweets back to the people viewing the timeline
+How model quality is measured:
+
+during training: well-defined accuracy metric. But, this doesn’t predict how people will react to those Tweets.
+there are no natural ground truth labels.
+evaluate models with A/B testing: serve two sets of users with two different models, and see which were more engaged, spent more time on the service, etc.
+Also consider operational metrics:
+
+how much better is Model A than Model B? (in A/B testing)
+is the better model more costly? (more compute resources, more complicated operation and support)
+the pipeline’s ease of use, scalability, and extendability
+Additional challenges: missing data
+
+for a given input, some features may be unavailable
+Overall considerations: Quality and speed of predictions, resource utilization, maintainability. The highest “quality” model is not necessarily the one that is deployed in production.
+
+Case study: Uber eats https://www.uber.com/blog/michelangelo-machine-learning-platform/ 
+-->
 
 ## Summary
 
