@@ -89,6 +89,7 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 
 * Handout: Support vector classifier <a href="slides/7-svm.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: SVM with kernels <a href="slides/8-svm-kernel.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Hyperparameter optimization <a href="slides/8-hyperparameter.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Support vector machines in depth <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-svm-with-kernel.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-svm-with-kernel.ipynb)
 * Notebook: Bias and variance of SVM <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-svm-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-svm-bias-variance.ipynb)
 * Notebook: Handwritten digits classification <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/7-demo-digits-classifiers.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-demo-digits-classifiers.ipynb)
@@ -98,6 +99,7 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 
 * Handout: Neural networks <a href="slides/8-neural.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Draw your own classification problem for a neural network [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw.ipynb)
+* Notebook: Draw your own classification problem for a neural network (Pytorch version) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw-torch.ipynb.ipynb)
 * Notebook: Backpropagation <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-demo-backprop.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-demo-backprop.ipynb)
 * Notebook: Neural networks for music classification (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-lab-neural-net-music-classification.ipynb)
 
@@ -112,8 +114,9 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 
 ## Week 11: Deploying machine learning systems
 
+* [Outside reference: Using Deep Learning at Scale in Twitter’s Timelines](https://blog.twitter.com/engineering/en_us/topics/insights/2017/using-deep-learning-at-scale-in-twitters-timelines)
 * Handout: Deploying machine learning systems <a href="slides/10-deployment.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Learning activity: <a href="https://github.com/teaching-on-testbeds/k8s-ml/blob/main/README.md">Deploying machine learning systems on Kubernetes</a>
+* Activity: <a href="https://github.com/teaching-on-testbeds/k8s-ml/blob/gh-pages/README.md">Deploying machine learning systems on Kubernetes</a>
 
 ## Week 12: Unsupervised learning
 
