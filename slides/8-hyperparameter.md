@@ -49,7 +49,7 @@ Goal of hyperparameter optimization: find the set of hyperparameters for which t
 :::notes
 
 Grid search is the extension of cross validation to higher dimensions.
-Note: you need to know which part of the hyperparameter to search in the first place!
+Note: you need to know which part of the hyperparameter space to search in the first place!
 
 Depending on the initial results, you may consider extending the grid in another iteration:
 
