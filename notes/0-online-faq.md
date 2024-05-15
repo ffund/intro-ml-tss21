@@ -61,6 +61,7 @@ A typical week will include the following:
  - a lab assignment (estimated time: 2-3 hours)
 
 A student who is not very comfortable with the prerequisites may have to spend more time than the estimated 9 hours/week in order to do well. 
+
 ### What are the prerequisites for this course? 
 
 This course is mathematically oriented, and undergraduate-level
@@ -82,7 +83,7 @@ If you want to brush up, you can review:
 
 There will be a significant programming component to this course, and class and homework exercises will be in Python. You do not need to know
 Python a priori, but you should know basic programming concepts and have
-experience programming in some programming language. We will review 
+experience programming in some programming language, and you should be comfortable picking up Python on your own. We will review 
 some important Python basics in the first week of the course.
 
 ### Do I need previous experience with machine learning for this course? 
