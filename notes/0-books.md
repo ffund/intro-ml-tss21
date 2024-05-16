@@ -6,10 +6,10 @@ author: Fraida Fund
 
 ## Machine Learning Concepts and Theory
 
-* The Elements of Statistical Learning, (Hastie, Friedman, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph006482758), [PDF](https://web.stanford.edu/~hastie/ElemStatLearn//)
-* An Introduction to Statistical Learning, (James, Witten, Hastie, and Tibshirani), 2013. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/1c17uag/nyu_aleph004655521), [PDF 2nd ed](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf.view-in-google.html)
+* The Elements of Statistical Learning, 2nd edition (Hastie, Friedman, and Tibshirani), 2019. [PDF](https://web.stanford.edu/~hastie/ElemStatLearn//)
+* An Introduction to Statistical Learning with Applications in Python, (James, Witten, Hastie, Tibshirani, and Taylor), 2023. [PDF](https://hastie.su.domains/ISLP/ISLP_website.pdf.download.html)
 * Pattern Recognition and Machine Learning, (Bishop), 2006. [PDF](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf)
-* Machine Learning: A Probabilistic Perspective, (Murphy). [PDF](http://noiselab.ucsd.edu/ECE228/Murphy_Machine_Learning.pdf)
+* Machine Learning: A Probabilistic Perspective, (Murphy). [PDF](https://probml.github.io/pml-book/book0.html)
 * Understanding Machine Learning: From Theory to Algorithms, (Shalev-Shwartz, Ben-David), 2014. [Website](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/index.html), [Download](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/copy.html)
 
 ## Python and Programming for Machine Learning
@@ -17,7 +17,7 @@ author: Fraida Fund
 * Python Data Science Handbook, (VanderPlas), 2016. [Github](https://jakevdp.github.io/PythonDataScienceHandbook/)
 * Hands-on Machine Learning with Scikit-Learn, Keras, and TensorFlow (Géron), 2019. [NYU Library 1](https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008011603), [NYU Library 2](https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph005589560), [Notebooks on Github](https://github.com/ageron/handson-ml2)
 * Machine Learning with PyTorch and Scikit-Learn (Raschka, Liu, Mirjalili), 2022. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008654761), [Notebooks on Github](https://github.com/rasbt/machine-learning-book)
-* Python Machine Learning, (Raschka, Mirjalili), 2017. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008027112), [Notebooks on Github](https://github.com/rasbt/python-machine-learning-book-3rd-edition)
+* Python Machine Learning, 3rd edition (Raschka, Mirjalili), 2019. [NYU Library](https://bobcat.library.nyu.edu/permalink/f/ci13eu/nyu_aleph008027112), [Notebooks on Github](https://github.com/rasbt/python-machine-learning-book-3rd-edition)
 
 
 ## Background/Prerequisites
