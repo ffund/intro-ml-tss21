@@ -245,6 +245,9 @@ What are some benefits of predicting course grade using the data-driven approach
 * it's easy to update with more experience or if the "world" changes. For example: 
   * if over time the quality of admitted students goes up and I give higher grades, the system that predicts the mean of last semester's scores will "track" with that.
   * if I didn't have many students with poor programming background the first semester, but I do the second semester, I will be able to predict their performance better next time.
+
+Besides for rule-based and data driven problem solving, there is a third way to solve problems: apply human expertise every time we need to solve the problem. (i.e. no computer program.)
+
 :::
 
 :::
@@ -274,7 +277,7 @@ Now that we understand the difference between rule-based problem solving and ML-
 
 ::: notes
 
-You will read some notes on a 1964 attempt to solve this problem. Was that attempt using ML, or was it rule-driven? Would this be a good candidate for ML? Why or why not?
+You have/will read notes on a 1964 solution to this problem. Was that using ML, or was it rule-driven? Would this be a good candidate for ML, rule-based program, or human expertise? Why or why not?
 
 Are there any important reasons *not* to use ML for this?
 
@@ -329,6 +332,9 @@ Are there reasons not to use ML here?
 * ML may not be explainable or auditable.
 * ML may perpetuate and/or exacerbate bias in the training data. See [Flawed Algorithms Are Grading Millions of Students’ Essays](https://www.vice.com/en/article/pa7dj9/flawed-algorithms-are-grading-millions-of-students-essays) in Mother board by Vice. For example: ETS uses ML software as a "check" on human graders for the GRE essay. But its system overscores students from mainland China (by about 1.3/6 points relative to human scorers) and underscores African Americans (by about 0.8/6 points) and other groups.
 
+
+**Takeaway**: an ML system can sometimes be more biased than an equivalent human system.
+
 :::
 
 \newpage
@@ -373,6 +379,8 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 * The company that makes the scoring system said: "Just like in a normal job interview, these factors are taken into account for the assessment. However, that does not happen on demand. There’s no pressure, that can appear in talking to real people." Is this a satisfactory answer?
 * See the report by [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/).
 
+**Takeaway**: an ML system will "find" meaningless patterns, if you let it.
+
 :::
 
 :::
@@ -381,31 +389,41 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 ::: {.cell .markdown}
 
-### Determine severity of injury from knee X-ray (1)
+### Determine severity of injury from knee X-ray 
 
 ![Example of a knee X-ray. [Source](https://www.nature.com/articles/s41591-020-01192-7)](../images/1-knee-xray.jpeg){ width=35% }
 
-:::
-
-
-::: {.cell .markdown}
-
-### Determine severity of injury from knee X-ray (2)
+::: notes
 
 * Among patients with a similar X-ray "score" (from expert), Black patients tend to have more pain.
 * What if radiologists may miss some sources of pain? (Medical science often comes from very limited study populations.)
+* This algorithm was trained to predict patient pain, rather than radiologist's score.
+* Reduced "pain disparity" by 43% (does  a better job than radiologists of finding things that "hurt", especially in Black knees!)
+
+**Takeaway**: an ML system can sometimes be *less* biased than an equivalent human system.
+
+:::
 
 :::
 
 
 ::: {.cell .markdown}
 
-### Determine severity of injury from knee X-ray (3)
+### Write a course review
 
-* This algorithm was trained to predict patient pain, rather than radiologist's score.
-* Reduced "pain disparity" by 43% (does  a better job than radiologists of finding things that "hurt", especially in Black knees!)
+![Would this help you decide what course to take?](../images/1-intro-ml-review.png){ width=65% }
+
+::: notes
+
+**Takeaway**: ML systems are not useful when you want an authentic human voice.
 
 :::
+
+:::
+
+
+
+
 
 <!--
 
@@ -436,7 +454,7 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 * There is no "good" data available to train the model.
 * The model can be "tricked", with potentially severe consequences.
 * Need to audit or explain the output.
-* Expects human empathy, expert creativity.
+* Expects human empathy, creativity, insight.
 
 :::
 
@@ -445,11 +463,11 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 ### Problems that are often good candidates for ML
 
-* There is "good" data available to train the model
-* The thing we want to predict is measurable and observable 
-* Human expertise does not exist or is insufficient
-* Humans cannot easily explain their expertise 
-* We will get more data during operation + can improve with experience
+* There is "good" data available to train the model.
+* The thing we want to predict is measurable and observable.
+* Human expertise does not exist, is insufficient, or is expensive.
+* Humans cannot easily explain their expertise.
+* We will get more data during operation + can improve with experience.
 
 :::
 
@@ -459,6 +477,7 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 \newpage
 
+<!-- 
 ::: {.cell .markdown}
 
 ### Why now?
@@ -470,6 +489,7 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 :::
 
+-->
 
 ::: {.cell .markdown}
 
@@ -624,6 +644,19 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 :::
 
+::: {.cell .markdown}
+
+### For each type of model in this course...
+
+Fill in "recipe" details, then ask:
+
+* What type of relationships $f(x)$ can it represent?
+* How do we train the model efficiently?
+* What can we learn about the problem from the trained model?
+* How do we control the generalization error?
+
+:::
+
 
 \newpage
 
@@ -676,17 +709,16 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 :::
 
-\newpage
-
 
 ::: {.cell .markdown}
 
-### ChatGPT (1)
+### ChatGPT 
 
 ![ChatGPT does not understand pregnancy. [Source](https://twitter.com/sergioontiveros/status/1599590647367110656).](../images/1-chatgpt-pregnant.jpeg){ width=45% }
 
 :::
 
+<!-- 
 ::: {.cell .markdown}
 
 ### ChatGPT (2)
@@ -696,6 +728,7 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 :::
 
+-->
 
 \newpage
 
@@ -730,6 +763,8 @@ Quotes from: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through
 
 
 ::: {.cell .markdown}
+
+\newpage
 
 ### Example: grad school admissions
 

@@ -261,6 +261,9 @@ first semester, but I do the second semester, I will be able to predict
 their performance better next time.</li>
 </ul></li>
 </ul>
+<p>Besides for rule-based and data driven problem solving, there is a
+third way to solve problems: apply human expertise every time we need to
+solve the problem. (i.e. no computer program.)</p>
 </aside>
 </section>
 <section id="machine-learning-problems"
@@ -284,9 +287,9 @@ alt="Example of a handwritten 5 that the 1964 system would struggle with." />
 system would struggle with.</figcaption>
 </figure>
 <aside class="notes">
-<p>You will read some notes on a 1964 attempt to solve this problem. Was
-that attempt using ML, or was it rule-driven? Would this be a good
-candidate for ML? Why or why not?</p>
+<p>You have/will read notes on a 1964 solution to this problem. Was that
+using ML, or was it rule-driven? Would this be a good candidate for ML,
+rule-based program, or human expertise? Why or why not?</p>
 <p>Are there any important reasons <em>not</em> to use ML for this?</p>
 </aside>
 </section>
@@ -356,6 +359,8 @@ for the GRE essay. But its system overscores students from mainland
 China (by about 1.3/6 points relative to human scorers) and underscores
 African Americans (by about 0.8/6 points) and other groups.</li>
 </ul>
+<p><strong>Takeaway</strong>: an ML system can sometimes be more biased
+than an equivalent human system.</p>
 </aside>
 </section>
 <section id="grading-students-essays-2"
@@ -404,37 +409,46 @@ satisfactory answer?</li>
 href="https://web.br.de/interaktiv/ki-bewerbung/en/">Bayerischer
 Rundfunk (German Public Broadcasting)</a>.</li>
 </ul>
+<p><strong>Takeaway</strong>: an ML system will “find” meaningless
+patterns, if you let it.</p>
 </aside>
 </section>
-<section id="determine-severity-of-injury-from-knee-x-ray-1"
+<section id="determine-severity-of-injury-from-knee-x-ray"
 class="slide level3 cell markdown">
-<h3>Determine severity of injury from knee X-ray (1)</h3>
+<h3>Determine severity of injury from knee X-ray</h3>
 <figure>
 <img data-src="../images/1-knee-xray.jpeg" style="width:35.0%"
 alt="Example of a knee X-ray. Source" />
 <figcaption aria-hidden="true">Example of a knee X-ray. <a
 href="https://www.nature.com/articles/s41591-020-01192-7">Source</a></figcaption>
 </figure>
-</section>
-<section id="determine-severity-of-injury-from-knee-x-ray-2"
-class="slide level3 cell markdown">
-<h3>Determine severity of injury from knee X-ray (2)</h3>
+<aside class="notes">
 <ul>
 <li>Among patients with a similar X-ray “score” (from expert), Black
 patients tend to have more pain.</li>
 <li>What if radiologists may miss some sources of pain? (Medical science
 often comes from very limited study populations.)</li>
-</ul>
-</section>
-<section id="determine-severity-of-injury-from-knee-x-ray-3"
-class="slide level3 cell markdown">
-<h3>Determine severity of injury from knee X-ray (3)</h3>
-<ul>
 <li>This algorithm was trained to predict patient pain, rather than
 radiologist’s score.</li>
 <li>Reduced “pain disparity” by 43% (does a better job than radiologists
 of finding things that “hurt”, especially in Black knees!)</li>
 </ul>
+<p><strong>Takeaway</strong>: an ML system can sometimes be
+<em>less</em> biased than an equivalent human system.</p>
+</aside>
+</section>
+<section id="write-a-course-review" class="slide level3 cell markdown">
+<h3>Write a course review</h3>
+<figure>
+<img data-src="../images/1-intro-ml-review.png" style="width:65.0%"
+alt="Would this help you decide what course to take?" />
+<figcaption aria-hidden="true">Would this help you decide what course to
+take?</figcaption>
+</figure>
+<aside class="notes">
+<p><strong>Takeaway</strong>: ML systems are not useful when you want an
+authentic human voice.</p>
+</aside>
 </section>
 <!--
 
@@ -462,32 +476,35 @@ desired output.</li>
 <li>The model can be “tricked”, with potentially severe
 consequences.</li>
 <li>Need to audit or explain the output.</li>
-<li>Expects human empathy, expert creativity.</li>
+<li>Expects human empathy, creativity, insight.</li>
 </ul>
 </section>
 <section id="problems-that-are-often-good-candidates-for-ml"
 class="slide level3 cell markdown">
 <h3>Problems that are often good candidates for ML</h3>
 <ul>
-<li>There is “good” data available to train the model</li>
-<li>The thing we want to predict is measurable and observable</li>
-<li>Human expertise does not exist or is insufficient</li>
-<li>Humans cannot easily explain their expertise</li>
+<li>There is “good” data available to train the model.</li>
+<li>The thing we want to predict is measurable and observable.</li>
+<li>Human expertise does not exist, is insufficient, or is
+expensive.</li>
+<li>Humans cannot easily explain their expertise.</li>
 <li>We will get more data during operation + can improve with
-experience</li>
+experience.</li>
 </ul>
 </section>
-<section id="why-now" class="slide level3 cell markdown">
-<h3>Why now?</h3>
-<ul>
-<li>Statistical foundations are around for decades</li>
-<li>What’s new:
-<ul>
-<li>Storage + Connectivity</li>
-<li>Computational power</li>
-</ul></li>
-</ul>
-</section>
+<!-- 
+::: {.cell .markdown}
+
+### Why now?
+
+* Statistical foundations are around for decades
+* What's new:
+  * Storage + Connectivity
+  * Computational power
+
+:::
+
+-->
 <section id="machine-learning-basics"
 class="title-slide slide level2 cell markdown">
 <h2>Machine learning basics</h2>
@@ -635,6 +652,18 @@ system.</figcaption>
 </figure>
 </aside>
 </section>
+<section id="for-each-type-of-model-in-this-course"
+class="slide level3 cell markdown">
+<h3>For each type of model in this course…</h3>
+<p>Fill in “recipe” details, then ask:</p>
+<ul>
+<li>What type of relationships <span class="math inline">\(f(x)\)</span>
+can it represent?</li>
+<li>How do we train the model efficiently?</li>
+<li>What can we learn about the problem from the trained model?</li>
+<li>How do we control the generalization error?</li>
+</ul>
+</section>
 <section id="limitations"
 class="title-slide slide level2 cell markdown">
 <h2>Limitations</h2>
@@ -677,8 +706,8 @@ href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Ja
 Shane</a></figcaption>
 </figure>
 </section>
-<section id="chatgpt-1" class="slide level3 cell markdown">
-<h3>ChatGPT (1)</h3>
+<section id="chatgpt" class="slide level3 cell markdown">
+<h3>ChatGPT</h3>
 <figure>
 <img data-src="../images/1-chatgpt-pregnant.jpeg" style="width:45.0%"
 alt="ChatGPT does not understand pregnancy. Source." />
@@ -686,16 +715,17 @@ alt="ChatGPT does not understand pregnancy. Source." />
 href="https://twitter.com/sergioontiveros/status/1599590647367110656">Source</a>.</figcaption>
 </figure>
 </section>
-<section id="chatgpt-2" class="slide level3 cell markdown">
-<h3>ChatGPT (2)</h3>
-<figure>
-<img data-src="../images/1-chatgpt-fryegg.png" style="width:65.0%"
-alt="ChatGPT does not understand fried eggs. Source." />
-<figcaption aria-hidden="true">ChatGPT does not understand fried eggs.
-<a
-href="https://twitter.com/bio_bootloader/status/1599131249553330176">Source</a>.</figcaption>
-</figure>
-</section>
+<!-- 
+::: {.cell .markdown}
+
+### ChatGPT (2)
+
+![ChatGPT does not understand fried eggs. [Source](https://twitter.com/bio_bootloader/status/1599131249553330176).](../images/1-chatgpt-fryegg.png){ width=65% }
+
+
+:::
+
+-->
 <section id="ml-as-leaky-pipeline" class="slide level3 cell markdown">
 <h3>ML as leaky pipeline</h3>
 </section>
