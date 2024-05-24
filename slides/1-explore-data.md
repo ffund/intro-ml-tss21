@@ -1,5 +1,5 @@
 ---
-title:  'Exploring your data'
+title:  'Working with Data'
 author: 'Fraida Fund'
 ---
 
@@ -7,24 +7,70 @@ author: 'Fraida Fund'
 
 ::: notes
 
-If you use "garbage" to train a machine learning model, you will only get "garbage" out. (+ Since you are testing on the same data, you might not even realize it is "garbage" until the model is in production!)
+Any machine learning project has to start with high-quality data.
+
+There is a "garbage in, garbage out" rule: If you use "garbage" to train a machine learning model, you will only get "garbage" out. (And: Since you are testing on the same data, you might not even realize it is "garbage" at first! You may not realize until the model is already deployed in production!)
 
 :::
 
+\newpage
 
-## Exploratory data analysis: what are we looking for?
+## Before using any data
 
+* Consider ethics concerns
+* Prepare a held-out test set
 * Make and check assumptions
 * Check for missing data
 * Identify potentially predictive features
 * Look for patterns you *don't* want model to learn
-* Ethics concerns
 
 
 
-\newpage
+## Ethics concerns
+
+
+::: {.cell .markdown}
+## Some data ethics concerns
+
+* Bias
+* Privacy
+* Consent
+
+...are just a few.
+
+:::notes
+
+* Many social media datasets used for "offensive post" classification have biased labels (especially if they were produced without adequate training procedures in place). For example, they may label posts containing African-American dialects of English as "offensive" much more often. [Source](https://www.aclweb.org/anthology/P19-1163.pdf), [User-friendly article](https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter)
+* [On the anonymity of the Facebook dataset](http://www.michaelzimmer.org/2008/09/30/on-the-anonymity-of-the-facebook-dataset/)
+* [70,000 OkCupid Users Just Had Their Data Published](https://www.vice.com/en_us/art*cle/8q88nx/70000-okcupid-users-just-had-their-data-published); [OkCupid Study Reveals the Perils of Big-Data Science](https://www.wired.com/2016/05/*kcupid-study-reveals-perils-big-data-science/); [Ethics, scientific consent and OKCupid](https://ironholds.org/scientific-consent/)
+* [IBM didn’t inform people when it used their Flickr photos for facial recognition training](https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training)
+
+:::
+
+:::
+
+## Prepare a held-out test set
+
+* If we plan to use some data for machine learning, we *must* set aside a "test set" before we do *anything* with the data.
+* We will explain in a future lesson why this is so important.
+
+::: notes
+
+Our next steps - checking assumptions, handling missing data, identifying potentially predictive features, identifying "bad" patterns - will be on the part of the data that is not "held out" as a test set.
+
+:::
 
 ## Make and check assumptions
+
+::: notes
+
+It's always a good idea to "sanity check" your data - before you look at it, think about what you expect to see. Then check to make sure your expectations are realized.
+
+Look at plots of data, summary statistics, etc. and consider general trends.
+
+:::
+
+\newpage
 
 ### Example: author citation data (1)
 
@@ -50,7 +96,7 @@ The true explanation: in 2002, PubMed started using full first names in authors 
 
 ### Example: author citation data (3)
 
-![The real distribution, after name unification. Example via [Steven Skiena @ SBU](https://www3.cs.stonybrook.edu/~skiena/519/).](../images/1-pubmed-authors2.png){ width=50% }
+![The real distribution, after name unification. Example via [Steven Skiena @ Stony Brook U](https://www3.cs.stonybrook.edu/~skiena/519/).](../images/1-pubmed-authors2.png){ width=50% }
 
 \newpage
 
@@ -99,9 +145,9 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
 
 :::notes
 
-How should you handle unreasonable values or outliers?
+How should you handle unreasonable values, data that does not match expectations, or "outliers"? It depends!
 
-* e.g. suppose in a dataset of voter information, some have impossible year of birth - would make the voter a child, or some indicate the voter is 120 years old. (Voters with no known DOB, who registered before DOB was required, are often encoded with a January 1900 DOB.)
+* e.g. suppose in a dataset of voter information, some have impossible year of birth - would make the voter over 120 years old. (The reason: Voters with no known DOB, who registered before DOB was required, are often encoded with a January 1900 DOB.)
 * **not** a good idea to just remove outliers unless you are sure they are a data entry error or otherwise not a "true" value.
 * Even if an outlier is due to some sort of error, if you remove them, you may skew the dataset (as in the 1/1/1900 voters example).
 
@@ -117,8 +163,19 @@ Consider the possibility of:
 
 
 
-## Missing data
+## Look for missing data
 
+
+::: {.cell .markdown}
+
+### Indicators of missing data
+
+* Rows that have `NaN` values
+* Rows that are *not there*
+
+<!-- To do: NYC taxi tip data, NYS thruway data -->
+
+:::
 
 
 ::: {.cell .markdown}
@@ -138,17 +195,6 @@ Consider the possibility of:
 
 ::: {.cell .markdown}
 
-### Indications of missing data
-
-* Rows that have `NaN` values
-* Rows that are *not there*
-
-<!-- To do: NYC taxi tip data, NYS thruway data -->
-
-:::
-
-::: {.cell .markdown}
-
 ### Types of "missingness"
 
 * Completely random
@@ -159,7 +205,7 @@ Consider the possibility of:
 
 These are often referred to using this standard terminology (which can be confusing):
 
-* Missing _completely_ at random: missingness not correlated with any feature or to the target variable.
+* Missing _completely_ at random: missingness not correlated with any feature or the target variable.
 * Missing at random: missingness correlated with something that is in data.
 * Missing not at random: missingness correlated with something that is not in data.
 
@@ -182,14 +228,19 @@ How should you handle little bits of missing data? It always depends on the data
 
 :::notes
 
-For example: suppose we are training a model on Intro ML students' score and duration on HW questions, to predict their score on related exam questions.
+You generally have to know why the data is missing, to understand the best way to handle it.
 
 :::
 
 :::
 
-## Predictive features
+## Identify predictive features
 
+::: notes
+
+"Predictive" means "related to the target variable" (any kind of relationship!)
+
+:::
 
 
 ::: {.cell .markdown}
@@ -203,8 +254,16 @@ For example: suppose we are training a model on Intro ML students' score and dur
 
 :::
 
+\newpage
+
 
 ## "Bad patterns" (and data leakage)
+
+::: notes
+
+When looking for predictive features, also ask yourself - are there patterns in the data that you *don't* want your model to learn?
+
+:::
 
 ### COVID-19 chest radiography (1)
 
@@ -235,6 +294,8 @@ Findings:
 * there were dataset-level differences in patient positioning
 * many COVID images came from screenshots of published papers, which often had text, arrows, or other annotations over the images. (Some non-COVID images did, too.)
 
+\newpage
+
 ### COVID-19 chest radiography (3)
 
 ![Saliency map showing the "important" pixels for classification. [Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7523163/)](../images/1-covid-xrays-saliency.png){ width=90% }
@@ -256,21 +317,19 @@ Many of the findings are not easy to understand without domain knowledge (e.g. k
 
 ::: notes
 
-In machine learning, we train models on a training set of data, then evaluate their performance on a set of data that was not used in training.
+In machine learning, we train models on a training set of data, then evaluate their performance on a set of data that was not used in training. "Data leakage" can occur when 
 
-Sometimes, information from the training set can "leak" into the evaluation - this is called data leakage.
+* information "leaks" between the held-out test set and the training set
+* or, information from the target variable (that should not/will not be available when making a prediction) leaks into the feature data
+* or any scenario where the model may learn a "pattern" that will not be present during the "real" task.
 
-Or, information from the target variable (which should not be available during inference) leaks into the feature data.
-
-Or, the model learns a "pattern" that will not be present during the "real" task.
-
-Data leakage: the model uses something (a feature, a pattern in the data, actual data points) that will not be available during "real" inference task.
+Data leakage: the model uses something (a feature, a pattern in the data, actual data points) that will not be available during "real" prediction task.
 
 :::
 
 ### Some types of data leakage
 
-* Learning from a feature that is a proxy for target variable, but that doesn't generalize 
+* Learning from a feature that is a proxy for target variable, but that won't be available 
 * Learning from adjacent temporal data
 * Learning from duplicate data
 * Learning from features that are not available at prediction time (e.g. data from the future)
@@ -293,27 +352,6 @@ Data leakage: the model uses something (a feature, a pattern in the data, actual
 
 
 
-## Ethics concerns
-
-
-::: {.cell .markdown}
-### Some types of data ethics fails
-
-* Bias
-* Privacy
-* Consent
-
-
-:::notes
-
-* Many social media datasets used for "offensive post" classification have biased labels (especially if they were produced without adequate training procedures in place). For example, they may label posts containing African-American dialects of English as "offensive" much more often. [Source](https://www.aclweb.org/anthology/P19-1163.pdf), [User-friendly article](https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter)
-* [On the anonymity of the Facebook dataset](http://www.michaelzimmer.org/2008/09/30/on-the-anonymity-of-the-facebook-dataset/)
-* [70,000 OkCupid Users Just Had Their Data Published](https://www.vice.com/en_us/art*cle/8q88nx/70000-okcupid-users-just-had-their-data-published); [OkCupid Study Reveals the Perils of Big-Data Science](https://www.wired.com/2016/05/*kcupid-study-reveals-perils-big-data-science/); [Ethics, scientific consent and OKCupid](https://ironholds.org/scientific-consent/)
-* [IBM didn’t inform people when it used their Flickr photos for facial recognition training](https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training)
-
-:::
-
-:::
 
 
 
@@ -322,17 +360,11 @@ Data leakage: the model uses something (a feature, a pattern in the data, actual
 
 ::: notes
 
-* Data or labels reflect human bias
-* Data is not representative of your target situation
-* Data or situation changes over time
-
-Examples:
+* **Data is not representative of your target situation**. For example, you are training a model to predict the spread of infectious disease for a NYC-based health startup, but you are using data from another country.
+* **Data or situation changes over time**. For example, imagine you train a machine learning model to classify loan applications. However, if the economy changes, applicants that were previously considered credit-worthy might not be anymore despite having the same income, as the lender becomes more risk-averse. Similarly, if wages increase across the board, the income standard for a loan would increase.
 
 
-Change over time: Imagine you train a machine learning model to classify loan applications. However, if the economy changes, applicants that were previously considered credit-worthy might not be anymore despite having the same income, as the lender becomes more risk-averse. Similarly, if wages increase across the board, the income standard for a loan would increase.
 
 :::
-
-\newpage
 
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Fraida Fund">
-  <title>Exploring your data</title>
+  <title>Working with Data</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -33,36 +33,104 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">Exploring your data</h1>
+  <h1 class="title">Working with Data</h1>
   <p class="author">Fraida Fund</p>
 </section>
 
 <section id="garbage-in-garbage-out" class="title-slide slide level2">
 <h2>Garbage in, garbage out</h2>
 <aside class="notes">
-<p>If you use “garbage” to train a machine learning model, you will only
-get “garbage” out. (+ Since you are testing on the same data, you might
-not even realize it is “garbage” until the model is in production!)</p>
+<p>Any machine learning project has to start with high-quality data.</p>
+<p>There is a “garbage in, garbage out” rule: If you use “garbage” to
+train a machine learning model, you will only get “garbage” out. (And:
+Since you are testing on the same data, you might not even realize it is
+“garbage” at first! You may not realize until the model is already
+deployed in production!)</p>
 </aside>
 </section>
 
-<section id="exploratory-data-analysis-what-are-we-looking-for"
-class="title-slide slide level2">
-<h2>Exploratory data analysis: what are we looking for?</h2>
+<section id="before-using-any-data" class="title-slide slide level2">
+<h2>Before using any data</h2>
 <ul>
+<li>Consider ethics concerns</li>
+<li>Prepare a held-out test set</li>
 <li>Make and check assumptions</li>
 <li>Check for missing data</li>
 <li>Identify potentially predictive features</li>
 <li>Look for patterns you <em>don’t</em> want model to learn</li>
-<li>Ethics concerns</li>
 </ul>
+</section>
+
+<section id="ethics-concerns" class="title-slide slide level2">
+<h2>Ethics concerns</h2>
+
+</section>
+
+<section id="some-data-ethics-concerns"
+class="title-slide slide level2 cell markdown">
+<h2>Some data ethics concerns</h2>
+<ul>
+<li>Bias</li>
+<li>Privacy</li>
+<li>Consent</li>
+</ul>
+<p>…are just a few.</p>
+<aside class="notes">
+<ul>
+<li>Many social media datasets used for “offensive post” classification
+have biased labels (especially if they were produced without adequate
+training procedures in place). For example, they may label posts
+containing African-American dialects of English as “offensive” much more
+often. <a
+href="https://www.aclweb.org/anthology/P19-1163.pdf">Source</a>, <a
+href="https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter">User-friendly
+article</a></li>
+<li><a
+href="http://www.michaelzimmer.org/2008/09/30/on-the-anonymity-of-the-facebook-dataset/">On
+the anonymity of the Facebook dataset</a></li>
+<li><a
+href="https://www.vice.com/en_us/art*cle/8q88nx/70000-okcupid-users-just-had-their-data-published">70,000
+OkCupid Users Just Had Their Data Published</a>; <a
+href="https://www.wired.com/2016/05/*kcupid-study-reveals-perils-big-data-science/">OkCupid
+Study Reveals the Perils of Big-Data Science</a>; <a
+href="https://ironholds.org/scientific-consent/">Ethics, scientific
+consent and OKCupid</a></li>
+<li><a
+href="https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training">IBM
+didn’t inform people when it used their Flickr photos for facial
+recognition training</a></li>
+</ul>
+</aside>
+</section>
+
+<section id="prepare-a-held-out-test-set"
+class="title-slide slide level2">
+<h2>Prepare a held-out test set</h2>
+<ul>
+<li>If we plan to use some data for machine learning, we <em>must</em>
+set aside a “test set” before we do <em>anything</em> with the
+data.</li>
+<li>We will explain in a future lesson why this is so important.</li>
+</ul>
+<aside class="notes">
+<p>Our next steps - checking assumptions, handling missing data,
+identifying potentially predictive features, identifying “bad” patterns
+- will be on the part of the data that is not “held out” as a test
+set.</p>
+</aside>
 </section>
 
 <section>
 <section id="make-and-check-assumptions"
 class="title-slide slide level2">
 <h2>Make and check assumptions</h2>
-
+<aside class="notes">
+<p>It’s always a good idea to “sanity check” your data - before you look
+at it, think about what you expect to see. Then check to make sure your
+expectations are realized.</p>
+<p>Look at plots of data, summary statistics, etc. and consider general
+trends.</p>
+</aside>
 </section>
 <section id="example-author-citation-data-1" class="slide level3">
 <h3>Example: author citation data (1)</h3>
@@ -92,11 +160,11 @@ the dataset as a “new” author with a first date of publication in
 <h3>Example: author citation data (3)</h3>
 <figure>
 <img data-src="../images/1-pubmed-authors2.png" style="width:50.0%"
-alt="The real distribution, after name unification. Example via Steven Skiena @ SBU." />
+alt="The real distribution, after name unification. Example via Steven Skiena @ Stony Brook U." />
 <figcaption aria-hidden="true">The real distribution, after name
 unification. Example via <a
-href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @
-SBU</a>.</figcaption>
+href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @ Stony
+Brook U</a>.</figcaption>
 </figure>
 <!-- 
 ### Example: anomalous voting data (1)
@@ -139,12 +207,13 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
 class="slide level3 cell markdown">
 <h3>Handling unreasonable data</h3>
 <aside class="notes">
-<p>How should you handle unreasonable values or outliers?</p>
+<p>How should you handle unreasonable values, data that does not match
+expectations, or “outliers”? It depends!</p>
 <ul>
 <li>e.g. suppose in a dataset of voter information, some have impossible
-year of birth - would make the voter a child, or some indicate the voter
-is 120 years old. (Voters with no known DOB, who registered before DOB
-was required, are often encoded with a January 1900 DOB.)</li>
+year of birth - would make the voter over 120 years old. (The reason:
+Voters with no known DOB, who registered before DOB was required, are
+often encoded with a January 1900 DOB.)</li>
 <li><strong>not</strong> a good idea to just remove outliers unless you
 are sure they are a data entry error or otherwise not a “true”
 value.</li>
@@ -161,9 +230,18 @@ dates)</li>
 </aside>
 </section></section>
 <section>
-<section id="missing-data" class="title-slide slide level2">
-<h2>Missing data</h2>
+<section id="look-for-missing-data" class="title-slide slide level2">
+<h2>Look for missing data</h2>
 
+</section>
+<section id="indicators-of-missing-data"
+class="slide level3 cell markdown">
+<h3>Indicators of missing data</h3>
+<ul>
+<li>Rows that have <code>NaN</code> values</li>
+<li>Rows that are <em>not there</em></li>
+</ul>
+<!-- To do: NYC taxi tip data, NYS thruway data -->
 </section>
 <section id="examples-of-missing-data"
 class="slide level3 cell markdown">
@@ -189,15 +267,6 @@ href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
 </ul>
 </aside>
 </section>
-<section id="indications-of-missing-data"
-class="slide level3 cell markdown">
-<h3>Indications of missing data</h3>
-<ul>
-<li>Rows that have <code>NaN</code> values</li>
-<li>Rows that are <em>not there</em></li>
-</ul>
-<!-- To do: NYC taxi tip data, NYS thruway data -->
-</section>
 <section id="types-of-missingness" class="slide level3 cell markdown">
 <h3>Types of “missingness”</h3>
 <ul>
@@ -210,7 +279,7 @@ class="slide level3 cell markdown">
 can be confusing):</p>
 <ul>
 <li>Missing <em>completely</em> at random: missingness not correlated
-with any feature or to the target variable.</li>
+with any feature or the target variable.</li>
 <li>Missing at random: missingness correlated with something that is in
 data.</li>
 <li>Missing not at random: missingness correlated with something that is
@@ -230,15 +299,18 @@ on the data and the circumstances. Some possibilities include:</p>
 value</li>
 </ul>
 <aside class="notes">
-<p>For example: suppose we are training a model on Intro ML students’
-score and duration on HW questions, to predict their score on related
-exam questions.</p>
+<p>You generally have to know why the data is missing, to understand the
+best way to handle it.</p>
 </aside>
 </section></section>
 <section>
-<section id="predictive-features" class="title-slide slide level2">
-<h2>Predictive features</h2>
-
+<section id="identify-predictive-features"
+class="title-slide slide level2">
+<h2>Identify predictive features</h2>
+<aside class="notes">
+<p>“Predictive” means “related to the target variable” (any kind of
+relationship!)</p>
+</aside>
 </section>
 <section id="how-do-we-look-for-predictive-features"
 class="slide level3 cell markdown">
@@ -254,7 +326,11 @@ class="slide level3 cell markdown">
 <section id="bad-patterns-and-data-leakage"
 class="title-slide slide level2">
 <h2>“Bad patterns” (and data leakage)</h2>
-
+<aside class="notes">
+<p>When looking for predictive features, also ask yourself - are there
+patterns in the data that you <em>don’t</em> want your model to
+learn?</p>
+</aside>
 </section>
 <section id="covid-19-chest-radiography-1" class="slide level3">
 <h3>COVID-19 chest radiography (1)</h3>
@@ -333,23 +409,25 @@ diaphragm area be helpful?</p>
 <aside class="notes">
 <p>In machine learning, we train models on a training set of data, then
 evaluate their performance on a set of data that was not used in
-training.</p>
-<p>Sometimes, information from the training set can “leak” into the
-evaluation - this is called data leakage.</p>
-<p>Or, information from the target variable (which should not be
-available during inference) leaks into the feature data.</p>
-<p>Or, the model learns a “pattern” that will not be present during the
-“real” task.</p>
+training. “Data leakage” can occur when</p>
+<ul>
+<li>information “leaks” between the held-out test set and the training
+set</li>
+<li>or, information from the target variable (that should not/will not
+be available when making a prediction) leaks into the feature data</li>
+<li>or any scenario where the model may learn a “pattern” that will not
+be present during the “real” task.</li>
+</ul>
 <p>Data leakage: the model uses something (a feature, a pattern in the
 data, actual data points) that will not be available during “real”
-inference task.</p>
+prediction task.</p>
 </aside>
 </section>
 <section id="some-types-of-data-leakage" class="slide level3">
 <h3>Some types of data leakage</h3>
 <ul>
 <li>Learning from a feature that is a proxy for target variable, but
-that doesn’t generalize</li>
+that won’t be available</li>
 <li>Learning from adjacent temporal data</li>
 <li>Learning from duplicate data</li>
 <li>Learning from features that are not available at prediction time
@@ -374,61 +452,22 @@ shouldn’t help)</li>
 <li>Early testing in production</li>
 </ul>
 </section></section>
-<section>
-<section id="ethics-concerns" class="title-slide slide level2">
-<h2>Ethics concerns</h2>
-
-</section>
-<section id="some-types-of-data-ethics-fails"
-class="slide level3 cell markdown">
-<h3>Some types of data ethics fails</h3>
-<ul>
-<li>Bias</li>
-<li>Privacy</li>
-<li>Consent</li>
-</ul>
-<aside class="notes">
-<ul>
-<li>Many social media datasets used for “offensive post” classification
-have biased labels (especially if they were produced without adequate
-training procedures in place). For example, they may label posts
-containing African-American dialects of English as “offensive” much more
-often. <a
-href="https://www.aclweb.org/anthology/P19-1163.pdf">Source</a>, <a
-href="https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter">User-friendly
-article</a></li>
-<li><a
-href="http://www.michaelzimmer.org/2008/09/30/on-the-anonymity-of-the-facebook-dataset/">On
-the anonymity of the Facebook dataset</a></li>
-<li><a
-href="https://www.vice.com/en_us/art*cle/8q88nx/70000-okcupid-users-just-had-their-data-published">70,000
-OkCupid Users Just Had Their Data Published</a>; <a
-href="https://www.wired.com/2016/05/*kcupid-study-reveals-perils-big-data-science/">OkCupid
-Study Reveals the Perils of Big-Data Science</a>; <a
-href="https://ironholds.org/scientific-consent/">Ethics, scientific
-consent and OKCupid</a></li>
-<li><a
-href="https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training">IBM
-didn’t inform people when it used their Flickr photos for facial
-recognition training</a></li>
-</ul>
-</aside>
-</section></section>
 <section id="many-more-data-problems" class="title-slide slide level2">
 <h2>Many more data problems…</h2>
 <aside class="notes">
 <ul>
-<li>Data or labels reflect human bias</li>
-<li>Data is not representative of your target situation</li>
-<li>Data or situation changes over time</li>
+<li><strong>Data is not representative of your target
+situation</strong>. For example, you are training a model to predict the
+spread of infectious disease for a NYC-based health startup, but you are
+using data from another country.</li>
+<li><strong>Data or situation changes over time</strong>. For example,
+imagine you train a machine learning model to classify loan
+applications. However, if the economy changes, applicants that were
+previously considered credit-worthy might not be anymore despite having
+the same income, as the lender becomes more risk-averse. Similarly, if
+wages increase across the board, the income standard for a loan would
+increase.</li>
 </ul>
-<p>Examples:</p>
-<p>Change over time: Imagine you train a machine learning model to
-classify loan applications. However, if the economy changes, applicants
-that were previously considered credit-worthy might not be anymore
-despite having the same income, as the lender becomes more risk-averse.
-Similarly, if wages increase across the board, the income standard for a
-loan would increase.</p>
 </aside>
 </section>
     </div>
