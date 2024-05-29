@@ -56,8 +56,6 @@ Vandenberghe)</li>
 Vandenberghe)</li>
 </ul>
 </aside>
-</div>
-</section>
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
@@ -65,8 +63,8 @@ Vandenberghe)</li>
 <li>Multiple linear regression</li>
 <li>Linear basis function regression</li>
 <li>OLS solution for simple regression</li>
-<li>Interpretation</li>
 <li>OLS solution for multiple/LBF regression</li>
+<li>Interpretation</li>
 </ul>
 <aside class="notes">
 <p>With linear regression, as with all of the supervised learning models
@@ -74,20 +72,22 @@ in this course, we will consider:</p>
 <ul>
 <li>The parts of the basic “recipe” (loss function, training algorithm,
 etc.)</li>
-<li>What kind of relationships (between features and target variable)
-can be represented by this model?</li>
-<li>Are the decisions of the model explainable? (Can we infer anything
-useful from the parameters learned by the model? )</li>
-<li>What kinds of errors may this model make, and how can we adjust its
-error performance?</li>
-<li>How do we train this model efficiently - without excessive
-computation?</li>
+</ul>
+<p>and these four questions:</p>
+<ul>
+<li>What type of relationships <span class="math inline">\(f(x)\)</span>
+can it represent?</li>
+<li>What can we learn about the problem from the trained model?</li>
+<li>How do we train the model efficiently?</li>
+<li>How do we control the generalization error?</li>
 </ul>
 <p>For linear regression, we will consider the first two questions in
 this lesson, and the second two questions in the next lesson.</p>
 </aside>
 </section>
 
+</div>
+</section>
 <section>
 <section id="regression" class="title-slide slide level2">
 <h2>Regression</h2>
@@ -112,6 +112,30 @@ target variable in training data:</p>
 <p><span class="math inline">\(\forall i\)</span>, where <span
 class="math inline">\(w_0 = \frac{1}{n} \sum_{i=1}^n y_i =
 \bar{y}\)</span>.</p>
+<aside class="notes">
+<p>We can show that the mean is the one-parameter model that optimizes
+the <em>mean squared error</em> (MSE) loss function:</p>
+<p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{n}
+\sum_{i=1}^n (y_i - \hat{y_i})^2 =  \frac{1}{n} \sum_{i=1}^n (y_i -
+w_0)^2  \]</span></p>
+<p>Take the derivative of <span
+class="math inline">\(L(\mathbf{w})\)</span> with respect to <span
+class="math inline">\(w_0\)</span></p>
+<p><span class="math display">\[ \frac{\partial L(\mathbf{w}) }{\partial
+w_0} = \frac{-2}{n} \sum_{i=1}^n (y_i - w_0) \]</span></p>
+<p>and set it equal to zero:</p>
+<p><span class="math display">\[\frac{-2}{n} \sum_{i=1}^n (y_i - w_0) =
+0\]</span></p>
+<p>Since we set it equal to zero, we can ignore that <span
+class="math inline">\(-2\)</span> factor -</p>
+<p><span class="math display">\[\frac{1}{n} \sum_{i=1}^n (y_i - w_0) =
+0\]</span></p>
+<p>Now solve for <span class="math inline">\(w_0\)</span>:</p>
+<p><span class="math display">\[w_0 = \frac{1}{n} \sum_{i=1}^n y_i  =
+0\]</span></p>
+<p>This is the single parameter value that minimizes the mean squared
+error loss function.</p>
+</aside>
 </section>
 <section id="prediction-by-mean-illustration" class="slide level3">
 <h3>Prediction by mean, illustration</h3>
@@ -138,12 +162,16 @@ some/all of that variance.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="sample-mean-variance---definitions" class="slide level3">
-<h3>Sample mean, variance - definitions</h3>
-<p>Sample mean and variance:</p>
+<section id="mean-variance---definitions" class="slide level3">
+<h3>Mean, variance - definitions</h3>
+<p>Mean and variance:</p>
 <p><span class="math display">\[\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i,
 \quad \sigma_y^2 = \frac{1}{n} \sum_{i=1}^n (y_i - \bar{y})
 ^2\]</span></p>
+<aside class="notes">
+<p>We are using the “biased” estimate of mean and variace, without
+Bessel’s correction.</p>
+</aside>
 </section></section>
 <section>
 <section id="simple-linear-regression" class="title-slide slide level2">
@@ -199,26 +227,23 @@ truly “random”…</p>
 model:</p>
 <p><span class="math display">\[y_i = w_0 + w_1 x_i + e_i\]</span></p>
 <p>where <span class="math inline">\(e_i = y_i - \hat{y_i}\)</span>.</p>
+<!-- 
+
+### Example:  Intro ML grades (1)
+
+![Histogram of previous students' grades in Intro ML.](../images/2-example-hist.svg){ width=40% }
+
+::: notes
+
+Note: this is a fictional example with completely invented numbers.
+
+Suppose students in Intro ML have the following distribution of course grades. We want to develop a model that can predict a student's course grade.
+
+:::
+-->
 </section>
-<section id="example-intro-ml-grades-1" class="slide level3">
-<h3>Example: Intro ML grades (1)</h3>
-<figure>
-<img data-src="../images/2-example-hist.svg" style="width:40.0%"
-alt="Histogram of previous students’ grades in Intro ML." />
-<figcaption aria-hidden="true">Histogram of previous students’ grades in
-Intro ML.</figcaption>
-</figure>
-<aside class="notes">
-<p>Note: this is a fictional example with completely invented
-numbers.</p>
-<p>Suppose students in Intro ML have the following distribution of
-course grades. We want to develop a model that can predict whether you
-will be a student in the “95-100” bin or a student in the “75-80”
-bin.</p>
-</aside>
-</section>
-<section id="example-intro-ml-grades-2" class="slide level3">
-<h3>Example: Intro ML grades (2)</h3>
+<section id="example-intro-ml-grades" class="slide level3">
+<h3>Example: Intro ML grades</h3>
 <figure>
 <img data-src="../images/2-example-regression.svg" style="width:40.0%"
 alt="Predicting students’ grades in Intro ML using regression on previous coursework." />
@@ -226,6 +251,8 @@ alt="Predicting students’ grades in Intro ML using regression on previous cour
 using regression on previous coursework.</figcaption>
 </figure>
 <aside class="notes">
+<p>Suppose students we want to develop a model that can predict a
+student’s course grade.</p>
 <p>To some extent, a student’s average grades on previous coursework
 “explains” their grade in Intro ML.</p>
 <ul>
@@ -542,13 +569,12 @@ class="title-slide slide level2">
 <h2>Ordinary least squares solution for simple linear regression</h2>
 
 </section>
-<section id="mean-squared-error" class="slide level3">
-<h3>Mean squared error</h3>
+<section id="mean-squared-error-loss-function" class="slide level3">
+<h3>Mean squared error loss function</h3>
 <p>We will use the <em>mean squared error</em> (MSE) loss function:</p>
 <p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{n}
-\sum_{i=1}^n (y_i - \hat{y_i})^2 = \frac{1}{n} \sum_{i=1}^n ( e_i )^2
-\]</span></p>
-<p>a variation on the <em>residual sum of squares</em> (RSS):</p>
+\sum_{i=1}^n (y_i - \hat{y_i})^2 \]</span></p>
+<p>which is related to the <em>residual sum of squares</em> (RSS):</p>
 <p><span class="math display">\[\sum_{i=1}^n (y_i - \hat{y_i})^2 =
 \sum_{i=1}^n ( e_i )^2 \]</span></p>
 <aside class="notes">
@@ -591,20 +617,20 @@ class="slide level3">
 <h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
 linear regression (1)</h3>
 <p>Given</p>
-<p><span class="math display">\[ MSE(w_0, w_1) = \frac{1}{n}
-\sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 \]</span></p>
+<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n
+[y_i - (w_0 + w_1 x_i) ]^2 \]</span></p>
 <p>we take</p>
-<p><span class="math display">\[ \frac{\partial MSE}{\partial w_0} = 0,
-\frac{\partial MSE}{\partial w_1} = 0\]</span></p>
+<p><span class="math display">\[ \frac{\partial L}{\partial w_0} = 0,
+\frac{\partial L}{\partial w_1} = 0\]</span></p>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-2"
 class="slide level3">
 <h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
 linear regression (2)</h3>
 <p>First, the intercept:</p>
-<p><span class="math display">\[ MSE(w_0, w_1) = \frac{1}{n}
-\sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
-<p><span class="math display">\[ \frac{\partial MSE}{\partial w_0}
+<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n
+[y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
+<p><span class="math display">\[ \frac{\partial L}{\partial w_0}
 =  -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] \]</span></p>
 <p>using chain rule, power rule.</p>
 <aside class="notes">
@@ -631,9 +657,9 @@ class="slide level3">
 <h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
 linear regression (4)</h3>
 <p>Now, the slope coefficient:</p>
-<p><span class="math display">\[ MSE(w_0, w_1) = \frac{1}{n}
-\sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
-<p><span class="math display">\[ \frac{\partial MSE}{\partial w_1} =
+<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n
+[y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
+<p><span class="math display">\[ \frac{\partial L}{\partial w_1} =
 \frac{1}{n}\sum_{i=1}^n  2(y_i - w_0 -w_1 x_i)(-x_i)\]</span></p>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-5"
@@ -650,10 +676,10 @@ linear regression (5)</h3>
 for details.</p>
 </aside>
 </section>
-<section id="optimizing-mathbfw---simple-linear-regression-6"
+<section id="optimizing-mathbfw---relationship-to-variancecovariance"
 class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (6)</h3>
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> -
+relationship to variance/covariance</h3>
 <p>The slope coefficient is the ratio of <em>sample covariance</em>
 <span class="math inline">\(\sigma_{xy}\)</span> to <em>sample
 variance</em> <span class="math inline">\(\sigma_x^2\)</span>:</p>
@@ -664,16 +690,16 @@ variance</em> <span class="math inline">\(\sigma_x^2\)</span>:</p>
 class="math inline">\(\sigma_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i -
 \bar{x}) ^2\)</span></p>
 </section>
-<section id="optimizing-mathbfw---simple-linear-regression-7"
+<section
+id="optimizing-mathbfw---relationship-to-correlation-coefficient"
 class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (7)</h3>
+<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> -
+relationship to correlation coefficient</h3>
 <p>We can also express it as</p>
 <p><span class="math display">\[ \frac{r_{xy} \sigma_y}{\sigma_x}
 \]</span></p>
-<p>where sample correlation coefficient <span
-class="math inline">\(r_{xy} = \frac{\sigma_{xy}}{\sigma_x
-\sigma_y}\)</span>.</p>
+<p>where correlation coefficient <span class="math inline">\(r_{xy} =
+\frac{\sigma_{xy}}{\sigma_x \sigma_y}\)</span>.</p>
 <aside class="notes">
 <p>(Note: from Cauchy-Schwartz law, <span
 class="math inline">\(|\sigma_{xy}| &lt; \sigma_x \sigma_y\)</span>, we
@@ -683,129 +709,27 @@ know <span class="math inline">\(r_{xy} \in [-1, 1]\)</span>)</p>
 <section id="mse-for-optimal-simple-linear-regression"
 class="slide level3 cell markdown">
 <h3>MSE for optimal simple linear regression</h3>
-<p><span class="math display">\[MSE(w_0^*, w_1^*) = \sigma_y^2 -
+<p><span class="math display">\[L(w_0^*, w_1^*) = \sigma_y^2 -
 \frac{\sigma_{xy}^2}{\sigma_{x}^2} \]</span></p>
-<p><span class="math display">\[\implies \frac{MSE(w_0^*,
+<p><span class="math display">\[\implies \frac{L(w_0^*,
 w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2
 \sigma_{y}^2}\]</span></p>
 <aside class="notes">
+<p><strong>If</strong> we fit a simple regression model using this
+ordinary least squares solution,</p>
 <ul>
-<li>the ratio on the left in the second line is the <em>fraction of
-unexplained variance</em>: of all the variance in <span
-class="math inline">\(y\)</span>, how much is still “left” unexplained
-after our model explains some of it? (best case: 0)</li>
-<li>the ratio on the far right in the second line is the <em>coefficient
-of determination</em>, R2 (best case: 1).</li>
+<li>the ratio <span class="math inline">\(\frac{L(w_0^*,
+w_1^*)}{\sigma_y^2}\)</span> is the <em>fraction of unexplained
+variance</em>: of all the variance in <span
+class="math inline">\(y\)</span> (denominator), how much is still “left”
+unexplained after our model explains some of it (numerator)? (best case:
+0)</li>
+<li>the ratio <span
+class="math inline">\(\frac{\sigma_{xy}^2}{\sigma_{x}^2
+\sigma_{y}^2}\)</span> is the <em>coefficient of determination</em>, R2
+(best case: 1).</li>
 </ul>
 </aside>
-</section></section>
-<section>
-<section id="regression-metrics" class="title-slide slide level2">
-<h2>Regression metrics</h2>
-
-</section>
-<section id="many-numbers" class="slide level3">
-<h3>Many numbers:</h3>
-<ul>
-<li>Correlation coefficient R (<span
-class="math inline">\(r_{xy}\)</span>)</li>
-<li>Slope coefficient <span class="math inline">\(w_1\)</span> and
-intercept <span class="math inline">\(w_0\)</span></li>
-<li>RSS, MSE, R2</li>
-</ul>
-<aside class="notes">
-<p>Which of these depend only on the data, and which depend on the model
-too?</p>
-<p>Which of these tell us something about the “goodness” of our
-model?</p>
-</aside>
-</section>
-<section id="interpreting-r-correlation-coefficient"
-class="slide level3">
-<h3>Interpreting R: correlation coefficient</h3>
-<figure>
-<img data-src="../images/Correlation_examples2.svg"
-alt="Several sets of (x, y) points, with r_{xy} for each. Image via Wikipedia." />
-<figcaption aria-hidden="true">Several sets of (x, y) points, with <span
-class="math inline">\(r_{xy}\)</span> for each. Image via
-Wikipedia.</figcaption>
-</figure>
-</section>
-<section id="interpreting-r2-coefficient-of-determination-1"
-class="slide level3">
-<h3>Interpreting R2: coefficient of determination (1)</h3>
-<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i -
-\overline{y_i})^2}\]</span></p>
-<p>For linear regression: What proportion of the variance in <span
-class="math inline">\(y\)</span> is “explained” by our model?</p>
-<ul>
-<li><span class="math inline">\(R^2 \approx 1\)</span> - model
-“explains” all the variance in <span
-class="math inline">\(y\)</span></li>
-<li><span class="math inline">\(R^2 \approx 0\)</span> - model doesn’t
-“explain” any of the variance in <span
-class="math inline">\(y\)</span></li>
-</ul>
-</section>
-<section id="interpreting-r2-coefficient-of-determination-2"
-class="slide level3">
-<h3>Interpreting R2: coefficient of determination (2)</h3>
-<p>Alternatively: what is the ratio of error of our model, to error of
-prediction by mean?</p>
-<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i -
-\overline{y_i})^2}\]</span></p>
-</section>
-<section id="example-intro-ml-grades-3" class="slide level3">
-<h3>Example: Intro ML grades (3)</h3>
-<figure>
-<img data-src="../images/2-example-regression-metrics.svg"
-style="width:75.0%"
-alt="Predicting students’ grades in Intro ML, for two different sections." />
-<figcaption aria-hidden="true">Predicting students’ grades in Intro ML,
-for two different sections.</figcaption>
-</figure>
-<aside class="notes">
-<p>In Instructor A’s section, a change in average overall course grades
-is associated with a bigger change in Intro ML course grade than in
-Instructor B’s section; but in Instructor B’s section, more of the
-variance among students is explained by the linear regression on
-previous overall grades.</p>
-<p>Note: the example above was for a simple linear regression (model
-with one feature).</p>
-<ul>
-<li>The slope coefficient of a linear regression models with one feature
-tells us, “an increase of one unit in this feature is associated with an
-increase of the target variable by [the coefficient value]”.</li>
-<li>The coefficients of a multiple regression model with several
-features tell us, “an increase of one unit in this feature,
-<strong>while holding the other features that are in the model
-constant</strong>, is associated with an increase of the target variable
-by [the value of the coefficient for that feature]”.</li>
-</ul>
-</aside>
-<!--
-
-### Example: TX vaccination levels (2)
-
-![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=40% }
-
-
-
-### Example: FL vaccination levels
-
-![Florida vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-fl-covid.jpeg){ width=40% }
-
-::: notes
-
-In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.
-
-:::
-
-
-
--->
 </section></section>
 <section>
 <section
@@ -891,6 +815,169 @@ in <span class="math inline">\(d\)</span> unknowns, called the
 <p>We can solve this as we would any set of linear equations (see
 supplementary notebook on computing regression coefficients by
 hand.)</p>
+</aside>
+</section></section>
+<section>
+<section id="interpreting-regression-metrics"
+class="title-slide slide level2">
+<h2>Interpreting regression metrics</h2>
+
+</section>
+<section id="understanding-the-numbers" class="slide level3">
+<h3>Understanding the numbers</h3>
+<ul>
+<li>Correlation coefficient <span
+class="math inline">\(r_{xy}\)</span></li>
+<li>Slope coefficient <span class="math inline">\(w_j\)</span> for
+feature <span class="math inline">\(j\)</span></li>
+<li>MSE, R2</li>
+</ul>
+<aside class="notes">
+<p>Which of these depend only on the data, and which depend on the model
+too?</p>
+<p>Which of these tell us something about the “goodness” of our
+model?</p>
+</aside>
+</section>
+<section id="interpreting-correlation-coefficient" class="slide level3">
+<h3>Interpreting correlation coefficient</h3>
+<figure>
+<img data-src="../images/Correlation_examples2.svg"
+alt="Several sets of (x, y) points, with r_{xy} for each. Image via Wikipedia." />
+<figcaption aria-hidden="true">Several sets of (x, y) points, with <span
+class="math inline">\(r_{xy}\)</span> for each. Image via
+Wikipedia.</figcaption>
+</figure>
+<aside class="notes">
+<p>The correlation coefficient <span
+class="math inline">\(\frac{\sigma_{xy}}{\sigma_x \sigma_y}\)</span> is
+fundamental to the data - it tells us how well a linear relationship can
+fit the data.</p>
+</aside>
+</section>
+<section id="interpreting-coefficient-w_j" class="slide level3">
+<h3>Interpreting coefficient <span
+class="math inline">\(w_j\)</span></h3>
+<p>The coefficient <span class="math inline">\(w_j\)</span> for feature
+<span class="math inline">\(j\)</span> says:</p>
+<ul>
+<li>simple regression: “an increase of one unit in this feature is
+associated with an increase of the target variable by <span
+class="math inline">\(w_j\)</span>”</li>
+<li>multiple regression: “an increase of one unit in this feature,
+<strong>while holding the other features that are in the model
+constant</strong>, is associated with an increase of the target variable
+by <span class="math inline">\(w_j\)</span>”</li>
+</ul>
+<aside class="notes">
+<p>Note: doesn’t say whether the effect is <em>causal</em> or whether it
+is <em>significant</em> (out of scope of this course).</p>
+<p>Be aware of units - we cannot directly compare the magnitude of
+coefficients of features measured in different units.</p>
+</aside>
+</section>
+<section id="interpreting-r2-as-explained-variance"
+class="slide level3">
+<h3>Interpreting R2 as explained variance</h3>
+<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i -
+\overline{y_i})^2}\]</span></p>
+<p>For linear regression: What proportion of the variance in <span
+class="math inline">\(y\)</span> is “explained” by our model?</p>
+<ul>
+<li><span class="math inline">\(R^2 \approx 1\)</span> - model
+“explains” all the variance in <span
+class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(R^2 \approx 0\)</span> - model doesn’t
+“explain” any of the variance in <span
+class="math inline">\(y\)</span></li>
+</ul>
+</section>
+<section id="interpreting-r2-as-error-relative-to-mean-model"
+class="slide level3">
+<h3>Interpreting R2 as error relative to “mean model”</h3>
+<p>Alternatively: what is the ratio of error of our model, to error of
+prediction by mean?</p>
+<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i -
+\overline{y_i})^2}\]</span></p>
+<aside class="notes">
+<p>What would be R2 of a model that is <em>worse</em> than prediction by
+mean?</p>
+</aside>
+</section>
+<section id="example-intro-ml-grades-2" class="slide level3">
+<h3>Example: Intro ML grades (2)</h3>
+<figure>
+<img data-src="../images/2-example-regression-metrics.svg"
+style="width:75.0%"
+alt="Predicting students’ grades in Intro ML, for two different sections." />
+<figcaption aria-hidden="true">Predicting students’ grades in Intro ML,
+for two different sections.</figcaption>
+</figure>
+<aside class="notes">
+<p>In Instructor A’s section, a change in average overall course grades
+is associated with a bigger change in Intro ML course grade than in
+Instructor B’s section; but in Instructor B’s section, more of the
+variance among students is explained by the linear regression on
+previous overall grades.</p>
+</aside>
+<!--
+
+### Example: TX vaccination levels (2)
+
+![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=40% }
+
+
+
+### Example: FL vaccination levels
+
+![Florida vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-fl-covid.jpeg){ width=40% }
+
+::: notes
+
+In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.
+
+:::
+
+
+
+-->
+</section></section>
+<section>
+<section id="recap" class="title-slide slide level2">
+<h2>Recap</h2>
+
+</section>
+<section id="completed-recipe" class="slide level3">
+<h3>Completed “recipe”</h3>
+<ol type="1">
+<li>Get <strong>data</strong>: <span
+class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+<li>Choose a <strong>model</strong>: <span
+class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)},
+\mathbf{w} \rangle\)</span></li>
+<li>Choose a <strong>loss function</strong>: <span
+class="math inline">\(L(\mathbf{w}) = \frac{1}{n} (y_i - \hat{y}_i)
+^2\)</span></li>
+<li>Find model <strong>parameters</strong> that minimize loss: OLS
+solution for <span class="math inline">\(\mathbf{w}^{*}\)</span></li>
+<li>Use model to <strong>predict</strong> <span
+class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
+<li>Evaluate model performance on new, unseen data</li>
+</ol>
+</section>
+<section id="key-questions" class="slide level3">
+<h3>Key questions</h3>
+<ul>
+<li>What type of relationships <span class="math inline">\(f(x)\)</span>
+can it represent?</li>
+<li>What can we learn about the problem from the trained model?</li>
+<li>(How do we train the model efficiently?)</li>
+<li>(How do we control the generalization error?)</li>
+</ul>
+<aside class="notes">
+<p>We will address the last two questions next week.</p>
 </aside>
 </section></section>
     </div>

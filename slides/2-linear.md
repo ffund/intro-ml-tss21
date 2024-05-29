@@ -2,8 +2,8 @@
 title:  'Linear Regression'
 author: 'Fraida Fund'
 ---
-
 ::: {.cell .markdown}
+
 
 :::notes
 
@@ -17,16 +17,14 @@ author: 'Fraida Fund'
 
 :::
 
-:::
-
 ## In this lecture
 
 * Simple (univariate) linear regression
 * Multiple linear regression
 * Linear basis function regression
 * OLS solution for simple regression
-* Interpretation 
 * OLS solution for multiple/LBF regression
+* Interpretation 
 
 :::notes
 
@@ -34,12 +32,17 @@ author: 'Fraida Fund'
 With linear regression, as with all of the supervised learning models in this course, we will consider:
 
 * The parts of the basic "recipe" (loss function, training algorithm, etc.)
-* What kind of relationships (between features and target variable) can be represented by this model?
-* Are the decisions of the model explainable? (Can we infer anything useful from the parameters learned by the model? )
-* What kinds of errors may this model make, and how can we adjust its error performance? 
-* How do we train this model efficiently - without excessive computation? 
+
+and these four questions:
+
+* What type of relationships $f(x)$ can it represent?
+* What can we learn about the problem from the trained model?
+* How do we train the model efficiently?
+* How do we control the generalization error?
 
 For linear regression, we will consider the first two questions in this lesson, and the second two questions in the next lesson.
+
+:::
 
 :::
 
@@ -68,15 +71,42 @@ $$\hat{y_i} = w_0$$
 $\forall i$, where $w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}$.
 
 
+::: notes
+
+We can show that the mean is the one-parameter model that optimizes the *mean squared error* (MSE) loss function:
+
+$$ L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 =  \frac{1}{n} \sum_{i=1}^n (y_i - w_0)^2  $$ 
+
+Take the derivative of $L(\mathbf{w})$ with respect to $w_0$
+
+$$ \frac{\partial L(\mathbf{w}) }{\partial w_0} = \frac{-2}{n} \sum_{i=1}^n (y_i - w_0) $$
+
+
+and set it equal to zero:
+
+$$\frac{-2}{n} \sum_{i=1}^n (y_i - w_0) = 0$$
+
+Since we set it equal to zero, we can ignore that $-2$ factor -
+
+$$\frac{1}{n} \sum_{i=1}^n (y_i - w_0) = 0$$
+
+Now solve for $w_0$:
+
+$$w_0 = \frac{1}{n} \sum_{i=1}^n y_i  = 0$$
+
+This is the single parameter value that minimizes the mean squared error loss function.
+
+
+:::
+
+\newpage
 ### Prediction by mean, illustration
 
 ::: notes
 
 
-
 ![A "recipe" for our simple ML system.](../images/2-prediction-mean-zero-variance.png){ width=80% }
 
-\newpage
 
 Note that the loss function we defined for this problem - sum of squared differences between the true value and predicted value - is the variance of $y$.
 
@@ -88,13 +118,19 @@ Under what conditions will that loss function be very small (or even zero)?
 :::
 
 
-### Sample mean, variance - definitions
+### Mean, variance - definitions
 
-Sample mean and variance:
+Mean and variance:
 
 $$\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i, \quad \sigma_y^2 = \frac{1}{n} \sum_{i=1}^n (y_i - \bar{y}) ^2$$
 
+::: notes
 
+We are using the "biased" estimate of mean and variace, without Bessel's correction.
+
+:::
+
+\newpage
 
 ## Simple linear regression
 
@@ -121,8 +157,6 @@ $$ \hat{y_i} = w_0 + w_1 x_i$$
 
 where $\mathbf{w} = [w_0, w_1]$, the intercept and slope, are model **parameters** that we *fit* in training.
 
-\newpage
-
 ### Residual term (1)
 
 There is variance in $y$ among the data:
@@ -147,6 +181,9 @@ $$y_i = w_0 + w_1 x_i + e_i$$
 
 where $e_i = y_i - \hat{y_i}$.
 
+\newpage
+
+<!-- 
 
 ### Example:  Intro ML grades (1)
 
@@ -156,19 +193,19 @@ where $e_i = y_i - \hat{y_i}$.
 
 Note: this is a fictional example with completely invented numbers.
 
-Suppose students in Intro ML have the following distribution of course grades. We want to develop a model that can predict whether you will be a student in the "95-100" bin or a student in the "75-80" bin.
+Suppose students in Intro ML have the following distribution of course grades. We want to develop a model that can predict a student's course grade.
 
 :::
+-->
 
-\newpage
-
-
-### Example:  Intro ML grades (2)
+### Example:  Intro ML grades 
 
 ![Predicting students' grades in Intro ML using regression on previous coursework.](../images/2-example-regression.svg){ width=40% }
 
 
 ::: notes
+
+Suppose students we want to develop a model that can predict a student's course grade.
 
 To some extent, a student's average grades on previous coursework "explains" their grade in Intro ML. 
 
@@ -451,14 +488,14 @@ Now that we have described some more flexible versions of the linear regression 
 
 ## Ordinary least squares solution for simple linear regression
 
-### Mean squared error
+### Mean squared error loss function
 
 
 We will use the *mean squared error* (MSE) loss function:
 
-$$ L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 = \frac{1}{n} \sum_{i=1}^n ( e_i )^2 $$ 
+$$ L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 $$ 
 
-a variation on the *residual sum of squares* (RSS):
+which is related to the *residual sum of squares* (RSS):
 
 $$\sum_{i=1}^n (y_i - \hat{y_i})^2 = \sum_{i=1}^n ( e_i )^2 $$ 
 
@@ -498,20 +535,20 @@ The loss function is convex, so to find $\mathbf{w^*}$ where $L(\mathbf{w})$ is 
 
 Given 
 
-$$ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 $$
+$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 $$
 
 we take
 
-$$ \frac{\partial MSE}{\partial w_0} = 0, \frac{\partial MSE}{\partial w_1} = 0$$
+$$ \frac{\partial L}{\partial w_0} = 0, \frac{\partial L}{\partial w_1} = 0$$
 
 
 ### Optimizing $\mathbf{w}$ - simple linear regression (2)
 
 First, the intercept:
 
-$$ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 $$
+$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 $$
 
-$$ \frac{\partial MSE}{\partial w_0} =  -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] $$
+$$ \frac{\partial L}{\partial w_0} =  -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] $$
 
 using chain rule, power rule. 
 
@@ -536,10 +573,10 @@ where $\bar{x}, \bar{y}$ are the means of $x, y$.
 
 Now, the slope coefficient:
 
-$$ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 $$
+$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 $$
 
 
-$$ \frac{\partial MSE}{\partial w_1} = \frac{1}{n}\sum_{i=1}^n  2(y_i - w_0 -w_1 x_i)(-x_i)$$
+$$ \frac{\partial L}{\partial w_1} = \frac{1}{n}\sum_{i=1}^n  2(y_i - w_0 -w_1 x_i)(-x_i)$$
 
 
 
@@ -557,7 +594,7 @@ Note: some algebra is omitted here, but refer to the secondary notes for details
 
 :::
 
-### Optimizing $\mathbf{w}$ - simple linear regression (6)
+### Optimizing $\mathbf{w}$ - relationship to variance/covariance
 
 The slope coefficient is the ratio of *sample covariance* $\sigma_{xy}$ to *sample variance* $\sigma_x^2$:
 
@@ -565,13 +602,13 @@ $$ \frac{\sigma_{xy}}{\sigma_x^2} $$
 
 where $\sigma_{xy} = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$ and $\sigma_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x}) ^2$
 
-### Optimizing $\mathbf{w}$ - simple linear regression (7)
+### Optimizing $\mathbf{w}$ - relationship to correlation coefficient
 
 We can also express it as
 
 $$ \frac{r_{xy} \sigma_y}{\sigma_x} $$
 
-where sample correlation coefficient 
+where correlation coefficient 
 $r_{xy} = \frac{\sigma_{xy}}{\sigma_x \sigma_y}$.
 
 ::: notes
@@ -585,107 +622,22 @@ $r_{xy} = \frac{\sigma_{xy}}{\sigma_x \sigma_y}$.
 
 ### MSE for optimal simple linear regression
 
-$$MSE(w_0^*, w_1^*) = \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} $$ 
+$$L(w_0^*, w_1^*) = \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} $$ 
 
-$$\implies \frac{MSE(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$$
+$$\implies \frac{L(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$$
 
 
 ::: notes
 
-* the ratio on the left in the second line is the *fraction of unexplained variance*: of all the variance in $y$, how much is still "left" unexplained after our model explains some of it? (best case: 0)
-* the ratio on the far right in the second line is the *coefficient of determination*, R2 (best case: 1).
+**If** we fit a simple regression model using this ordinary least squares solution,
+
+* the ratio $\frac{L(w_0^*, w_1^*)}{\sigma_y^2}$ is the *fraction of unexplained variance*: of all the variance in $y$ (denominator), how much is still "left" unexplained after our model explains some of it (numerator)? (best case: 0)
+* the ratio $\frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$ is the *coefficient of determination*, R2 (best case: 1).
 
 :::
 
 :::
 
-
-
-\newpage
-
-## Regression metrics
-
-
-### Many numbers:
-
-* Correlation coefficient R ($r_{xy}$)
-* Slope coefficient $w_1$ and intercept $w_0$
-* RSS, MSE, R2
-
-::: notes
-
-Which of these depend only on the data, and which depend on the model too?
-
-Which of these tell us something about the "goodness" of our model?
-
-:::
-
-
-### Interpreting R: correlation coefficient
-
-![Several sets of (x, y) points, with $r_{xy}$ for each. Image via Wikipedia.](../images/Correlation_examples2.svg)
-
-
-
-### Interpreting R2: coefficient of determination (1)
-
-$$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}$$
-
-For linear regression: What proportion of the variance in $y$ is "explained" by our model?
-
-* $R^2 \approx 1$ - model "explains" all the variance in $y$
-* $R^2 \approx 0$ - model doesn't "explain" any of the variance in $y$
-
-### Interpreting R2: coefficient of determination (2)
-
-Alternatively: what is the ratio of error of our model, to error of prediction by mean?
-
-
-$$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}$$
-
-\newpage
-
-
-
-### Example: Intro ML grades (3)
-
-![Predicting students' grades in Intro ML, for two different sections.](../images/2-example-regression-metrics.svg){ width=75% }
-
-::: notes
-
-In Instructor A's section, a change in average overall course grades is associated with a bigger change in Intro ML course grade than in Instructor B's section; but in Instructor B's section, more of the variance among students is explained by the linear regression on previous overall grades.
-
-Note: the example above was for a simple linear regression (model with one feature).
-
-* The slope coefficient of a linear regression models with one feature tells us, "an increase of one unit in this feature is associated with an increase of the target variable by [the coefficient value]".
-* The coefficients of a multiple regression model with several features tell us, "an increase of one unit in this feature, **while holding the other features that are in the model constant**, is associated with an increase of the target variable by [the value of the coefficient for that feature]".
-
-:::
-
-<!--
-
-### Example: TX vaccination levels (2)
-
-![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=40% }
-
-
-
-### Example: FL vaccination levels
-
-![Florida vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-fl-covid.jpeg){ width=40% }
-
-::: notes
-
-In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.
-
-:::
-
-
-\newpage
-
---> 
 
 
 ## Ordinary least squares solution for multiple/linear basis function regression
@@ -770,6 +722,135 @@ represents a set of $d$ equations in $d$ unknowns, called the *normal equations*
 ::: notes
 
 We can solve this as we would any set of linear equations (see supplementary notebook on computing regression coefficients by hand.)
+
+:::
+
+
+## Interpreting regression metrics
+
+
+### Understanding the numbers
+
+* Correlation coefficient $r_{xy}$
+* Slope coefficient $w_j$ for feature $j$
+* MSE, R2
+
+::: notes
+
+Which of these depend only on the data, and which depend on the model too?
+
+Which of these tell us something about the "goodness" of our model?
+
+:::
+
+
+### Interpreting correlation coefficient
+
+![Several sets of (x, y) points, with $r_{xy}$ for each. Image via Wikipedia.](../images/Correlation_examples2.svg)
+
+::: notes
+
+The correlation coefficient $\frac{\sigma_{xy}}{\sigma_x \sigma_y}$ is fundamental to the data - it tells us how well a linear relationship can fit the data.
+
+:::
+
+\newpage
+
+### Interpreting coefficient $w_j$
+
+The coefficient $w_j$ for feature $j$ says: 
+
+* simple regression: "an increase of one unit in this feature is associated with an increase of the target variable by $w_j$"
+* multiple regression: "an increase of one unit in this feature, **while holding the other features that are in the model constant**, is associated with an increase of the target variable by $w_j$"
+
+::: notes
+
+Note: doesn't say whether the effect is *causal* or whether it is *significant* (out of scope of this course).
+
+Be aware of units - we cannot directly compare the magnitude of coefficients of features measured in different units.
+
+:::
+
+### Interpreting R2 as explained variance
+
+$$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}$$
+
+For linear regression: What proportion of the variance in $y$ is "explained" by our model?
+
+* $R^2 \approx 1$ - model "explains" all the variance in $y$
+* $R^2 \approx 0$ - model doesn't "explain" any of the variance in $y$
+
+### Interpreting R2 as error relative to "mean model"
+
+Alternatively: what is the ratio of error of our model, to error of prediction by mean?
+
+
+$$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}$$
+
+:::notes
+
+What would be R2 of a model that is *worse* than prediction by mean?
+
+:::
+
+### Example: Intro ML grades (2)
+
+![Predicting students' grades in Intro ML, for two different sections.](../images/2-example-regression-metrics.svg){ width=75% }
+
+::: notes
+
+In Instructor A's section, a change in average overall course grades is associated with a bigger change in Intro ML course grade than in Instructor B's section; but in Instructor B's section, more of the variance among students is explained by the linear regression on previous overall grades.
+
+
+:::
+
+<!--
+
+### Example: TX vaccination levels (2)
+
+![Texas vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-tx-covid.jpeg){ width=40% }
+
+
+
+### Example: FL vaccination levels
+
+![Florida vaccination levels vs. share of 2020 Trump vote, by county. Via [Charles Gaba](https://twitter.com/charles_gaba/status/1404472166926651395).](../images/2-reg-fl-covid.jpeg){ width=40% }
+
+::: notes
+
+In Florida, a change in vote share is associated with a bigger change in vaccination level than in Texas; but in Texas, more of the variance among counties is explained by the linear regression on vote share.
+
+:::
+
+
+\newpage
+
+--> 
+
+## Recap
+
+### Completed "recipe"
+
+
+1. Get **data**: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$ 
+2. Choose a **model**: $\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle$
+3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{n} (y_i - \hat{y}_i) ^2$
+4. Find model **parameters** that minimize loss: OLS solution for $\mathbf{w}^{*}$
+5. Use model to **predict** $\hat{y}$ for new, unlabeled samples
+6. Evaluate model performance on new, unseen data
+
+### Key questions
+
+* What type of relationships $f(x)$ can it represent?
+* What can we learn about the problem from the trained model?
+* (How do we train the model efficiently?)
+* (How do we control the generalization error?)
+
+::: notes
+
+We will address the last two questions next week.
 
 :::
 

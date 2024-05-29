@@ -14,11 +14,11 @@ $$\hat{y_i} = w_0 + w_1 x_i$$
 
 Given the (convex) loss function
 
-$$ MSE(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 $$
+$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 $$
 
-to find the minimum, we take the derivative and set it equal to zero:
+to find the minimum, we take the partial derivative with respect to each parameter, and set it equal to zero:
 
-$$ \frac{\partial MSE}{\partial w_0} = 0, \frac{\partial MSE}{\partial w_1} = 0$$
+$$ \frac{\partial L}{\partial w_0} = 0, \frac{\partial L}{\partial w_1} = 0$$
 
 
 ## Solution for intercept $w_0$
@@ -26,12 +26,12 @@ $$ \frac{\partial MSE}{\partial w_0} = 0, \frac{\partial MSE}{\partial w_1} = 0$
 First, let's solve for the intercept $w_0$. Using the chain rule, power rule:
 
 $$ 
-\frac{\partial MSE}{\partial w_0} = \frac{1}{n}\sum_{i=1}^n  (2)[y_i - (w_0 + w_1 x_i) ] (-1) = -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] 
+\frac{\partial L}{\partial w_0} = \frac{1}{n}\sum_{i=1}^n  (2)[y_i - (w_0 + w_1 x_i) ] (-1) = -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] 
 $$
 
 (We can then drop the constant factor when we set this expression equal to $0$.)
 
-Then, setting $\frac{\partial MSE}{\partial w_0}=0$  is equivalent to setting the sum of residuals to zero:
+Then, setting $\frac{\partial L}{\partial w_0}=0$  is equivalent to setting the sum of residuals to zero:
 
 $$ \sum_{i=1}^n e_i  = 0$$
 
@@ -43,7 +43,7 @@ $$ \sum_{i=1}^n e_i  = 0$$
 Next, we work on the slope:
 
 
-$$ \frac{\partial MSE}{\partial w_1} = \frac{1}{n}\sum_{i=1}^n  2[y_i - (w_0 + w_1 x_i)](-x_i)$$
+$$ \frac{\partial L}{\partial w_1} = \frac{1}{n}\sum_{i=1}^n  2[y_i - (w_0 + w_1 x_i)](-x_i)$$
 
 $$  \implies -\frac{2}{n} \sum_{i=1}^n x_i [y_i - (w_0 + w_1 x_i)]  = 0$$
 
@@ -56,7 +56,7 @@ $$  \sum_{i=1}^n x_i e_i  = 0$$
 
 ## Solving two equations for two unknowns
 
-From setting the $\frac{\partial MSE}{\partial w_0}=0$ and $\frac{\partial MSE}{\partial w_1}=0$ we end up with two equations involving the residuals:
+From setting the $\frac{\partial L}{\partial w_0}=0$ and $\frac{\partial L}{\partial w_1}=0$ we end up with two equations involving the residuals:
 
 $$  \sum_{i=1}^n e_i  = 0,  \sum_{i=1}^n x_i e_i  = 0$$
 
@@ -76,7 +76,7 @@ i.e.
 
 $$w_0^* = \bar{y} - w_1 \bar{x}$$
 
-where $\bar{x}, \bar{y}$ are the sample means of $x, y$.
+where $\bar{x}, \bar{y}$ are the means of $x, y$.
 
 \newpage
 
