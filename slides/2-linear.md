@@ -596,7 +596,7 @@ Note: some algebra is omitted here, but refer to the secondary notes for details
 
 ### Optimizing $\mathbf{w}$ - relationship to variance/covariance
 
-The slope coefficient is the ratio of *sample covariance* $\sigma_{xy}$ to *sample variance* $\sigma_x^2$:
+The slope coefficient is the ratio of *covariance* $\sigma_{xy}$ to *variance* $\sigma_x^2$:
 
 $$ \frac{\sigma_{xy}}{\sigma_x^2} $$
 
