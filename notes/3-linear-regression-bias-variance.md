@@ -242,7 +242,7 @@ For the next part, we will compute the variance term from the *in-sample* predic
 * $x_{t} = x_i$ with probability $\frac{1}{n}$
 
 
-Since the rows of $\Phi$ are $\phi(x_i)^T$, then
+Each row of $\Phi$ is a vector $\phi(x_i)$ for sample $i$, then
 
 $$\Phi^T \Phi = \sum_{i=1}^n \phi(x_i) \phi(x_i)^T$$
 

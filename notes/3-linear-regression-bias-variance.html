@@ -9,13 +9,20 @@
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -25,43 +32,74 @@
 <h1 class="title">Bias and variance for linear regression</h1>
 <p class="author">Fraida Fund</p>
 </header>
-<p>In this set of notes, we derive the bias and variance for linear regression models, including linear basis function models.</p>
+<p>In this set of notes, we derive the bias and variance for linear
+regression models, including linear basis function models.</p>
 <h2 id="linear-basis-function-model">Linear basis function model</h2>
-<p>For data <span class="math inline">\((x_i, y_i), i=1,\ldots,n\)</span>, consider the linear basis function model:</p>
-<p><span class="math display">\[\hat{y} = f(x,{w}) = \phi(x)^T {w} = w_1 \phi_1(x) + \ldots +w_p \phi_p(x)\]</span></p>
+<p>For data <span class="math inline">\((x_i, y_i),
+i=1,\ldots,n\)</span>, consider the linear basis function model:</p>
+<p><span class="math display">\[\hat{y} = f(x,{w}) = \phi(x)^T {w} = w_1
+\phi_1(x) + \ldots +w_p \phi_p(x)\]</span></p>
 <p>The least squares fit is</p>
-<p><span class="math display">\[{w} = (\Phi^T \Phi)^{-1} \Phi^T y\]</span></p>
+<p><span class="math display">\[{w} = (\Phi^T \Phi)^{-1} \Phi^T
+y\]</span></p>
 <p>where</p>
-<p><span class="math display">\[ 
-\Phi = 
+<p><span class="math display">\[
+\Phi =
 \begin{bmatrix}
 \phi_1 ({x_1}) &amp; \cdots &amp; \phi_p ({x_1}) \\
 \vdots  &amp; \ddots &amp; \vdots  \\
-\phi_1 ({x_n}) &amp; \cdots &amp; \phi_p ({x_n}) 
-\end{bmatrix} 
+\phi_1 ({x_n}) &amp; \cdots &amp; \phi_p ({x_n})
+\end{bmatrix}
 \]</span></p>
 <p>Assume the true function is</p>
-<p><span class="math display">\[y=t(x) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2)\]</span></p>
+<p><span class="math display">\[y=t(x) + \epsilon, \quad \epsilon \sim
+N(0, \sigma_\epsilon^2)\]</span></p>
 <p>When there is no under-modeling,</p>
-<p><span class="math display">\[t(x) = f(x,w_t) = \phi(x)^T w_t\]</span></p>
-<p>where <span class="math inline">\(w_t\)</span> is the true parameter vector.</p>
-<h2 id="unique-solution-to-ordinary-least-squares-estimate">Unique solution to ordinary least squares estimate</h2>
-<p>For <span class="math inline">\(\Phi \in R^{n\times p}\)</span>, there is a unique solution to the ordinary least squares estimate</p>
-<p><span class="math display">\[{w} = (\Phi^T \Phi)^{-1} \Phi^T y\]</span></p>
-<p>only if <span class="math inline">\(\text{Rank}(\Phi) = n\)</span>. This will be the case if the columns of <span class="math inline">\(\Phi\)</span> are linearly independent, and <span class="math inline">\(n \geq p\)</span>.</p>
-<p>In other words, the unique solution exists only if the number of data samples for training (<span class="math inline">\(n\)</span>) is greater than or equal to the number of parameters <span class="math inline">\(p\)</span>.</p>
-<p>This limits the model complexity you can use (greater <span class="math inline">\(p\)</span> <span class="math inline">\(\implies\)</span> greater model complexity).</p>
-<p>For the rest of these notes, we will assume a unique least squares solution (<span class="math inline">\(n \geq p\)</span>).</p>
+<p><span class="math display">\[t(x) = f(x,w_t) = \phi(x)^T
+w_t\]</span></p>
+<p>where <span class="math inline">\(w_t\)</span> is the true parameter
+vector.</p>
+<h2 id="unique-solution-to-ordinary-least-squares-estimate">Unique
+solution to ordinary least squares estimate</h2>
+<p>For <span class="math inline">\(\Phi \in R^{n\times p}\)</span>,
+there is a unique solution to the ordinary least squares estimate</p>
+<p><span class="math display">\[{w} = (\Phi^T \Phi)^{-1} \Phi^T
+y\]</span></p>
+<p>only if <span class="math inline">\(\text{Rank}(\Phi) = n\)</span>.
+This will be the case if the columns of <span
+class="math inline">\(\Phi\)</span> are linearly independent, and <span
+class="math inline">\(n \geq p\)</span>.</p>
+<p>In other words, the unique solution exists only if the number of data
+samples for training (<span class="math inline">\(n\)</span>) is greater
+than or equal to the number of parameters <span
+class="math inline">\(p\)</span>.</p>
+<p>This limits the model complexity you can use (greater <span
+class="math inline">\(p\)</span> <span
+class="math inline">\(\implies\)</span> greater model complexity).</p>
+<p>For the rest of these notes, we will assume a unique least squares
+solution (<span class="math inline">\(n \geq p\)</span>).</p>
 <h2 id="bias-of-linear-model">Bias of linear model</h2>
-<p>Let us give a definition of <em>bias</em> on a test point, <span class="math inline">\((x_t, y_t)\)</span> for a function <span class="math inline">\(f\)</span> with parameter estimate <span class="math inline">\(\hat{w}\)</span>:</p>
-<p><span class="math display">\[\text{Bias}(x_t) := t( x_t ) -  E[f(x_t, \hat{w})] \]</span></p>
-<p>We will try to derive the bias for a linear regression when the true function is in the assumed model class, i.e. there is no under-modeling.</p>
-<p>Suppose that there is no under-modeling, so there is a parameter vector <span class="math inline">\(w_t\)</span> such that</p>
-<p><span class="math display">\[t(x) = f(x,w_t) = \phi(x)^T w_t\]</span></p>
-<p>Then for each training sample <span class="math inline">\(i=1,\ldots,n\)</span>,</p>
-<p><span class="math display">\[y_i = \phi(x_i)^T w_t + \epsilon_i\]</span></p>
-<p>and for the entire training set, <span class="math inline">\(y=\Phi w_t + \epsilon\)</span>.</p>
-<p>For a fixed training set, the least squares parameter estimate will be</p>
+<p>Let us give a definition of <em>bias</em> on a test point, <span
+class="math inline">\((x_t, y_t)\)</span> for a function <span
+class="math inline">\(f\)</span> with parameter estimate <span
+class="math inline">\(\hat{w}\)</span>:</p>
+<p><span class="math display">\[\text{Bias}(x_t) := t( x_t ) -  E[f(x_t,
+\hat{w})] \]</span></p>
+<p>We will try to derive the bias for a linear regression when the true
+function is in the assumed model class, i.e. there is no
+under-modeling.</p>
+<p>Suppose that there is no under-modeling, so there is a parameter
+vector <span class="math inline">\(w_t\)</span> such that</p>
+<p><span class="math display">\[t(x) = f(x,w_t) = \phi(x)^T
+w_t\]</span></p>
+<p>Then for each training sample <span
+class="math inline">\(i=1,\ldots,n\)</span>,</p>
+<p><span class="math display">\[y_i = \phi(x_i)^T w_t +
+\epsilon_i\]</span></p>
+<p>and for the entire training set, <span class="math inline">\(y=\Phi
+w_t + \epsilon\)</span>.</p>
+<p>For a fixed training set, the least squares parameter estimate will
+be</p>
 <p><span class="math display">\[
 \begin{aligned}
 \hat{w} &amp;= (\Phi^T \Phi)^{-1} \Phi^T y \\
@@ -69,61 +107,108 @@
 &amp;=w_t+ (\Phi^T \Phi)^{-1} \Phi^T \epsilon
 \end{aligned}
 \]</span></p>
-<p>Now we can find <span class="math inline">\(E[\hat{w}]\)</span> over the samples of noisy training data: since <span class="math inline">\(E[\epsilon] = 0\)</span>, we have <span class="math inline">\(E[\hat{w}] =w_t\)</span>.</p>
-<p>Informally, we can say that on average, the parameter estimate matches the “true” parameter.</p>
-<p>Then <span class="math inline">\(E[f(x_t, \hat{w})] = E[f(x_t, w_t)] = t(x_t)\)</span>.</p>
-<p><strong>Conclusion</strong>: We can see that when the model is linear and there is no under-modeling, there is no bias:</p>
+<p>Now we can find <span class="math inline">\(E[\hat{w}]\)</span> over
+the samples of noisy training data: since <span
+class="math inline">\(E[\epsilon] = 0\)</span>, we have <span
+class="math inline">\(E[\hat{w}] =w_t\)</span>.</p>
+<p>Informally, we can say that on average, the parameter estimate
+matches the “true” parameter.</p>
+<p>Then <span class="math inline">\(E[f(x_t, \hat{w})] = E[f(x_t, w_t)]
+= t(x_t)\)</span>.</p>
+<p><strong>Conclusion</strong>: We can see that when the model is linear
+and there is no under-modeling, there is no bias:</p>
 <p><span class="math display">\[\text{Bias}(x_t) =  0\]</span></p>
 <h2 id="random-vectors">Random vectors</h2>
-<p>Before we look at the variance, we will review some terminology of random vectors:</p>
+<p>Before we look at the variance, we will review some terminology of
+random vectors:</p>
 <ul>
-<li>A <strong>random vector</strong> <span class="math inline">\(x = (x_1, \ldots, x_d)^T\)</span> is a vector where each <span class="math inline">\(x_j\)</span> is a random variable.</li>
-<li>The <strong>vector of means</strong> of <span class="math inline">\(x\)</span> is <span class="math inline">\({\mu} = (E[x_1], \ldots, E[x_d])^T = (u_1, \ldots, u_d)^T\)</span>.</li>
-<li>The <strong>covariance</strong> of <span class="math inline">\(x_i, x_j\)</span> is <span class="math inline">\(Cov(x_i, x_j) = E[(x_i - \mu_i)(x_j - \mu_j)]\)</span></li>
-<li>The <strong>variance matrix</strong> (which is a <span class="math inline">\(d \times d\)</span> matrix) is:</li>
+<li>A <strong>random vector</strong> <span class="math inline">\(x =
+(x_1, \ldots, x_d)^T\)</span> is a vector where each <span
+class="math inline">\(x_j\)</span> is a random variable.</li>
+<li>The <strong>vector of means</strong> of <span
+class="math inline">\(x\)</span> is <span class="math inline">\({\mu} =
+(E[x_1], \ldots, E[x_d])^T = (u_1, \ldots, u_d)^T\)</span>.</li>
+<li>The <strong>covariance</strong> of <span class="math inline">\(x_i,
+x_j\)</span> is <span class="math inline">\(Cov(x_i, x_j) = E[(x_i -
+\mu_i)(x_j - \mu_j)]\)</span></li>
+<li>The <strong>variance matrix</strong> (which is a <span
+class="math inline">\(d \times d\)</span> matrix) is:</li>
 </ul>
-<p><span class="math display">\[Var(x) := E[(x - {u})(x - {u})^T ] = 
+<p><span class="math display">\[Var(x) := E[(x - {u})(x - {u})^T ] =
 \begin{bmatrix}
 Cov (x_1, x_1) &amp; \cdots &amp; Cov (x_1, x_d) \\
 \vdots  &amp; \ddots &amp; \vdots  \\
 Cov (x_d, x_1) &amp; \cdots &amp; Cov (x_d, x_d) \\
-\end{bmatrix} 
+\end{bmatrix}
 \]</span></p>
 <ul>
-<li>In a <strong>linear transform</strong> <span class="math inline">\(y=Ax+b\)</span>, the input <span class="math inline">\(x \in R^N\)</span> is mapped to <span class="math inline">\(Ax \in R^M\)</span> by <span class="math inline">\(A \in R^{M\times N}\)</span></li>
-<li>The mean and variance matrix under this linear transform are given by <span class="math inline">\(E(y) = AE(x) + b\)</span> and <span class="math inline">\(Var(y) = A Var(x) A^T\)</span>, respectively.</li>
+<li>In a <strong>linear transform</strong> <span
+class="math inline">\(y=Ax+b\)</span>, the input <span
+class="math inline">\(x \in R^N\)</span> is mapped to <span
+class="math inline">\(Ax \in R^M\)</span> by <span
+class="math inline">\(A \in R^{M\times N}\)</span></li>
+<li>The mean and variance matrix under this linear transform are given
+by <span class="math inline">\(E(y) = AE(x) + b\)</span> and <span
+class="math inline">\(Var(y) = A Var(x) A^T\)</span>, respectively.</li>
 </ul>
 <h2 id="variance-of-linear-model">Variance of linear model</h2>
-<p>Now us give a definition of <em>variance</em> on a test point, <span class="math inline">\((x_t, y_t)\)</span> for a function <span class="math inline">\(f\)</span> with parameter estimate <span class="math inline">\(\hat{w}\)</span>:</p>
-<p><span class="math display">\[\text{Var}(x_t) :=  E[ (f(x_t, \hat{w}) - E[f(x_t, \hat{w})] ) ^2 ]\]</span></p>
-<p>We will try to derive this variance in three steps: first, we will find the variance of the parameter estimate <span class="math inline">\(\hat{w}\)</span>. Then, we will describe the variance of the model output <span class="math inline">\(f(x_t, \hat{w})\)</span> for a fixed <span class="math inline">\(x_t\)</span>. Finally, we will find the expected variance over the distribution of <span class="math inline">\(x_t\)</span>.</p>
-<h3 id="variance-of-parameter-estimate">Variance of parameter estimate</h3>
-<p>Recall that <span class="math inline">\(\epsilon_i\)</span> are independent for different samples, with <span class="math inline">\(E[\epsilon_i] = 0\)</span> and <span class="math inline">\(Var(\epsilon) = \sigma_\epsilon^2\)</span>.</p>
+<p>Now us give a definition of <em>variance</em> on a test point, <span
+class="math inline">\((x_t, y_t)\)</span> for a function <span
+class="math inline">\(f\)</span> with parameter estimate <span
+class="math inline">\(\hat{w}\)</span>:</p>
+<p><span class="math display">\[\text{Var}(x_t) :=  E[ (f(x_t, \hat{w})
+- E[f(x_t, \hat{w})] ) ^2 ]\]</span></p>
+<p>We will try to derive this variance in three steps: first, we will
+find the variance of the parameter estimate <span
+class="math inline">\(\hat{w}\)</span>. Then, we will describe the
+variance of the model output <span class="math inline">\(f(x_t,
+\hat{w})\)</span> for a fixed <span class="math inline">\(x_t\)</span>.
+Finally, we will find the expected variance over the distribution of
+<span class="math inline">\(x_t\)</span>.</p>
+<h3 id="variance-of-parameter-estimate">Variance of parameter
+estimate</h3>
+<p>Recall that <span class="math inline">\(\epsilon_i\)</span> are
+independent for different samples, with <span
+class="math inline">\(E[\epsilon_i] = 0\)</span> and <span
+class="math inline">\(Var(\epsilon) = \sigma_\epsilon^2\)</span>.</p>
 <p>Then,</p>
-<p><span class="math display">\[ Cov(\epsilon_i, \epsilon_j) = 
+<p><span class="math display">\[ Cov(\epsilon_i, \epsilon_j) =
     \begin{cases}
         0, \quad i \neq j \\
         \sigma_\epsilon^2, \quad i=j \\
         \end{cases}
 \]</span></p>
-<p>so the variance matrix for the <span class="math inline">\(\epsilon\)</span> noise is</p>
-<p><span class="math display">\[Var(\epsilon) = \sigma_\epsilon^2 I\]</span></p>
-<p>(<span class="math inline">\(I\)</span> is the identity matrix). Also recall from our discussion of bias that with no under-modeling,</p>
-<p><span class="math display">\[\hat{w} = w_t + (\Phi^T \Phi)^{-1} \Phi^T \epsilon\]</span></p>
-<p>Let us think of this as a linear transform of <span class="math inline">\(\hat{w}\)</span>, <span class="math inline">\(y = Ax + b\)</span> where:</p>
+<p>so the variance matrix for the <span
+class="math inline">\(\epsilon\)</span> noise is</p>
+<p><span class="math display">\[Var(\epsilon) = \sigma_\epsilon^2
+I\]</span></p>
+<p>(<span class="math inline">\(I\)</span> is the identity matrix). Also
+recall from our discussion of bias that with no under-modeling,</p>
+<p><span class="math display">\[\hat{w} = w_t + (\Phi^T \Phi)^{-1}
+\Phi^T \epsilon\]</span></p>
+<p>Let us think of this as a linear transform of <span
+class="math inline">\(\hat{w}\)</span>, <span class="math inline">\(y =
+Ax + b\)</span> where:</p>
 <ul>
 <li><span class="math inline">\(y=\hat{w}\)</span></li>
-<li><span class="math inline">\(A = (\Phi^T \Phi)^{-1} \Phi^T\)</span></li>
+<li><span class="math inline">\(A = (\Phi^T \Phi)^{-1}
+\Phi^T\)</span></li>
 <li><span class="math inline">\(x = \epsilon\)</span></li>
 <li><span class="math inline">\(b = w_t\)</span></li>
 </ul>
-<p>and recall that for a linear transform <span class="math inline">\(y = Ax + b\)</span>, <span class="math inline">\(Var(y) = A Var(x) A^T\)</span>.</p>
-<p>Then we can compute the variance matrix of the <em>parameter estimate</em> for the linear model as</p>
-<p><span class="math display">\[ 
+<p>and recall that for a linear transform <span class="math inline">\(y
+= Ax + b\)</span>, <span class="math inline">\(Var(y) = A Var(x)
+A^T\)</span>.</p>
+<p>Then we can compute the variance matrix of the <em>parameter
+estimate</em> for the linear model as</p>
+<p><span class="math display">\[
 \begin{aligned}
-Var(\hat{w}) &amp;=  [(\Phi^T \Phi)^{-1} \Phi^T] [Var(\epsilon)] [(\Phi^T \Phi)^{-1} \Phi^T]^T \\
-&amp;=  [(\Phi^T \Phi)^{-1} \Phi^T] [\sigma_\epsilon^2 I] [(\Phi^T \Phi)^{-1} \Phi^T]^T \\
-&amp;=  [(\Phi^T \Phi)^{-1} \Phi^T] [\sigma_\epsilon^2 I] [\Phi (\Phi^T \Phi)^{-1}] \\
+Var(\hat{w}) &amp;=  [(\Phi^T \Phi)^{-1} \Phi^T] [Var(\epsilon)]
+[(\Phi^T \Phi)^{-1} \Phi^T]^T \\
+&amp;=  [(\Phi^T \Phi)^{-1} \Phi^T] [\sigma_\epsilon^2 I] [(\Phi^T
+\Phi)^{-1} \Phi^T]^T \\
+&amp;=  [(\Phi^T \Phi)^{-1} \Phi^T] [\sigma_\epsilon^2 I] [\Phi (\Phi^T
+\Phi)^{-1}] \\
 &amp; = \sigma_\epsilon^2 (\Phi^T \Phi)^{-1}
 \end{aligned}
 \]</span></p>
@@ -140,68 +225,119 @@ $$
 
 -->
 <h3 id="variance-of-model-output">Variance of model output</h3>
-<p>Now, we will use <span class="math inline">\(Var(\hat{w})\)</span> to compute <span class="math inline">\(Var(x_t)\)</span> for the linear model.</p>
-<p>First, recall from our discussion of bias that when there is no under-modeling</p>
-<p><span class="math display">\[E[f(x_{t}, \hat{w})] = \phi(x_{t})^T \hat{w} = \phi(x_{t})^T w_t \]</span></p>
+<p>Now, we will use <span class="math inline">\(Var(\hat{w})\)</span> to
+compute <span class="math inline">\(Var(x_t)\)</span> for the linear
+model.</p>
+<p>First, recall from our discussion of bias that when there is no
+under-modeling</p>
+<p><span class="math display">\[E[f(x_{t}, \hat{w})] = \phi(x_{t})^T
+\hat{w} = \phi(x_{t})^T w_t \]</span></p>
 <p>Then the variance of the linear model output for a test point is</p>
-<p><span class="math display">\[ 
+<p><span class="math display">\[
 \begin{aligned}
 Var(x_{t}) &amp; = E [f(x_{t}, \hat{w}) - E[f(x_{t}, \hat{w})]]^2 \\
 &amp;= E [\phi(x_{t})^T \hat{w} - \phi(x_{t})^T w_t ]^2 \\
 &amp;= E [\phi(x_{t})^T (\hat{w} - w_t) ]^2 \\
 \end{aligned}
 \]</span></p>
-<p>Also note the following trick: if <span class="math inline">\({a}\)</span> is a non-random vector and <span class="math inline">\({z}\)</span> is a random vector, then</p>
-<p><span class="math display">\[E[{a}^T {z}]^2 = E[{a}^T {zz}^T {a}] = {a}^T E[{zz}^T]{a}\]</span></p>
+<p>Also note the following trick: if <span
+class="math inline">\({a}\)</span> is a non-random vector and <span
+class="math inline">\({z}\)</span> is a random vector, then</p>
+<p><span class="math display">\[E[{a}^T {z}]^2 = E[{a}^T {zz}^T {a}] =
+{a}^T E[{zz}^T]{a}\]</span></p>
 <p>Therefore,</p>
 <p><span class="math display">\[
 \begin{aligned}
 Var(x_{t}) &amp; = E [\phi(x_{t})^T (\hat{w} - w_t) ]^2 \\
-&amp; =  \phi(x_{t})^T  E [(\hat{w} -w_t)(\hat{w} -w_t)^T] \phi(x_{t}) \\
+&amp; =  \phi(x_{t})^T  E [(\hat{w} -w_t)(\hat{w} -w_t)^T] \phi(x_{t})
+\\
 \end{aligned}
 \]</span></p>
 <p>Finally, recall that</p>
-<p><span class="math display">\[Var(\hat{w}) = E [(\hat{w} -w_t)(\hat{w} -w_t)^T] = \sigma_\epsilon^2 (\Phi^T \Phi)^{-1}\]</span></p>
+<p><span class="math display">\[Var(\hat{w}) = E [(\hat{w} -w_t)(\hat{w}
+-w_t)^T] = \sigma_\epsilon^2 (\Phi^T \Phi)^{-1}\]</span></p>
 <p>so</p>
 <p><span class="math display">\[
 \begin{aligned}
-Var(x_{t}) &amp; =  \phi(x_{t})^T  E [(\hat{w} -w_t)(\hat{w} -w_t)^T] \phi(x_{t})  \\
-&amp; =  \sigma_\epsilon^2  \phi(x_{t})^T (\Phi^T \Phi)^{-1} \phi(x_{t}) \\
+Var(x_{t}) &amp; =  \phi(x_{t})^T  E [(\hat{w} -w_t)(\hat{w} -w_t)^T]
+\phi(x_{t})  \\
+&amp; =  \sigma_\epsilon^2  \phi(x_{t})^T (\Phi^T \Phi)^{-1} \phi(x_{t})
+\\
 \end{aligned}
 \]</span></p>
-<p>This derivation assumed there is no under-modeling. However, in the case of under-modeling, the variance expression is similar.</p>
-<p>For the next part, we will compute the variance term from the <em>in-sample</em> prediction error, i.e. the error if the test point is randomly drawn from the training data:</p>
+<p>This derivation assumed there is no under-modeling. However, in the
+case of under-modeling, the variance expression is similar.</p>
+<p>For the next part, we will compute the variance term from the
+<em>in-sample</em> prediction error, i.e. the error if the test point is
+randomly drawn from the training data:</p>
 <ul>
-<li>Training data is <span class="math inline">\((x_i, y_i), i=1,\ldots, n\)</span></li>
-<li><span class="math inline">\(x_{t} = x_i\)</span> with probability <span class="math inline">\(\frac{1}{n}\)</span></li>
+<li>Training data is <span class="math inline">\((x_i, y_i), i=1,\ldots,
+n\)</span></li>
+<li><span class="math inline">\(x_{t} = x_i\)</span> with probability
+<span class="math inline">\(\frac{1}{n}\)</span></li>
 </ul>
-<p>Since the rows of <span class="math inline">\(\Phi\)</span> are <span class="math inline">\(\phi(x_i)^T\)</span>, then</p>
-<p><span class="math display">\[\Phi^T \Phi = \sum_{i=1}^n \phi(x_i) \phi(x_i)^T\]</span></p>
-<p>We will use a trick: for random vectors <span class="math inline">\({u}, {v}\)</span>, <span class="math inline">\(E[{u}^T{v}] = Tr( E[{v} {u}^T])\)</span>, where <span class="math inline">\(Tr(X)\)</span> is the sum of diagonal of <span class="math inline">\(X\)</span>.</p>
-<p>Then the expectation (over the test points) of the variance of the model output is:</p>
+<p>Each row of <span class="math inline">\(\Phi\)</span> is a vector
+<span class="math inline">\(\phi(x_i)\)</span> for sample <span
+class="math inline">\(i\)</span>, then</p>
+<p><span class="math display">\[\Phi^T \Phi = \sum_{i=1}^n \phi(x_i)
+\phi(x_i)^T\]</span></p>
+<p>We will use a trick: for random vectors <span
+class="math inline">\({u}, {v}\)</span>, <span
+class="math inline">\(E[{u}^T{v}] = Tr( E[{v} {u}^T])\)</span>, where
+<span class="math inline">\(Tr(X)\)</span> is the sum of diagonal of
+<span class="math inline">\(X\)</span>.</p>
+<p>Then the expectation (over the test points) of the variance of the
+model output is:</p>
 <p><span class="math display">\[
 \begin{aligned}
-E [Var(x_t)] &amp; = \sigma_\epsilon^2 E [\phi(x_t)^T (\Phi^T \Phi)^{-1} \phi(x_t)] \\
-&amp; = \sigma_\epsilon ^2 Tr\left( E [\phi(x_t)  \phi(x_t)^T] (\Phi^T \Phi)^{-1}\right) \\
-&amp; = \frac{\sigma_\epsilon ^2}{n} Tr\left(\sum_{i=1}^n [\phi(x_{i})  \phi(x_{i})^T] (\Phi^T \Phi)^{-1}\right) \\
-&amp; = \frac{\sigma_\epsilon ^2}{n} Tr\left( (\Phi^T \Phi)(\Phi^T \Phi)^{-1}\right) \\
+E [Var(x_t)] &amp; = \sigma_\epsilon^2 E [\phi(x_t)^T (\Phi^T \Phi)^{-1}
+\phi(x_t)] \\
+&amp; = \sigma_\epsilon ^2 Tr\left( E [\phi(x_t)  \phi(x_t)^T] (\Phi^T
+\Phi)^{-1}\right) \\
+&amp; = \frac{\sigma_\epsilon ^2}{n} Tr\left(\sum_{i=1}^n
+[\phi(x_{i})  \phi(x_{i})^T] (\Phi^T \Phi)^{-1}\right) \\
+&amp; = \frac{\sigma_\epsilon ^2}{n} Tr\left( (\Phi^T \Phi)(\Phi^T
+\Phi)^{-1}\right) \\
 &amp; = \frac{\sigma_\epsilon ^2}{n} Tr\left(  I_p \right) \\
-&amp; = \frac{\sigma_\epsilon ^2 p}{n} 
+&amp; = \frac{\sigma_\epsilon ^2 p}{n}
 \end{aligned}
 \]</span></p>
-<p>The average variance increases with the number of parameters <span class="math inline">\(p\)</span>, and decreases with the number of samples used for training <span class="math inline">\(n\)</span>, as long as the test point is distributed like the training data.</p>
-<h2 id="summary-of-results-for-linear-regression">Summary of results for linear regression</h2>
-<p>Suppose the model class is linear with <span class="math inline">\(n\)</span> samples and <span class="math inline">\(p\)</span> parameters.</p>
-<h3 id="result-1-uniqueness-of-coefficient-estimate">Result 1: Uniqueness of coefficient estimate</h3>
-<p>When <span class="math inline">\(n &lt; p\)</span>, the least squares estimate of the coefficients is not unique.</p>
-<h3 id="result-2-bias-of-estimate-of-target-variable">Result 2: Bias of estimate of target variable</h3>
-<p>When <span class="math inline">\(n \geq p\)</span> and the least squares estimate of the coefficients is unique, <em>and</em> there is no under-modeling, then the estimate of the target variable is unbiased.</p>
-<h3 id="result-3-variance-of-estimate-of-target-variable">Result 3: Variance of estimate of target variable</h3>
-<p>When <span class="math inline">\(n \geq p\)</span>, the least squares estimate of the coefficients is unique, there is no under-modeling, <em>and</em> the test point is drawn from the same distribution as the trainng data, then the variance of the estimate of the target variable increases linearly with the number of parameters and inversely with the number of samples used for training:</p>
-<p><span class="math display">\[ Var = \frac{p}{n} \sigma_\epsilon^2 \]</span></p>
-<h3 id="result-4-overall-prediction-error">Result 4: Overall prediction error</h3>
-<p>The overall expected in-sample prediction error for the ordinary least squares linear regression is</p>
-<p><span class="math display">\[0 + \frac{p}{n} \sigma_\epsilon^2 + \sigma_\epsilon^2\]</span></p>
-<p>where the three terms represent the squared bias, the variance, and the irreducible error.</p>
+<p>The average variance increases with the number of parameters <span
+class="math inline">\(p\)</span>, and decreases with the number of
+samples used for training <span class="math inline">\(n\)</span>, as
+long as the test point is distributed like the training data.</p>
+<h2 id="summary-of-results-for-linear-regression">Summary of results for
+linear regression</h2>
+<p>Suppose the model class is linear with <span
+class="math inline">\(n\)</span> samples and <span
+class="math inline">\(p\)</span> parameters.</p>
+<h3 id="result-1-uniqueness-of-coefficient-estimate">Result 1:
+Uniqueness of coefficient estimate</h3>
+<p>When <span class="math inline">\(n &lt; p\)</span>, the least squares
+estimate of the coefficients is not unique.</p>
+<h3 id="result-2-bias-of-estimate-of-target-variable">Result 2: Bias of
+estimate of target variable</h3>
+<p>When <span class="math inline">\(n \geq p\)</span> and the least
+squares estimate of the coefficients is unique, <em>and</em> there is no
+under-modeling, then the estimate of the target variable is
+unbiased.</p>
+<h3 id="result-3-variance-of-estimate-of-target-variable">Result 3:
+Variance of estimate of target variable</h3>
+<p>When <span class="math inline">\(n \geq p\)</span>, the least squares
+estimate of the coefficients is unique, there is no under-modeling,
+<em>and</em> the test point is drawn from the same distribution as the
+trainng data, then the variance of the estimate of the target variable
+increases linearly with the number of parameters and inversely with the
+number of samples used for training:</p>
+<p><span class="math display">\[ Var = \frac{p}{n} \sigma_\epsilon^2
+\]</span></p>
+<h3 id="result-4-overall-prediction-error">Result 4: Overall prediction
+error</h3>
+<p>The overall expected in-sample prediction error for the ordinary
+least squares linear regression is</p>
+<p><span class="math display">\[0 + \frac{p}{n} \sigma_\epsilon^2 +
+\sigma_\epsilon^2\]</span></p>
+<p>where the three terms represent the squared bias, the variance, and
+the irreducible error.</p>
 </body>
 </html>
