@@ -453,7 +453,33 @@ results suggest that this is only part of the picture.</p>
 </section>
 <section id="updated-view-double-descent" class="slide level3">
 <h3>Updated view: double descent</h3>
+<figure>
+<img data-src="../images/8-polynomial-animation.gif" style="width:40.0%"
+alt="Polynomial model before and after the interpolation threshold. Image source: Boaz Barak, click link to see animation." />
+<figcaption aria-hidden="true">Polynomial model before and after the
+interpolation threshold. Image source: <a
+href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
+Barak, click link to see animation</a>.</figcaption>
+</figure>
 <aside class="notes">
+<p>Explanation (via <a
+href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
+Barak</a>):</p>
+<blockquote>
+<p>When <span class="math inline">\(d\)</span> of the model is less than
+<span class="math inline">\(d_t\)</span> of the polynomial, we are
+“under-fitting” and will not get good performance. As <span
+class="math inline">\(d\)</span> increases between <span
+class="math inline">\(d_t\)</span> and <span
+class="math inline">\(n\)</span>, we fit more and more of the noise,
+until for <span class="math inline">\(d=n\)</span> we have a perfect
+interpolating polynomial that will have perfect training but very poor
+test performance. When <span class="math inline">\(d\)</span> grows
+beyond <span class="math inline">\(n\)</span>, more than one polynomial
+can fit the data, and (under certain conditions) SGD will select the
+minimal norm one, which will make the interpolation smoother and
+smoother and actually result in better performance.</p>
+</blockquote>
 <p>For an intuitive explanation of “double descent”, see:</p>
 <ul>
 <li><a href="https://mlu-explain.github.io/double-descent/">Double
