@@ -39,20 +39,21 @@
 
 <section class="slide level3">
 
-<div class="cell markdown">
 <aside class="notes">
 <p><strong>Math prerequisites for this lecture</strong>: You should know
 about:</p>
 <ul>
 <li>derivatives and optimization (Appendix C in Boyd and
 Vandenberghe)</li>
-<li>complexity of algorithms (Big O notation)</li>
+<li>complexity of algorithms and especially of vector and matrix
+operations (Appendix B in Boyd and Vandenberghe, also the complexity
+part of Section I, Chapter 1 and Section II, Chapter 5)</li>
 </ul>
 </aside>
-</div>
 </section>
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
+<p>Addresses “How do we train the model efficiently?”</p>
 <ul>
 <li>Runtime of OLS solution for multiple/LBF regression</li>
 <li>Solution using gradient descent</li>
@@ -80,19 +81,16 @@ size.</p>
 <li>Ignore constant terms, constant factors</li>
 <li>Ignore all but the dominant term</li>
 </ul>
-<p>Example: <span class="math inline">\(3n^3 + 100n^2 +
-1000\)</span>?</p>
+<p>Example: <span class="math inline">\(3n^3 + 100n^2 + 1000\)</span>
+would be <span class="math inline">\(O(n^3)\)</span>.</p>
 </section>
 <section id="computing-ols-solution" class="slide level3">
 <h3>Computing OLS solution</h3>
-<p>We had</p>
+<p>How long does it take to compute</p>
 <p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi
 \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
 <p>where <span class="math inline">\(\Phi\)</span> is an <span
-class="math inline">\(n \times d\)</span> matrix. If <span
-class="math inline">\(n \geq d\)</span> then it is (usually) full rank
-and a unique solution exists.</p>
-<p>How long does it take to compute?</p>
+class="math inline">\(n \times d\)</span> matrix?</p>
 <aside class="notes">
 <p>Runtime of a “naive” solution using “standard” matrix
 multiplication:</p>
@@ -102,12 +100,21 @@ class="math inline">\(\Phi^T \Phi\)</span></li>
 <li><span class="math inline">\(O(dn)\)</span> to multiply <span
 class="math inline">\(\Phi^T y\)</span></li>
 <li><span class="math inline">\(O(d^3)\)</span> to compute the inverse
-of <span class="math inline">\(\Phi^T \Phi\)</span></li>
+of <span class="math inline">\(\Phi^T \Phi\)</span> (Note: in practice,
+we can do it a bit faster.)</li>
 </ul>
 <p>Since <span class="math inline">\(n\)</span> is generally much larger
 than <span class="math inline">\(d\)</span>, the first term dominates
 and the runtime is <span class="math inline">\(O(d^2n)\)</span>.</p>
-<p>(Note: in practice, we can do it a bit faster.)</p>
+<figure>
+<img data-src="../images/3-gd-ols-compute.png" style="width:60.0%"
+alt="Computing \Phi^T \Phi. For each entry in the matrix, we need n multiplications, and then we need to fill in d \times d entries to complete the matrix." />
+<figcaption aria-hidden="true">Computing <span
+class="math inline">\(\Phi^T \Phi\)</span>. For each entry in the
+matrix, we need <span class="math inline">\(n\)</span> multiplications,
+and then we need to fill in <span class="math inline">\(d \times
+d\)</span> entries to complete the matrix.</figcaption>
+</figure>
 </aside>
 </section></section>
 <section>
@@ -115,9 +122,6 @@ and the runtime is <span class="math inline">\(O(d^2n)\)</span>.</p>
 class="title-slide slide level2">
 <h2>Solution using gradient descent</h2>
 
-</section>
-<section id="exhaustive-search" class="slide level3">
-<h3>Exhaustive search</h3>
 </section>
 <section id="iterative-solution" class="slide level3">
 <h3>Iterative solution</h3>
@@ -183,6 +187,13 @@ L_i(\mathbf{w}^t, \mathbf{x}_i, y_i)
 \end{aligned}
 \]</span></p>
 <p>Repeat until stopping criterion is met.</p>
+<aside class="notes">
+<p>“Stopping criteria” may be: loss is sufficiently small, gradient is
+sufficiently close to zero, or a pre-set max number of iterations is
+reached.</p>
+<p>Note: the superscript <span class="math inline">\(t\)</span> tracks
+what iteration we are on. It’s not an exponent!</p>
+</aside>
 </section>
 <section id="example-gradient-descent-for-linear-regression-1"
 class="slide level3">
@@ -190,16 +201,25 @@ class="slide level3">
 <p>With a mean squared error loss function</p>
 <p><span class="math display">\[
 \begin{aligned}
-L(w, X, y) &amp;= \frac{1}{n} \sum_{i=1}^n (y_i - \langle w, x_i
-\rangle)^2 \\
+L(w) &amp;= \frac{1}{n} \sum_{i=1}^n (y_i - \langle w, x_i \rangle)^2 \\
      &amp;= \frac{1}{n} \|y - Xw\|^2
 \end{aligned}
 \]</span></p>
+<aside class="notes">
+<p>Gradient of the loss function is:</p>
+<ul>
+<li>Vector form: <span class="math inline">\(\frac{-\alpha^t}{n}
+\sum_{i=1}^n (y_i - \langle w^t,x_i \rangle) x_i\)</span></li>
+<li>Matrix form: <span class="math inline">\(\frac{-\alpha^t}{n} X^T (y
+- X w^t)\)</span></li>
+</ul>
+<p>we move in the <em>opposite</em> direction, so…</p>
+</aside>
 </section>
 <section id="example-gradient-descent-for-linear-regression-2"
 class="slide level3">
 <h3>Example: gradient descent for linear regression (2)</h3>
-<p>we will compute the weights at each step as</p>
+<p>We will compute the weights at each step as</p>
 <p><span class="math display">\[
 \begin{aligned}
 w^{t+1} &amp;= w^t + \frac{\alpha^t}{n} \sum_{i=1}^n (y_i - \langle
@@ -235,10 +255,15 @@ still be expensive!</p>
 <p>Idea:</p>
 <p>At each step, compute estimate of gradient using only one randomly
 selected sample, and move in the direction it indicates.</p>
-<p>Many of the steps will be in the wrong direction, but progress
-towards minimum occurs <em>on average</em>, as long as the steps are
-small.</p>
 <aside class="notes">
+<figure>
+<img data-src="../images/3-gd-sgd.png" style="width:70.0%"
+alt="Full-batch gradient descent (left), SGD (right). Many of the steps will be in the wrong direction, but progress towards minimum occurs on average, as long as the steps are small." />
+<figcaption aria-hidden="true">Full-batch gradient descent (left), SGD
+(right). Many of the steps will be in the wrong direction, but progress
+towards minimum occurs <em>on average</em>, as long as the steps are
+small.</figcaption>
+</figure>
 <p>Each iteration is now only <span class="math inline">\(O(d)\)</span>,
 but we may need more iterations than for gradient descent. However, in
 many cases we still come out ahead (especially if <span
@@ -250,6 +275,9 @@ notes</a> for an analysis of the number of iterations needed.</p>
 <ul>
 <li>SGD is often more efficient because of <em>redundancy</em> in the
 data - data points have some similarity.</li>
+<li>But, we miss out on the benefits of vectorization. In practice, it
+takes longer to compute something over 1 sample 1024 times, than over
+1024 samples 1 time.</li>
 <li>If the function we want to optimize does not have a global minimum,
 the noise can be helpful - we can “bounce” out of a local minimum.</li>
 </ul>
@@ -280,8 +308,17 @@ class="math inline">\(I_t\subset{1,\ldots,n}\)</span></li>
 \mathbf{w}^t - \alpha^t g^t\)</span></li>
 </ul>
 <aside class="notes">
-<p>This approach is often used in practice because we get some benefit
-of vectorization, but also take advantage of redundancy in data.</p>
+<p>Now that each iteration is not equal to an iteration over
+<em>all</em> data, we need to introduce the idea of an “epoch”:</p>
+<ul>
+<li>One epoch = one pass over <em>all</em> the data</li>
+<li>Mini-batch SGD is often used in practice because we get some benefit
+of vectorization, but also take advantage of redundancy in data.</li>
+</ul>
+<p>After a fixed number of epochs (passes over the entire data), * we
+may end up at a better minimum (lower loss) with a small batch size, *
+<em>but</em>, the time per epoch may be longer with a small batch
+size.</p>
 </aside>
 <!-- 
 
@@ -310,6 +347,8 @@ style="width:85.0%" alt="Choice of learning rate \alpha is critical" />
 class="math inline">\(\alpha\)</span> is critical</figcaption>
 </figure>
 <aside class="notes">
+<p>Image credit: Hands-On Machine Learning with Scikit-Learn, Keras, and
+TensorFlow, 2nd Edition, by Aurélien Géron.</p>
 <p>Also note: SGD “noise ball”</p>
 </aside>
 </section>
@@ -361,25 +400,59 @@ steps.</li>
 updates.</li>
 <li>(Go faster if gradient keeps pointing in the same direction!)</li>
 </ul>
+<!--
+
+### Momentum (2)
+
+Classical momentum: for some $0 \leq \gamma_t < 1$,
+
+$$v_{t+1} = \gamma_t v_t - \alpha_t \nabla L\left(w_t\right)$$
+
+so
+
+$$w_{t+1} = w_t + v_{t+1} = w_t  - \alpha_t \nabla L\left(w_t\right) + \gamma_t v_t$$
+
+($\gamma_t$ is often around 0.9, or starts at 0.5 and anneals to 0.99 over many epochs.)
+
+Note: $v_{t+1} = w_{t+1} - w_t$ is $\Delta w$.
+
+-->
 </section>
 <section id="momentum-2" class="slide level3">
 <h3>Momentum (2)</h3>
 <p>Classical momentum: for some <span class="math inline">\(0 \leq
 \gamma_t &lt; 1\)</span>,</p>
-<p><span class="math display">\[v_{t+1} = \gamma_t v_t - \alpha_t \nabla
-L\left(w_t\right)\]</span></p>
+<p><span class="math display">\[v^{t+1} = \gamma^t v^t +   \nabla
+L\left(w^t\right)\]</span></p>
 <p>so</p>
-<p><span class="math display">\[w_{t+1} = w_t + v_{t+1} = w_t  -
-\alpha_t \nabla L\left(w_t\right) + \gamma_t v_t\]</span></p>
-<p>(<span class="math inline">\(\gamma_t\)</span> is often around 0.9,
-or starts at 0.5 and anneals to 0.99 over many epochs.)</p>
-<p>Note: <span class="math inline">\(v_{t+1} = w_{t+1} - w_t\)</span> is
-<span class="math inline">\(\Delta w\)</span>.</p>
+<p><span class="math display">\[w^{t+1} = w^t - \alpha^t v^{t+1} =
+w^t  - \alpha^t \left( \gamma^t v^t + \nabla L\left(w^t\right)
+\right)\]</span></p>
+<p>(<span class="math inline">\(\gamma\)</span> may be in range 0.9 -
+0.99.)</p>
+</section>
+<section id="momentum-pseudocode" class="slide level3">
+<h3>Momentum: pseudocode</h3>
+GD:
+
+<pre><code>for t in range(num_steps):
+  dw = compute_grad(w)
+  w -= lr * dw
+</code></pre>
+
+GD + Momentum:
+
+<pre><code>v = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: blue">v = gamma * v + dw</span>
+  w -= lr * <span style="color: blue">v</span>
+</code></pre>
 </section>
 <section id="momentum-illustrated" class="slide level3">
 <h3>Momentum: illustrated</h3>
 <figure>
-<img data-src="../images/ravine-momentum.png" style="width:50.0%"
+<img data-src="../images/ravine-momentum.png" style="width:45.0%"
 alt="Momentum dampens oscillations by reinforcing the component along w_2 while canceling out the components along w_1." />
 <figcaption aria-hidden="true">Momentum dampens oscillations by
 reinforcing the component along <span class="math inline">\(w_2\)</span>
@@ -387,20 +460,77 @@ while canceling out the components along <span
 class="math inline">\(w_1\)</span>.</figcaption>
 </figure>
 </section>
-<section id="rmsprop" class="slide level3">
-<h3>RMSProp</h3>
-<p>Idea: Track per-parameter EWMA of square of gradient, to normalize
-parameter update step.</p>
-<p><span class="math display">\[w_{t+1} = w_t  - \frac{\eta}{\sqrt{
-v_{t+1} + \epsilon } } \nabla L\left(w_t\right) \]</span></p>
+<section id="adagrad-1" class="slide level3">
+<h3>AdaGrad (1)</h3>
+<p>Next idea: “per-parameter learning rates”!</p>
+<p>Track per-parameter square of gradient, to normalize parameter update
+step.</p>
+</section>
+<section id="adagrad-2" class="slide level3">
+<h3>AdaGrad (2)</h3>
+<p><span class="math display">\[w^{t+1} = w^t  - \frac{\alpha}{\sqrt{
+v^{t+1} + \epsilon } } \nabla L\left(w^t\right) \]</span></p>
 <p>where</p>
-<p><span class="math display">\[v_{t} = \gamma v_{t-1} + (1 - \gamma)
-\nabla L\left(w_{t}\right) ^2\]</span></p>
+<p><span class="math display">\[v^{t+1} = v^{t} + \nabla
+L\left(w^{t}\right) ^2\]</span></p>
 <aside class="notes">
-<p>Weights with recent gradients of large magnitude have smaller
-learning rate, weights with small recent gradients have larger learning
-rates.</p>
+<p>Weights with large gradient have smaller learning rate, weights with
+small gradients have larger learning rates.</p>
+<p>i.e.: take smaller steps in steep directions, take bigger steps where
+the gradient is flat.</p>
 </aside>
+</section>
+<section id="adagrad-pseudocode" class="slide level3">
+<h3>AdaGrad: pseudocode</h3>
+GD:
+
+<pre><code>for t in range(num_steps):
+  dw = compute_grad(w)
+  w -= lr * dw
+</code></pre>
+
+
+GD + AdaGrad:
+
+<pre><code>grad_sq = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: purple">grad_sq = grad_sq +  dw * dw</span>
+  w -= lr * dw <span style="color: purple">/ sqrt(grad_sq + epsilon)</span>
+</code></pre>
+
+</section>
+<section id="rmsprop-leaky-adagrad" class="slide level3">
+<h3>RMSProp: Leaky AdaGrad</h3>
+<p>Idea: Use EWMA to emphasize <em>recent</em> gradient magnitudes.</p>
+<p><span class="math display">\[w^{t+1} = w^t  - \frac{\alpha}{\sqrt{
+v^{t+1} + \epsilon } } \nabla L\left(w^t\right) \]</span></p>
+<p>where</p>
+<p><span class="math display">\[v^{t+1} = \gamma v^{t} + (1 - \gamma)
+\nabla L\left(w^{t}\right) ^2\]</span></p>
+</section>
+<section id="rmsprop-pseudocode" class="slide level3">
+<h3>RMSProp: pseudocode</h3>
+
+GD + AdaGrad:
+
+<pre><code>grad_sq = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: purple">grad_sq = grad_sq +  dw * dw</span>
+  w -= lr * dw <span style="color: purple">/ sqrt(grad_sq + epsilon)</span>
+</code></pre>
+
+
+GD + RMSProp:
+
+<pre><code>grad_sq = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: magenta">grad_sq = gamma * grad_sq + (1 - gamma) * dw * dw</span>
+  w -= lr * dw <span style="color: magenta">/ sqrt(grad_sq + epsilon)</span>
+</code></pre>
+
 </section>
 <section id="adam-adaptive-moment-estimation" class="slide level3">
 <h3>Adam: Adaptive Moment Estimation</h3>
@@ -410,9 +540,78 @@ moment)!</li>
 <li>plus bias correction
 <!-- https://web.eecs.umich.edu/~justincj/slides/eecs498/498_FA2019_lecture04.pdf --></li>
 </ul>
+</section>
+<section id="adam-pseudocode-vs-momentum" class="slide level3">
+<h3>Adam: pseudocode vs Momentum</h3>
+
+GD + Momentum:
+
+<pre><code>v = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: blue">v = gamma * v + dw</span>
+  w -= lr * <span style="color: blue">v</span>
+</code></pre>
+
+
+GD + Adam (without bias correction):
+
+<pre><code>moment1 = 0
+moment2 = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: blue">moment1 = b1 * moment1 + (1 - b1) * dw</span>
+  moment2 = b2 * moment2 + (1 - b2) * dw * dw
+  w -= lr * <span style="color: blue">moment1</span> / sqrt(moment2 + epsilon)
+</code></pre>
+
+</section>
+<section id="adam-pseudocode-vs-rmsprop" class="slide level3">
+<h3>Adam: pseudocode vs RMSProp</h3>
+
+GD + RMSProp:
+
+<pre><code>grad_sq = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: magenta">grad_sq = gamma * grad_sq + (1 - gamma) * dw * dw</span>
+  w -= lr * dw <span style="color: magenta">/ sqrt(grad_sq + epsilon)</span>
+</code></pre>
+
+GD + Adam (without bias correction):
+
+<pre><code>moment1 = 0
+moment2 = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: blue">moment1 = b1 * moment1 + (1 - b1) * dw</span>
+  <span style="color: magenta">moment2 = b2 * moment2 + (1 - b2) * dw * dw</span>
+  w -= lr * <span style="color: blue">moment1</span> <span style="color: magenta">/ sqrt(moment2 + epsilon)</span>
+</code></pre>
+
 <aside class="notes">
-<p>Bias correction accounts for the fact that first and second moment
-estimates start at zero.</p>
+<p>Usually <code>b1</code> is smaller than <code>b2</code>, i.e. we
+update <code>moment1</code> more aggressively than
+<code>moment2</code>.</p>
+</aside>
+</section>
+<section id="adam-pseudocode-with-bias-correction" class="slide level3">
+<h3>Adam: Pseudocode with bias correction</h3>
+
+<pre><code>moment1 = 0
+moment2 = 0
+for t in range(num_steps):
+  dw = compute_grad(w)
+  <span style="color: blue">moment1 = b1 * moment1 + (1 - b1) * dw</span>
+  <span style="color: magenta">moment2 = b2 * moment2 + (1 - b2) * dw * dw</span>
+  <span style="color: green">moment1_unbias = moment1 / (1 - b1 ** t)
+  moment2_unbias = moment2 / (1 - b2 ** t)</span>
+  w -= lr * <span style="color: blue">moment1_unbias</span> <span style="color: magenta">/ sqrt(moment2_unbias + epsilon)</span>
+</code></pre>
+<aside class="notes">
+<p>When we initialize both moments to zero, they are initially “biased”
+to smaller values (since they update slowly!) This bias correction
+accounts for that.</p>
 </aside>
 </section>
 <section id="illustration-beales-function" class="slide level3">
@@ -446,9 +645,14 @@ symmetry and descend in optimization direction.</p>
 <section id="recap" class="title-slide slide level2">
 <h2>Recap</h2>
 <ul>
-<li>Gradient descent as a general approach to model training</li>
+<li>Gradient descent as a general approach to training</li>
 <li>Variations</li>
 </ul>
+<aside class="notes">
+<p>Gradient descent is easy on linear regression! You won’t get to apply
+any of these more advanced techniques until later in the semester, when
+we work with less friendly loss surfaces.</p>
+</aside>
 </section>
     </div>
   </div>
