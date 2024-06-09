@@ -39,7 +39,6 @@ Your mastery of the course material will be evaluated by your performance on:
 * **Homework problem sets**: These are computer-graded, and you'll have instant feedback as you work, so you'll know whether your answers are correct or not. If you manage your time well, you'll be able to get help or ask clarifying questions so that you can improve your understanding on questions you did not answer correctly, and re-submit a corrected answer for credit.
 * **"Lab" assignments**: Some modules include a "lab" assignment that expands on the technique you learned that week. You'll be given a Python notebook with some cells missing; you'll have to fill in code or answer questions in the missing cells.
 * **Exams**: The course will include a midterm exam and a final exam. You'll have a few choices of dates/times for each exam, so you can select one that does not conflict with your course schedule or other responsibilities.
-* **Project**: The course project will require you to go move beyond the fundamentals of Intro ML and apply your new knowledge to something more challenging. It is *not* an open-ended project on an ML topic of your choice. Specific guidelines will be discussed in the second half of the semester.
 
 The relative weight of each of these components will be shared via the course syllabus in the first week of the semester.
 
@@ -65,32 +64,22 @@ knowledge of probability and linear algebra is required.
 
 If you want to brush up, you can review:
 
--   [Review of probability
-    theory](http://cs229.stanford.edu/section/cs229-prob.pdf) (http://cs229.stanford.edu/section/cs229-prob.pdf)
--   In [Boyd & Vandenberghe "Introduction to Applied Linear
-    Algebra"](http://vmls-book.stanford.edu/vmls.pdf) (http://vmls-book.stanford.edu/vmls.pdf), these sections:
-    -   Section I, Chapter 1 (Vectors): vectors, vector addition,
-        scalar-vector multiplication, inner product (dot product)
-    -   Section I, Chapter 3 (Norm and distance):  Norm of a vector,
-        euclidean distance 
-    -   Section II, Chapter 5 (Matrices): matrix notation, zero and
-        identity matrices, sparse matrices, matrix transposition, matrix
-        addition, scalar-matrix multiplication, matrix norm,
-        matrix-vector multiplication
-    -   Section II, Chapter 8 (Linear equations): systems of linear
-        equations
-    -   Section II, Chapter 10 (Matrix multiplication): matrix-matrix
-        multiplication
-    -   Section II, Chapter 11 (Matrix inverses): Inverse, solving a
-        system of linear equations
-    -   Also a quick optimization review: Appendix C (Derivatives and
-        optimization)
+* [Review of Probability Theory](http://cs229.stanford.edu/section/cs229-prob.pdf) (http://cs229.stanford.edu/section/cs229-prob.pdf)
+* In [Boyd and Vandenberghe "Introduction to Applied Linear Algebra"](http://vmls-book.stanford.edu/vmls.pdf) (http://vmls-book.stanford.edu/vmls.pdf):
+  * Section I, Chapter 1 (Vectors): vectors, vector addition, scalar-vector multiplication, inner product (dot product), complexity of vector computations
+  * Section I, Chapter 3 (Norm and distance):  Norm of a vector, euclidean distance, complexity
+  * Section II, Chapter 5 (Matrices): matrix notation, zero and identity matrices, sparse matrices, matrix transposition, matrix addition, scalar-matrix multiplication, matrix norm, matrix-vector multiplication, complexity
+  * Section II, Chapter 8 (Linear equations): systems of linear equations
+  * Section II, Chapter 10 (Matrix multiplication): matrix-matrix multiplication
+  * Section II, Chapter 11 (Matrix inverses): Inverse, solving a system of linear equations
+  * Also a quick optimization review: Appendix C (Derivatives and optimization)
+  * And a brief introduction to algorithm complexity: Appendix B (Complexity)
 
 There will be a significant programming component to this course, and
 class and homework exercises will be in Python. You do not need to know
-Python a priori, but you should know basic programming concepts and have
-experience programming in some programming language. We will review 
-some important Python basics in the first week of the course.
+Python a priori, but you should know programming concepts and have
+experience programming in some programming language, and you should be comfortable picking
+up Python basics independently. We will review some important Python basics in the first week of the course.
 
 ### Do I need previous experience with machine learning for this course? 
 
