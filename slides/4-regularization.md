@@ -8,9 +8,11 @@ author: 'Fraida Fund'
 **Math prerequisites for this lecture**: You should know about:
 
 * derivatives and optimization (Appendix C in Boyd and Vandenberghe)
+* norm of a vector (Section I, Chapter 3 in Boyd and Vandenberghe)
 
 :::
 
+\newpage
 ## Regularization
 
 ### Penalty for model complexity
@@ -42,6 +44,7 @@ LASSO regression (L1):
 
 $$ \phi (w) = \alpha \sum_{j=1}^d | w_j | $$
 
+\newpage
 
 ### Graphical representation
 
@@ -72,7 +75,13 @@ LASSO (L1)
 * tends to make coefficients either 0 or large (sparse!)
 * does feature selection (setting $w_j$ to zero is equivalent to un-selecting feature)
 
+:::notes
 
+To understand why L1 regularization tends to make sparse coefficients but not L2 regularization - look at the graphical representation. Note that the contours of the L1 regularization "stick out" when one or both parameters is zero.
+
+:::
+
+\newpage
 
 ### Standardization (1)
 
@@ -117,6 +126,7 @@ J(\mathbf{w}) &= \sum_{i=1}^n (y_i - \hat{y}_i)^2 + \alpha  \sum_{j=1}^d |w_j| \
 \end{aligned}
 $$ 
 
+\newpage
 ### Ridge regularization
 
 Why minimize $|| \mathbf{w} || ^2$?
