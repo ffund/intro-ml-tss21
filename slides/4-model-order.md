@@ -42,19 +42,19 @@ author: 'Fraida Fund'
 
 Model selection problem: how to select the $f()$ that maps features $X$ to target $y$?
 
-We'll look at two examples of model selection problems, but there are many more.
+We'll look at a few examples of model selection problems (polynomial order selection, selecting number of knots and degrees in spline features, selecting number of features), but there are many more.
 
 :::
 
 
-### Model order selection problem
+### Problem 1: Polynomial order selection problem
 
 * Given data $(x_i, y_i), i=1\cdots,N$ (one feature)
 * Polynomial model: $\hat{y} = w_0 + w_1 x + \cdots + w_d x^d$
 * $d$ is degree of polynomial, called **model order**
 * **Model order selection problem**: choosing $d$
 
-### Using training loss for model order selection?
+### Using training loss for polynomial order selection?
 
 Suppose we would "search" over each possible $d$:
 
@@ -65,7 +65,7 @@ Suppose we would "search" over each possible $d$:
 
 ::: notes
 
-![This approach does *not* work, because the  loss function always decreases with $d$ (training error decreases with model complexity!)](../images/3-validation-select.png){ width=80%  }
+![This approach does *not* work, because the  loss function always decreases with $d$ (model will overfit to data, training error decreases with model complexity!)](../images/3-validation-select.png){ width=80%  }
 
 Note that we shouldn't use the test data to select a model either - the test set must be left as an "unused" data set on which to evaluate how well the model generalizes.
 
@@ -75,7 +75,7 @@ Note that we shouldn't use the test data to select a model either - the test set
 
 \newpage
 
-### Model order selection for spline features (1)
+### Recap: Spline features (1)
 
 Polynomial models of high $d$ are actually bad, usually - 
 
@@ -89,7 +89,7 @@ Polynomial models of high $d$ are actually bad, usually -
 
 :::
 
-### Model order selection for spline features (2)
+### Recap: Spline features (2)
 
 Instead, we tend to prefer lower-$d$ piecewise functions, so we can fit *local* behavior:
 
@@ -105,7 +105,7 @@ If we constrain the piecewise function to meet at the knots, we call these splin
 
 \newpage
 
-### Model order selection for spline features (3)
+### Recap: Spline features (3)
 
 For constant functions (degree 0) - given "knots" at positions $k_t, k_{t+1}$:
 
@@ -116,7 +116,7 @@ $$
 \end{cases}
 $$
 
-### Model order selection for spline features (4)
+### Recap: Spline features (4)
 
 For degree $p>0$, defined recursively:
 
@@ -130,7 +130,7 @@ You won't need to compute this yourself - use [`SplineTransformer`](https://scik
 
 :::
 
-### Model order selection for spline features (5)
+### Problem 2: Selecting number of knots, degree for spline features
 
 ![Increasing number of knots makes the model more complex. ([Image source](https://madrury.github.io/jekyll/update/statistics/2017/08/04/basis-expansions.html).)](../images/4-bins-various-n-cuts.png){ width=80% }
 
@@ -144,11 +144,16 @@ Now we have two "knobs" for tuning model complexity:
 
 The number of features will be: number of knots + degree - 1
 
+We have the same problem as before: 
+
+* if we select the number of knots, degree to minimize error on the training set - we will always pick the model with the most knots, highest degree
+* if we choose the model that minimizes error on the test set, we don't have a held-out set on which to evaluate our model on new, unseen data. (If we use the test data for model selection, then again for evaluation, we will have an overly optimistic evaluation of model performance on unseen data.)
+
 :::
 
 \newpage
 
-### Feature selection problem (1)
+### Problem 3: Feature selection (1)
 
 
 
@@ -158,12 +163,12 @@ Linear model: $\hat{y} = w_0 + \sum_{j=1}^d w_j x_j$
 
 ::: notes
 
-* Many features, only some are relevant
+* Many features, only some are relevant (you don't know which, or how many!)
 * **Feature selection problem**: fit a model with a small number of features
 
 :::
 
-### Feature selection problem (2)
+### Problem 3: Feature selection (2)
 
 Select a subset of $k << d$ features, $\mathbf{X}_S \in R^{n \times k}$ that is most relevant to target $y$. 
 
@@ -175,15 +180,32 @@ Linear model: $\hat{y} = w_0 + \sum_{x \in \mathbf{X}_S} w_j x_j$
 Why use a subset of features?
 
 * High risk of overfitting if you use all features!
-* For linear regression, when $N \geq p$, variance increases linearly with number of parameters, inversely with number of samples. (Not derived in class, but read extra notes posted after class at home.)
+* For linear regression, when $N \geq p$, variance increases linearly with number of parameters, inversely with number of samples. (Refer to extra notes posted after class at home.)
+
+Today we consider the challenge of selecting the number of features $k$, in a future lesson we will discuss how to decide $which$ features to include.
+
+Once again:
+
+* if we select the number of features to minimize error on the training set - we will always pick the model with the most features. Our model will happily overfit to the "noise" of irrelevant features!
+* and we also shouldn't use our test set.
 
 :::
 
-
 ## Validation
 
+::: notes
 
-### Hold-out validation
+We will discuss a few types of validation:
+
+* Hold-out validation
+* K-fold cross validation
+* Leave-p-out validation
+
+:::
+
+\newpage
+
+### Hold-out validation (1)
 
 * Divide data into training, validation, test sets
 * For each candidate model, learn model parameters on training set
@@ -200,7 +222,7 @@ Note: sometimes you'll hear "validation set" and "test set" used according to th
 
 :::
 
-### Hold-out validation (1)
+### Hold-out validation (2)
 
 * Split $X, y$ into training, validation, and test.
 * Loop over models of increasing complexity: For $p=1,\ldots,p_{max}$,
@@ -209,7 +231,7 @@ Note: sometimes you'll hear "validation set" and "test set" used according to th
   * **Score**: $S_p = \text{score}(y_{v}, \hat{y}_{v,p})$
 
 
-### Hold-out validation (2)
+### Hold-out validation (3)
 
 * Select model order with best score (here, assuming "lower is better"): $$p^* = \operatorname*{argmin}_p S_p$$
 * Evaluate: $$S_{p^*} = \text{score}(y_{ts}, \hat{y}_{ts,p^*}), \quad \hat{y}_{ts,p^*} = \text{pred}(X_{ts}, \hat{w}_{p^*})$$
@@ -224,10 +246,11 @@ Note: sometimes you'll hear "validation set" and "test set" used according to th
 
 :::
 
+\newpage
 
 ### K-fold cross validation
 
-Alternative to simple split:
+Alternative to single split:
 
 * Divide data into $K$ equal-sized parts (typically 5, 10)
 * For each of the "splits": evaluate model using $K-1$ parts for training, last part for validation
@@ -464,16 +487,18 @@ In this example, we cannot put the computation of the spline features outside th
 
 However, we can consider two *valid* ways to place the computation of spline features: 
 
-![Either of these are valid ways to compute the spline features.](../images/4-kfold-spline.png){width=40%}
+![Either of these are valid ways to compute the spline features.](../images/4-kfold-spline.png){width=60%}
 
 * In the first (left) case, however, we re-compute the spline features repeatedly for the same samples - we don't need to!
 * Instead, we should use the second (right) loop order, and then in the inner loop, just select the rows corresponding to training and validation from the design matrix *for the given model*.
 
 :::
 
+<!-- 
 
 * pre-processing: fill missing values with median?
 * compute design matrix: n-way interactions?
 * compute design matrix: splines with increasing number of knots?
 
+-->
 

@@ -79,12 +79,14 @@ with no “hyperparameters”.</figcaption>
 class="math inline">\(f()\)</span> that maps features <span
 class="math inline">\(X\)</span> to target <span
 class="math inline">\(y\)</span>?</p>
-<p>We’ll look at two examples of model selection problems, but there are
-many more.</p>
+<p>We’ll look at a few examples of model selection problems (polynomial
+order selection, selecting number of knots and degrees in spline
+features, selecting number of features), but there are many more.</p>
 </aside>
 </section>
-<section id="model-order-selection-problem" class="slide level3">
-<h3>Model order selection problem</h3>
+<section id="problem-1-polynomial-order-selection-problem"
+class="slide level3">
+<h3>Problem 1: Polynomial order selection problem</h3>
 <ul>
 <li>Given data <span class="math inline">\((x_i, y_i),
 i=1\cdots,N\)</span> (one feature)</li>
@@ -96,9 +98,9 @@ called <strong>model order</strong></li>
 class="math inline">\(d\)</span></li>
 </ul>
 </section>
-<section id="using-training-loss-for-model-order-selection"
+<section id="using-training-loss-for-polynomial-order-selection"
 class="slide level3">
-<h3>Using training loss for model order selection?</h3>
+<h3>Using training loss for polynomial order selection?</h3>
 <p>Suppose we would “search” over each possible <span
 class="math inline">\(d\)</span>:</p>
 <ul>
@@ -114,20 +116,19 @@ training set</li>
 <aside class="notes">
 <figure>
 <img data-src="../images/3-validation-select.png" style="width:80.0%"
-alt="This approach does not work, because the loss function always decreases with d (training error decreases with model complexity!)" />
+alt="This approach does not work, because the loss function always decreases with d (model will overfit to data, training error decreases with model complexity!)" />
 <figcaption aria-hidden="true">This approach does <em>not</em> work,
 because the loss function always decreases with <span
-class="math inline">\(d\)</span> (training error decreases with model
-complexity!)</figcaption>
+class="math inline">\(d\)</span> (model will overfit to data, training
+error decreases with model complexity!)</figcaption>
 </figure>
 <p>Note that we shouldn’t use the test data to select a model either -
 the test set must be left as an “unused” data set on which to evaluate
 how well the model generalizes.</p>
 </aside>
 </section>
-<section id="model-order-selection-for-spline-features-1"
-class="slide level3">
-<h3>Model order selection for spline features (1)</h3>
+<section id="recap-spline-features-1" class="slide level3">
+<h3>Recap: Spline features (1)</h3>
 <p>Polynomial models of high <span class="math inline">\(d\)</span> are
 actually bad, usually -</p>
 <figure>
@@ -150,9 +151,8 @@ different behavior</li>
 </ul>
 </aside>
 </section>
-<section id="model-order-selection-for-spline-features-2"
-class="slide level3">
-<h3>Model order selection for spline features (2)</h3>
+<section id="recap-spline-features-2" class="slide level3">
+<h3>Recap: Spline features (2)</h3>
 <p>Instead, we tend to prefer lower-<span
 class="math inline">\(d\)</span> piecewise functions, so we can fit
 <em>local</em> behavior:</p>
@@ -173,9 +173,8 @@ polynomial function of the feature between two knots.</p>
 these splines - basis splines or “B splines”.</p>
 </aside>
 </section>
-<section id="model-order-selection-for-spline-features-3"
-class="slide level3">
-<h3>Model order selection for spline features (3)</h3>
+<section id="recap-spline-features-3" class="slide level3">
+<h3>Recap: Spline features (3)</h3>
 <p>For constant functions (degree 0) - given “knots” at positions <span
 class="math inline">\(k_t, k_{t+1}\)</span>:</p>
 <p><span class="math display">\[
@@ -185,9 +184,8 @@ class="math inline">\(k_t, k_{t+1}\)</span>:</p>
 \end{cases}
 \]</span></p>
 </section>
-<section id="model-order-selection-for-spline-features-4"
-class="slide level3">
-<h3>Model order selection for spline features (4)</h3>
+<section id="recap-spline-features-4" class="slide level3">
+<h3>Recap: Spline features (4)</h3>
 <p>For degree <span class="math inline">\(p&gt;0\)</span>, defined
 recursively:</p>
 <p><span class="math display">\[
@@ -200,9 +198,11 @@ href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Sp
 in <code>sklearn</code>.</p>
 </aside>
 </section>
-<section id="model-order-selection-for-spline-features-5"
+<section
+id="problem-2-selecting-number-of-knots-degree-for-spline-features"
 class="slide level3">
-<h3>Model order selection for spline features (5)</h3>
+<h3>Problem 2: Selecting number of knots, degree for spline
+features</h3>
 <figure>
 <img data-src="../images/4-bins-various-n-cuts.png" style="width:80.0%"
 alt="Increasing number of knots makes the model more complex. (Image source.)" />
@@ -218,10 +218,21 @@ source</a>.)</figcaption>
 <li>and the number of knots!</li>
 </ul>
 <p>The number of features will be: number of knots + degree - 1</p>
+<p>We have the same problem as before:</p>
+<ul>
+<li>if we select the number of knots, degree to minimize error on the
+training set - we will always pick the model with the most knots,
+highest degree</li>
+<li>if we choose the model that minimizes error on the test set, we
+don’t have a held-out set on which to evaluate our model on new, unseen
+data. (If we use the test data for model selection, then again for
+evaluation, we will have an overly optimistic evaluation of model
+performance on unseen data.)</li>
+</ul>
 </aside>
 </section>
-<section id="feature-selection-problem-1" class="slide level3">
-<h3>Feature selection problem (1)</h3>
+<section id="problem-3-feature-selection-1" class="slide level3">
+<h3>Problem 3: Feature selection (1)</h3>
 <p>Given high dimensional data <span class="math inline">\(\mathbf{X}
 \in R^{n \times d}\)</span> and target variable <span
 class="math inline">\(y\)</span>,</p>
@@ -229,14 +240,15 @@ class="math inline">\(y\)</span>,</p>
 \sum_{j=1}^d w_j x_j\)</span></p>
 <aside class="notes">
 <ul>
-<li>Many features, only some are relevant</li>
+<li>Many features, only some are relevant (you don’t know which, or how
+many!)</li>
 <li><strong>Feature selection problem</strong>: fit a model with a small
 number of features</li>
 </ul>
 </aside>
 </section>
-<section id="feature-selection-problem-2" class="slide level3">
-<h3>Feature selection problem (2)</h3>
+<section id="problem-3-feature-selection-2" class="slide level3">
+<h3>Problem 3: Feature selection (2)</h3>
 <p>Select a subset of <span class="math inline">\(k &lt;&lt; d\)</span>
 features, <span class="math inline">\(\mathbf{X}_S \in R^{n \times
 k}\)</span> that is most relevant to target <span
@@ -249,18 +261,36 @@ class="math inline">\(y\)</span>.</p>
 <li>High risk of overfitting if you use all features!</li>
 <li>For linear regression, when <span class="math inline">\(N \geq
 p\)</span>, variance increases linearly with number of parameters,
-inversely with number of samples. (Not derived in class, but read extra
-notes posted after class at home.)</li>
+inversely with number of samples. (Refer to extra notes posted after
+class at home.)</li>
+</ul>
+<p>Today we consider the challenge of selecting the number of features
+<span class="math inline">\(k\)</span>, in a future lesson we will
+discuss how to decide <span class="math inline">\(which\)</span>
+features to include.</p>
+<p>Once again:</p>
+<ul>
+<li>if we select the number of features to minimize error on the
+training set - we will always pick the model with the most features. Our
+model will happily overfit to the “noise” of irrelevant features!</li>
+<li>and we also shouldn’t use our test set.</li>
 </ul>
 </aside>
 </section></section>
 <section>
 <section id="validation" class="title-slide slide level2">
 <h2>Validation</h2>
-
+<aside class="notes">
+<p>We will discuss a few types of validation:</p>
+<ul>
+<li>Hold-out validation</li>
+<li>K-fold cross validation</li>
+<li>Leave-p-out validation</li>
+</ul>
+</aside>
 </section>
-<section id="hold-out-validation" class="slide level3">
-<h3>Hold-out validation</h3>
+<section id="hold-out-validation-1" class="slide level3">
+<h3>Hold-out validation (1)</h3>
 <ul>
 <li>Divide data into training, validation, test sets</li>
 <li>For each candidate model, learn model parameters on training
@@ -280,8 +310,8 @@ set.</figcaption>
 according to the reverse meanings.</p>
 </aside>
 </section>
-<section id="hold-out-validation-1" class="slide level3">
-<h3>Hold-out validation (1)</h3>
+<section id="hold-out-validation-2" class="slide level3">
+<h3>Hold-out validation (2)</h3>
 <ul>
 <li>Split <span class="math inline">\(X, y\)</span> into training,
 validation, and test.</li>
@@ -297,8 +327,8 @@ class="math inline">\(p=1,\ldots,p_{max}\)</span>,
 </ul></li>
 </ul>
 </section>
-<section id="hold-out-validation-2" class="slide level3">
-<h3>Hold-out validation (2)</h3>
+<section id="hold-out-validation-3" class="slide level3">
+<h3>Hold-out validation (3)</h3>
 <ul>
 <li>Select model order with best score (here, assuming “lower is
 better”): <span class="math display">\[p^* = \operatorname*{argmin}_p
@@ -321,7 +351,7 @@ selected for training and validation.</li>
 </section>
 <section id="k-fold-cross-validation" class="slide level3">
 <h3>K-fold cross validation</h3>
-<p>Alternative to simple split:</p>
+<p>Alternative to single split:</p>
 <ul>
 <li>Divide data into <span class="math inline">\(K\)</span> equal-sized
 parts (typically 5, 10)</li>
@@ -673,7 +703,7 @@ is no “repetition” of features from one model to the next.)</p>
 <p>However, we can consider two <em>valid</em> ways to place the
 computation of spline features:</p>
 <figure>
-<img data-src="../images/4-kfold-spline.png" style="width:40.0%"
+<img data-src="../images/4-kfold-spline.png" style="width:60.0%"
 alt="Either of these are valid ways to compute the spline features." />
 <figcaption aria-hidden="true">Either of these are valid ways to compute
 the spline features.</figcaption>
@@ -686,11 +716,13 @@ the inner loop, just select the rows corresponding to training and
 validation from the design matrix <em>for the given model</em>.</li>
 </ul>
 </aside>
-<ul>
-<li>pre-processing: fill missing values with median?</li>
-<li>compute design matrix: n-way interactions?</li>
-<li>compute design matrix: splines with increasing number of knots?</li>
-</ul>
+<!-- 
+
+* pre-processing: fill missing values with median?
+* compute design matrix: n-way interactions?
+* compute design matrix: splines with increasing number of knots?
+
+-->
 </section>
     </div>
   </div>
