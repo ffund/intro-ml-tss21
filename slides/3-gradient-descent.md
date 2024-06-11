@@ -94,28 +94,34 @@ $$\nabla L(\mathbf{w}) = 0$$
 
 At other points, $\nabla L(\mathbf{w})$ points towards direction of maximum (infinitesimal) rate of *increase*.
 
+::: notes
+
+![Properties of gradient.](../images/3-properties-gradient.png){width=80%}
+
+:::
+
 
 ### Gradient descent idea
 
-To move towards minimum of a (smooth, convex) function, use first order approximation: 
+To move towards minimum of a (smooth, convex) function: 
 
 Start from some initial point, then iteratively 
 
 * compute gradient at current point, and 
-* add some fraction of the negative gradient to the current point
+* add some fraction of the **negative** gradient to the current point
 
-
+<!-- 
 ### Gradient descent illustration
 
 ![[Link for animation](https://miro.medium.com/max/700/1*KQVi812_aERFRolz_5G3rA.gif). Image credit: Peter Roelants](../images/gradient-descent-animation.gif){width=80%}
 
-<!--
 
 ### Visual example: least square solution 3D plot
 
 ![Regression parameters - 3D plot.](../images/3.2b.svg){ width=40% }
 
 -->
+
 
 \newpage
 
