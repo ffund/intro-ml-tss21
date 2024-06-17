@@ -28,7 +28,7 @@ $$
 $$
 
 
-Assume the true function is
+Assume the true function is $t(x)$ such that
 
 $$y=t(x) + \epsilon, \quad \epsilon \sim N(0, \sigma_\epsilon^2)$$
 
