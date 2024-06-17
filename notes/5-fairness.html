@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>Classifier Fairness</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Classifier Fairness</h1>
+<p class="author">Fraida Fund</p>
+</header>
+<p>In addition to evaluating the <strong>error</strong> of a classifier,
+we are also often concerned with the <strong>fairness</strong> of a
+classifier.</p>
+<p>Suppose samples come from two groups: <span
+class="math inline">\(a\)</span> and <span
+class="math inline">\(b\)</span>. What does it mean for a classifier to
+treat both groups <em>fairly</em>? There are a number of different types
+of fairness, and like the error metrics described previously, we are
+often stuck in a situation where we must sacrifice on one fairness
+measure to improve another.</p>
+<p>This week’s case study expands on this topic.</p>
+<p>For this case study, you will work through some online material:</p>
+<ol type="1">
+<li>First, read the ProPublica article, <a
+href="https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing">Machine
+Bias</a>. Based on their description, what type of fairness is violated
+by the COMPAS recidivism risk prediction algorithm? (Choose one of the
+fairness measures described below in the section titled “Fairness
+metrics”.) We will revisit this later in the week.</li>
+<li>Next, read the article and work through the activity <a
+href="https://www.technologyreview.com/2019/10/17/75285/ai-fairer-than-judge-criminal-risk-assessment-algorithm/">Can
+you make AI fairer than a judge?</a> The article discusses two types of
+fairness regarding COMPAS - why is it not possible to reconcile
+them?</li>
+<li>You should also interact with the activity on <a
+href="https://pair.withgoogle.com/explorables/measuring-fairness/">Measuring
+Fairness</a>, which explains in greater detail why it may not be
+possible for an algorithm to be fair according to all metricsl.</li>
+<li>Finally, read <a
+href="https://qz.com/1814415/how-to-fix-bias-in-ai">The quest to make AI
+less prejudiced</a>, which discusses some other types of biases and
+fairness issues in machine learning.</li>
+</ol>
+<h3 id="question">Question</h3>
+<ul>
+<li>What is the <em>original</em> source of the unfairness in the COMPAS
+example? Is it the risk prediction model, or is it something else?</li>
+<li>The COMPAS risk prediction model was meant to be used by human
+judges in the context of other information about the defendant. Do you
+think the human judges using the model understood and were aware of its
+overall performance? Do you think they were aware of the fairness and
+bias issues that the model may have? (Do you know about fairness and
+bias issues related to machine learning models that <em>you</em>
+use?)</li>
+<li>Suppose that despite its bias, COMPAS is still about as fair or even
+slightly more fair than a human decision maker. Are you comfortable with
+COMPAS being used under these circumstances?</li>
+</ul>
+<h3 id="fairness-metrics">Fairness metrics</h3>
+<p>This section lists some metrics related to fairness. You won’t have
+to memorize these, but you should understand them, and given the
+definition of any of these metrics, you should be able say whether or
+not it is satisfied in a particular scenario.</p>
+<ul>
+<li><p><strong>Fairness through unawareness</strong> is not a measure of
+fairness, but describes a situation in which features related to group
+membership are not used in classification. (This doesn’t necessarily
+mean that the classifier produces fair outcomes! For example, if the
+classifier is trained on data that reflects an underlying bias in
+society, the classifier will be biased even if it is not trained on
+features related to group membership.)</p></li>
+<li><p><strong>Causal discrimination</strong> says that two samples that
+are identical w.r.t all features except group membership, should have
+same classification.</p></li>
+<li><p><strong>Group fairness</strong> (also called <em>statistical
+parity</em>) says that for groups <span class="math inline">\(a\)</span>
+and <span class="math inline">\(b\)</span>, the classifier should have
+equal probability of positive classification:</p></li>
+</ul>
+<p><span class="math display">\[P(\hat{y}=1 | G = a) = P(\hat{y}=1 | G =
+b)\]</span></p>
+<ul>
+<li><strong>Conditional statistical parity</strong> is a related metric,
+but now we are also controlling for factor <span
+class="math inline">\(F\)</span>:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y}=1 | G = a, F=f) = P(\hat{y}=1
+| G = b, F=f)\]</span></p>
+<ul>
+<li><strong>Balance for positive/negative class</strong> is similar to
+<em>group fairness</em>, but it is for classifiers that produce soft
+output. It applies to every probability <span
+class="math inline">\(S\)</span> produced by the classifier. This says
+that the expected value of probability assigned by the classifier should
+be the same for both groups -</li>
+<li>For <strong>positive class balance</strong></li>
+</ul>
+<p><span class="math display">\[E(S|y=1, G=a) = E(S|y=1,
+G=b)\]</span></p>
+<ul>
+<li>For <strong>negative class balance</strong></li>
+</ul>
+<p><span class="math display">\[E(S|y=0, G=a) = E(S|y=0,
+G=b)\]</span></p>
+<ul>
+<li><strong>Predictive parity</strong> (also called <em>outcome
+test</em>) says that the groups should have equal PPV, i.e. the
+prediction should carry similar meaning (w.r.t. probability of positive
+outcome) for both groups:</li>
+</ul>
+<p><span class="math display">\[P(y = 1 | \hat{y} = 1, G = a) = P(y = 1
+| \hat{y} = 1, G = b)  \]</span></p>
+<ul>
+<li>Predictive parity also implies equal FDR:</li>
+</ul>
+<p><span class="math display">\[P(y = 0 | \hat{y} = 1, G = a) = P(y = 0
+| \hat{y} = 1, G = b)  \]</span></p>
+<ul>
+<li><strong>Calibration</strong> (also called <em>test fairness</em>,
+<em>matching conditional frequencies</em>) is similar to <em>predictive
+parity</em>, but it is for classifiers that produce soft output. It
+applies to every probability <span class="math inline">\(S\)</span>
+produced by the classifier:</li>
+</ul>
+<p><span class="math display">\[P(y = 1 | S = s, G = a) = P(y = 1 | S =
+s, G = b) \]</span></p>
+<ul>
+<li><strong>Well-calibration</strong> extends this definition to add
+that the probability of positive outcome should actually be <span
+class="math inline">\(s\)</span>:</li>
+</ul>
+<p><span class="math display">\[P(y = 1 | S = s, G = a) = P(y = 1 | S =
+s, G = b) = s\]</span></p>
+<ul>
+<li><strong>False positive error rate balance</strong> (also called
+<em>predictive equality</em>) says that groups should have equal
+FPR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 1 | y = 0, G = a) =
+P(\hat{y} = 1 | y = 0, G = b)\]</span></p>
+<ul>
+<li>False positive error rate balance also implies equal TNR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 0 | y = 0, G = a) =
+P(\hat{y} = 0 | y = 0, G = b)\]</span></p>
+<ul>
+<li><strong>False negative error rate balance</strong> (also called
+<em>equal opportunity</em>) says that groups should have have equal FNR.
+This is equivalent to group fairness <strong>only</strong> if the
+prevalence of positive result is the same among both groups:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 0 | y = 1, G = a) =
+P(\hat{y} = 0 | y = 1, G = b)\]</span></p>
+<ul>
+<li>False negative error rate balance also implies equal TPR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 1 | y = 1, G = a) =
+P(\hat{y} = 1 | y = 1, G = b)\]</span></p>
+<ul>
+<li><strong>Equalized odds</strong> (also called <em>disparate
+mistreatment</em>) says that both groups should have equal TPR
+<em>and</em> FPR:</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = 0 | y = i, G = a) =
+P(\hat{y} = 0 | y = i, G = b), i \in 0,1\]</span></p>
+<ul>
+<li><p>Note that if the prevalence of the (actual) positive result is
+<em>different</em> between groups, then it is not possible to satisfy FP
+and FN error rate balance <em>and</em> predictive parity at the same
+time!</p></li>
+<li><p><strong>Conditional use accuracy equality</strong> says that the
+groups have equal PPV <em>and</em> NPV:</p></li>
+</ul>
+<p><span class="math display">\[P(y = 1 | \hat{y} = 1, G = a) = P(y = 1
+| \hat{y} = 1, G = b)\]</span></p>
+<p><span class="math display">\[P(y = 0 | \hat{y} = 0, G = a) = P(y = 0
+| \hat{y} = 0, G = b)\]</span></p>
+<ul>
+<li><strong>Overall accuracy equality</strong> says that the groups have
+equal overall accuracy</li>
+</ul>
+<p><span class="math display">\[P(\hat{y} = y | G = a) = P((\hat{y} = y
+| G = b)\]</span></p>
+<ul>
+<li><strong>Treatment equality</strong> says that the groups have equal
+ratio of FN to FP, <span
+class="math inline">\(\frac{FN}{FP}\)</span></li>
+</ul>
+</body>
+</html>

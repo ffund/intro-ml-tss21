@@ -7,6 +7,7 @@ SOURCES += 2-linear-extended-derivation.md
 SOURCES += 3-cubic-model.md
 SOURCES += 3-linear-regression-bias-variance.md
 SOURCES += 5-classifier-metrics.md
+SOURCES += 5-fairness.md
 SOURCES += 10-gpu.md
 
 #SOURCES += 3-when-learning-fails.md
