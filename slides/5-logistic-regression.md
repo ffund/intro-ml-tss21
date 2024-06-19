@@ -3,6 +3,8 @@ title:  'Logistic Regression for Classification'
 author: 'Fraida Fund'
 ---
 
+\newpage
+
 ## In this lecture
 
 * Linear classifiers
