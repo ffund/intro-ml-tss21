@@ -352,6 +352,12 @@ g_k(\mathbf{Wx})\]</span></p>
 <p>Given training data <span class="math inline">\((\mathbf{x}_i, y_i),
 i=1,\ldots,n\)</span>, we must learn <span
 class="math inline">\(\mathbf{W}\)</span>.</p>
+<aside class="notes">
+<p>Note that if the data is linearly separable, there will be more than
+one <span class="math inline">\(\mathbf{W}\)</span> that perfectly
+classifies the training data! We will choose the <em>maximum
+likelihood</em> one.</p>
+</aside>
 </section>
 <section id="maximum-likelihood-estimation-1" class="slide level3">
 <h3>Maximum likelihood estimation (1)</h3>
@@ -377,6 +383,24 @@ independent of one another,</p>
 <p><span class="math display">\[ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) =
 \prod_{i=1}^n P(y_i| \mathbf{x_i}, \mathbf{W})\]</span></p>
 <aside class="notes">
+<p>Note: <span class="math inline">\(P(y_i| \mathbf{x_i},
+\mathbf{W})\)</span> is equal to</p>
+<ul>
+<li><span class="math inline">\(y_i P(y_i = 1| \mathbf{x_i},
+\mathbf{W})\)</span> when <span class="math inline">\(y_i =
+1\)</span></li>
+<li>and <span class="math inline">\((1 - y_i) P(y_i = 0| \mathbf{x_i},
+\mathbf{W})\)</span> when <span class="math inline">\(y_i =
+0\)</span>.</li>
+</ul>
+<p>and since only one term will be non-zero for any given <span
+class="math inline">\(y_i\)</span>, <span class="math inline">\(P(y_i|
+\mathbf{x_i}, \mathbf{W})\)</span> is equal to the sum of those:</p>
+<p><span class="math display">\[y_i P(y_i  = 1| \mathbf{x_i},
+\mathbf{W}) + (1 - y_i) P(y_i = 0| \mathbf{x_i},
+\mathbf{W})\]</span></p>
+<p>This expression is familiar as the PMF of a Bernoulli random
+variable.</p>
 <p>We take the log of both sides, because then the product turns into a
 sum…</p>
 </aside>
@@ -390,7 +414,6 @@ L(\mathbf{W}) &amp;= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 &amp;= - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i}, \mathbf{W})
 \end{aligned}
 \]</span></p>
-<p>(the term in the sum is also called cross-entropy)</p>
 <aside class="notes">
 <p>Note that maximizing the likelihood is the same as minimizing the
 negative log likelihood.</p>
@@ -404,7 +427,14 @@ minimize:</p>
 \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W}) =
 \operatorname*{argmin}_W L(\mathbf{W})\]</span></p>
 <aside class="notes">
-<p>The next step will be to plug in our sigmoid function.</p>
+<p>At this point, we know we need to find</p>
+<p><span class="math display">\[ \operatorname*{argmin}_W  \left(
+-\sum_{i = 1}^n y_i \ln P(y_i  = 1| \mathbf{x_i}, \mathbf{W}) + (1 -
+y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{W}) \right) \]</span></p>
+<p>The next step will be to plug in our sigmoid function, <span
+class="math inline">\(P(y_i = 1| \mathbf{x_i}, \mathbf{W}) =
+\sigma(z_i)\)</span> where <span class="math inline">\(z_i =
+\mathbf{W}\mathbf{x_i}\)</span>.</p>
 </aside>
 </section>
 <section id="binary-cross-entropy-loss-1" class="slide level3">
@@ -425,14 +455,17 @@ class="math inline">\(0, 1\)</span>:</p>
 &amp; =  y_i z_i - \ln (1+e^{z_i})
 \end{aligned}
 \end{equation}\]</span></p>
-<p>(Note: <span class="math inline">\(\sigma(-z) =
-1-\sigma(z)\)</span>)</p>
+<aside class="notes">
+<p>Notes: <span class="math inline">\(\sigma(-z) =
+1-\sigma(z)\)</span></p>
+</aside>
 </section>
 <section id="binary-cross-entropy-loss-2" class="slide level3">
 <h3>Binary cross-entropy loss (2)</h3>
-<p>Binary cross-entropy loss function (negative log likelihood):</p>
-<p><span class="math display">\[\sum_{i=1}^n \ln (1+e^{z_i}) - y_i
-z_i\]</span></p>
+<p>Binary cross-entropy loss function (negative log likelihood) for
+<span class="math inline">\([0, 1]\)</span> class labels:</p>
+<p><span class="math display">\[ - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i},
+\mathbf{W}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i\]</span></p>
 </section>
 <section id="cross-entropy-loss-for-multi-class-classification-1"
 class="slide level3">
@@ -450,6 +483,12 @@ class="math inline">\(1\)</span>:</p>
 \]</span></p>
 <p><span class="math display">\[i = 1,\ldots , n, \quad k=1, \ldots,
 K\]</span></p>
+<aside class="notes">
+<p>For example: if the class labels are <span class="math inline">\([0,
+1, 2, 3, 4]\)</span>, for a sample for which <span
+class="math inline">\(y_i = 3\)</span>, <span
+class="math inline">\(r_{ik} = [0, 0, 0, 1, 0]\)</span>.</p>
+</aside>
 </section>
 <section id="cross-entropy-loss-for-multi-class-classification-2"
 class="slide level3">
@@ -540,7 +579,7 @@ highest.</li>
 <strong>labeled</strong> examples: <span class="math inline">\((x_i,
 y_i), i=1,2,\cdots,n\)</span></li>
 <li>Choose a <strong>loss function</strong> that will measure how well
-model fits data: cross-entropy</li>
+model fits data: categorical cross-entropy</li>
 </ul>
 <p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k
 e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] \text{ where

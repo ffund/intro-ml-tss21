@@ -3,9 +3,6 @@ title:  'Logistic Regression for Classification'
 author: 'Fraida Fund'
 ---
 
-
-\newpage
-
 ## In this lecture
 
 * Linear classifiers
@@ -258,6 +255,11 @@ $$ P(y=k | \mathbf{x}) = g_k(\mathbf{z}) = g_k(\mathbf{Wx})$$
 
 Given training data $(\mathbf{x}_i, y_i), i=1,\ldots,n$, we must learn $\mathbf{W}$.
 
+:::notes
+
+Note that if the data is linearly separable, there will be more than one $\mathbf{W}$ that perfectly classifies the training data! We will choose the *maximum likelihood* one.
+
+:::
 
 ### Maximum likelihood estimation (1)
 
@@ -284,6 +286,17 @@ $$ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \prod_{i=1}^n P(y_i| \mathbf{x_i}, \m
 
 ::: notes
 
+Note: $P(y_i| \mathbf{x_i}, \mathbf{W})$ is equal to 
+
+* $y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{W})$ when $y_i = 1$
+* and $(1 - y_i) P(y_i = 0| \mathbf{x_i}, \mathbf{W})$ when $y_i = 0$.
+
+and since only one term will be non-zero for any given $y_i$, $P(y_i| \mathbf{x_i}, \mathbf{W})$ is equal to the sum of those: 
+
+$$y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{W}) + (1 - y_i) P(y_i = 0| \mathbf{x_i}, \mathbf{W})$$
+
+This expression is familiar as the PMF of a Bernoulli random variable.
+
 We take the log of both sides, because then the product turns into a sum...
 
 :::
@@ -299,7 +312,6 @@ L(\mathbf{W}) &= -\ln P(\mathbf{y}| \mathbf{X}, \mathbf{W}) \\
 \end{aligned}
 $$
 
-(the term in the sum is also called cross-entropy)
 
 ::: notes
 
@@ -316,7 +328,12 @@ $$ \mathbf{\hat{W}} = \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf
 
 ::: notes
 
-The next step will be to plug in our sigmoid function.
+At this point, we know we need to find
+
+$$ \operatorname*{argmin}_W  \left( -\sum_{i = 1}^n y_i \ln P(y_i  = 1| \mathbf{x_i}, \mathbf{W}) + (1 - y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{W}) \right) $$
+
+
+The next step will be to plug in our sigmoid function, $P(y_i = 1| \mathbf{x_i}, \mathbf{W}) = \sigma(z_i)$ where $z_i = \mathbf{W}\mathbf{x_i}$.
 
 :::
 
@@ -336,15 +353,20 @@ For binary classification with class labels $0, 1$:
 \end{aligned}
 \end{equation}
 
-(Note: $\sigma(-z) = 1-\sigma(z)$)
+:::notes
+
+Notes: $\sigma(-z) = 1-\sigma(z)$
+
+
+:::
 
 ### Binary cross-entropy loss (2)
 
-Binary cross-entropy loss function (negative log likelihood):
+Binary cross-entropy loss function (negative log likelihood) for $[0, 1]$ class labels:
 
-$$\sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
+$$ - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i}, \mathbf{W}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
 
-
+\newpage
 ### Cross-entropy loss for  multi-class classification (1)
 
 Define "one-hot" vector - for a sample from class $k$, all entries in the vector are $0$ except for the $k$th entry which is $1$:
@@ -358,6 +380,11 @@ $$
 
 $$i = 1,\ldots , n, \quad k=1, \ldots, K$$
 
+:::notes
+
+For example: if the class labels are $[0, 1, 2, 3, 4]$, for a sample for which $y_i = 3$, $r_{ik} = [0, 0, 0, 1, 0]$.
+
+:::
 
 ### Cross-entropy loss for  multi-class classification (2)
 
@@ -444,7 +471,7 @@ $$P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}} \text{ where 
 
 
 * Get **data** - for supervised learning, we need **labeled** examples: $(x_i, y_i), i=1,2,\cdots,n$
-* Choose a **loss function** that will measure how well model fits data: cross-entropy 
+* Choose a **loss function** that will measure how well model fits data: categorical cross-entropy 
 
 $$ \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] \text{ where }$$
 
