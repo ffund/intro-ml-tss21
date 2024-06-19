@@ -223,7 +223,7 @@ Acts like a probability mass function:
 
 Class probabilities are given by
 
-$$P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}$$
+$$P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=0}^{K-1} e^{z_\ell}}$$
 
 ### Softmax function for multi-class logistic regression (2)
 
@@ -390,14 +390,15 @@ For example: if the class labels are $[0, 1, 2, 3, 4]$, for a sample for which $
 
 ### Cross-entropy loss for  multi-class classification (2)
 
-Then,
+Then, like before
 
-$$ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) = \sum_{k=1}^K r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})$$
+$$ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) = \sum_{k=0}^{K-1} r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})$$
 
 
 Cross-entropy loss function is
 
 $$ \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right]$$
+
 
 
 ### Minimizing cross-entropy loss

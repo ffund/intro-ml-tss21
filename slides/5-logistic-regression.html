@@ -312,7 +312,7 @@ class="slide level3">
 <h3>Softmax function for multi-class logistic regression (1)</h3>
 <p>Class probabilities are given by</p>
 <p><span class="math display">\[P(y=k | \mathbf{x}) =
-\frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
+\frac{e^{z_k}}{\sum_{\ell=0}^{K-1} e^{z_\ell}}\]</span></p>
 </section>
 <section id="softmax-function-for-multi-class-logistic-regression-2"
 class="slide level3">
@@ -493,9 +493,9 @@ class="math inline">\(r_{ik} = [0, 0, 0, 1, 0]\)</span>.</p>
 <section id="cross-entropy-loss-for-multi-class-classification-2"
 class="slide level3">
 <h3>Cross-entropy loss for multi-class classification (2)</h3>
-<p>Then,</p>
+<p>Then, like before</p>
 <p><span class="math display">\[ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) =
-\sum_{k=1}^K r_{ik} \ln P(y_i = k| \mathbf{x_i},
+\sum_{k=0}^{K-1} r_{ik} \ln P(y_i = k| \mathbf{x_i},
 \mathbf{W})\]</span></p>
 <p>Cross-entropy loss function is</p>
 <p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k
