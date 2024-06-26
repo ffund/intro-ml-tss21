@@ -24,6 +24,9 @@ author: 'Fraida Fund'
 * Bias and variance of KNN
 * The Curse of Dimensionality
 
+
+
+
 \newpage
 
 ## Parametric vs. non-parametric models
@@ -46,8 +49,6 @@ A model class is more flexible if $f(x, w)$ can represent more possible function
 But until now, we had to "know" how to add flexibility - for example, by adding interaction terms or other basis functions. 
 
 A way to get more flexible models is with a **non-parametric** approach, where we don't a priori impose the functional form or a fixed number of parameters that the model should learn.
-
-**Note**: "parametric" and "non-parametric" are not precisely defined terms, but this is how they are often understood.
 
 :::
 
@@ -79,6 +80,7 @@ We previously spoke about the inductive bias of the linear models - we assumed t
 
 :::
 
+\newpage
 
 ### 1-NN
 
@@ -110,6 +112,17 @@ There, the training time could be long, but *inference* was only $O(d)$. We can 
 
 :::
 
+\newpage
+
+### 1NN - approximation as a step function
+
+::: notes
+
+![The nearest neighbor model approximates the true function using steps.](../images/6-knn-step.png){ width=40% }
+
+:::
+
+
 ### 1NN - decision boundaries
 
 ![1NN decision boundaries - Nearest neighborhoods for each point of the training data set. ](../images/knn-decision-boundaries.png){ width=60% }
@@ -121,6 +134,7 @@ Note that there will be zero error on training set (unless there are training da
 :::
 
 \newpage
+
 
 ### K nearest neighbors
 
@@ -258,16 +272,16 @@ Problems with the basic distance metrics:
 
 :::
 
-
 ### Distance measure - standardization (1)
 
-![Without standardization, via [https://stats.stackexchange.com/a/287439/](https://stats.stackexchange.com/a/287439/). The x2 feature dominates the distance measure.](https://i.stack.imgur.com/OCUmI.png){ width=40% }
+![Without standardization, via [https://stats.stackexchange.com/a/287439/](https://stats.stackexchange.com/a/287439/). The x2 feature dominates the distance measure.](../images/6-knn-standardize-1.png){ width=40% }
 
 
 ### Distance measure - standardization (2)
 
-![With standardization, via [https://stats.stackexchange.com/a/287439/](https://stats.stackexchange.com/a/287439/)](https://i.stack.imgur.com/J5r01.png){ width=40% }
+![With standardization, via [https://stats.stackexchange.com/a/287439/](https://stats.stackexchange.com/a/287439/)](../images/6-knn-standardize-2.png){ width=40% }
 
+>
 
 \newpage
 

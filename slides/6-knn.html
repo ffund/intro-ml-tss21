@@ -89,8 +89,6 @@ by adding interaction terms or other basis functions.</p>
 <strong>non-parametric</strong> approach, where we don’t a priori impose
 the functional form or a fixed number of parameters that the model
 should learn.</p>
-<p><strong>Note</strong>: “parametric” and “non-parametric” are not
-precisely defined terms, but this is how they are often understood.</p>
 </aside>
 </section>
 <section id="parametric-models" class="slide level3">
@@ -173,6 +171,18 @@ regression or logistic regression?</p>
 <p>There, the training time could be long, but <em>inference</em> was
 only <span class="math inline">\(O(d)\)</span>. We can tolerate a long
 training time more easily than a long inference time.</p>
+</aside>
+</section>
+<section id="nn---approximation-as-a-step-function"
+class="slide level3">
+<h3>1NN - approximation as a step function</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/6-knn-step.png" style="width:40.0%"
+alt="The nearest neighbor model approximates the true function using steps." />
+<figcaption aria-hidden="true">The nearest neighbor model approximates
+the true function using steps.</figcaption>
+</figure>
 </aside>
 </section>
 <section id="nn---decision-boundaries" class="slide level3">
@@ -352,7 +362,7 @@ perceptual similarity</li>
 <section id="distance-measure---standardization-1" class="slide level3">
 <h3>Distance measure - standardization (1)</h3>
 <figure>
-<img data-src="https://i.stack.imgur.com/OCUmI.png" style="width:40.0%"
+<img data-src="../images/6-knn-standardize-1.png" style="width:40.0%"
 alt="Without standardization, via https://stats.stackexchange.com/a/287439/. The x2 feature dominates the distance measure." />
 <figcaption aria-hidden="true">Without standardization, via <a
 href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a>.
@@ -362,11 +372,14 @@ The x2 feature dominates the distance measure.</figcaption>
 <section id="distance-measure---standardization-2" class="slide level3">
 <h3>Distance measure - standardization (2)</h3>
 <figure>
-<img data-src="https://i.stack.imgur.com/J5r01.png" style="width:40.0%"
+<img data-src="../images/6-knn-standardize-2.png" style="width:40.0%"
 alt="With standardization, via https://stats.stackexchange.com/a/287439/" />
 <figcaption aria-hidden="true">With standardization, via <a
 href="https://stats.stackexchange.com/a/287439/">https://stats.stackexchange.com/a/287439/</a></figcaption>
 </figure>
+<blockquote>
+
+</blockquote>
 </section>
 <section id="distance-measure---equal-weighted-features"
 class="slide level3">
