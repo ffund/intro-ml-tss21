@@ -187,3 +187,4 @@ Tuning parameters to select by CV:
 
 * Can use a single estimator that has poor performance
 * Combining the output of multiple estimators into a single prediction: better predictive accuracy, less interpretability
+* Also more expensive to fit
