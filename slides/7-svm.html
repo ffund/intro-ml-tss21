@@ -39,6 +39,10 @@
 
 <section class="slide level3">
 
+<aside class="notes">
+<p><strong>Math prerequisites for this lecture</strong>: Constrained
+optimization (Appendix C in in Boyd and Vandenberghe).</p>
+</aside>
 <!--
 
 ## In this lecture
@@ -672,6 +676,18 @@ and each support vector.</p>
 <p>Predicted label is weighted average of labels for support vectors,
 with weights proportional to “correlation” of test sample and support
 vector.</p>
+</section>
+<section id="relationship-between-svm-and-other-models"
+class="slide level3">
+<h3>Relationship between SVM and other models</h3>
+<ul>
+<li>Like a logistic regression - linear classifier, separating
+hyperplane is <span class="math inline">\(w_0 + \sum_{j=1}^p w_j x_{ij}
+= 0\)</span></li>
+<li>Like a weighted KNN - predicted label is weighted average of labels
+for support vectors, with weights proportional to “similarity” of test
+sample and support vector.</li>
+</ul>
 </section></section>
     </div>
   </div>

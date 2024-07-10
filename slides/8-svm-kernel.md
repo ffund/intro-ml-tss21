@@ -304,6 +304,13 @@ A basis function transformation can be expensive if the dimensionality of the tr
 
 :::
 
+### Kernel: not just for SVM
+
+Kernels are used in other types of models - 
+
+* Kernel regression
+* Gaussian process regression
+
 \newpage
 
 ## Summary: SVM

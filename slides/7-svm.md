@@ -3,6 +3,12 @@ title:  'Support vector machines'
 author: 'Fraida Fund'
 ---
 
+:::notes
+
+**Math prerequisites for this lecture**: Constrained optimization (Appendix C in in Boyd and Vandenberghe).
+
+:::
+
 <!--
 
 ## In this lecture
@@ -549,3 +555,8 @@ Classifier output (assuming -1,1 labels):
 $$\hat{y}(\mathbf{x}) = \text{sign} (\hat{z}(\mathbf{x}))$$
 
 Predicted label is weighted average of labels for support vectors, with weights proportional to "correlation" of test sample and support vector.
+
+### Relationship between SVM and other models
+
+* Like a logistic regression - linear classifier, separating hyperplane is $w_0 + \sum_{j=1}^p w_j x_{ij} = 0$
+* Like a weighted KNN - predicted label is weighted average of labels for support vectors, with weights proportional to "similarity" of test sample and support vector.
