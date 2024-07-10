@@ -501,7 +501,7 @@ $$
 
 ::: notes
 
-This turns out to be not too terrible to solve.
+This turns out to be not too terrible to solve. $\alpha$ is non-zero only when the constraint is active - only for support vectors.
 
 :::
 
