@@ -173,7 +173,7 @@ Similarly, the activation function at the output unit and the loss function are 
 
 For binary classification, $y \in [0,1]$: 
 
-- Use sigmoid activation, output will be: $u_O = P(y=1| x)=\frac{1}{1+e^{-z_O}}$
+- Use sigmoid activation $g_O$, output will be: $u_O = P(y=1| x)=\frac{1}{1+e^{-z_O}}$
 - $u_O$ is scalar - need one output node
 - Use binary cross entropy loss:
 
@@ -194,7 +194,7 @@ The mapping from transformed feature space to output is just like a logistic reg
 
 For multi-class classification, $y=1,\ldots, K$:
 
-- Use softmax activation, output will be: $u_{O, k} = P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}$
+- Use softmax activation $g_O$, output will be: $u_{O, k} = P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}$
 - $u_O$ is vector $[u_0, \ldots, u_K]$ - need $K$ output nodes
 - Use categorical cross entropy loss:
 
@@ -210,7 +210,7 @@ Then you can select predicted label by $\hat{y} = \operatorname*{argmax}_k u_{O,
 
 For regression, $y \in R^{1}$:
 
-- Use linear activation, output will be: $u_O = z_O$
+- Use linear activation $g_O$, output will be: $u_O = z_O$
 - $u_O$ is scalar - need one output node
 - Use L2 loss:
 
@@ -220,7 +220,7 @@ $$L(\mathbf{W}) = \sum_{i=1}^n (y_i - z_{Oi})^2$$
 
 For regression, $y \in R^{K}$:
 
-- Use linear activation, output will be: $u_{O,k} = z_{O,k}$
+- Use linear activation $g_O$, output will be: $u_{O,k} = z_{O,k}$
 - $u_O$ is vector $[u_0, \ldots, u_K]$ - need $K$ output nodes
 - Use vector L2 loss:
 
@@ -258,12 +258,12 @@ Total                           $N_H(N_I+1)+N_O(N_H+1)$
 ### Activation functions at hidden layer: identity?
 
 * Suppose we use $g(z) = z$ (identity function) as activation function throughout the network.
-* The network can only achieve linear decision boundary!
-* To get non-linear decision boundary, need non-linear activation functions.
+* The network can only achieve linear decision boundary/ output!
+* To get non-linear decision boundary/output, need non-linear activation functions.
 
 ::: notes
 
-Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear decision boundary! (See [this post](http://neuralnetworksanddeeplearning.com/chap4.html) for a convincing demonstration.)
+Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear activation! (See [this post](http://neuralnetworksanddeeplearning.com/chap4.html) for a convincing demonstration.)
 
 (The more hidden units we have, the more complex a function we can represent.)
 
@@ -355,10 +355,16 @@ How do we choose the parameters in the last step? We'll use *gradient descent* o
 
 We need to compute the gradient of the loss function with respect to *every* weight, and there are $N_H(N_I+1)+N_O(N_H+1)$ weights!
 
-The key to efficient computation will be:
+Two perspectives on backpropagation:
+
+* It's just the chain rule
+* It's not just the chain rule 
+
+Re: "it's not just the chain rule", the key to efficient computation will be:
 
 * saving all the intermediate (hidden) variables on the forward pass, to reuse in the computation of gradients
 * computing the gradients in a *backwards* pass - going from output to input, and accumulating local derivatives along the path (you'll see!)
+
 
 :::
 ### Composite functions and computational graphs
@@ -621,7 +627,6 @@ so for a hidden unit, too, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
 :::
 
 
-
 <!-- 
 ### Backpropagation error: unit with inputs and outputs illustration
 
@@ -720,7 +725,13 @@ With reverse mode differentiation, we take the derivative of the outupt with res
 
 If we want to take derivatives with respect to a *different* input (e.g. input $a$), we already have most of the accumulated gradients - we would just need to compute one more local derivative near that input ($\frac{dc}{da}$).
 
+
 For a problem where you need derivative of one output (loss) with respect to many inputs (many weights), reverse mode differentiation is very efficient because the accumulated gradients ($\delta$ values) are computed once and then reused many times.
+
+So, **it's not just the chain rule**:
+
+* Forward-mode differentiation: complexity scales roughly with the size of the *input*.
+* Reverse-mode differentiation: complexity scales roughly with the size of the *output*.
 
 :::
 

@@ -272,8 +272,9 @@ function are dictated by the problem!</p>
 <p>For binary classification, <span class="math inline">\(y \in
 [0,1]\)</span>:</p>
 <ul>
-<li>Use sigmoid activation, output will be: <span
-class="math inline">\(u_O = P(y=1| x)=\frac{1}{1+e^{-z_O}}\)</span></li>
+<li>Use sigmoid activation <span class="math inline">\(g_O\)</span>,
+output will be: <span class="math inline">\(u_O = P(y=1|
+x)=\frac{1}{1+e^{-z_O}}\)</span></li>
 <li><span class="math inline">\(u_O\)</span> is scalar - need one output
 node</li>
 <li>Use binary cross entropy loss:</li>
@@ -292,8 +293,8 @@ logistic regression - we haven’t changed <em>that</em> part!</p>
 <p>For multi-class classification, <span
 class="math inline">\(y=1,\ldots, K\)</span>:</p>
 <ul>
-<li>Use softmax activation, output will be: <span
-class="math inline">\(u_{O, k} = P(y=k|
+<li>Use softmax activation <span class="math inline">\(g_O\)</span>,
+output will be: <span class="math inline">\(u_{O, k} = P(y=k|
 x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K e^{z_\ell}}\)</span></li>
 <li><span class="math inline">\(u_O\)</span> is vector <span
 class="math inline">\([u_0, \ldots, u_K]\)</span> - need <span
@@ -313,8 +314,8 @@ u_{O,k}\)</span></p>
 <h3>Regression with one output…</h3>
 <p>For regression, <span class="math inline">\(y \in R^{1}\)</span>:</p>
 <ul>
-<li>Use linear activation, output will be: <span
-class="math inline">\(u_O = z_O\)</span></li>
+<li>Use linear activation <span class="math inline">\(g_O\)</span>,
+output will be: <span class="math inline">\(u_O = z_O\)</span></li>
 <li><span class="math inline">\(u_O\)</span> is scalar - need one output
 node</li>
 <li>Use L2 loss:</li>
@@ -326,8 +327,9 @@ z_{Oi})^2\]</span></p>
 <h3>Regression with multiple outputs…</h3>
 <p>For regression, <span class="math inline">\(y \in R^{K}\)</span>:</p>
 <ul>
-<li>Use linear activation, output will be: <span
-class="math inline">\(u_{O,k} = z_{O,k}\)</span></li>
+<li>Use linear activation <span class="math inline">\(g_O\)</span>,
+output will be: <span class="math inline">\(u_{O,k} =
+z_{O,k}\)</span></li>
 <li><span class="math inline">\(u_O\)</span> is vector <span
 class="math inline">\([u_0, \ldots, u_K]\)</span> - need <span
 class="math inline">\(K\)</span> output nodes</li>
@@ -396,15 +398,15 @@ class="slide level3">
 <ul>
 <li>Suppose we use <span class="math inline">\(g(z) = z\)</span>
 (identity function) as activation function throughout the network.</li>
-<li>The network can only achieve linear decision boundary!</li>
-<li>To get non-linear decision boundary, need non-linear activation
-functions.</li>
+<li>The network can only achieve linear decision boundary/ output!</li>
+<li>To get non-linear decision boundary/output, need non-linear
+activation functions.</li>
 </ul>
 <aside class="notes">
 <p>Universal approximation theorem: under certain conditions, with
 enough (finite) hidden nodes, can approximate <em>any</em> continuous
 real-valued function, to any degree of precision. But only with
-non-linear decision boundary! (See <a
+non-linear activation! (See <a
 href="http://neuralnetworksanddeeplearning.com/chap4.html">this post</a>
 for a convincing demonstration.)</p>
 <p>(The more hidden units we have, the more complex a function we can
@@ -508,7 +510,13 @@ class="math inline">\(\nabla L(\mathbf{W})\)</span></li>
 <p>We need to compute the gradient of the loss function with respect to
 <em>every</em> weight, and there are <span
 class="math inline">\(N_H(N_I+1)+N_O(N_H+1)\)</span> weights!</p>
-<p>The key to efficient computation will be:</p>
+<p>Two perspectives on backpropagation:</p>
+<ul>
+<li>It’s just the chain rule</li>
+<li>It’s not just the chain rule</li>
+</ul>
+<p>Re: “it’s not just the chain rule”, the key to efficient computation
+will be:</p>
 <ul>
 <li>saving all the intermediate (hidden) variables on the forward pass,
 to reuse in the computation of gradients</li>
@@ -949,6 +957,13 @@ respect to many inputs (many weights), reverse mode differentiation is
 very efficient because the accumulated gradients (<span
 class="math inline">\(\delta\)</span> values) are computed once and then
 reused many times.</p>
+<p>So, <strong>it’s not just the chain rule</strong>:</p>
+<ul>
+<li>Forward-mode differentiation: complexity scales roughly with the
+size of the <em>input</em>.</li>
+<li>Reverse-mode differentiation: complexity scales roughly with the
+size of the <em>output</em>.</li>
+</ul>
 </aside>
 </section></section>
     </div>
