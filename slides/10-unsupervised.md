@@ -45,9 +45,10 @@ What are some things we might be able to learn about the structure of the data?
 
 
 * dimensionality reduction
+* feature representation
+* embedding
 * clustering
 * anomaly detection
-* feature learning
 * density estimation
 
 
@@ -180,7 +181,7 @@ $$Q = \frac{1}{N} \widetilde{X} ^T \widetilde{X}$$
 
 ### Directional variance 
 
-Projection onto $v$: $z_i= (v^T \widetilde{x}_i) v$
+Projection onto a unit vector $v$: $z_i= (v^T \widetilde{x}_i) v$
 
 * Sample mean: $\bar{z} = v^T \bar{x}$
 * Sample variance: $s_z^2 = v^T Q v$

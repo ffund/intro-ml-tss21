@@ -11,12 +11,20 @@
   <link rel="stylesheet" href="reveal.js-master/dist/reset.css">
   <link rel="stylesheet" href="reveal.js-master/dist/reveal.css">
   <style>
+    .reveal .sourceCode {  /* see #7635 */
+      overflow: visible;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
   </style>
   <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
 </head>
@@ -34,43 +42,66 @@
 <h2>Unsupervised learning</h2>
 
 </section>
-<section id="the-basic-supervised-learning-problem" class="slide level3">
+<section id="the-basic-supervised-learning-problem"
+class="slide level3">
 <h3>The basic supervised learning problem</h3>
-<p>Given a <strong>sample</strong> with a vector of <strong>features</strong></p>
-<p><span class="math display">\[\mathbf{x} = (x_1, x_2,..., x_d)\]</span></p>
-<p>There is some (unknown) relationship between <span class="math inline">\(\mathbf{x}\)</span> and a <strong>target</strong> variable, <span class="math inline">\(y\)</span>, whose value is unknown.</p>
-<p>We want to find <span class="math inline">\(\hat{y}\)</span>, our <strong>prediction</strong> for the value of <span class="math inline">\(y\)</span>.</p>
+<p>Given a <strong>sample</strong> with a vector of
+<strong>features</strong></p>
+<p><span class="math display">\[\mathbf{x} = (x_1, x_2,...,
+x_d)\]</span></p>
+<p>There is some (unknown) relationship between <span
+class="math inline">\(\mathbf{x}\)</span> and a <strong>target</strong>
+variable, <span class="math inline">\(y\)</span>, whose value is
+unknown.</p>
+<p>We want to find <span class="math inline">\(\hat{y}\)</span>, our
+<strong>prediction</strong> for the value of <span
+class="math inline">\(y\)</span>.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-supervised.png" style="width:55.0%" alt="Basic supervised learning problem." /><figcaption aria-hidden="true">Basic supervised learning problem.</figcaption>
+<img data-src="../images/10-supervised.png" style="width:55.0%"
+alt="Basic supervised learning problem." />
+<figcaption aria-hidden="true">Basic supervised learning
+problem.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="the-basic-unsupervised-learning-problem" class="slide level3">
+<section id="the-basic-unsupervised-learning-problem"
+class="slide level3">
 <h3>The basic unsupervised learning problem</h3>
-<p>Given a <strong>sample</strong> with a vector of <strong>features</strong></p>
-<p><span class="math display">\[\mathbf{x} = (x_1, x_2,..., x_d)\]</span></p>
-<p>We want to learn something about the underlying <em>structure</em> of the data.</p>
+<p>Given a <strong>sample</strong> with a vector of
+<strong>features</strong></p>
+<p><span class="math display">\[\mathbf{x} = (x_1, x_2,...,
+x_d)\]</span></p>
+<p>We want to learn something about the underlying <em>structure</em> of
+the data.</p>
 <p>No labels!</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-unsupervised.png" style="width:55.0%" alt="Unsupervised learning." /><figcaption aria-hidden="true">Unsupervised learning.</figcaption>
+<img data-src="../images/10-unsupervised.png" style="width:55.0%"
+alt="Unsupervised learning." />
+<figcaption aria-hidden="true">Unsupervised learning.</figcaption>
 </figure>
-<p>What are some things we might be able to learn about the structure of the data?</p>
+<p>What are some things we might be able to learn about the structure of
+the data?</p>
 <ul>
 <li>dimensionality reduction</li>
+<li>feature representation</li>
+<li>embedding</li>
 <li>clustering</li>
 <li>anomaly detection</li>
-<li>feature learning</li>
 <li>density estimation</li>
 </ul>
 <figure>
-<img data-src="../images/10-unsupervised-examples.png" style="width:100.0%" alt="Unupervised learning problems." /><figcaption aria-hidden="true">Unupervised learning problems.</figcaption>
+<img data-src="../images/10-unsupervised-examples.png"
+style="width:100.0%" alt="Unupervised learning problems." />
+<figcaption aria-hidden="true">Unupervised learning
+problems.</figcaption>
 </figure>
 </aside>
 </section></section>
 <section>
-<section id="dimensionality-reduction-with-pca" class="title-slide slide level2">
+<section id="dimensionality-reduction-with-pca"
+class="title-slide slide level2">
 <h2>Dimensionality reduction with PCA</h2>
 <aside class="notes">
 <p>Why?</p>
@@ -84,63 +115,108 @@
 <section id="dimensionality-reduction-problem" class="slide level3">
 <h3>Dimensionality reduction problem</h3>
 <ul>
-<li>Given <span class="math inline">\(N \times p\)</span> data matrix <span class="math inline">\({X}\)</span> where each row is a sample <span class="math inline">\(x_n\)</span></li>
-<li><strong>Problem</strong>: Map data to <span class="math inline">\(N \times p&#39;\)</span> where <span class="math inline">\(p&#39; \ll p\)</span></li>
+<li>Given <span class="math inline">\(N \times p\)</span> data matrix
+<span class="math inline">\({X}\)</span> where each row is a sample
+<span class="math inline">\(x_n\)</span></li>
+<li><strong>Problem</strong>: Map data to <span class="math inline">\(N
+\times p&#39;\)</span> where <span class="math inline">\(p&#39; \ll
+p\)</span></li>
 </ul>
 </section>
-<section id="dimensionality-reduction-with-pca-vs-feature-selection" class="slide level3">
+<section id="dimensionality-reduction-with-pca-vs-feature-selection"
+class="slide level3">
 <h3>Dimensionality reduction with PCA vs feature selection</h3>
 <p>Previous feature selection:</p>
 <ul>
 <li>Choose subset of existing features</li>
 <li>Many features are somewhat correlated; redundant information</li>
 </ul>
-<p>Now: <em>new</em> features, so we can get max information with min features.</p>
+<p>Now: <em>new</em> features, so we can get max information with min
+features.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-feature-selection-vs-pca.png" style="width:100.0%" alt="Instead of using existing features, we project the data onto a new feature space." /><figcaption aria-hidden="true">Instead of using existing features, we project the data onto a new feature space.</figcaption>
+<img data-src="../images/10-feature-selection-vs-pca.png"
+style="width:100.0%"
+alt="Instead of using existing features, we project the data onto a new feature space." />
+<figcaption aria-hidden="true">Instead of using existing features, we
+project the data onto a new feature space.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="projections" class="slide level3">
 <h3>Projections</h3>
-<p>Given vectors <span class="math inline">\(z\)</span> and <span class="math inline">\(v\)</span>, <span class="math inline">\(\theta\)</span> is the angle between them. Projection of <span class="math inline">\(z\)</span> onto <span class="math inline">\(v\)</span> is:</p>
-<p><span class="math display">\[\hat{z} = \text{Proj}_v (z) = \alpha v, \quad \alpha = \frac{v^T z}{v^T v} = \frac{||z||}{||v||} \cos \theta\]</span></p>
-<p><span class="math inline">\(V = \{\alpha v | \alpha \in R\}\)</span> are the vectors on the line spanned by <span class="math inline">\(v\)</span>, then <span class="math inline">\(\text{Proj}_v (z)\)</span> is the closest vector in <span class="math inline">\(V\)</span> to <span class="math inline">\(z\)</span>: <span class="math inline">\(\hat{z} = \operatorname*{argmin}_{w \in V} || z - w ||^2\)</span>.</p>
+<p>Given vectors <span class="math inline">\(z\)</span> and <span
+class="math inline">\(v\)</span>, <span
+class="math inline">\(\theta\)</span> is the angle between them.
+Projection of <span class="math inline">\(z\)</span> onto <span
+class="math inline">\(v\)</span> is:</p>
+<p><span class="math display">\[\hat{z} = \text{Proj}_v (z) = \alpha v,
+\quad \alpha = \frac{v^T z}{v^T v} = \frac{||z||}{||v||} \cos
+\theta\]</span></p>
+<p><span class="math inline">\(V = \{\alpha v | \alpha \in R\}\)</span>
+are the vectors on the line spanned by <span
+class="math inline">\(v\)</span>, then <span
+class="math inline">\(\text{Proj}_v (z)\)</span> is the closest vector
+in <span class="math inline">\(V\)</span> to <span
+class="math inline">\(z\)</span>: <span class="math inline">\(\hat{z} =
+\operatorname*{argmin}_{w \in V} || z - w ||^2\)</span>.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/9-projection.png" style="width:35.0%" alt="Projection of z onto v." /><figcaption aria-hidden="true">Projection of <span class="math inline">\(z\)</span> onto <span class="math inline">\(v\)</span>.</figcaption>
+<img data-src="../images/9-projection.png" style="width:35.0%"
+alt="Projection of z onto v." />
+<figcaption aria-hidden="true">Projection of <span
+class="math inline">\(z\)</span> onto <span
+class="math inline">\(v\)</span>.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="pca-intution-1" class="slide level3">
 <h3>PCA intution (1)</h3>
 <figure>
-<img data-src="../images/pca-intuition-part1.png" style="width:60.0%" alt="Data with two features, on two axes. Data is centered." /><figcaption aria-hidden="true">Data with two features, on two axes. Data is centered.</figcaption>
+<img data-src="../images/pca-intuition-part1.png" style="width:60.0%"
+alt="Data with two features, on two axes. Data is centered." />
+<figcaption aria-hidden="true">Data with two features, on two axes. Data
+is centered.</figcaption>
 </figure>
 </section>
 <section id="pca-intuition-2" class="slide level3">
 <h3>PCA intuition (2)</h3>
 <figure>
-<img data-src="../images/pca-animation.gif" style="width:60.0%" alt="Construct a new feature by drawing a line w_1 x_1 + w_2 x_2, and projecting data onto that line (red dots are projections). View animation here." /><figcaption aria-hidden="true">Construct a new feature by drawing a line <span class="math inline">\(w_1 x_1 + w_2 x_2\)</span>, and projecting data onto that line (red dots are projections). <a href="https://stats.stackexchange.com/a/140579/41284">View animation here.</a></figcaption>
+<img data-src="../images/pca-animation.gif" style="width:60.0%"
+alt="Construct a new feature by drawing a line w_1 x_1 + w_2 x_2, and projecting data onto that line (red dots are projections). View animation here." />
+<figcaption aria-hidden="true">Construct a new feature by drawing a line
+<span class="math inline">\(w_1 x_1 + w_2 x_2\)</span>, and projecting
+data onto that line (red dots are projections). <a
+href="https://stats.stackexchange.com/a/140579/41284">View animation
+here.</a></figcaption>
 </figure>
 </section>
 <section id="pca-intuition-3" class="slide level3">
 <h3>PCA intuition (3)</h3>
 <p>Project onto which line?</p>
 <ul>
-<li>Maximize average squared distance from the center to each red dot; <strong>variance of new feature</strong></li>
-<li>Minimize average squared length of the corresponding red connecting lines; <strong>total reconstruction error</strong></li>
+<li>Maximize average squared distance from the center to each red dot;
+<strong>variance of new feature</strong></li>
+<li>Minimize average squared length of the corresponding red connecting
+lines; <strong>total reconstruction error</strong></li>
 </ul>
 <aside class="notes">
-<p>Can you convince yourself that these two objectives are related, and are achieved by the same projection?</p>
+<p>Can you convince yourself that these two objectives are related, and
+are achieved by the same projection?</p>
 <!-- 
 Suppose we have a zero-centered data set ($\bar{x} = 0$) and consider a single data point. The point's contribution to the variance is fixed (red line). We decide the direction of the projection, which will determine the projected point's contribution to the "new" variance (purple line) and the difference between the original point and projected point (green line).
 -->
 <figure>
-<img data-src="../images/9-pythagorean.png" style="width:50.0%" alt="Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average)." /><figcaption aria-hidden="true">Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average).</figcaption>
+<img data-src="../images/9-pythagorean.png" style="width:50.0%"
+alt="Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average)." />
+<figcaption aria-hidden="true">Pythagorean decomposition. Keeping
+reconstruction error minimized (on average) is the same as keeping
+variance of projection high (on average).</figcaption>
 </figure>
-<p>The intuition is that, by Pythagorean decomposition: the variance of the data (a fixed quantity) is equal to the variance of the projected data (which we want to be large) plus the reconstruction error (which we want to be small).</p>
+<p>The intuition is that, by Pythagorean decomposition: the variance of
+the data (a fixed quantity) is equal to the variance of the projected
+data (which we want to be large) plus the reconstruction error (which we
+want to be small).</p>
 <!--
 OR, you can think of it as: data variance = remaining variance + lost variance!
 
@@ -151,78 +227,130 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <section id="sample-covariance-matrix-1" class="slide level3">
 <h3>Sample covariance matrix (1)</h3>
 <ul>
-<li>sample variance <span class="math inline">\(s_x^2 = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x}) ^2\)</span></li>
-<li>sample covariance <span class="math inline">\(s_{xy} = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})\)</span></li>
-<li><span class="math inline">\(\text{Cov}(x, y)\)</span> is a <span class="math inline">\(p \times p\)</span> matrix <span class="math inline">\(Q\)</span> with components:</li>
+<li>sample variance <span class="math inline">\(s_x^2 = \frac{1}{N}
+\sum_{i=1}^N (x_i - \bar{x}) ^2\)</span></li>
+<li>sample covariance <span class="math inline">\(s_{xy} = \frac{1}{N}
+\sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})\)</span></li>
+<li><span class="math inline">\(\text{Cov}(x, y)\)</span> is a <span
+class="math inline">\(p \times p\)</span> matrix <span
+class="math inline">\(Q\)</span> with components:</li>
 </ul>
-<p><span class="math display">\[ Q_{k,l} = \frac{1}{N} \sum_{i=1}^N (x_{ik} - \bar{x}_k)(x_{il} - \bar{x}_l)\]</span></p>
+<p><span class="math display">\[ Q_{k,l} = \frac{1}{N} \sum_{i=1}^N
+(x_{ik} - \bar{x}_k)(x_{il} - \bar{x}_l)\]</span></p>
 <aside class="notes">
-<p>Note: <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> in this notation are two different features, not a feature matrix and label.</p>
+<p>Note: <span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> in this notation are two different
+features, not a feature matrix and label.</p>
 <figure>
-<img data-src="../images/9-cov-matrix.png" style="width:35.0%" alt="Illustration of covariance matrix." /><figcaption aria-hidden="true">Illustration of covariance matrix.</figcaption>
+<img data-src="../images/9-cov-matrix.png" style="width:35.0%"
+alt="Illustration of covariance matrix." />
+<figcaption aria-hidden="true">Illustration of covariance
+matrix.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="sample-covariance-matrix-2" class="slide level3">
 <h3>Sample covariance matrix (2)</h3>
-<p>Let <span class="math inline">\(\widetilde{X}\)</span> be the data matrix with sample mean removed, row <span class="math inline">\(\widetilde{x}_i = x_i - \bar{x}\)</span></p>
+<p>Let <span class="math inline">\(\widetilde{X}\)</span> be the data
+matrix with sample mean removed, row <span
+class="math inline">\(\widetilde{x}_i = x_i - \bar{x}\)</span></p>
 <p>Sample covariance matrix is:</p>
-<p><span class="math display">\[Q = \frac{1}{N} \widetilde{X} ^T \widetilde{X}\]</span></p>
+<p><span class="math display">\[Q = \frac{1}{N} \widetilde{X} ^T
+\widetilde{X}\]</span></p>
 <p>(compute covariance matrix by matrix product!)</p>
 </section>
 <section id="directional-variance" class="slide level3">
 <h3>Directional variance</h3>
-<p>Projection onto <span class="math inline">\(v\)</span>: <span class="math inline">\(z_i= (v^T \widetilde{x}_i) v\)</span></p>
+<p>Projection onto a unit vector <span class="math inline">\(v\)</span>:
+<span class="math inline">\(z_i= (v^T \widetilde{x}_i) v\)</span></p>
 <ul>
-<li>Sample mean: <span class="math inline">\(\bar{z} = v^T \bar{x}\)</span></li>
-<li>Sample variance: <span class="math inline">\(s_z^2 = v^T Q v\)</span></li>
+<li>Sample mean: <span class="math inline">\(\bar{z} = v^T
+\bar{x}\)</span></li>
+<li>Sample variance: <span class="math inline">\(s_z^2 = v^T Q
+v\)</span></li>
 </ul>
 <aside class="notes">
-<p>Now we have these mean-removed rows of data, and we want to project each row onto some vector <span class="math inline">\(v\)</span>, where <span class="math inline">\(z\)</span> is the projection of <span class="math inline">\(\widetilde{x}_i\)</span> onto <span class="math inline">\(v\)</span>. And we want to choose <span class="math inline">\(v\)</span> to maximize the variance of <span class="math inline">\(z\)</span>, <span class="math inline">\(s_z^2\)</span>.</p>
-<p>We will call this the <em>directional variance</em> - the variance of the projection of the row onto <span class="math inline">\(v\)</span>.</p>
+<p>Now we have these mean-removed rows of data, and we want to project
+each row onto some vector <span class="math inline">\(v\)</span>, where
+<span class="math inline">\(z\)</span> is the projection of <span
+class="math inline">\(\widetilde{x}_i\)</span> onto <span
+class="math inline">\(v\)</span>. And we want to choose <span
+class="math inline">\(v\)</span> to maximize the variance of <span
+class="math inline">\(z\)</span>, <span
+class="math inline">\(s_z^2\)</span>.</p>
+<p>We will call this the <em>directional variance</em> - the variance of
+the projection of the row onto <span
+class="math inline">\(v\)</span>.</p>
 </aside>
 </section>
 <section id="maximizing-directional-variance-1" class="slide level3">
 <h3>Maximizing directional variance (1)</h3>
-<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>, what directions of unit vector <span class="math inline">\(v\)</span> (<span class="math inline">\(||v|| = 1\)</span>) maximizes the variance of projection along direction of <span class="math inline">\(v\)</span>?</p>
-<p><span class="math display">\[\operatorname*{max}_v v^T Q v \quad \text{s.t} ||v|| = 1\]</span></p>
+<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>, what
+directions of unit vector <span class="math inline">\(v\)</span> (<span
+class="math inline">\(||v|| = 1\)</span>) maximizes the variance of
+projection along direction of <span
+class="math inline">\(v\)</span>?</p>
+<p><span class="math display">\[\operatorname*{max}_v v^T Q v \quad
+\text{s.t} ||v|| = 1\]</span></p>
 <aside class="notes">
 <p>Important note:</p>
 <ul>
-<li>an eigenvector is a special vector that, when you multiply the covariance matrix by the eigenvector, the result is a shorter or longer eigenvector pointing in the <em>same direction</em>.</li>
-<li>the eigenvalue is the value by which eigenvector is scaled when multiplied by the covariance matrix.</li>
-<li>a <span class="math inline">\(p \times p\)</span> matrix has <span class="math inline">\(p\)</span> eigenvectors.</li>
+<li>an eigenvector is a special vector that, when you multiply the
+covariance matrix by the eigenvector, the result is a shorter or longer
+eigenvector pointing in the <em>same direction</em>.</li>
+<li>the eigenvalue is the value by which eigenvector is scaled when
+multiplied by the covariance matrix.</li>
+<li>a <span class="math inline">\(p \times p\)</span> matrix has <span
+class="math inline">\(p\)</span> eigenvectors.</li>
 <li>the eigenvectors are orthogonal.</li>
 </ul>
 <figure>
-<img data-src="../images/9-eigen.png" style="width:35.0%" alt="Eigenvectors and eigenvalues." /><figcaption aria-hidden="true">Eigenvectors and eigenvalues.</figcaption>
+<img data-src="../images/9-eigen.png" style="width:35.0%"
+alt="Eigenvectors and eigenvalues." />
+<figcaption aria-hidden="true">Eigenvectors and
+eigenvalues.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="maximizing-directional-variance-2" class="slide level3">
 <h3>Maximizing directional variance (2)</h3>
-<p>Let <span class="math inline">\(v_1, \ldots, v_p\)</span> be <em>eigenvectors</em> of <span class="math inline">\(Q\)</span> (there are <span class="math inline">\(p\)</span>):</p>
+<p>Let <span class="math inline">\(v_1, \ldots, v_p\)</span> be
+<em>eigenvectors</em> of <span class="math inline">\(Q\)</span> (there
+are <span class="math inline">\(p\)</span>):</p>
 <p><span class="math display">\[Q v_j = \lambda_j v_j\]</span></p>
 <ul>
-<li>Sort them in descending order: <span class="math inline">\(\lambda_1 \geq \lambda_2 \geq \cdots \lambda_p\)</span>.</li>
-<li>The largest one is the vector that maximizes directional variance, the next is direction of second most variance, etc.</li>
+<li>Sort them in descending order: <span class="math inline">\(\lambda_1
+\geq \lambda_2 \geq \cdots \lambda_p\)</span>.</li>
+<li>The largest one is the vector that maximizes directional variance,
+the next is direction of second most variance, etc.</li>
 </ul>
 <aside class="notes">
-<p><strong>Theorem</strong>: any eigenvector of <span class="math inline">\(Q\)</span> is a local maxima of the optimization problem</p>
-<p><span class="math display">\[\operatorname*{max}_v v^T Q v \quad \text{s.t} ||v|| = 1\]</span></p>
+<p><strong>Theorem</strong>: any eigenvector of <span
+class="math inline">\(Q\)</span> is a local maxima of the optimization
+problem</p>
+<p><span class="math display">\[\operatorname*{max}_v v^T Q v \quad
+\text{s.t} ||v|| = 1\]</span></p>
 <p><strong>Proof</strong>: Define the Lagrangian,</p>
-<p><span class="math display">\[L(v, \lambda) = v^T Qv - \lambda [ || v||^2 -1]\]</span></p>
+<p><span class="math display">\[L(v, \lambda) = v^T Qv - \lambda [ ||
+v||^2 -1]\]</span></p>
 <p>At any local maxima,</p>
-<p><span class="math display">\[\frac{\partial L}{\partial v} = 0 \implies Qv - \lambda v = 0\]</span></p>
-<p>Therefore, <span class="math inline">\(v\)</span> is an eigenvector of <span class="math inline">\(Q\)</span>.</p>
-<p>For a nice, detailed proof of this, I recommend <a href="http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf">this set of notes</a> by Cosma Shalizi at CMU.</p>
+<p><span class="math display">\[\frac{\partial L}{\partial v} = 0
+\implies Qv - \lambda v = 0\]</span></p>
+<p>Therefore, <span class="math inline">\(v\)</span> is an eigenvector
+of <span class="math inline">\(Q\)</span>.</p>
+<p>For a nice, detailed proof of this, I recommend <a
+href="http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf">this
+set of notes</a> by Cosma Shalizi at CMU.</p>
 </aside>
 </section>
-<section id="projections-onto-eigenvectors-uncorrelated-features" class="slide level3">
+<section id="projections-onto-eigenvectors-uncorrelated-features"
+class="slide level3">
 <h3>Projections onto eigenvectors: uncorrelated features</h3>
 <ul>
-<li>Eigenvectors are orthogonal: <span class="math inline">\(v_j^T v_k = 0\)</span> if <span class="math inline">\(j \neq k\)</span></li>
-<li>So the projections of the data onto eigenvectors are uncorrelated</li>
+<li>Eigenvectors are orthogonal: <span class="math inline">\(v_j^T v_k =
+0\)</span> if <span class="math inline">\(j \neq k\)</span></li>
+<li>So the projections of the data onto eigenvectors are
+uncorrelated</li>
 </ul>
 <aside class="notes">
 <p>These are called the <em>principal components</em></p>
@@ -231,7 +359,16 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <section id="pca-intuition-5" class="slide level3">
 <h3>PCA intuition (5)</h3>
 <figure>
-<img data-src="../images/pca-animation.gif" style="width:50.0%" alt="In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). View animation here." /><figcaption aria-hidden="true">In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). <a href="https://stats.stackexchange.com/a/140579/41284">View animation here.</a></figcaption>
+<img data-src="../images/pca-animation.gif" style="width:50.0%"
+alt="In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). View animation here." />
+<figcaption aria-hidden="true">In the animation, gray and black lines
+form a rotating coordinate frame. When variance of projection is
+maximized, the black line points in direction of first eigenvector of
+covariance matrix (direction of maximum variance of the data), and grey
+line points toward second eigenvector (direction of second-most variance
+of the data). <a
+href="https://stats.stackexchange.com/a/140579/41284">View animation
+here.</a></figcaption>
 </figure>
 </section>
 <section id="pca-in-summary-1" class="slide level3">
@@ -242,30 +379,44 @@ OR, you can think of it as: data variance = remaining variance + lost variance!
 <li>Get covariance matrix</li>
 <li>Get eigenvectors, eigenvalues</li>
 <li>Sort by eigenvalue</li>
-<li>Choose <span class="math inline">\(p&#39;\)</span> eigenvectors with largest eigenvalues</li>
+<li>Choose <span class="math inline">\(p&#39;\)</span> eigenvectors with
+largest eigenvalues</li>
 <li>Project data onto those eigenvectors</li>
 </ol>
-<p>Now you have <span class="math inline">\(N \times p&#39;\)</span> data that maximizes info</p>
+<p>Now you have <span class="math inline">\(N \times p&#39;\)</span>
+data that maximizes info</p>
 <aside class="notes">
-<p>Note: in practice, we compute PCA using singular value decomposition (SVD) which is numerically more stable.</p>
+<p>Note: in practice, we compute PCA using singular value decomposition
+(SVD) which is numerically more stable.</p>
 <figure>
-<img data-src="../images/10-pca-summary.png" style="width:70.0%" alt="PCA summary." /><figcaption aria-hidden="true">PCA summary.</figcaption>
+<img data-src="../images/10-pca-summary.png" style="width:70.0%"
+alt="PCA summary." />
+<figcaption aria-hidden="true">PCA summary.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="approximating-data" class="slide level3">
 <h3>Approximating data</h3>
-<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>, <span class="math inline">\(i=1, \ldots, N\)</span>, and PCs <span class="math inline">\(v_1, \ldots, v_p\)</span>, we can project + then reconstruct the data:</p>
-<p><span class="math display">\[\widetilde{x}_i = \sum_{j=1}^p (v_j^T \widetilde{x}_i) v_j \]</span></p>
-<p>Consider approximation with <em>first</em> <span class="math inline">\(d &lt; p\)</span> coefficients:</p>
-<p><span class="math display">\[\hat{x}_i = \sum_{i=1}^d (v_j^T \widetilde{x}_i) v_j\]</span></p>
+<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>,
+<span class="math inline">\(i=1, \ldots, N\)</span>, and PCs <span
+class="math inline">\(v_1, \ldots, v_p\)</span>, we can project + then
+reconstruct the data:</p>
+<p><span class="math display">\[\widetilde{x}_i = \sum_{j=1}^p (v_j^T
+\widetilde{x}_i) v_j \]</span></p>
+<p>Consider approximation with <em>first</em> <span
+class="math inline">\(d &lt; p\)</span> coefficients:</p>
+<p><span class="math display">\[\hat{x}_i = \sum_{i=1}^d (v_j^T
+\widetilde{x}_i) v_j\]</span></p>
 </section>
 <section id="average-approximation-error" class="slide level3">
 <h3>Average approximation error</h3>
 <p>For sample <span class="math inline">\(i\)</span>, error is:</p>
-<p><span class="math display">\[\widetilde{x}_i - \hat{x}_i = \sum_{j=d+1}^p (v_j^T \widetilde{x}_i) v_j\]</span></p>
+<p><span class="math display">\[\widetilde{x}_i - \hat{x}_i =
+\sum_{j=d+1}^p (v_j^T \widetilde{x}_i) v_j\]</span></p>
 <aside class="notes">
-<p>The projection onto the first principal components carries the most information; the projection onto the last principal components carries the least. So the error due to missing the last PCs is small!</p>
+<p>The projection onto the first principal components carries the most
+information; the projection onto the last principal components carries
+the least. So the error due to missing the last PCs is small!</p>
 </aside>
 <!--
 which, on average, is sum of smallest $p-d$ eigenvalues:
@@ -275,9 +426,13 @@ $$\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \l
 </section>
 <section id="proportion-of-variance-explained" class="slide level3">
 <h3>Proportion of variance explained</h3>
-<p>The <em>proportion of variance</em> explained by <span class="math inline">\(d\)</span> PCs is:</p>
-<p><span class="math display">\[PoV(d) = \frac{\sum_{j=1}^d \lambda_j} {\sum_{j=1}^p \lambda_j }\]</span></p>
-<p>where the denominator is variance of projected data: <span class="math inline">\(\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 = \sum_{j=1}^p \lambda_j\)</span></p>
+<p>The <em>proportion of variance</em> explained by <span
+class="math inline">\(d\)</span> PCs is:</p>
+<p><span class="math display">\[PoV(d) = \frac{\sum_{j=1}^d \lambda_j}
+{\sum_{j=1}^p \lambda_j }\]</span></p>
+<p>where the denominator is variance of projected data: <span
+class="math inline">\(\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 =
+\sum_{j=1}^p \lambda_j\)</span></p>
 <!--
 
 ### PCA demo
@@ -299,19 +454,29 @@ Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/u
 <section id="clustering-problem" class="slide level3">
 <h3>Clustering problem</h3>
 <ul>
-<li><p>Given <span class="math inline">\(N \times d\)</span> data matrix <span class="math inline">\({X}\)</span> where each row is a sample <span class="math inline">\(x_n\)</span></p></li>
-<li><p><strong>Problem</strong>: Group data into <span class="math inline">\(K\)</span> clusters</p></li>
-<li><p>More formally: Assign <span class="math inline">\(\sigma_n = \{1, \ldots, K\}\)</span> cluster label for each sample</p></li>
-<li><p>Samples in same cluster should be close: <span class="math inline">\(||x_n - x_m||\)</span> is small when <span class="math inline">\(\sigma_n = \sigma_m\)</span></p></li>
+<li><p>Given <span class="math inline">\(N \times d\)</span> data matrix
+<span class="math inline">\({X}\)</span> where each row is a sample
+<span class="math inline">\(x_n\)</span></p></li>
+<li><p><strong>Problem</strong>: Group data into <span
+class="math inline">\(K\)</span> clusters</p></li>
+<li><p>More formally: Assign <span class="math inline">\(\sigma_n = \{1,
+\ldots, K\}\)</span> cluster label for each sample</p></li>
+<li><p>Samples in same cluster should be close: <span
+class="math inline">\(||x_n - x_m||\)</span> is small when <span
+class="math inline">\(\sigma_n = \sigma_m\)</span></p></li>
 </ul>
 </section>
 <section id="k-means-clustering" class="slide level3">
 <h3>K-means clustering</h3>
 <p>We want to minimize</p>
-<p><span class="math display">\[J = \sum_{i=1}^K \sum_{n\in C_i} || x_n - \mu_j || ^2 \]</span></p>
+<p><span class="math display">\[J = \sum_{i=1}^K \sum_{n\in C_i} || x_n
+- \mu_j || ^2 \]</span></p>
 <ul>
-<li><span class="math inline">\(u_i\)</span> is the mean of each cluster</li>
-<li><span class="math inline">\(\sigma_n \in \{1, \ldots, K\}\)</span> is the cluster that <span class="math inline">\(x_n\)</span> belongs to</li>
+<li><span class="math inline">\(u_i\)</span> is the mean of each
+cluster</li>
+<li><span class="math inline">\(\sigma_n \in \{1, \ldots, K\}\)</span>
+is the cluster that <span class="math inline">\(x_n\)</span> belongs
+to</li>
 </ul>
 <!-- _
 ![Clustering objective.](../images/10-clustering-objective.png){ width=70% }
@@ -319,32 +484,46 @@ Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/u
 </section>
 <section id="k-means-algorithm" class="slide level3">
 <h3>K-means algorithm</h3>
-<p>Start with random (?) guesses for each <span class="math inline">\(\mu_i\)</span>. Then, iteratively:</p>
+<p>Start with random (?) guesses for each <span
+class="math inline">\(\mu_i\)</span>. Then, iteratively:</p>
 <ul>
-<li>Update cluster membership (nearest neighbor rule): For every <span class="math inline">\(n\)</span>,</li>
+<li>Update cluster membership (nearest neighbor rule): For every <span
+class="math inline">\(n\)</span>,</li>
 </ul>
-<p><span class="math display">\[\sigma_n = \operatorname*{argmin}_i ||x_n - \mu_i||^2\]</span></p>
+<p><span class="math display">\[\sigma_n = \operatorname*{argmin}_i
+||x_n - \mu_i||^2\]</span></p>
 <ul>
-<li>Update mean of each cluster (centroid rule): for every <span class="math inline">\(i\)</span>, <span class="math inline">\(u_i\)</span> is average of <span class="math inline">\(x_n\)</span> in <span class="math inline">\(C_i\)</span></li>
+<li>Update mean of each cluster (centroid rule): for every <span
+class="math inline">\(i\)</span>, <span
+class="math inline">\(u_i\)</span> is average of <span
+class="math inline">\(x_n\)</span> in <span
+class="math inline">\(C_i\)</span></li>
 </ul>
 <p>(Sensitive to initial conditions!)</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-clustering-algorithm.png" style="width:90.0%" alt="K-means clustering." /><figcaption aria-hidden="true">K-means clustering.</figcaption>
+<img data-src="../images/10-clustering-algorithm.png"
+style="width:90.0%" alt="K-means clustering." />
+<figcaption aria-hidden="true">K-means clustering.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="k-means-visualization" class="slide level3">
 <h3>K-means visualization</h3>
 <figure>
-<img data-src="../images/kmeansViz.png" style="width:70.0%" alt="Visualization of k-means clustering." /><figcaption aria-hidden="true">Visualization of k-means clustering.</figcaption>
+<img data-src="../images/kmeansViz.png" style="width:70.0%"
+alt="Visualization of k-means clustering." />
+<figcaption aria-hidden="true">Visualization of k-means
+clustering.</figcaption>
 </figure>
 </section>
 <section id="k-means-summary" class="slide level3">
 <h3>K-means summary</h3>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-clustering-summary.png" style="width:80.0%" alt="Clustering summary." /><figcaption aria-hidden="true">Clustering summary.</figcaption>
+<img data-src="../images/10-clustering-summary.png" style="width:80.0%"
+alt="Clustering summary." />
+<figcaption aria-hidden="true">Clustering summary.</figcaption>
 </figure>
 </aside>
 <!--
@@ -367,63 +546,92 @@ This week: deep unsupervised learning
 -->
 </section></section>
 <section>
-<section id="dimensionality-reduction-with-deep-learning" class="title-slide slide level2">
+<section id="dimensionality-reduction-with-deep-learning"
+class="title-slide slide level2">
 <h2>Dimensionality reduction with deep learning</h2>
 
 </section>
-<section id="dimensionality-reduction-using-an-autoencoder" class="slide level3">
+<section id="dimensionality-reduction-using-an-autoencoder"
+class="slide level3">
 <h3>Dimensionality reduction using an autoencoder</h3>
 <p>An <em>autoencoder</em> is a learner that includes:</p>
 <ul>
-<li>Encoder: produces low-dimensional representation of input, <span class="math inline">\(x \rightarrow z\)</span></li>
-<li>Decoder: reconstructs an estimate of input from the low-dimensional representation, <span class="math inline">\(z \rightarrow \hat{x}\)</span></li>
-<li><span class="math inline">\(z\)</span> known as <em>latent variables</em>, <em>latent representation</em>, or <em>code</em></li>
+<li>Encoder: produces low-dimensional representation of input, <span
+class="math inline">\(x \rightarrow z\)</span></li>
+<li>Decoder: reconstructs an estimate of input from the low-dimensional
+representation, <span class="math inline">\(z \rightarrow
+\hat{x}\)</span></li>
+<li><span class="math inline">\(z\)</span> known as <em>latent
+variables</em>, <em>latent representation</em>, or <em>code</em></li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-autoencoder.png" style="width:70.0%" alt="Autoencoder." /><figcaption aria-hidden="true">Autoencoder.</figcaption>
+<img data-src="../images/10-autoencoder.png" style="width:70.0%"
+alt="Autoencoder." />
+<figcaption aria-hidden="true">Autoencoder.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="k-means-as-an-autoencoder-1" class="slide level3">
 <h3>K-means as an autoencoder (1)</h3>
 <ul>
-<li>Encoder: map each data point to one of <span class="math inline">\(K\)</span> clusters</li>
+<li>Encoder: map each data point to one of <span
+class="math inline">\(K\)</span> clusters</li>
 <li>Decoder: “reconstruct” data point as center of its cluster</li>
 </ul>
 </section>
 <section id="k-means-as-an-autoencoder-2" class="slide level3">
 <h3>K-means as an autoencoder (2)</h3>
 <ul>
-<li>Let <span class="math inline">\(X\in \mathbb{R}^{n\times d}\)</span> be the data matrix containg <span class="math inline">\(n\)</span> <span class="math inline">\(d\)</span>-dimensional data points.</li>
-<li>Let <span class="math inline">\(Z\)</span> be a <span class="math inline">\(n\times k\)</span> matrix (if <span class="math inline">\(k\)</span> clusters) where each entry is all zeros, except for one 1</li>
-<li>Let <span class="math inline">\(D\)</span> be a <span class="math inline">\(k\times d\)</span> matrix of cluster centers.</li>
+<li>Let <span class="math inline">\(X\in \mathbb{R}^{n\times d}\)</span>
+be the data matrix containg <span class="math inline">\(n\)</span> <span
+class="math inline">\(d\)</span>-dimensional data points.</li>
+<li>Let <span class="math inline">\(Z\)</span> be a <span
+class="math inline">\(n\times k\)</span> matrix (if <span
+class="math inline">\(k\)</span> clusters) where each entry is all
+zeros, except for one 1</li>
+<li>Let <span class="math inline">\(D\)</span> be a <span
+class="math inline">\(k\times d\)</span> matrix of cluster centers.</li>
 </ul>
 </section>
 <section id="k-means-as-an-autoencoder-3" class="slide level3">
 <h3>K-means as an autoencoder (3)</h3>
 <ul>
-<li>Encoder performs non-linear mapping, expresses result as one-hot vector in <span class="math inline">\(Z\)</span>.</li>
+<li>Encoder performs non-linear mapping, expresses result as one-hot
+vector in <span class="math inline">\(Z\)</span>.</li>
 <li>Decoder is linear:</li>
 </ul>
 <p><span class="math display">\[X\approx \hat{X} = ZD\]</span></p>
 <aside class="notes">
-<p>Note: <span class="math inline">\(Z\)</span> was <span class="math inline">\(n \times k\)</span>, <span class="math inline">\(D\)</span> was <span class="math inline">\(k \times d\)</span>, so <span class="math inline">\(ZD\)</span> will be <span class="math inline">\(n \times d\)</span>.</p>
+<p>Note: <span class="math inline">\(Z\)</span> was <span
+class="math inline">\(n \times k\)</span>, <span
+class="math inline">\(D\)</span> was <span class="math inline">\(k
+\times d\)</span>, so <span class="math inline">\(ZD\)</span> will be
+<span class="math inline">\(n \times d\)</span>.</p>
 </aside>
 </section>
 <section id="pca-as-an-autoencoder-1" class="slide level3">
 <h3>PCA as an autoencoder (1)</h3>
 <ul>
-<li>Let <span class="math inline">\(X\in \mathbb{R}^{n\times d}\)</span> be the (mean-removed) data matrix containg <span class="math inline">\(n\)</span> <span class="math inline">\(d\)</span>-dimensional data points.</li>
-<li>Let <span class="math inline">\(V\)</span> be a <span class="math inline">\(d\times k\)</span> matrix of <span class="math inline">\(k\)</span> eigenvectors with highest eigenvalues</li>
-<li><span class="math inline">\(Z = XV\)</span> is the <span class="math inline">\(n \times k\)</span> matrix of PCA projections</li>
-<li>Then <span class="math inline">\(X\approx \hat{X} = ZV^T\)</span></li>
+<li>Let <span class="math inline">\(X\in \mathbb{R}^{n\times d}\)</span>
+be the (mean-removed) data matrix containg <span
+class="math inline">\(n\)</span> <span
+class="math inline">\(d\)</span>-dimensional data points.</li>
+<li>Let <span class="math inline">\(V\)</span> be a <span
+class="math inline">\(d\times k\)</span> matrix of <span
+class="math inline">\(k\)</span> eigenvectors with highest
+eigenvalues</li>
+<li><span class="math inline">\(Z = XV\)</span> is the <span
+class="math inline">\(n \times k\)</span> matrix of PCA projections</li>
+<li>Then <span class="math inline">\(X\approx \hat{X} =
+ZV^T\)</span></li>
 </ul>
 </section>
 <section id="pca-as-an-autoencoder-2" class="slide level3">
 <h3>PCA as an autoencoder (2)</h3>
 <ul>
-<li>Encoder: linear projection using <span class="math inline">\(k\)</span> best principal components</li>
+<li>Encoder: linear projection using <span
+class="math inline">\(k\)</span> best principal components</li>
 <li>Decoder: also linear projection</li>
 </ul>
 </section>
@@ -431,21 +639,25 @@ This week: deep unsupervised learning
 <h3>Limits of PCA</h3>
 <ul>
 <li>PCA learns linear projection</li>
-<li>Neural network with non-linear activation function can learn complex non-linear features</li>
+<li>Neural network with non-linear activation function can learn complex
+non-linear features</li>
 <li>Use neural network to do something like PCA?</li>
 </ul>
 </section>
 <section id="neural-autoencoder" class="slide level3">
 <h3>Neural autoencoder</h3>
 <ul>
-<li>Neural network with <span class="math inline">\(d\)</span> inputs, <span class="math inline">\(d\)</span> outputs</li>
+<li>Neural network with <span class="math inline">\(d\)</span> inputs,
+<span class="math inline">\(d\)</span> outputs</li>
 <li>Use input as target</li>
 <li>(<em>Self-supervised</em>: creates its own labels)</li>
 <li>Train network to learn approximation of identity function</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-neural-autoencoder.png" style="width:70.0%" alt="Neural autoencoder." /><figcaption aria-hidden="true">Neural autoencoder.</figcaption>
+<img data-src="../images/10-neural-autoencoder.png" style="width:70.0%"
+alt="Neural autoencoder." />
+<figcaption aria-hidden="true">Neural autoencoder.</figcaption>
 </figure>
 <p>What should the architecture of the network be?</p>
 </aside>
@@ -453,45 +665,66 @@ This week: deep unsupervised learning
 <section id="overcomplete-autoencoder" class="slide level3">
 <h3>Overcomplete autoencoder</h3>
 <figure>
-<img data-src="../images/overcomplete-autoencoder.svg" style="width:30.0%" alt="If we train this network to minimize reconstruction loss, it may literally learn the identity function - not useful." /><figcaption aria-hidden="true">If we train this network to minimize reconstruction loss, it may literally learn the identity function - not useful.</figcaption>
+<img data-src="../images/overcomplete-autoencoder.svg"
+style="width:30.0%"
+alt="If we train this network to minimize reconstruction loss, it may literally learn the identity function - not useful." />
+<figcaption aria-hidden="true">If we train this network to minimize
+reconstruction loss, it may literally learn the identity function - not
+useful.</figcaption>
 </figure>
 </section>
 <section id="undercomplete-autoencoder" class="slide level3">
 <h3>Undercomplete autoencoder</h3>
 <figure>
-<img data-src="../images/undercomplete-autoencoder.svg" style="width:30.0%" alt="Is this network forced to learn a low-dimensional representation?" /><figcaption aria-hidden="true">Is this network forced to learn a low-dimensional representation?</figcaption>
+<img data-src="../images/undercomplete-autoencoder.svg"
+style="width:30.0%"
+alt="Is this network forced to learn a low-dimensional representation?" />
+<figcaption aria-hidden="true">Is this network forced to learn a
+low-dimensional representation?</figcaption>
 </figure>
 </section>
 <section id="sparse-autoencoder-1" class="slide level3">
 <h3>Sparse autoencoder (1)</h3>
 <ul>
-<li>Does a small “bottleneck” force autoencoder to learn useful latent features?</li>
-<li>Even if “bottleneck” is very small, can still memorize data by encoding index</li>
-<li>Instead of limiting number of hidden nodes, add a penalty function on <em>activations</em></li>
+<li>Does a small “bottleneck” force autoencoder to learn useful latent
+features?</li>
+<li>Even if “bottleneck” is very small, can still memorize data by
+encoding index</li>
+<li>Instead of limiting number of hidden nodes, add a penalty function
+on <em>activations</em></li>
 </ul>
 <!-- https://www.jeremyjordan.me/autoencoders/ -->
 </section>
 <section id="sparse-autoencoder-2" class="slide level3">
 <h3>Sparse autoencoder (2)</h3>
-<p>Allow many hidden units, but for a given input, most of them must produce a very small activation.</p>
+<p>Allow many hidden units, but for a given input, most of them must
+produce a very small activation.</p>
 <ul>
-<li>Add penalty term to loss function, like regularization, but not on weights!</li>
-<li>Penalty is on average activation value (over all the training samples)</li>
+<li>Add penalty term to loss function, like regularization, but not on
+weights!</li>
+<li>Penalty is on average activation value (over all the training
+samples)</li>
 </ul>
 </section>
 <section id="autoencoder-comparison" class="slide level3">
 <h3>Autoencoder comparison</h3>
 <ul>
-<li><strong>Undercomplete autoencoder</strong>: uses entire network for each sample. Limits capacity to memorize, but also limits capacity to extract complex features.</li>
-<li><strong>Sparse autoencoder</strong>: different parts of network can “specialize” depending on input. Limits capacity to memorize, but can still extract complex features.</li>
+<li><strong>Undercomplete autoencoder</strong>: uses entire network for
+each sample. Limits capacity to memorize, but also limits capacity to
+extract complex features.</li>
+<li><strong>Sparse autoencoder</strong>: different parts of network can
+“specialize” depending on input. Limits capacity to memorize, but can
+still extract complex features.</li>
 </ul>
 </section>
 <section id="what-are-autoencoders-good-for" class="slide level3">
 <h3>What are autoencoders good for?</h3>
 <ul>
 <li>Not typically useful for compression - too data-specific</li>
-<li>Can use to initialize supervised learning model - throw away decoder, fine-tune with classifier</li>
-<li>Can use for dimensionality reduction for data visualization (often in combination with other unsupervised learning methods)</li>
+<li>Can use to initialize supervised learning model - throw away
+decoder, fine-tune with classifier</li>
+<li>Can use for dimensionality reduction for data visualization (often
+in combination with other unsupervised learning methods)</li>
 <li>Can use for data denoising</li>
 </ul>
 <!--
@@ -504,13 +737,23 @@ This week: deep unsupervised learning
 <section id="example-reconstruction-of-faces" class="slide level3">
 <h3>Example: reconstruction of faces</h3>
 <figure>
-<img data-src="../images/autoencoder-vs-pca-science06.png" style="width:80.0%" alt="Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." /><figcaption aria-hidden="true">Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006.</figcaption>
+<img data-src="../images/autoencoder-vs-pca-science06.png"
+style="width:80.0%"
+alt="Reconstruction of faces (top) by 30-D neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." />
+<figcaption aria-hidden="true">Reconstruction of faces (top) by 30-D
+neural autoencoder (middle) and 30-D PCA (bottom). Image via Hinton et
+al “Reducing the dimensionality of data with neural networks”, Science,
+2006.</figcaption>
 </figure>
 </section>
 <section id="example-mnist-visualization" class="slide level3">
 <h3>Example: MNIST visualization</h3>
 <figure>
-<img data-src="../images/autoencoder-mnist.png" style="width:80.0%" alt="Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." /><figcaption aria-hidden="true">Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006.</figcaption>
+<img data-src="../images/autoencoder-mnist.png" style="width:80.0%"
+alt="Image via Hinton et al “Reducing the dimensionality of data with neural networks”, Science, 2006." />
+<figcaption aria-hidden="true">Image via Hinton et al “Reducing the
+dimensionality of data with neural networks”, Science,
+2006.</figcaption>
 </figure>
 </section></section>
 <section>
@@ -521,7 +764,8 @@ This week: deep unsupervised learning
 <section id="types-of-density-estimation" class="slide level3">
 <h3>Types of density estimation</h3>
 <ul>
-<li>Explicit: define and solve for density (then sample from it if you want)</li>
+<li>Explicit: define and solve for density (then sample from it if you
+want)</li>
 <li>Implicit: sample from density without defining it</li>
 </ul>
 <!--
@@ -536,8 +780,10 @@ Given a set of data instances $X$ and a set of labels $y$,
 <section id="gan-generative-adversarial-networks" class="slide level3">
 <h3>GAN: Generative adversarial networks</h3>
 <ul>
-<li>From <a href="https://arxiv.org/abs/1406.2661">Goodfellow et al 2014</a></li>
-<li>Unsupervised, generative, implicit density estimation: Given training data, generate new samples from same distribution</li>
+<li>From <a href="https://arxiv.org/abs/1406.2661">Goodfellow et al
+2014</a></li>
+<li>Unsupervised, generative, implicit density estimation: Given
+training data, generate new samples from same distribution</li>
 </ul>
 </section>
 <section id="gan-basic-idea-1" class="slide level3">
@@ -545,8 +791,10 @@ Given a set of data instances $X$ and a set of labels $y$,
 <p>Two neural networks play a “game”:</p>
 <p>Generator:</p>
 <ul>
-<li>takes random noise <span class="math inline">\(z\)</span> drawn from <span class="math inline">\(p_z\)</span> as input,</li>
-<li>generates samples, tries to trick “discriminator” into believing they are real,</li>
+<li>takes random noise <span class="math inline">\(z\)</span> drawn from
+<span class="math inline">\(p_z\)</span> as input,</li>
+<li>generates samples, tries to trick “discriminator” into believing
+they are real,</li>
 <li>learns parameters <span class="math inline">\(\theta\)</span>.</li>
 </ul>
 </section>
@@ -554,72 +802,104 @@ Given a set of data instances $X$ and a set of labels $y$,
 <h3>GAN: basic idea (2)</h3>
 <p>Discriminator:</p>
 <ul>
-<li>takes samples <span class="math inline">\(x\)</span> drawn from <span class="math inline">\(p_\text{data}\)</span> as input,</li>
-<li>produces classification <span class="math inline">\(y\)</span> (1=real, 0=fake),</li>
+<li>takes samples <span class="math inline">\(x\)</span> drawn from
+<span class="math inline">\(p_\text{data}\)</span> as input,</li>
+<li>produces classification <span class="math inline">\(y\)</span>
+(1=real, 0=fake),</li>
 <li>learns parameters <span class="math inline">\(\phi\)</span>.</li>
 </ul>
 </section>
 <section id="discriminator-loss-function-1" class="slide level3">
 <h3>Discriminator loss function (1)</h3>
-<p>Discriminator wants to update its parameters <span class="math inline">\(\phi\)</span> so</p>
+<p>Discriminator wants to update its parameters <span
+class="math inline">\(\phi\)</span> so</p>
 <ul>
-<li><span class="math inline">\(D_\phi({x})\)</span> (output for real data) is close to 1</li>
-<li><span class="math inline">\(D_\phi(G_\theta({z}))\)</span> (output for generated data) is close to 0</li>
+<li><span class="math inline">\(D_\phi({x})\)</span> (output for real
+data) is close to 1</li>
+<li><span class="math inline">\(D_\phi(G_\theta({z}))\)</span> (output
+for generated data) is close to 0</li>
 </ul>
 </section>
 <section id="discriminator-loss-function-2" class="slide level3">
 <h3>Discriminator loss function (2)</h3>
 <p>Binary cross-entropy loss:</p>
-<p><span class="math display">\[- \sum_{i=1}^N y_i \log D_\phi(x_i) - \sum_{i=1}^N (1-y_i) \log (1-D_\phi(x_i))\]</span></p>
-<p>Left side is for “true” samples and the right side is for “fake” samples…</p>
+<p><span class="math display">\[- \sum_{i=1}^N y_i \log D_\phi(x_i) -
+\sum_{i=1}^N (1-y_i) \log (1-D_\phi(x_i))\]</span></p>
+<p>Left side is for “true” samples and the right side is for “fake”
+samples…</p>
 </section>
 <section id="discriminator-objective" class="slide level3">
 <h3>Discriminator objective</h3>
-<p>Replace sums with expectations, then discriminator wants to <em>maximize</em></p>
-<p><span class="math display">\[\mathbb{E}_{x \sim {p}_{\textrm{data}}} [\log D_\phi({x})] + 
+<p>Replace sums with expectations, then discriminator wants to
+<em>maximize</em></p>
+<p><span class="math display">\[\mathbb{E}_{x \sim {p}_{\textrm{data}}}
+[\log D_\phi({x})] +
 \mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]\]</span></p>
 </section>
 <section id="generator-objective-1" class="slide level3">
 <h3>Generator objective (1)</h3>
-<p>Generator wants to update its parameters <span class="math inline">\(\theta\)</span> so that:</p>
+<p>Generator wants to update its parameters <span
+class="math inline">\(\theta\)</span> so that:</p>
 <ul>
-<li><span class="math inline">\(D_\phi(G_\theta({z}))\)</span> (output for generated data) is close to 1</li>
-<li>Minimize <span class="math inline">\(\mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]\)</span></li>
+<li><span class="math inline">\(D_\phi(G_\theta({z}))\)</span> (output
+for generated data) is close to 1</li>
+<li>Minimize <span class="math inline">\(\mathbb{E}_{z \sim p_{z}} [\log
+(1-D_\phi(G_\theta({z})))]\)</span></li>
 </ul>
 </section>
 <section id="overall-objective" class="slide level3">
 <h3>Overall objective</h3>
-<p><span class="math display">\[\min_{\theta} \max_{\phi}  \mathbb{E}_{x \sim {p}_{\textrm{data}}} [\log D_\phi({x})] + 
+<p><span class="math display">\[\min_{\theta} \max_{\phi}  \mathbb{E}_{x
+\sim {p}_{\textrm{data}}} [\log D_\phi({x})] +
 \mathbb{E}_{z \sim p_{z}} [\log (1-D_\phi(G_\theta({z})))]\]</span></p>
 </section>
-<section id="problem-gradient-of-cross-entropy-loss" class="slide level3">
+<section id="problem-gradient-of-cross-entropy-loss"
+class="slide level3">
 <h3>Problem: gradient of cross-entropy loss</h3>
 <ul>
-<li>Cross-entropy loss designed to accelerate learning (steep gradient) when classifier is wrong</li>
-<li>Gradient is flat when classifier is correct, when generator needs to improve!</li>
+<li>Cross-entropy loss designed to accelerate learning (steep gradient)
+when classifier is wrong</li>
+<li>Gradient is flat when classifier is correct, when generator needs to
+improve!</li>
 </ul>
 </section>
 <section id="generator-objective-2" class="slide level3">
 <h3>Generator objective (2)</h3>
 <ul>
-<li>Instead, generator can do gradient <em>ascent</em> on the objective</li>
+<li>Instead, generator can do gradient <em>ascent</em> on the
+objective</li>
 </ul>
-<p><span class="math display">\[\log \left(D_\phi(G_\theta({z}^{(i)})) \right)\]</span></p>
+<p><span class="math display">\[\log \left(D_\phi(G_\theta({z}^{(i)}))
+\right)\]</span></p>
 <ul>
-<li>Instead of minimizing likelihood of discriminator being correct, now maximizing likelihood of discriminator being wrong.<br />
+<li>Instead of minimizing likelihood of discriminator being correct, now
+maximizing likelihood of discriminator being wrong.<br />
 </li>
-<li>Can still learn even when discriminator is successful at rejecting generator samples</li>
+<li>Can still learn even when discriminator is successful at rejecting
+generator samples</li>
 </ul>
 </section>
 <section id="training-first-update-discriminator" class="slide level3">
 <h3>Training: First, update discriminator</h3>
 <ol type="1">
-<li>Get mini-batch of size <span class="math inline">\(m\)</span> from data: <span class="math inline">\({x}^{(1)}, \ldots, {x}^{(m)} \sim p_\text{data}\)</span></li>
-<li>Get mini-batch of size <span class="math inline">\(m\)</span> from noise input: <span class="math inline">\({z}^{(1)}, \ldots, {z}^{(m)} \sim p_z\)</span></li>
-<li>Forward pass: get <span class="math inline">\(G_\theta({z}^{(i)})\)</span> for each noise input, get <span class="math inline">\(D_\phi({x}^{(i)})\)</span> for each real sample, get <span class="math inline">\(D_\phi(G_\theta({z}^{(i)}))\)</span> for each fake sample.</li>
-<li>Backward pass: gradient <em>ascent</em> on discriminator parameters <span class="math inline">\(\phi\)</span>:</li>
+<li>Get mini-batch of size <span class="math inline">\(m\)</span> from
+data: <span class="math inline">\({x}^{(1)}, \ldots, {x}^{(m)} \sim
+p_\text{data}\)</span></li>
+<li>Get mini-batch of size <span class="math inline">\(m\)</span> from
+noise input: <span class="math inline">\({z}^{(1)}, \ldots, {z}^{(m)}
+\sim p_z\)</span></li>
+<li>Forward pass: get <span
+class="math inline">\(G_\theta({z}^{(i)})\)</span> for each noise input,
+get <span class="math inline">\(D_\phi({x}^{(i)})\)</span> for each real
+sample, get <span
+class="math inline">\(D_\phi(G_\theta({z}^{(i)}))\)</span> for each fake
+sample.</li>
+<li>Backward pass: gradient <em>ascent</em> on discriminator parameters
+<span class="math inline">\(\phi\)</span>:</li>
 </ol>
-<p><span class="math display">\[\frac{1}{m}  \sum_{i=1}^m \left[\log D_\phi({x}^{(i)}) + \log (1 - D_\phi(G_\theta({z}^{(i)}))) \right]\]</span></p>
+<p><span class="math display">\[\frac{1}{m}  \sum_{i=1}^m \left[\log
+D_\phi({x}^{(i)}) + \log (1 - D_\phi(G_\theta({z}^{(i)})))
+\right]\]</span></p>
 <aside class="notes">
 
 </aside>
@@ -627,22 +907,33 @@ Given a set of data instances $X$ and a set of labels $y$,
 <section id="training-then-update-generator" class="slide level3">
 <h3>Training: Then, update generator</h3>
 <ol start="5" type="1">
-<li>Get mini-batch of size <span class="math inline">\(m\)</span> from noise input: <span class="math inline">\({z}^{(1)}, \ldots, {z}^{(m)} \sim p_z\)</span></li>
-<li>Forward pass: get <span class="math inline">\(G_\theta({z}^{(i)})\)</span> for each noise input, get <span class="math inline">\(D_\phi(G_\theta({z}^{(i)}))\)</span> for each fake sample.</li>
-<li>Backward pass: gradient <em>ascent</em> on generator parameters <span class="math inline">\(\theta\)</span>:</li>
+<li>Get mini-batch of size <span class="math inline">\(m\)</span> from
+noise input: <span class="math inline">\({z}^{(1)}, \ldots, {z}^{(m)}
+\sim p_z\)</span></li>
+<li>Forward pass: get <span
+class="math inline">\(G_\theta({z}^{(i)})\)</span> for each noise input,
+get <span class="math inline">\(D_\phi(G_\theta({z}^{(i)}))\)</span> for
+each fake sample.</li>
+<li>Backward pass: gradient <em>ascent</em> on generator parameters
+<span class="math inline">\(\theta\)</span>:</li>
 </ol>
-<p><span class="math display">\[\frac{1}{m}  \sum_{i=1}^m \log \left(D_\phi(G_\theta({z}^{(i)})) \right)\]</span></p>
+<p><span class="math display">\[\frac{1}{m}  \sum_{i=1}^m \log
+\left(D_\phi(G_\theta({z}^{(i)})) \right)\]</span></p>
 </section>
 <section id="illustration-training-discriminator" class="slide level3">
 <h3>Illustration: training discriminator</h3>
 <figure>
-<img data-src="../images/9-gan-discriminator.png" style="width:100.0%" alt="Training the discriminator." /><figcaption aria-hidden="true">Training the discriminator.</figcaption>
+<img data-src="../images/9-gan-discriminator.png" style="width:100.0%"
+alt="Training the discriminator." />
+<figcaption aria-hidden="true">Training the discriminator.</figcaption>
 </figure>
 </section>
 <section id="illustration-training-generator" class="slide level3">
 <h3>Illustration: training generator</h3>
 <figure>
-<img data-src="../images/9-gan-generator.png" style="width:100.0%" alt="Training the generator." /><figcaption aria-hidden="true">Training the generator.</figcaption>
+<img data-src="../images/9-gan-generator.png" style="width:100.0%"
+alt="Training the generator." />
+<figcaption aria-hidden="true">Training the generator.</figcaption>
 </figure>
 <!--
 
@@ -657,7 +948,7 @@ Given a set of data instances $X$ and a set of labels $y$,
 
   <script src="reveal.js-master/dist/reveal.js"></script>
 
-  // reveal.js plugins
+  <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
   <script src="reveal.js-master/plugin/search/search.js"></script>
   <script src="reveal.js-master/plugin/zoom/zoom.js"></script>
@@ -668,10 +959,148 @@ Given a set of data instances $X$ and a set of labels $y$,
       // Full list of configuration options available at:
       // https://revealjs.com/config/
       Reveal.initialize({
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
         // Push each slide change to the browser history
-        history: true,
+        history: false,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
