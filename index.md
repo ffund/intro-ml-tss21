@@ -94,7 +94,7 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 * Notebook: Bias and variance of SVM <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-svm-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-svm-bias-variance.ipynb)
 * Notebook: Handwritten digits classification <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/7-demo-digits-classifiers.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-demo-digits-classifiers.ipynb)
 
-* Notebook: UAV assisted wireless location with Bayesian Optimization and Gaussian Process Regression (homework) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw-torch.ipynb) (requires [Hello, AERPAW](https://teaching-on-testbeds.github.io/hello-aerpaw/))
+* Notebook: UAV assisted wireless localization with Bayesian Optimization and Gaussian Process Regression (homework) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw-torch.ipynb) (requires [Hello, AERPAW](https://teaching-on-testbeds.github.io/hello-aerpaw/))
 
 ## Week 9: Neural networks
 
