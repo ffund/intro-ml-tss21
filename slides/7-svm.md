@@ -409,18 +409,57 @@ Then, to solve, we use joint optimization over $x$ and $\lambda$:
 $$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)$$
 
 
-over $x$ and $\lambda$. If for some $x$,
+over $x$ and $\lambda$.
 
-* $g(x) \leq 0$: the constraint is not active, $\lambda = 0$.
-* $g(x) > 0$: the constraint is active, $\lambda > 0$. Then we need to change $x$ to make $g(x)$ smaller.
+
+:::notes
+
+("Solve" in the usual way if the function is convex: by taking partial derivative of $L(x,\lambda)$ with respect to each argument, and setting it to zero. The solution to the original function will be a saddle point in the Lagrangian.)
+
+
+:::
+
+
+### Background: Solving with Lagrangian (3)
+
+$$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)$$
+
+
+Suppose that for the $x$ that minimizes $f(x)$, $g(x) \leq 0$
+
+
+(i.e. **$x$ is in the feasible set**.) 
+
+If $g(x) < 0$ (constraint is not active), 
+
+* to maximize: we want $\lambda = 0$
+* to minimize: we'll minimize $f(x)$, $\lambda g(x) = 0$ 
+
+
+### Background: Solving with Lagrangian (4)
+
+
+$$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)$$
+
+Suppose that for the $x$ that minimizes $f(x)$, $g(x) > 0$
+
+(**$x$ is not in the feasible set.**)
+
+  * to maximize: we want $\lambda > 0$
+  * to minimize: we want small $g(x)$ and $f(x)$.
 
 ::: notes
 
-"Solve" in the usual way if the function is convex: by taking partial derivative of $L(x,\lambda)$ with respect to each argument, and setting it to zero. The solution to the original function will be a saddle point in the Lagrangian.
+In this case, the "pull" between 
 
-This "pull" between the $x$ that minimizes $f(x)$ and the $\lambda g(x)$ ends up making the constraint "tight": if $\lambda > 0$ then we'll make $g(x) = 0$. 
+* the $x$ that minimizes $f(x)$ 
+* and the $\lambda g(x)$ which pulls toward the feasible set, 
+
+ends up making the constraint "tight". We will use the $x$ on the edge of the feasible set ($g(x) = 0$, constraint is active) for which $f(x)$ is smallest.
+
 
 This is called the KKT complementary slackness condition: for every constraint, $\lambda g(x) = 0$, either because $\lambda = 0$ (inactive constraint) or $g(x) = 0$ (active constraint).
+
 
 :::
 
@@ -439,8 +478,6 @@ is the same as the solution to the *dual* problem:
 
 $$\operatorname*{maximize}_{\lambda \geq 0 } \operatorname*{minimize}_{x} L(x, \lambda) $$
 
-
-\newpage
 
 ### Problem formulation - Lagrangian primal
 
@@ -504,8 +541,6 @@ $$
 This turns out to be not too terrible to solve. $\alpha$ is non-zero only when the constraint is active - only for support vectors.
 
 :::
-
-\newpage
 
 
 

@@ -507,27 +507,62 @@ class="math inline">\(\lambda\)</span>:</p>
 \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda
 g(x)\]</span></p>
 <p>over <span class="math inline">\(x\)</span> and <span
-class="math inline">\(\lambda\)</span>. If for some <span
-class="math inline">\(x\)</span>,</p>
+class="math inline">\(\lambda\)</span>.</p>
+<aside class="notes">
+<p>(“Solve” in the usual way if the function is convex: by taking
+partial derivative of <span class="math inline">\(L(x,\lambda)\)</span>
+with respect to each argument, and setting it to zero. The solution to
+the original function will be a saddle point in the Lagrangian.)</p>
+</aside>
+</section>
+<section id="background-solving-with-lagrangian-3" class="slide level3">
+<h3>Background: Solving with Lagrangian (3)</h3>
+<p><span class="math display">\[\operatorname*{minimize}_{x}
+\operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda
+g(x)\]</span></p>
+<p>Suppose that for the <span class="math inline">\(x\)</span> that
+minimizes <span class="math inline">\(f(x)\)</span>, <span
+class="math inline">\(g(x) \leq 0\)</span></p>
+<p>(i.e. <strong><span class="math inline">\(x\)</span> is in the
+feasible set</strong>.)</p>
+<p>If <span class="math inline">\(g(x) &lt; 0\)</span> (constraint is
+not active),</p>
 <ul>
-<li><span class="math inline">\(g(x) \leq 0\)</span>: the constraint is
-not active, <span class="math inline">\(\lambda = 0\)</span>.</li>
-<li><span class="math inline">\(g(x) &gt; 0\)</span>: the constraint is
-active, <span class="math inline">\(\lambda &gt; 0\)</span>. Then we
-need to change <span class="math inline">\(x\)</span> to make <span
-class="math inline">\(g(x)\)</span> smaller.</li>
+<li>to maximize: we want <span class="math inline">\(\lambda =
+0\)</span></li>
+<li>to minimize: we’ll minimize <span
+class="math inline">\(f(x)\)</span>, <span class="math inline">\(\lambda
+g(x) = 0\)</span></li>
+</ul>
+</section>
+<section id="background-solving-with-lagrangian-4" class="slide level3">
+<h3>Background: Solving with Lagrangian (4)</h3>
+<p><span class="math display">\[\operatorname*{minimize}_{x}
+\operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda
+g(x)\]</span></p>
+<p>Suppose that for the <span class="math inline">\(x\)</span> that
+minimizes <span class="math inline">\(f(x)\)</span>, <span
+class="math inline">\(g(x) &gt; 0\)</span></p>
+<p>(<strong><span class="math inline">\(x\)</span> is not in the
+feasible set.</strong>)</p>
+<ul>
+<li>to maximize: we want <span class="math inline">\(\lambda &gt;
+0\)</span></li>
+<li>to minimize: we want small <span class="math inline">\(g(x)\)</span>
+and <span class="math inline">\(f(x)\)</span>.</li>
 </ul>
 <aside class="notes">
-<p>“Solve” in the usual way if the function is convex: by taking partial
-derivative of <span class="math inline">\(L(x,\lambda)\)</span> with
-respect to each argument, and setting it to zero. The solution to the
-original function will be a saddle point in the Lagrangian.</p>
-<p>This “pull” between the <span class="math inline">\(x\)</span> that
-minimizes <span class="math inline">\(f(x)\)</span> and the <span
-class="math inline">\(\lambda g(x)\)</span> ends up making the
-constraint “tight”: if <span class="math inline">\(\lambda &gt;
-0\)</span> then we’ll make <span class="math inline">\(g(x) =
-0\)</span>.</p>
+<p>In this case, the “pull” between</p>
+<ul>
+<li>the <span class="math inline">\(x\)</span> that minimizes <span
+class="math inline">\(f(x)\)</span></li>
+<li>and the <span class="math inline">\(\lambda g(x)\)</span> which
+pulls toward the feasible set,</li>
+</ul>
+<p>ends up making the constraint “tight”. We will use the <span
+class="math inline">\(x\)</span> on the edge of the feasible set (<span
+class="math inline">\(g(x) = 0\)</span>, constraint is active) for which
+<span class="math inline">\(f(x)\)</span> is smallest.</p>
 <p>This is called the KKT complementary slackness condition: for every
 constraint, <span class="math inline">\(\lambda g(x) = 0\)</span>,
 either because <span class="math inline">\(\lambda = 0\)</span>
