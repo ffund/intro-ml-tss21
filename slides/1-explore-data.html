@@ -43,39 +43,59 @@
 <p>Any machine learning project has to start with high-quality data.</p>
 <p>There is a “garbage in, garbage out” rule: If you use “garbage” to
 train a machine learning model, you will only get “garbage” out. (And:
-Since you are testing on the same data, you might not even realize it is
-“garbage” at first! You may not realize until the model is already
+Since you are evaluating on the same data, you might not even realize it
+is “garbage” at first! You may not realize until the model is already
 deployed in production!)</p>
 </aside>
 </section>
 
-<section id="before-using-any-data" class="title-slide slide level2">
-<h2>Before using any data</h2>
+<section id="model-training-vs-evaluation-vs-deployment"
+class="title-slide slide level2">
+<h2>Model training vs evaluation vs deployment</h2>
+<aside class="notes">
+<figure>
+<img data-src="../images/1-lifecycle.png" style="width:60.0%"
+alt="The lifecycle of an ML model" />
+<figcaption aria-hidden="true">The lifecycle of an ML model</figcaption>
+</figure>
+<p>We want to understand how the model will behave in
+<em>deployment</em> as early as possible (before investing too much
+time, effort, money in a model that won’t do well).</p>
 <ul>
-<li>Consider ethics concerns</li>
-<li>Prepare a held-out test set</li>
-<li>Make and check assumptions</li>
-<li>Check for missing data</li>
-<li>Identify potentially predictive features</li>
-<li>Look for patterns you <em>don’t</em> want model to learn</li>
+<li>Best case: Model does well in evaluation, and deployment</li>
+<li>Second best case: Model does poorly in evaluation, is not
+deployed</li>
+<li>Worst case: Model does well in evaluation, poorly in deployment
+(“overly optimistic evaluation”)</li>
 </ul>
+</aside>
 </section>
 
-<section id="ethics-concerns" class="title-slide slide level2">
-<h2>Ethics concerns</h2>
-
+<section>
+<section id="data-considerations-in-no-particular-order"
+class="title-slide slide level2">
+<h2>Data considerations (in no particular order…)</h2>
+<ul>
+<li>no ethical and legal concerns</li>
+<li>appropriate features and target variable</li>
+<li>representative of deployment scenario</li>
+<li>avoid data leakage concerns</li>
+</ul>
+<aside class="notes">
+<p>… then, you may still need to “clean” data.</p>
+</aside>
 </section>
-
-<section id="some-data-ethics-concerns"
-class="title-slide slide level2 cell markdown">
-<h2>Some data ethics concerns</h2>
+<section id="ethical-and-legal-concerns" class="slide level3">
+<h3>Ethical and legal concerns</h3>
 <ul>
 <li>Bias</li>
-<li>Privacy</li>
 <li>Consent</li>
+<li>Privacy</li>
+<li>Copyright</li>
 </ul>
 <p>…are just a few.</p>
 <aside class="notes">
+<p>Some examples of data ethics failures:</p>
 <ul>
 <li>Many social media datasets used for “offensive post” classification
 have biased labels (especially if they were produced without adequate
@@ -99,241 +119,119 @@ consent and OKCupid</a></li>
 href="https://www.theverge.com/2019/3/12/18262646/ibm-didnt-inform-people-when-it-used-their-flickr-photos-for-facial-recognition-training">IBM
 didn’t inform people when it used their Flickr photos for facial
 recognition training</a></li>
+<li><a
+href="https://arstechnica.com/information-technology/2022/09/artist-finds-private-medical-record-photos-in-popular-ai-training-data-set/">Artist
+finds private medical record photos in popular AI training data
+set</a></li>
+<li><a
+href="https://arstechnica.com/information-technology/2024/01/openai-says-its-impossible-to-create-useful-ai-models-without-copyrighted-material/">OpenAI
+says it’s “impossible” to create useful AI models without copyrighted
+material</a></li>
 </ul>
 </aside>
 </section>
-
-<section id="prepare-a-held-out-test-set"
-class="title-slide slide level2">
-<h2>Prepare a held-out test set</h2>
+<section id="appropriate-features" class="slide level3">
+<h3>Appropriate features</h3>
 <ul>
-<li>If we plan to use some data for machine learning, we <em>must</em>
-set aside a “test set” before we do <em>anything</em> with the
-data.</li>
-<li>We will explain in a future lesson why this is so important.</li>
+<li>predictive</li>
+<li>available</li>
+<li>no data leakage</li>
 </ul>
 <aside class="notes">
-<p>Our next steps - checking assumptions, handling missing data,
-identifying potentially predictive features, identifying “bad” patterns
-- will be on the part of the data that is not “held out” as a test
-set.</p>
-</aside>
-</section>
-
-<section>
-<section id="make-and-check-assumptions"
-class="title-slide slide level2">
-<h2>Make and check assumptions</h2>
-<aside class="notes">
-<p>It’s always a good idea to “sanity check” your data - before you look
-at it, think about what you expect to see. Then check to make sure your
-expectations are realized.</p>
-<p>Look at plots of data, summary statistics, etc. and consider general
-trends.</p>
-</aside>
-</section>
-<section id="example-author-citation-data-1" class="slide level3">
-<h3>Example: author citation data (1)</h3>
-<p>Data analysis: use PubMed, and identify the year of first publication
-for the 100,000 most cited authors.</p>
-<aside class="notes">
-<p>What are our expectations about what this should look like?</p>
-</aside>
-</section>
-<section id="example-author-citation-data-2" class="slide level3">
-<h3>Example: author citation data (2)</h3>
-<figure>
-<img data-src="../images/1-pubmed-authors.png" style="width:50.0%"
-alt="Does this look reasonable?" />
-<figcaption aria-hidden="true">Does this look reasonable?</figcaption>
-</figure>
-<aside class="notes">
-<p>We can think of many potential explanations for this pattern, even
-though it is actually a data artifact.</p>
-<p>The true explanation: in 2002, PubMed started using full first names
-in authors instead of just initials. The same author is represented in
-the dataset as a “new” author with a first date of publication in
-2002.</p>
-</aside>
-</section>
-<section id="example-author-citation-data-3" class="slide level3">
-<h3>Example: author citation data (3)</h3>
-<figure>
-<img data-src="../images/1-pubmed-authors2.png" style="width:50.0%"
-alt="The real distribution, after name unification. Example via Steven Skiena @ Stony Brook U." />
-<figcaption aria-hidden="true">The real distribution, after name
-unification. Example via <a
-href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @ Stony
-Brook U</a>.</figcaption>
-</figure>
-<!-- 
-### Example: anomalous voting data (1)
-
-![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
-
-::: notes
-
-What are our assumptions about election night data, and how are they violated here? 
-
-We expect that per-candidate vote totals (computed by multiplying total votes and vote share) should increase as more votes are counted, but never decrease.
-
-What are possible explanations?
-
-:::
-
-### Example: anomalous voting data (2)
-
-![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=75% }
-
-::: notes
-
-This anomaly makes a lot of sense as a correction of a data entry or duplicate entry error. 
-
-How Edison/AP collects the data for their Election Night feed:
-
-* There are "stringers" (temporary reporters) at various elections offices who call results into their phone center
-* They have people who look at official government websites for new results that they manually enter into the system
-* They have people who monitor results sent by fax from counties and cities
-
-all working as fast as they can! Data entry and duplicate entry errors are not only likely, they are almost guaranteed. When they are corrected, vote totals may decrease.
-
-Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us/topics/politics/elections/counting-the-vote), [Edison](http://www.edisonresearch.com/wp-content/uploads/2020/10/Web-Entry-Team-Handout-2020.pdf)
-
-:::
-
--->
-</section>
-<section id="handling-unreasonable-data"
-class="slide level3 cell markdown">
-<h3>Handling unreasonable data</h3>
-<aside class="notes">
-<p>How should you handle unreasonable values, data that does not match
-expectations, or “outliers”? It depends!</p>
+<p>Good <em>features</em>:</p>
 <ul>
-<li>e.g. suppose in a dataset of voter information, some have impossible
-year of birth - would make the voter over 120 years old. (The reason:
-Voters with no known DOB, who registered before DOB was required, are
-often encoded with a January 1900 DOB.)</li>
-<li><strong>not</strong> a good idea to just remove outliers unless you
-are sure they are a data entry error or otherwise not a “true”
-value.</li>
-<li>Even if an outlier is due to some sort of error, if you remove them,
-you may skew the dataset (as in the 1/1/1900 voters example).</li>
+<li>are predictive (related to target variable - <em>any</em> kind of
+relationship) (how do we look for relationships in numeric, categorical,
+graphical, text features?)</li>
+<li>will be available to the model at the time of deployment.</li>
+<li>does not have other data leakage concerns (to be discussed
+shortly)</li>
 </ul>
-<p>Consider the possibility of:</p>
-<ul>
-<li>Different units, time zones, etc. in different rows</li>
-<li>Same value represented several different ways (e.g. names,
-dates)</li>
-<li>Missing data encoded as zero</li>
-</ul>
+<p>A machine learning model will find “patterns” even if the feature
+data is not really related to the target variable! It will find
+“spurious” relationships. That can potentially be much worse than if
+there was no ML model at all.</p>
 </aside>
-</section></section>
-<section>
-<section id="look-for-missing-data" class="title-slide slide level2">
-<h2>Look for missing data</h2>
-
 </section>
-<section id="indicators-of-missing-data"
-class="slide level3 cell markdown">
-<h3>Indicators of missing data</h3>
+<section id="and-appropriate-target" class="slide level3">
+<h3>and appropriate target</h3>
 <ul>
-<li>Rows that have <code>NaN</code> values</li>
-<li>Rows that are <em>not there</em></li>
+<li>measureable</li>
+<li>available</li>
+<li>correct</li>
 </ul>
-<!-- To do: NYC taxi tip data, NYS thruway data -->
+<aside class="notes">
+<p>If the exact thing we want to predict is measurable and available to
+us in the data, it will be a <em>direct</em> target variable. Sometimes,
+however, the thing we want to predict is not measurable or
+available.</p>
+<p>In this case, we may need to use a <em>proxy</em> variable that
+<em>is</em> measurable and available, and is closely related to the
+thing we want to predict. (The results will only be as good as the
+relationship between the thing we want to predict, and the proxy!)</p>
+<p>Since it is expensive to get labeled data, it’s not uncommon for
+labels to be either machine-generated, or added by humans who spend very
+little time on each sample. See e.g. <a
+href="https://www.surgehq.ai/blog/30-percent-of-googles-reddit-emotions-dataset-is-mislabeled">30%
+of Google’s Emotions Dataset is Mislabeled</a>.</p>
+</aside>
 </section>
-<section id="examples-of-missing-data"
-class="slide level3 cell markdown">
-<h3>Examples of missing data</h3>
+<section id="representative-of-deployment-scenario"
+class="slide level3">
+<h3>Representative of deployment scenario</h3>
 <aside class="notes">
 <ul>
-<li>Twitter API terms of use don’t allow researchers to share tweets
-directly, only message IDs (except for limited distribution, e.g. by
-email). To reproduce the dataset, you use the Twitter API to download
-messages using their IDs. But, tweets that have been removed are not
-available - the distribution of removed tweets is not flat! (For
-example: you might end up with a dataset that has offensive posts but
-few “obvious” offensive posts.)</li>
-<li>A dataset of Tweets following Hurricane Sandy makes it looks like
-Manhattan was the hub of the disaster, because of power blackouts and
-limited cell service in the most affected areas. <a
-href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
-<li>The City of Boston released a smartphone app that uses accelerometer
-and GPS data to detect potholes and report them automatically. But, low
-income and older residents are less likely to have smartphones, so this
-dataset presents a skewed view of where potholes are. <a
-href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
+<li><strong>Data is not representative of your target
+situation</strong>. For example, you are training a model to predict the
+spread of infectious disease for a NYC-based health startup, but you are
+using data from another country.</li>
+<li><strong>Data or situation changes over time</strong>. For example,
+imagine you train a machine learning model to classify loan
+applications. However, if the economy changes, applicants that were
+previously considered credit-worthy might not be anymore despite having
+the same income, as the lender becomes more risk-averse. Similarly, if
+wages increase across the board, the income standard for a loan would
+increase.</li>
 </ul>
 </aside>
 </section>
-<section id="types-of-missingness" class="slide level3 cell markdown">
-<h3>Types of “missingness”</h3>
+<section id="avoid-data-leakage-1" class="slide level3">
+<h3>Avoid data leakage (1)</h3>
+<p>Type 1: No <em>independent</em> test set -</p>
 <ul>
-<li>Completely random</li>
-<li>Correlated with something that is in data</li>
-<li>Correlated with something not in data</li>
+<li>no test set at all!</li>
+<li>duplicate rows</li>
+<li>pre-processing uses entire data</li>
+<li>model selection uses test set (TBD Week 4)</li>
 </ul>
 <aside class="notes">
-<p>These are often referred to using this standard terminology (which
-can be confusing):</p>
-<ul>
-<li>Missing <em>completely</em> at random: missingness not correlated
-with any feature or the target variable.</li>
-<li>Missing at random: missingness correlated with something that is in
-data.</li>
-<li>Missing not at random: missingness correlated with something that is
-not in data.</li>
-</ul>
+<p>These are <em>bad</em> practices that lead to overly optimistic
+evaluation.</p>
 </aside>
 </section>
-<section id="handling-missing-data" class="slide level3 cell markdown">
-<h3>Handling missing data</h3>
-<p>How should you handle little bits of missing data? It always depends
-on the data and the circumstances. Some possibilities include:</p>
+<section id="avoid-data-leakage-2" class="slide level3">
+<h3>Avoid data leakage (2)</h3>
+<p>Type 2: Inappropriate features</p>
 <ul>
-<li>omit the row</li>
-<li>fill with mean, median, max, mode…</li>
-<li>fill back/forward (ordered rows)</li>
-<li>train a model on the rest of the data to “predict” the missing
-value</li>
+<li>feature not available at inference time</li>
+<li>feature is a proxy for target variable in data, but not in
+deployment</li>
 </ul>
 <aside class="notes">
-<p>You generally have to know why the data is missing, to understand the
-best way to handle it.</p>
-</aside>
-</section></section>
-<section>
-<section id="identify-predictive-features"
-class="title-slide slide level2">
-<h2>Identify predictive features</h2>
-<aside class="notes">
-<p>“Predictive” means “related to the target variable” (any kind of
-relationship!)</p>
-</aside>
-</section>
-<section id="how-do-we-look-for-predictive-features"
-class="slide level3 cell markdown">
-<h3>How do we look for predictive features?</h3>
-<ul>
-<li>Numeric (continuous) features</li>
-<li>Categorical features</li>
-<li>Graphical features</li>
-<li>Text features</li>
-</ul>
-</section></section>
-<section>
-<section id="bad-patterns-and-data-leakage"
-class="title-slide slide level2">
-<h2>“Bad patterns” (and data leakage)</h2>
-<aside class="notes">
-<p>When looking for predictive features, also ask yourself - are there
-patterns in the data that you <em>don’t</em> want your model to
-learn?</p>
+<!--
+
+Which is an easier task:
+
+* "Predict" whether a patient has hypertension, given medical history
+* "Predict" whether a patient has hypertension, given medical history *including current medications, which may list drugs to lower blood pressure* (this is not available before the diagnosis of hypertension!)
+
+This often requires domain knowledge...
+
+ -->
 </aside>
 </section>
-<section id="covid-19-chest-radiography-1" class="slide level3">
-<h3>COVID-19 chest radiography (1)</h3>
+<section id="covid-19-chest-radiography" class="slide level3">
+<h3>COVID-19 chest radiography</h3>
 <ul>
 <li><strong>Problem</strong>: diagnose COVID-19 from chest radiography
 images</li>
@@ -404,35 +302,57 @@ important and what part should not be.) For example: should the
 diaphragm area be helpful?</p>
 </aside>
 </section>
-<section id="data-leakage" class="slide level3">
-<h3>Data leakage</h3>
+<section id="avoid-data-leakage-3" class="slide level3">
+<h3>Avoid data leakage (3)</h3>
+<p>Type 3: “Easier” task than deployment</p>
+<ul>
+<li>temporal leakage</li>
+<li>non-independence of training and test</li>
+<li>sampling bias</li>
+</ul>
 <aside class="notes">
-<p>In machine learning, we train models on a training set of data, then
-evaluate their performance on a set of data that was not used in
-training. “Data leakage” can occur when</p>
-<ul>
-<li>information “leaks” between the held-out test set and the training
-set</li>
-<li>or, information from the target variable (that should not/will not
-be available when making a prediction) leaks into the feature data</li>
-<li>or any scenario where the model may learn a “pattern” that will not
-be present during the “real” task.</li>
-</ul>
-<p>Data leakage: the model uses something (a feature, a pattern in the
-data, actual data points) that will not be available during “real”
-prediction task.</p>
+<!-- 
+Suppose I ask you to predict the temperature at 8AM tomorrow morning. 
+
+Which is an easier task:
+
+* predict the temperature at 8AM tomorrow, given the temperature at 7AM and at 9AM
+* predict the temperature at 8AM tomorrow, given the temperature at 8AM every day in 2023
+
+(this is an example of temporal data leakage.)
+
+Which is an easier task:
+
+* predict the temperature at 8AM tomorrow in Brooklyn, NY, given the temperature for Brooklyn, NY every day in 2023
+* predict the temperature at 8AM tomorrow in Brooklyn, NY, given the temperature in Phoenix, AZ and Seattle, WA every day in 2023
+
+(this is an example of non-independence - the training and test samples are from the same person, same location, etc. but the prediction will be about new people or a new location.)
+
+
+Which is an easier task:
+
+* predict the temperature at 8AM in Brooklyn, NY, for the months of the year with the most consistent temperature
+* predict the temperature at 8AM in Brooklyn, NY, for all months of the year
+
+(this is an example of sampling bias - the most difficult cases e.g. borderline cases are excluded from the data.)
+-->
+<p>(In Week 4, we will learn how to create the held-out test set to
+avoid these types of data leakage.)</p>
+<p>See <a
+href="https://www.cell.com/patterns/pdfExtended/S2666-3899(23)00159-9">Leakage
+and the reproducibility crisis in machinelearning-based science</a>.</p>
 </aside>
-</section>
-<section id="some-types-of-data-leakage" class="slide level3">
-<h3>Some types of data leakage</h3>
-<ul>
-<li>Learning from a feature that is a proxy for target variable, but
-that won’t be available</li>
-<li>Learning from adjacent temporal data</li>
-<li>Learning from duplicate data</li>
-<li>Learning from features that are not available at prediction time
-(e.g. data from the future)</li>
-</ul>
+<!-- 
+
+
+https://www.nature.com/articles/s41559-023-02162-1  Data leakage jeopardizes ecological applications of machine learning
+
+https://www.nature.com/articles/s41467-024-46150-w Data leakage inflates prediction performance in connectome-based machine learning models
+
+https://www.nature.com/articles/s41592-024-02362-y Guiding questions to avoid data leakage in biological machine learning applications
+
+
+-->
 </section>
 <section id="signs-of-potential-data-leakage-after-training"
 class="slide level3">
@@ -452,23 +372,262 @@ shouldn’t help)</li>
 <li>Early testing in production</li>
 </ul>
 </section></section>
-<section id="many-more-data-problems" class="title-slide slide level2">
-<h2>Many more data problems…</h2>
-<aside class="notes">
+<section>
+<section id="cleaning-data-in-no-particular-order"
+class="title-slide slide level2">
+<h2>“Cleaning” data (in no particular order)</h2>
 <ul>
-<li><strong>Data is not representative of your target
-situation</strong>. For example, you are training a model to predict the
-spread of infectious disease for a NYC-based health startup, but you are
-using data from another country.</li>
-<li><strong>Data or situation changes over time</strong>. For example,
-imagine you train a machine learning model to classify loan
-applications. However, if the economy changes, applicants that were
-previously considered credit-worthy might not be anymore despite having
-the same income, as the lender becomes more risk-averse. Similarly, if
-wages increase across the board, the income standard for a loan would
-increase.</li>
+<li>make and check assumptions</li>
+<li>convert to numeric types</li>
+<li>handle missing data</li>
+<li>create “transformed” versions of features as needed</li>
+</ul>
+<aside class="notes">
+<p>During the “cleaning” step, it’s important not to “contaminate” the
+test set - any cleaning that uses statistics of the data (mean, max,
+etc.) must use the statistics of the training set only.</p>
+</aside>
+</section>
+<section id="make-and-check-assumptions" class="slide level3">
+<h3>Make and check assumptions</h3>
+<aside class="notes">
+<p>It’s always a good idea to “sanity check” your data - before you look
+at it, think about what you expect to see. Then check to make sure your
+expectations are realized.</p>
+<p>Look at plots of data, summary statistics, etc. and consider general
+trends.</p>
+</aside>
+</section>
+<section id="example-author-citation-data-1" class="slide level3">
+<h3>Example: author citation data (1)</h3>
+<p>Data analysis: use PubMed, and identify the year of first publication
+for the 100,000 most cited authors.</p>
+<aside class="notes">
+<p>What are our expectations about what this should look like?</p>
+</aside>
+</section>
+<section id="example-author-citation-data-2" class="slide level3">
+<h3>Example: author citation data (2)</h3>
+<figure>
+<img data-src="../images/1-pubmed-authors.png" style="width:50.0%"
+alt="Does this look reasonable?" />
+<figcaption aria-hidden="true">Does this look reasonable?</figcaption>
+</figure>
+<aside class="notes">
+<p>We can think of many potential explanations for this pattern, even
+though it is actually a data artifact.</p>
+<p>The true explanation: in 2002, PubMed started using full first names
+in authors instead of just initials. The same author is represented in
+the dataset as a “new” author with a first date of publication in
+2002.</p>
+</aside>
+</section>
+<section id="example-author-citation-data-3" class="slide level3">
+<h3>Example: author citation data (3)</h3>
+<figure>
+<img data-src="../images/1-pubmed-authors2.png" style="width:50.0%"
+alt="The real distribution, after name unification. Example via Steven Skiena @ Stony Brook U." />
+<figcaption aria-hidden="true">The real distribution, after name
+unification. Example via <a
+href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @ Stony
+Brook U</a>.</figcaption>
+</figure>
+<aside class="notes">
+<p>How <em>should</em> you handle unreasonable values, data that does
+not match expectations, or “outliers”? It depends!</p>
+<ul>
+<li>e.g. suppose in a dataset of voter information, some have impossible
+year of birth - would make the voter over 120 years old. (The reason:
+Voters with no known DOB, who registered before DOB was required, are
+often encoded with a January 1900 DOB.)</li>
+<li><strong>not</strong> a good idea to just remove outliers unless you
+are sure they are a data entry error or otherwise not a “true”
+value.</li>
+<li>Even if an outlier is due to some sort of error, if you remove them,
+you may skew the dataset (as in the 1/1/1900 voters example).</li>
+</ul>
+<p>Consider the possibility of:</p>
+<ul>
+<li>Different units, time zones, etc. in different rows</li>
+<li>Same value represented several different ways (e.g. names,
+dates)</li>
+<li>Missing data encoded as zero</li>
 </ul>
 </aside>
+</section>
+<section id="convert-to-numeric-types" class="slide level3">
+<h3>Convert to numeric types</h3>
+<ul>
+<li>fix “reading in the data” issues</li>
+<li>ordinal and one-hot encoding of categorical data</li>
+<li>image data to raw pixels</li>
+<li>text to “bag of words” or other representation</li>
+<li>audio to frequency domain (or image of frequency domain)
+features</li>
+</ul>
+</section>
+<section id="handle-missing-data" class="slide level3">
+<h3>Handle missing data</h3>
+<p>Missing data can appear as:</p>
+<ul>
+<li>Rows that have <code>NaN</code> values</li>
+<li>Rows that have other values encoding “missing” (-1, 0, 100…)</li>
+<li>Rows that are <em>not there</em> but should be</li>
+</ul>
+<aside class="notes">
+<!-- 
+* Example: NYC taxi tip data, NYS thruway data
+-->
+<p>Some practical examples of “rows that should be there, but are not”
+-</p>
+<!-- 
+* Twitter API terms of use don't allow researchers to share tweets directly, only message IDs (except for limited distribution, e.g. by email). To reproduce the dataset, you use the Twitter API to download messages using their IDs. But, tweets that have been removed are not available - the distribution of removed tweets is not flat! (For example: you might end up with a dataset that has offensive posts but few "obvious" offensive posts.) -->
+<ul>
+<li>A dataset of Tweets following Hurricane Sandy makes it looks like
+Manhattan was the hub of the disaster, because of power blackouts and
+limited cell service in the most affected areas. <a
+href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
+<li>The City of Boston released a smartphone app that uses accelerometer
+and GPS data to detect potholes and report them automatically. But, low
+income and older residents are less likely to have smartphones, so this
+dataset presents a skewed view of where potholes are. <a
+href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
+</ul>
+</aside>
+</section>
+<section id="types-of-missingness" class="slide level3 cell markdown">
+<h3>Types of “missingness”</h3>
+<ul>
+<li>not related to anything of interest</li>
+<li>correlated with observed features</li>
+<li>correlated with measure of interest</li>
+</ul>
+<aside class="notes">
+<p>These are often referred to using this standard terminology (which
+can be confusing):</p>
+<ul>
+<li>Missing <em>completely</em> at random: equal probability of being
+missing for every sample.</li>
+<li>Missing at random: samples with <span class="math inline">\(x =
+X\)</span> (for some feature, value <span
+class="math inline">\(X\)</span>) more likely to be missing.</li>
+<li>Missing not at random: some values of target variable <span
+class="math inline">\(y\)</span>, more likely to be missing.</li>
+</ul>
+<p>For example, suppose we want to survey students about their course
+load and their stress levels. in order to predict stress levels in
+future students and better advise them about course registration -</p>
+<ul>
+<li>MCAR: a pile of survey forms is accidentally thrown out. Losing this
+data doesn’t have any systematic impact, beyond the less of the
+data.</li>
+<li>MAR: last-semester students are less likely to fill out the survey
+than first-semester students, because they don’t feel like they’ll be
+around long enough to benefit from the results. Losing this data means
+that our end result may be biased, or less accurate, for students in
+their last semester.</li>
+<li>MNAR: students who are stressed out are less likely to fill out the
+survey. Losing this data is likely to have a (bad) systematic
+effect.</li>
+</ul>
+</aside>
+</section>
+<section id="handling-missing-data" class="slide level3 cell markdown">
+<h3>Handling missing data</h3>
+<p>How should you handle little bits of missing data? It always depends
+on the data and the circumstances. Some possibilities include:</p>
+<ul>
+<li>omit the row (or column)</li>
+<li>fill back/forward (ordered rows)</li>
+<li>fill with mean, median, max, mode…</li>
+</ul>
+<aside class="notes">
+<p>You generally have to know why the data is missing, to understand the
+best way to handle it. If imputing a value, we want it to be <em>as
+close as possible to the true (unknown) value</em>.</p>
+<p><strong>Important note</strong>: If imputing values using statistics
+of data (e.g. mean), use <em>only</em> training set statistics.</p>
+</aside>
+</section>
+<section id="create-transformed-features" class="slide level3">
+<h3>Create “transformed” features</h3>
+<!-- 
+
+Biological reasoning
+
+Physical reasoning
+
+Social reasoning
+
+Practical reasoning (see HellaSwag)
+
+Object and individual tracking
+
+Non sequiturs
+
+failed gemini prompts:
+
+* generate a photorealistic image of a pencil in a glass of water
+* Two days ago, I found two cute little bunnies in my backyard. Yesterday, I found two dead little bunnies in my backyard and I buried them. What will I find in my backyard tomorrow? Answer in 5 words or less.
+
+
+https://www.technologyreview.com/2020/08/22/1007539/gpt3-openai-language-generator-artificial-intelligence-ai-opinion/
+
+
+
+
+
+
+Mis-labeled examples:
+
+https://www.surgehq.ai/blog/30-percent-of-googles-reddit-emotions-dataset-is-mislabeled
+
+> Yay, cold McDonald's. My favorite. – mislabeled as LOVE
+
+
+
+
+-->
+<!-- 
+### Example: anomalous voting data (1)
+
+![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
+
+::: notes
+
+What are our assumptions about election night data, and how are they violated here? 
+
+We expect that per-candidate vote totals (computed by multiplying total votes and vote share) should increase as more votes are counted, but never decrease.
+
+What are possible explanations?
+
+:::
+
+### Example: anomalous voting data (2)
+
+![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=75% }
+
+::: notes
+
+This anomaly makes a lot of sense as a correction of a data entry or duplicate entry error. 
+
+How Edison/AP collects the data for their Election Night feed:
+
+* There are "stringers" (temporary reporters) at various elections offices who call results into their phone center
+* They have people who look at official government websites for new results that they manually enter into the system
+* They have people who monitor results sent by fax from counties and cities
+
+all working as fast as they can! Data entry and duplicate entry errors are not only likely, they are almost guaranteed. When they are corrected, vote totals may decrease.
+
+Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us/topics/politics/elections/counting-the-vote), [Edison](http://www.edisonresearch.com/wp-content/uploads/2020/10/Web-Entry-Team-Handout-2020.pdf)
+
+:::
+
+-->
+</section></section>
+<section id="recap-working-with-data" class="title-slide slide level2">
+<h2>Recap: Working with data</h2>
+
 </section>
     </div>
   </div>
