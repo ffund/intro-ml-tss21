@@ -37,15 +37,6 @@
   <p class="author">Fraida Fund</p>
 </section>
 
-<section class="slide level3">
-
-<div class="cell markdown">
-<aside class="notes">
-<p><strong>Math prerequisites for this specific lecture</strong>:
-None</p>
-</aside>
-</div>
-</section>
 <section id="in-this-lecture"
 class="title-slide slide level2 cell markdown">
 <h2>In this lecture</h2>
@@ -55,6 +46,10 @@ class="title-slide slide level2 cell markdown">
 <li>Machine learning terminology and framework</li>
 <li>Reality check</li>
 </ul>
+<aside class="notes">
+<p><strong>Math prerequisites for this specific lecture</strong>:
+None</p>
+</aside>
 </section>
 
 <section id="what-is-machine-learning"
@@ -62,17 +57,18 @@ class="title-slide slide level2 cell markdown">
 <h2>What is machine learning?</h2>
 <aside class="notes">
 <ul>
-<li>To answer this question, I’m going to describe some computer systems
-that solve a problem.</li>
+<li>To answer this question, I’m going to describe <strong>four</strong>
+different versions of a computer system that solves a problem.</li>
 <li>You’re going to let me know whether you think I’ve described a
-machine learning solution or not.</li>
+machine learning solution or not. (We’ll review at the end.)</li>
 </ul>
+<p>First, let’s clarify what we mean by “a computer system that solves a
+problem.”</p>
 </aside>
 </section>
 
-<section id="solving-problems-example"
-class="slide level3 cell markdown">
-<h3>Solving problems: example</h3>
+<section id="solving-problems" class="slide level3 cell markdown">
+<h3>Solving problems</h3>
 <aside class="notes">
 <p>Generally speaking, to solve problems using computer systems, we
 program them to</p>
@@ -89,9 +85,9 @@ world.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="solving-problems-example-1"
+<section id="solving-problems-example-premise"
 class="slide level3 cell markdown">
-<h3>Solving problems: example (1)</h3>
+<h3>Solving problems: example premise</h3>
 <p>Suppose we want a system to help students decide whether to enroll in
 this course or not.</p>
 <ul>
@@ -99,9 +95,9 @@ this course or not.</p>
 <li>Actionable info: predicted ML course grade</li>
 </ul>
 </section>
-<section id="solving-problems-example-2"
+<section id="solving-problems-example-formulation"
 class="slide level3 cell markdown">
-<h3>Solving problems: example (2)</h3>
+<h3>Solving problems: example formulation</h3>
 <p>Let</p>
 <ul>
 <li><span class="math inline">\(x_1\)</span> = grade on previous
@@ -123,9 +119,9 @@ grade.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="solving-problems-example-3"
+<section id="solving-problems-example-1"
 class="slide level3 cell markdown">
-<h3>Solving problems: example (3)</h3>
+<h3>Solving problems: example (1)</h3>
 <p>Suppose we predict your grade as</p>
 <p><span class="math display">\[\hat{y} = min(x_1, x_2,
 x_3)\]</span></p>
@@ -140,9 +136,9 @@ minimum grade from prerequisite coursework. This is a
 </figure>
 </aside>
 </section>
-<section id="solving-problems-example-4"
+<section id="solving-problems-example-2"
 class="slide level3 cell markdown">
-<h3>Solving problems: example (4)</h3>
+<h3>Solving problems: example (2)</h3>
 <p>Suppose we predict your grade as</p>
 <p><span class="math display">\[\hat{y} = w_1 x_1 + w_2 x_2 + w_3
 x_3\]</span></p>
@@ -159,9 +155,9 @@ are fixed. This is a <em>rule-based</em> system.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="solving-problems-example-5"
+<section id="solving-problems-example-3"
 class="slide level3 cell markdown">
-<h3>Solving problems: example (5)</h3>
+<h3>Solving problems: example (3)</h3>
 <p>Suppose we predict your grade as the mean of last semester’s
 grades:</p>
 <p><span class="math display">\[\hat{y} = w_0\]</span></p>
@@ -178,9 +174,9 @@ system.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="solving-problems-example-6"
+<section id="solving-problems-example-4"
 class="slide level3 cell markdown">
-<h3>Solving problems: example (6)</h3>
+<h3>Solving problems: example (4)</h3>
 <p>Suppose we predict your grade using this algorithm:</p>
 <p>If <span class="math inline">\(S_y\)</span> is the grades of a set of
 3 students from previous semesters with the profile most similar to
@@ -208,6 +204,10 @@ given input.</li>
 <li>Feed input to the implemented algorithm, which outputs a
 result.</li>
 </ol>
+<aside class="notes">
+<p>Of our four examples, (1) and (2) are rule-based. I used my domain
+knowledge and expertise to establish rules for solving the problem.</p>
+</aside>
 </section>
 <section id="problem-solving-with-machine-learning"
 class="slide level3 cell markdown">
@@ -218,7 +218,10 @@ class="slide level3 cell markdown">
 <li>Use the model on new inputs to produce a result as output.</li>
 </ol>
 <aside class="notes">
-<p>(“Rules” are inferred automatically from data!)</p>
+<p>Of our four examples, (3) and (4) are are data-driven. I still used
+some of my own expertise to establish rules - for example, the structure
+of the solution - but I used <em>data</em> (and not just the current
+input) to produce the output.</p>
 </aside>
 </section>
 <section id="ml-vs.-rule-based-system---comic"
@@ -236,15 +239,6 @@ Molnar’s Interpretable Machine Learning</a></figcaption>
 class="slide level3 cell markdown">
 <h3>Rule-based vs. data driven problem solving</h3>
 <aside class="notes">
-<ul>
-<li>The first two were examples of <em>rule-based</em> problem solving.
-I used my domain knowledge and expertise to establish rules for solving
-the problem.</li>
-<li>The second two were examples of <em>data-driven</em> problem
-solving. I still used some of my own expertise to establish rules - for
-example, the structure of the solution - but I used <em>data</em> (and
-not just data from the current input) to produce the output.</li>
-</ul>
 <p>What are some benefits of predicting course grade using the
 data-driven approach?</p>
 <ul>
@@ -266,79 +260,79 @@ third way to solve problems: apply human expertise every time we need to
 solve the problem. (i.e. no computer program.)</p>
 </aside>
 </section>
+<section id="recognize-handwritten-digits"
+class="slide level3 cell markdown">
+<h3>Recognize handwritten digits</h3>
+<aside class="notes">
+<p>You have/will read notes on a 1964 solution to this problem. Was that
+using ML, or was it rule-driven?</p>
+<p>Would this <em>task</em> in general be a good candidate for ML,
+rule-based program, or human expertise? Why or why not?</p>
+</aside>
+</section>
 <section id="machine-learning-problems"
 class="title-slide slide level2 cell markdown">
 <h2>Machine learning problems</h2>
 <aside class="notes">
 <p>Now that we understand the difference between rule-based problem
-solving and ML-based problem solving, which is data driven, we can think
-about <em>what types of problems</em> are best solved with each approach
-(or by humans!).</p>
+solving and ML-based (data driven) problem solving, we can think about
+<em>what types of problems</em> are best solved with each approach (or
+by humans!).</p>
+<p>Considering <strong>your</strong> recent, current, and near future
+education and career experiences…</p>
 </aside>
 </section>
 
-<section id="recognize-handwritten-digits"
+<!-- 
+::: {.cell .markdown}
+
+### Autonomous driving control (1)
+
+![Autonomous vehicle prototype.](../images/1-self-driving.png){ width=50% }
+
+::: notes
+
+What makes this problem a good/bad candidate for ML? Are there reasons *not* to use ML for this?
+
+* Much too complex to program a rule-based system for autonomous driving.
+* ML may not generalize to "weird" situations as well as a *human* driver would. See e.g. [Autonomous Vehicles vs. Kangaroos: the Long Furry Tail of Unlikely Events](https://spectrum.ieee.org/cars-that-think/transportation/self-driving/autonomous-cars-vs-kangaroos-the-long-furry-tail-of-unlikely-events) in IEEE Spectrum.
+* But, ML will not be tired or otherwise impaired the way a human driver might be.
+* ML may be "tricked" by certain attacks that wouldn't affect *human* drivers. See e.g. [Slight Street Sign Modifications Can Completely Fool Machine Learning Algorithms](https://spectrum.ieee.org/cars-that-think/transportation/sensors/slight-street-sign-modifications-can-fool-machine-learning-algorithms) and [Three Small Stickers in Intersection Can Cause Tesla Autopilot to Swerve Into Wrong Lane
+](https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane) in IEEE Spectrum.
+
+:::
+
+
+:::
+
+
+::: {.cell .markdown}
+
+### Autonomous driving control (2)
+
+![Adversarial attack: "graffiti" stuck on stop sign causes ML to interpret it as a speed limit sign.](../images/1-self-driving-attack.png){ width=40% }
+
+
+:::
+
+-->
+<section id="grading-students-gretoefl-essays"
 class="slide level3 cell markdown">
-<h3>Recognize handwritten digits</h3>
-<figure>
-<img data-src="../images/1-bad-five.svg" style="width:15.0%"
-alt="Example of a handwritten 5 that the 1964 system would struggle with." />
-<figcaption aria-hidden="true">Example of a handwritten 5 that the 1964
-system would struggle with.</figcaption>
-</figure>
+<h3>Grading students’ GRE/TOEFL essays</h3>
 <aside class="notes">
-<p>You have/will read notes on a 1964 solution to this problem. Was that
-using ML, or was it rule-driven? Would this be a good candidate for ML,
-rule-based program, or human expertise? Why or why not?</p>
-<p>Are there any important reasons <em>not</em> to use ML for this?</p>
+<p>When you applied to grad school, many of you took the GRE and/or
+TOEFL and had to write essays as part of these exams. ETS uses an ML
+product called “e-rater” alongside human graders to score these
+essays.</p>
+<p>How do you feel about your GRE/TOEFL essays being graded (partly) by
+ML?</p>
+<p>How would you feel if you disagreed with the score of the ML
+model?</p>
 </aside>
 </section>
-<section id="autonomous-driving-control-1"
+<section id="grading-students-gre-essays-1"
 class="slide level3 cell markdown">
-<h3>Autonomous driving control (1)</h3>
-<figure>
-<img data-src="../images/1-self-driving.png" style="width:50.0%"
-alt="Autonomous vehicle prototype." />
-<figcaption aria-hidden="true">Autonomous vehicle
-prototype.</figcaption>
-</figure>
-<aside class="notes">
-<p>What makes this problem a good/bad candidate for ML? Are there
-reasons <em>not</em> to use ML for this?</p>
-<ul>
-<li>Much too complex to program a rule-based system for autonomous
-driving.</li>
-<li>ML may not generalize to “weird” situations as well as a
-<em>human</em> driver would. See e.g. <a
-href="https://spectrum.ieee.org/cars-that-think/transportation/self-driving/autonomous-cars-vs-kangaroos-the-long-furry-tail-of-unlikely-events">Autonomous
-Vehicles vs. Kangaroos: the Long Furry Tail of Unlikely Events</a> in
-IEEE Spectrum.</li>
-<li>But, ML will not be tired or otherwise impaired the way a human
-driver might be.</li>
-<li>ML may be “tricked” by certain attacks that wouldn’t affect
-<em>human</em> drivers. See e.g. <a
-href="https://spectrum.ieee.org/cars-that-think/transportation/sensors/slight-street-sign-modifications-can-fool-machine-learning-algorithms">Slight
-Street Sign Modifications Can Completely Fool Machine Learning
-Algorithms</a> and <a
-href="https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane">Three
-Small Stickers in Intersection Can Cause Tesla Autopilot to Swerve Into
-Wrong Lane</a> in IEEE Spectrum.</li>
-</ul>
-</aside>
-</section>
-<section id="autonomous-driving-control-2"
-class="slide level3 cell markdown">
-<h3>Autonomous driving control (2)</h3>
-<figure>
-<img data-src="../images/1-self-driving-attack.png" style="width:40.0%"
-alt="Adversarial attack: “graffiti” stuck on stop sign causes ML to interpret it as a speed limit sign." />
-<figcaption aria-hidden="true">Adversarial attack: “graffiti” stuck on
-stop sign causes ML to interpret it as a speed limit sign.</figcaption>
-</figure>
-</section>
-<section id="grading-students-essays-1"
-class="slide level3 cell markdown">
-<h3>Grading students’ essays (1)</h3>
+<h3>Grading students’ GRE essays (1)</h3>
 <figure>
 <img data-src="../images/1-essay-score.png" style="width:70.0%"
 alt="Sample GRE essay generated by the Basic Automatic B.S. Essay Language Generator." />
@@ -347,35 +341,112 @@ href="https://lesperelman.com/writing-assessment-robo-grading/babel-generator/">
 Basic Automatic B.S. Essay Language Generator</a>.</figcaption>
 </figure>
 <aside class="notes">
-<p>Are there reasons not to use ML here?</p>
-<ul>
-<li>ML may not be explainable or auditable.</li>
-<li>ML may perpetuate and/or exacerbate bias in the training data. See
-<a
-href="https://www.vice.com/en/article/pa7dj9/flawed-algorithms-are-grading-millions-of-students-essays">Flawed
-Algorithms Are Grading Millions of Students’ Essays</a> in Mother board
-by Vice. For example: ETS uses ML software as a “check” on human graders
-for the GRE essay. But its system overscores students from mainland
-China (by about 1.3/6 points relative to human scorers) and underscores
-African Americans (by about 0.8/6 points) and other groups.</li>
-</ul>
-<p><strong>Takeaway</strong>: an ML system can sometimes be more biased
-than an equivalent human system.</p>
+<p>The model may learn characteristics that occur most often in good
+essays. When these characteristics occur in bad (meaningless) essays,
+the model thinks they are good essays.</p>
+<p>(We will talk about this more in the Week 1 lesson - machine learning
+models will learn patterns, but not necessarily when they do or do not
+apply.)</p>
 </aside>
 </section>
-<section id="grading-students-essays-2"
+<section id="grading-students-gre-essays-2"
 class="slide level3 cell markdown">
-<h3>Grading students’ essays (2)</h3>
+<h3>Grading students’ GRE essays (2)</h3>
 <figure>
 <img data-src="../images/1-essay-score2.png" style="width:70.0%"
 alt="The essay was scored by ML as a 6/6." />
 <figcaption aria-hidden="true">The essay was scored by ML as a
 6/6.</figcaption>
 </figure>
+<aside class="notes">
+<p>The model may learn patterns that create or exacerbate bias.</p>
+<p>For example: ETS uses ML software as a “check” on human graders for
+the GRE essay. But its system overscores students from mainland China
+(by about 1.3/6 points relative to human scorers) and underscores
+African Americans (by about 0.8/6 points) and other groups.</p>
+<p>Also: See <a
+href="https://www.vice.com/en/article/pa7dj9/flawed-algorithms-are-grading-millions-of-students-essays">Flawed
+Algorithms Are Grading Millions of Students’ Essays</a> in Mother board
+by Vice.</p>
+<p>Are there reasons not to use ML here?</p>
+<ul>
+<li><strong>Takeaway</strong>: ML model may not recognize some
+characteristics of good essays that would be evident to human readers,
+and the ML model’s score may not be explainable or auditable.</li>
+<li><strong>Takeaway</strong>: ML model may be easily “tricked” into
+giving a bad essay a good score.</li>
+<li><strong>Takeaway</strong>: ML model may perpetuate and/or exacerbate
+bias in the training data.</li>
+</ul>
+</aside>
 </section>
-<section id="score-candidates-performance-in-a-job-interview-1"
+<section id="grading-students-annotated-readings-in-perusall"
 class="slide level3 cell markdown">
-<h3>Score candidate’s performance in a job interview (1)</h3>
+<h3>Grading students’ annotated readings in Perusall</h3>
+<p>Perusall uses machine learning to automatically rate comment quality
+(high, medium, low).</p>
+<aside class="notes">
+<p>If you tried it -</p>
+<ul>
+<li>were you able to get it to give a high score to a bad or irrelevant
+comment?</li>
+<li>did you find it frustrating that you didn’t know what you needed to
+do in order to get a good score?</li>
+</ul>
+</aside>
+</section>
+<section id="grading-students-annotated-readings-in-perusall-1"
+class="slide level3 cell markdown">
+<h3>Grading students’ annotated readings in Perusall (1)</h3>
+<figure>
+<img data-src="../images/perusall.png" style="width:90.0%"
+alt="Many students struggle with Perusall grading." />
+<figcaption aria-hidden="true">Many students struggle with Perusall
+grading.</figcaption>
+</figure>
+<aside class="notes">
+<ul>
+<li><strong>Takeaway</strong>: The ML model does not explain its score
+to students, frustrating them when their own idea of a “good annotation”
+does not align with the model’s.</li>
+<li><strong>Takeaway</strong>: (especially if the model <em>would</em>
+explain its score) the model could be easily “tricked” so that students
+can earn a good score without actually learning.</li>
+</ul>
+</aside>
+</section>
+<section id="detecting-use-of-ai-in-students-writing"
+class="slide level3 cell markdown">
+<h3>Detecting use of AI in student’s writing</h3>
+<aside class="notes">
+<p>Try one, e.g. https://quillbot.com/ai-content-detector</p>
+<ul>
+<li><strong>Takeaway</strong>: The model may not be able to explain its
+score.</li>
+<li><strong>Takeaway</strong>: Professors using this tool may not
+realize that the model can make mistakes. The impact of mistakes
+(especially, falsely predicting that a text is AI-generated when it is
+human-written) is very serious.</li>
+</ul>
+</aside>
+</section>
+<section id="writing-a-course-review"
+class="slide level3 cell markdown">
+<h3>Writing a course review</h3>
+<figure>
+<img data-src="../images/1-intro-ml-review.png" style="width:65.0%"
+alt="Would this help you decide what course to take?" />
+<figcaption aria-hidden="true">Would this help you decide what course to
+take?</figcaption>
+</figure>
+<aside class="notes">
+<p><strong>Takeaway</strong>: Sometimes, you really want an authentic
+human voice.</p>
+</aside>
+</section>
+<section id="score-candidates-performance-in-a-job-interview"
+class="slide level3 cell markdown">
+<h3>Score candidate’s performance in a job interview</h3>
 <ul>
 <li>Use video recording as input to ML system</li>
 <li>Train using videos of past interviews + human assessment on key
@@ -386,9 +457,9 @@ personality features</li>
 predictor of how you will perform the job?</p>
 </aside>
 </section>
-<section id="score-candidates-performance-in-a-job-interview-2"
+<section id="score-candidates-performance-in-a-job-interview-1"
 class="slide level3 cell markdown">
-<h3>Score candidate’s performance in a job interview (2)</h3>
+<h3>Score candidate’s performance in a job interview (1)</h3>
 <figure>
 <img data-src="../images/1-intro-job-interview.jpeg" style="width:60.0%"
 alt="ML job interview scoring by ML. Source: Bayerischer Rundfunk (German Public Broadcasting)" />
@@ -410,46 +481,32 @@ href="https://web.br.de/interaktiv/ki-bewerbung/en/">Bayerischer
 Rundfunk (German Public Broadcasting)</a>.</li>
 </ul>
 <p><strong>Takeaway</strong>: an ML system will “find” meaningless
-patterns, if you let it.</p>
+patterns, if we let it. In this case, the thing we asked the model to
+predict is not observable or measurable, and is probably unrelated to
+the data we give it. Its scores are not auditable or explainable, and it
+may introduce or exacerbate bias.</p>
 </aside>
 </section>
-<section id="determine-severity-of-injury-from-knee-x-ray"
-class="slide level3 cell markdown">
-<h3>Determine severity of injury from knee X-ray</h3>
-<figure>
-<img data-src="../images/1-knee-xray.jpeg" style="width:35.0%"
-alt="Example of a knee X-ray. Source" />
-<figcaption aria-hidden="true">Example of a knee X-ray. <a
-href="https://www.nature.com/articles/s41591-020-01192-7">Source</a></figcaption>
-</figure>
-<aside class="notes">
-<ul>
-<li>Among patients with a similar X-ray “score” (from expert), Black
-patients tend to have more pain.</li>
-<li>What if radiologists may miss some sources of pain? (Medical science
-often comes from very limited study populations.)</li>
-<li>This algorithm was trained to predict patient pain, rather than
-radiologist’s score.</li>
-<li>Reduced “pain disparity” by 43% (does a better job than radiologists
-of finding things that “hurt”, especially in Black knees!)</li>
-</ul>
-<p><strong>Takeaway</strong>: an ML system can sometimes be
-<em>less</em> biased than an equivalent human system.</p>
-</aside>
-</section>
-<section id="write-a-course-review" class="slide level3 cell markdown">
-<h3>Write a course review</h3>
-<figure>
-<img data-src="../images/1-intro-ml-review.png" style="width:65.0%"
-alt="Would this help you decide what course to take?" />
-<figcaption aria-hidden="true">Would this help you decide what course to
-take?</figcaption>
-</figure>
-<aside class="notes">
-<p><strong>Takeaway</strong>: ML systems are not useful when you want an
-authentic human voice.</p>
-</aside>
-</section>
+<!--
+::: {.cell .markdown}
+
+### Determine severity of injury from knee X-ray 
+
+![Example of a knee X-ray. [Source](https://www.nature.com/articles/s41591-020-01192-7)](../images/1-knee-xray.jpeg){ width=35% }
+
+::: notes
+
+* Among patients with a similar X-ray "score" (from expert), Black patients tend to have more pain.
+* What if radiologists may miss some sources of pain? (Medical science often comes from very limited study populations.)
+* This algorithm was trained to predict patient pain, rather than radiologist's score.
+* Reduced "pain disparity" by 43% (does  a better job than radiologists of finding things that "hurt", especially in Black knees!)
+
+**Takeaway**: an ML system can sometimes be *less* biased than an equivalent human system.
+
+:::
+
+:::
+ -->
 <!--
 
 
@@ -472,11 +529,12 @@ class="slide level3 cell markdown">
 <ul>
 <li>There is an accurate and simple algorithm that will produce the
 desired output.</li>
-<li>There is no “good” data available to train the model.</li>
-<li>The model can be “tricked”, with potentially severe
-consequences.</li>
+<li>The model can be “tricked”.</li>
+<li>The model may introduce or exacerbate bias.</li>
 <li>Need to audit or explain the output.</li>
+<li>An incorrect result has very serious consequences.</li>
 <li>Expects human empathy, creativity, insight.</li>
+<li>There is no “good” data available to train the model.</li>
 </ul>
 </section>
 <section id="problems-that-are-often-good-candidates-for-ml"
@@ -491,6 +549,11 @@ expensive.</li>
 <li>We will get more data during operation + can improve with
 experience.</li>
 </ul>
+<aside class="notes">
+<p>Now that we have an idea of what is/is not machine learning, and when
+it might be appropriate to use machine learning, we will introduce a
+basic framework for an ML model.</p>
+</aside>
 </section>
 <!-- 
 ::: {.cell .markdown}
@@ -511,9 +574,9 @@ class="title-slide slide level2 cell markdown">
 
 </section>
 
-<section id="goal-of-a-machine-learning-system"
+<section id="goal-of-a-supervised-learning-system"
 class="slide level3 cell markdown">
-<h3>Goal of a machine learning system</h3>
+<h3>Goal of a supervised learning system</h3>
 <p>Seeks to estimate a “true” value <span
 class="math inline">\(y\)</span> (known as the target variable) for some
 input <span class="math inline">\(x\)</span>.</p>
@@ -550,6 +613,31 @@ predictions.</p>
 alt="Supervised learning." />
 <figcaption aria-hidden="true">Supervised learning.</figcaption>
 </figure>
+<p>For example, try the <a
+href="https://sketch.metademolab.com/canvas">Animated Drawings</a>
+demo:</p>
+<ul>
+<li>“Find the character” step: The character <em>localization</em> task
+is a regression problem: the model output is the center of the character
+(<span class="math inline">\(x\)</span> and <span
+class="math inline">\(y\)</span> coordinate) and the height and width of
+the <em>bounding box</em>.</li>
+<li>“Highlight the character” step: This <em>image segmentation</em>
+task is a classification problem: for each pixel in the image, the model
+will indicate whether it belongs to the “background” class or
+“foreground character” class.</li>
+<li>“Mark the character’s joints” step: the <em>pose estimation</em>
+task is also a regression problem: the model output is an <span
+class="math inline">\(x, y\)</span> coordinate for each joint.</li>
+</ul>
+<p>For more details on this demo, see
+https://github.com/facebookresearch/AnimatedDrawings and:</p>
+<blockquote>
+<p>Harrison Jesse Smith, Qingyuan Zheng, Yifei Li, Somya Jain, and
+Jessica K. Hodgins. 2023. A Method for Animating Children’s Drawings of
+the Human Figure. ACM Trans. Graph. 42, 3, Article 32 (June 2023), 15
+pages. https://doi.org/10.1145/3592788</p>
+</blockquote>
 </aside>
 </section>
 <section id="machine-learning-paradigms-2"
@@ -612,9 +700,9 @@ i=1,2,\cdots,N\)</span>.</p>
 class="slide level3 cell markdown">
 <h3>A supervised machine learning “recipe” (2)</h3>
 <ul>
-<li><p><em>Step 2</em>: Choose a candidate <strong>model</strong> <span
-class="math inline">\(f\)</span>: <span class="math inline">\(\hat{y} =
-f(x)\)</span>.</p></li>
+<li><p><em>Step 2</em>: Choose a candidate <strong>model</strong> class
+<span class="math inline">\(f\)</span>: <span
+class="math inline">\(\hat{y} = f(x)\)</span>.</p></li>
 <li><p><em>Step 3</em>: Select a <strong>loss function</strong> that
 will measure how good the prediction is.</p></li>
 <li><p><em>Step 4</em>: Find the model <strong>parameter</strong>
@@ -657,10 +745,10 @@ class="slide level3 cell markdown">
 <h3>For each type of model in this course…</h3>
 <p>Fill in “recipe” details, then ask:</p>
 <ul>
-<li>What type of relationships <span class="math inline">\(f(x)\)</span>
-can it represent?</li>
+<li>What type of relationships can <span
+class="math inline">\(f(x)\)</span> represent?</li>
 <li>How do we train the model efficiently?</li>
-<li>What can we learn about the problem from the trained model?</li>
+<li>What insight can we get from the trained model?</li>
 <li>How do we control the generalization error?</li>
 </ul>
 </section>
@@ -670,51 +758,56 @@ class="title-slide slide level2 cell markdown">
 
 </section>
 
-<section id="ml-finds-patterns" class="slide level3 cell markdown">
-<h3>ML finds patterns</h3>
-</section>
-<section id="image-captioning-1" class="slide level3 cell markdown">
-<h3>Image captioning (1)</h3>
-<figure>
-<img data-src="../images/1-hillside-sheep.jpg" style="width:55.0%"
-alt="ML model sees imaginary sheep on this grassy hillside. Source: Janelle Shane" />
-<figcaption aria-hidden="true">ML model sees imaginary sheep on this
-grassy hillside. Source: <a
-href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle
-Shane</a></figcaption>
-</figure>
-</section>
-<section id="image-captioning-2" class="slide level3 cell markdown">
-<h3>Image captioning (2)</h3>
-<figure>
-<img data-src="../images/1-goats-arms.jpg" style="width:45.0%"
-alt="Goats in arms are assumed to be dogs. Source: Janelle Shane" />
-<figcaption aria-hidden="true">Goats in arms are assumed to be dogs.
-Source: <a
-href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle
-Shane</a></figcaption>
-</figure>
-</section>
-<section id="image-captioning-3" class="slide level3 cell markdown">
-<h3>Image captioning (3)</h3>
-<figure>
-<img data-src="../images/1-goats-trees.jpg" style="width:55.0%"
-alt="Goats in trees are assumed to be birds. Source: Janelle Shane" />
-<figcaption aria-hidden="true">Goats in trees are assumed to be birds.
-Source: <a
-href="https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/">Janelle
-Shane</a></figcaption>
-</figure>
-</section>
-<section id="chatgpt" class="slide level3 cell markdown">
-<h3>ChatGPT</h3>
-<figure>
-<img data-src="../images/1-chatgpt-pregnant.jpeg" style="width:45.0%"
-alt="ChatGPT does not understand pregnancy. Source." />
-<figcaption aria-hidden="true">ChatGPT does not understand pregnancy. <a
-href="https://twitter.com/sergioontiveros/status/1599590647367110656">Source</a>.</figcaption>
-</figure>
-</section>
+<!-- 
+
+::: {.cell .markdown}
+
+### ML finds patterns
+
+
+:::
+
+
+::: {.cell .markdown}
+
+### Image captioning (1)
+
+
+![ML model sees imaginary sheep on this grassy hillside. Source:  [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-hillside-sheep.jpg){ width=55% }
+
+
+:::
+
+::: {.cell .markdown}
+
+### Image captioning (2)
+
+![Goats in arms are assumed to be dogs. Source:  [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-goats-arms.jpg){ width=45% }
+
+
+:::
+
+
+
+
+::: {.cell .markdown}
+
+### Image captioning (3)
+
+![Goats in trees are assumed to be birds. Source: [Janelle Shane](https://www.aiweirdness.com/do-neural-nets-dream-of-electric-18-03-02/)](../images/1-goats-trees.jpg){ width=55% }
+
+
+:::
+
+
+::: {.cell .markdown}
+
+### ChatGPT 
+
+![ChatGPT does not understand pregnancy. [Source](https://twitter.com/sergioontiveros/status/1599590647367110656).](../images/1-chatgpt-pregnant.jpeg){ width=45% }
+
+:::
+
 <!-- 
 ::: {.cell .markdown}
 
@@ -726,13 +819,10 @@ href="https://twitter.com/sergioontiveros/status/1599590647367110656">Source</a>
 :::
 
 -->
-<section id="ml-as-leaky-pipeline" class="slide level3 cell markdown">
-<h3>ML as leaky pipeline</h3>
-</section>
 <section id="ml-as-a-leaky-pipeline" class="slide level3 cell markdown">
 <h3>ML as a “leaky pipeline”</h3>
 <figure>
-<img data-src="../images/1-wot-leaky-pipelines.png" style="width:70.0%"
+<img data-src="../images/1-wot-leaky-pipelines.png" style="width:65.0%"
 alt="Source: Boaz Barak" />
 <figcaption aria-hidden="true">Source: <a
 href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
@@ -767,7 +857,20 @@ class="math inline">\(f\)</span> depends on the algorithm.</p>
 <p>Quotes from: <a
 href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
 Barak</a></p>
+<p>When training ML models, it is much too easy to look at the metrics
+reported in the last box, and think we have been succesful at solving
+the first box… but in fact, they are a long way apart.</p>
 </aside>
+</section>
+<section id="ml-training-vs-reality" class="slide level3 cell markdown">
+<h3>ML training vs reality</h3>
+<figure>
+<img data-src="../images/1-ml-shark.jpg" style="width:55.0%"
+alt="Kiddie pool vs shark ocean. Via Boaz Barak" />
+<figcaption aria-hidden="true">Kiddie pool vs shark ocean. Via <a
+href="https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/">Boaz
+Barak</a></figcaption>
+</figure>
 </section>
 <section id="example-grad-school-admissions"
 class="slide level3 cell markdown">
@@ -829,33 +932,25 @@ signals that the training data and “real” data are too dissimilar.)</li>
 </ol>
 </aside>
 </section>
-<section id="ml-training-vs-reality" class="slide level3 cell markdown">
-<h3>ML training vs reality</h3>
-<figure>
-<img data-src="../images/1-ml-shark.jpg" style="width:75.0%"
-alt="Kiddie pool vs shark ocean. Via Boaz Barak" />
-<figcaption aria-hidden="true">Kiddie pool vs shark ocean. Via <a
-href="https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/">Boaz
-Barak</a></figcaption>
-</figure>
-</section>
-<section id="limitations-recap"
-class="title-slide slide level2 cell markdown">
-<h2>Limitations (recap)</h2>
-<aside class="notes">
-<p>We described limitations -</p>
-<ul>
-<li>ML is just “pattern finding”. Sometimes it finds patterns that we
-want it to find, sometimes it finds patterns that work most of the time,
-sometimes it finds patterns that are not at all what we wanted it to
-learn.</li>
-<li>ML system is part of a “leaky pipeline”, where all along the path
-there are disconnects between what we want and what we can realize.</li>
-</ul>
-<p>Now we’ll look more closely at the <em>data</em>, which is key in
-either case.</p>
-</aside>
-</section>
+<!-- 
+::: {.cell .markdown}
+
+## Limitations (recap)
+
+
+::: notes
+
+We described limitations - 
+
+* ML is just "pattern finding". Sometimes it finds patterns that we want it to find, sometimes it finds patterns that work most of the time, sometimes it finds patterns that are not at all what we wanted it to learn.
+* ML system is part of a "leaky pipeline", where all along the path there are disconnects between what we want and what we can realize.
+
+
+Now we'll look more closely at the *data*, which is key in either case.
+:::
+
+:::
+-->
     </div>
   </div>
 

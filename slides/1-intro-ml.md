@@ -6,24 +6,18 @@ author: 'Fraida Fund'
 
 ::: {.cell .markdown}
 
-:::notes
-
-**Math prerequisites for this specific lecture**: None
-
-:::
-
-
-:::
-
-
-::: {.cell .markdown}
-
 ## In this lecture
 
 * What is machine learning?
 * Problems where machine learning can help
 * Machine learning terminology and framework
 * Reality check
+
+:::notes
+
+**Math prerequisites for this specific lecture**: None
+
+:::
 
 :::
 
@@ -34,8 +28,10 @@ author: 'Fraida Fund'
 
 ::: notes
 
-* To answer this question, I'm going to describe some computer systems that solve a problem. 
-* You're going to let me know whether you think I've described a machine learning solution or not.
+* To answer this question, I'm going to describe **four** different versions of a computer system that solves a problem. 
+* You're going to let me know whether you think I've described a machine learning solution or not. (We'll review at the end.)
+
+First, let's clarify what we mean by "a computer system that solves a problem."
 
 :::
 
@@ -43,9 +39,10 @@ author: 'Fraida Fund'
 
 \newpage
 
+
 ::: {.cell .markdown}
 
-### Solving problems: example
+### Solving problems
 
 ::: notes
 
@@ -64,7 +61,7 @@ Generally speaking, to solve problems using computer systems, we program them to
 ::: {.cell .markdown}
 
 
-### Solving problems: example (1) 
+### Solving problems: example premise
 
 
 
@@ -78,7 +75,7 @@ Suppose we want a system to help students decide whether to enroll in this cours
 
 ::: {.cell .markdown}
 
-### Solving problems: example (2)
+### Solving problems: example formulation
 
 
 Let
@@ -105,7 +102,7 @@ The "hat" indicates that this is an *estimated* value.
 
 ::: {.cell .markdown}
 
-### Solving problems: example (3)
+### Solving problems: example (1)
 
 
 Suppose we predict your grade as 
@@ -126,7 +123,7 @@ Is this ML?
 
 ::: {.cell .markdown}
 
-### Solving problems: example (4)
+### Solving problems: example (2)
 
 Suppose we predict your grade as 
 
@@ -151,7 +148,7 @@ Is this ML?
 
 ::: {.cell .markdown}
 
-### Solving problems: example (5)
+### Solving problems: example (3)
 
 Suppose we predict your grade as the mean of last semester's grades:
 
@@ -173,7 +170,7 @@ Is this ML?
 
 ::: {.cell .markdown}
 
-### Solving problems: example (6)
+### Solving problems: example (4)
 
 Suppose we predict your grade using this algorithm:
 
@@ -201,6 +198,12 @@ Is this ML?
 2. Implement the algorithm.
 3. Feed input to the implemented algorithm, which outputs a result.
 
+::: notes
+
+Of our four examples, (1) and (2) are rule-based. I used my domain knowledge and expertise to establish rules for solving the problem.
+
+:::
+
 :::
 
 
@@ -215,7 +218,8 @@ Is this ML?
 
 ::: notes
 
-("Rules" are inferred automatically from data!)
+Of our four examples, (3) and (4) are are data-driven.  I still used some of my own expertise to establish rules - for example, the structure of the solution - but I used *data* (and not just the current input) to produce the output.
+
 
 :::
 
@@ -236,9 +240,6 @@ Is this ML?
 
 ::: notes
 
-* The first two were examples of *rule-based* problem solving. I used my domain knowledge and expertise to establish rules for solving the problem.
-* The second two were examples of *data-driven* problem solving. I still used some of my own expertise to establish rules - for example, the structure of the solution - but I used *data* (and not just data from the current input) to produce the output.
-
 What are some benefits of predicting course grade using the data-driven approach?
 
 * if the "rules" are complicated, may be difficult/error-prone to encode them as a computer program.
@@ -256,36 +257,39 @@ Besides for rule-based and data driven problem solving, there is a third way to 
 
 ::: {.cell .markdown}
 
+### Recognize handwritten digits 
+
+
+::: notes
+
+You have/will read notes on a 1964 solution to this problem. Was that using ML, or was it rule-driven? 
+
+Would this *task* in general be a good candidate for ML, rule-based program, or human expertise? Why or why not?
+
+
+:::
+
+:::
+
+
+::: {.cell .markdown}
+
 
 ## Machine learning problems
 
 
 ::: notes
 
-Now that we understand the difference between rule-based problem solving and ML-based problem solving, which is data driven, we can think about *what types of problems* are best solved with each approach (or by humans!).
+Now that we understand the difference between rule-based problem solving and ML-based (data driven) problem solving, we can think about *what types of problems* are best solved with each approach (or by humans!).
 
-:::
-
-:::
-
-::: {.cell .markdown}
-
-### Recognize handwritten digits 
-
-
-![Example of a handwritten 5 that the 1964 system would struggle with.](../images/1-bad-five.svg){ width=15% }
-
-::: notes
-
-You have/will read notes on a 1964 solution to this problem. Was that using ML, or was it rule-driven? Would this be a good candidate for ML, rule-based program, or human expertise? Why or why not?
-
-Are there any important reasons *not* to use ML for this?
+Considering **your** recent, current, and near future education and career experiences...
 
 :::
 
 :::
 
 
+<!-- 
 ::: {.cell .markdown}
 
 ### Autonomous driving control (1)
@@ -318,42 +322,146 @@ What makes this problem a good/bad candidate for ML? Are there reasons *not* to 
 
 :::
 
+-->
 
 ::: {.cell .markdown}
 
-### Grading students' essays (1)
+### Grading students' GRE/TOEFL essays 
+
+::: notes
+
+When you applied to grad school, many of you took the GRE and/or TOEFL and had to write essays as part of these exams. ETS uses an ML product called "e-rater" alongside human graders to score these essays. 
+
+How do you feel about your GRE/TOEFL essays being graded (partly) by ML?
+
+How would you feel if you disagreed with the score of the ML model?
+
+:::
+
+:::
+
+
+::: {.cell .markdown}
+
+### Grading students' GRE essays (1)
 
 ![Sample GRE essay generated by [the Basic Automatic B.S. Essay Language Generator](https://lesperelman.com/writing-assessment-robo-grading/babel-generator/).](../images/1-essay-score.png){width=70%}
 
 ::: notes
 
-Are there reasons not to use ML here?
+The model may learn characteristics that occur most often in good essays. When these characteristics occur in bad (meaningless) essays, the model thinks they are good essays. 
 
-* ML may not be explainable or auditable.
-* ML may perpetuate and/or exacerbate bias in the training data. See [Flawed Algorithms Are Grading Millions of Students’ Essays](https://www.vice.com/en/article/pa7dj9/flawed-algorithms-are-grading-millions-of-students-essays) in Mother board by Vice. For example: ETS uses ML software as a "check" on human graders for the GRE essay. But its system overscores students from mainland China (by about 1.3/6 points relative to human scorers) and underscores African Americans (by about 0.8/6 points) and other groups.
+(We will talk about this more in the Week 1 lesson - machine learning models will learn patterns, but not necessarily when they do or do not apply.)
+
+:::
 
 
-**Takeaway**: an ML system can sometimes be more biased than an equivalent human system.
 
 :::
 
 \newpage
 
-:::
-
 ::: {.cell .markdown}
 
-### Grading students' essays (2)
+### Grading students' GRE essays (2)
 
 ![The essay was scored by ML as a 6/6.](../images/1-essay-score2.png){width=70%}
 
+::: notes
+
+The model may learn patterns that create or exacerbate bias.
+
+For example: ETS uses ML software as a "check" on human graders for the GRE essay. But its system overscores students from mainland China (by about 1.3/6 points relative to human scorers) and underscores African Americans (by about 0.8/6 points) and other groups.
+
+Also: See [Flawed Algorithms Are Grading Millions of Students’ Essays](https://www.vice.com/en/article/pa7dj9/flawed-algorithms-are-grading-millions-of-students-essays) in Mother board by Vice. 
+
+Are there reasons not to use ML here?
+
+* **Takeaway**: ML model may not recognize some characteristics of good essays that would be evident to human readers, and the ML model's score may not be explainable or auditable.
+* **Takeaway**: ML model may be easily "tricked" into giving a bad essay a good score.
+* **Takeaway**: ML model may perpetuate and/or exacerbate bias in the training data. 
+
+:::
+
 
 :::
 
 
 ::: {.cell .markdown}
 
-### Score candidate's performance in a job interview (1)
+### Grading students' annotated readings in Perusall
+
+Perusall uses machine learning to automatically rate comment quality (high, medium, low). 
+
+::: notes
+
+If you tried it - 
+
+* were you able to get it to give a high score to a bad or irrelevant comment?
+* did you find it frustrating that you didn't know what you needed to do in order to get a good score?
+
+:::
+
+:::
+
+\newpage
+
+::: {.cell .markdown}
+
+### Grading students' annotated readings in Perusall (1)
+
+![Many students struggle with Perusall grading.](../images/perusall.png){width=90%}
+
+
+:::notes
+
+
+* **Takeaway**: The ML model does not explain its score to students, frustrating them when their own idea of a "good annotation" does not align with the model's. 
+* **Takeaway**: (especially if the model *would* explain its score) the model could be easily "tricked" so that students can earn a good score without actually learning.
+
+:::
+
+:::
+
+\newpage
+
+::: {.cell .markdown}
+
+### Detecting use of AI in student's writing
+
+::: notes
+
+Try one, e.g. https://quillbot.com/ai-content-detector
+
+* **Takeaway**: The model may not be able to explain its score. 
+* **Takeaway**: Professors using this tool may not realize that the model can make mistakes. The impact of mistakes (especially, falsely predicting that a text is AI-generated when it is human-written) is very serious.
+
+
+:::
+
+:::
+
+
+
+::: {.cell .markdown}
+
+### Writing a course review
+
+![Would this help you decide what course to take?](../images/1-intro-ml-review.png){ width=65% }
+
+::: notes
+
+**Takeaway**: Sometimes, you really want an authentic human voice.
+
+:::
+
+:::
+
+
+
+::: {.cell .markdown}
+
+### Score candidate's performance in a job interview 
 
 * Use video recording as input to ML system
 * Train using videos of past interviews + human assessment on key personality features
@@ -366,10 +474,11 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 :::
 
+\newpage
 
 ::: {.cell .markdown}
 
-### Score candidate's performance in a job interview (2)
+### Score candidate's performance in a job interview (1)
 
 ![ML job interview scoring by ML. Source: [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/)](../images/1-intro-job-interview.jpeg){ width=60% }
 
@@ -379,14 +488,13 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 * The company that makes the scoring system said: "Just like in a normal job interview, these factors are taken into account for the assessment. However, that does not happen on demand. There’s no pressure, that can appear in talking to real people." Is this a satisfactory answer?
 * See the report by [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/).
 
-**Takeaway**: an ML system will "find" meaningless patterns, if you let it.
+**Takeaway**: an ML system will "find" meaningless patterns, if we let it. In this case, the thing we asked the model to predict is not observable or measurable, and is probably unrelated to the data we give it. Its scores are not auditable or explainable, and it may introduce or exacerbate bias.
 
 :::
 
 :::
 
-\newpage
-
+<!--
 ::: {.cell .markdown}
 
 ### Determine severity of injury from knee X-ray 
@@ -405,21 +513,7 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 :::
 
 :::
-
-
-::: {.cell .markdown}
-
-### Write a course review
-
-![Would this help you decide what course to take?](../images/1-intro-ml-review.png){ width=65% }
-
-::: notes
-
-**Takeaway**: ML systems are not useful when you want an authentic human voice.
-
-:::
-
-:::
+ -->
 
 
 
@@ -451,10 +545,12 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 ### Problems that may not be well suited to ML
 
 * There is an accurate and simple algorithm that will produce the desired output.
-* There is no "good" data available to train the model.
-* The model can be "tricked", with potentially severe consequences.
+* The model can be "tricked".
+* The model may introduce or exacerbate bias.
 * Need to audit or explain the output.
+* An incorrect result has very serious consequences.
 * Expects human empathy, creativity, insight.
+* There is no "good" data available to train the model.
 
 :::
 
@@ -468,6 +564,14 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 * Human expertise does not exist, is insufficient, or is expensive.
 * Humans cannot easily explain their expertise.
 * We will get more data during operation + can improve with experience.
+
+
+::: notes
+
+Now that we have an idea of what is/is not machine learning, and when it might be appropriate to use machine learning, we will introduce a basic framework for an ML model.
+
+:::
+
 
 :::
 
@@ -500,7 +604,7 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 
 ::: {.cell .markdown}
 
-### Goal of a machine learning system
+### Goal of a supervised learning system
 
 
 Seeks to estimate a "true" value $y$ (known as the target variable) for some input $x$.
@@ -535,11 +639,22 @@ In this case, we may need to use a *proxy* variable that *is* measurable and ava
 
 ![Supervised learning.](../images/1-basics-supervised.png){ width=55% }
 
-:::
-
-:::
-
 \newpage
+
+For example, try the [Animated Drawings](https://sketch.metademolab.com/canvas) demo:
+
+* "Find the character" step: The character *localization* task is a regression problem: the model output is the center of the character ($x$ and $y$ coordinate) and the height and width of the *bounding box*.
+* "Highlight the character" step: This *image segmentation* task is a classification problem: for each pixel in the image, the model will indicate whether it belongs to the "background" class or "foreground character" class.
+* "Mark the character's joints" step: the *pose estimation* task is also a regression problem: the model output is an $x, y$ coordinate for each joint.
+
+For more details on this demo, see https://github.com/facebookresearch/AnimatedDrawings and:
+
+> Harrison Jesse Smith, Qingyuan Zheng, Yifei Li, Somya Jain, and Jessica K. Hodgins. 2023. A Method for Animating Children’s Drawings of the Human Figure. ACM Trans. Graph. 42, 3, Article 32 (June 2023), 15 pages. https://doi.org/10.1145/3592788
+
+:::
+
+:::
+
 
 ::: {.cell .markdown}
 
@@ -603,7 +718,7 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 ### A supervised machine learning "recipe" (2)
 
-* *Step 2*: Choose a candidate **model** $f$: $\hat{y} = f(x)$.
+* *Step 2*: Choose a candidate **model** class $f$: $\hat{y} = f(x)$.
 
 * *Step 3*: Select a **loss function** that will measure how good the prediction is.
 
@@ -650,9 +765,9 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x_i}, y_i), i=1
 
 Fill in "recipe" details, then ask:
 
-* What type of relationships $f(x)$ can it represent?
+* What type of relationships can $f(x)$ represent?
 * How do we train the model efficiently?
-* What can we learn about the problem from the trained model?
+* What insight can we get from the trained model?
 * How do we control the generalization error?
 
 :::
@@ -668,6 +783,7 @@ Fill in "recipe" details, then ask:
 
 :::
 
+<!-- 
 
 ::: {.cell .markdown}
 
@@ -730,20 +846,12 @@ Fill in "recipe" details, then ask:
 
 -->
 
-\newpage
-
-::: {.cell .markdown}
-
-### ML as leaky pipeline
-
-
-:::
 
 ::: {.cell .markdown}
 
 ### ML as a "leaky pipeline"
 
-![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)](../images/1-wot-leaky-pipelines.png){ width=70% }
+![Source: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)](../images/1-wot-leaky-pipelines.png){ width=65% }
 
 ::: notes
 
@@ -757,10 +865,23 @@ Fill in "recipe" details, then ask:
 
 Quotes from: [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)
 
-:::
+When training ML models, it is much too easy to look at the metrics reported in the last box, and think we have been succesful at solving the first box... but in fact, they are a long way apart.
 
 :::
 
+:::
+
+
+
+::: {.cell .markdown}
+
+### ML training vs reality
+
+![Kiddie pool vs shark ocean. Via [Boaz Barak](https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/)](../images/1-ml-shark.jpg
+){ width=55% }
+
+
+:::
 
 ::: {.cell .markdown}
 
@@ -794,17 +915,8 @@ Our ultimate ML system will be many steps disconnected from this task:
 
 :::
 
-::: {.cell .markdown}
 
-### ML training vs reality
-
-![Kiddie pool vs shark ocean. Via [Boaz Barak](https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/)](../images/1-ml-shark.jpg
-){ width=75% }
-
-
-:::
-
-
+<!-- 
 ::: {.cell .markdown}
 
 ## Limitations (recap)
@@ -822,9 +934,8 @@ Now we'll look more closely at the *data*, which is key in either case.
 :::
 
 :::
+-->
 
-
-\newpage
 
 
 
