@@ -836,7 +836,7 @@ In Florida, a change in vote share is associated with a bigger change in vaccina
 
 1. Get **data**: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$ 
 2. Choose a **model**: $\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle$
-3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{n} (y_i - \hat{y}_i) ^2$
+3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i) ^2$
 4. Find model **parameters** that minimize loss: OLS solution for $\mathbf{w}^{*}$
 5. Use model to **predict** $\hat{y}$ for new, unlabeled samples
 6. Evaluate model performance on new, unseen data

@@ -958,8 +958,8 @@ class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
 class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)},
 \mathbf{w} \rangle\)</span></li>
 <li>Choose a <strong>loss function</strong>: <span
-class="math inline">\(L(\mathbf{w}) = \frac{1}{n} (y_i - \hat{y}_i)
-^2\)</span></li>
+class="math inline">\(L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i -
+\hat{y}_i) ^2\)</span></li>
 <li>Find model <strong>parameters</strong> that minimize loss: OLS
 solution for <span class="math inline">\(\mathbf{w}^{*}\)</span></li>
 <li>Use model to <strong>predict</strong> <span
