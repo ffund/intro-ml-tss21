@@ -77,7 +77,7 @@ etc.)</li>
 <ul>
 <li>What type of relationships <span class="math inline">\(f(x)\)</span>
 can it represent?</li>
-<li>What can we learn about the problem from the trained model?</li>
+<li>What insight can we get from the trained model?</li>
 <li>How do we train the model efficiently?</li>
 <li>How do we control the generalization error?</li>
 </ul>
@@ -131,8 +131,8 @@ class="math inline">\(-2\)</span> factor -</p>
 <p><span class="math display">\[\frac{1}{n} \sum_{i=1}^n (y_i - w_0) =
 0\]</span></p>
 <p>Now solve for <span class="math inline">\(w_0\)</span>:</p>
-<p><span class="math display">\[w_0 = \frac{1}{n} \sum_{i=1}^n y_i  =
-0\]</span></p>
+<p><span class="math display">\[w_0 = \frac{1}{n} \sum_{i=1}^n y_i
+\]</span></p>
 <p>This is the single parameter value that minimizes the mean squared
 error loss function.</p>
 </aside>
@@ -724,10 +724,11 @@ variance</em>: of all the variance in <span
 class="math inline">\(y\)</span> (denominator), how much is still “left”
 unexplained after our model explains some of it (numerator)? (best case:
 0)</li>
-<li>the ratio <span
-class="math inline">\(\frac{\sigma_{xy}^2}{\sigma_{x}^2
-\sigma_{y}^2}\)</span> is the <em>coefficient of determination</em>, R2
-(best case: 1).</li>
+<li>The <em>coefficient of determination</em>, R2, is equal to the ratio
+<span class="math inline">\(\frac{\sigma_{xy}^2}{\sigma_{x}^2
+\sigma_{y}^2}\)</span> (best case: 1) for the OLS simple regression.
+Generally, <span class="math inline">\(R2 = 1 -
+\frac{MSE}{\sigma_y^2}\)</span>.</li>
 </ul>
 </aside>
 </section></section>
@@ -851,8 +852,7 @@ Wikipedia.</figcaption>
 <aside class="notes">
 <p>The correlation coefficient <span
 class="math inline">\(\frac{\sigma_{xy}}{\sigma_x \sigma_y}\)</span> is
-fundamental to the data - it tells us how well a linear relationship can
-fit the data.</p>
+fundamental to the data - it is not about a fitted model.</p>
 </aside>
 </section>
 <section id="interpreting-coefficient-w_j" class="slide level3">
@@ -972,7 +972,7 @@ class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
 <ul>
 <li>What type of relationships <span class="math inline">\(f(x)\)</span>
 can it represent?</li>
-<li>What can we learn about the problem from the trained model?</li>
+<li>What insight can we get from the trained model?</li>
 <li>(How do we train the model efficiently?)</li>
 <li>(How do we control the generalization error?)</li>
 </ul>

@@ -36,7 +36,7 @@ With linear regression, as with all of the supervised learning models in this co
 and these four questions:
 
 * What type of relationships $f(x)$ can it represent?
-* What can we learn about the problem from the trained model?
+* What insight can we get from the trained model?
 * How do we train the model efficiently?
 * How do we control the generalization error?
 
@@ -92,7 +92,7 @@ $$\frac{1}{n} \sum_{i=1}^n (y_i - w_0) = 0$$
 
 Now solve for $w_0$:
 
-$$w_0 = \frac{1}{n} \sum_{i=1}^n y_i  = 0$$
+$$w_0 = \frac{1}{n} \sum_{i=1}^n y_i $$
 
 This is the single parameter value that minimizes the mean squared error loss function.
 
@@ -632,7 +632,7 @@ $$\implies \frac{L(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_
 **If** we fit a simple regression model using this ordinary least squares solution,
 
 * the ratio $\frac{L(w_0^*, w_1^*)}{\sigma_y^2}$ is the *fraction of unexplained variance*: of all the variance in $y$ (denominator), how much is still "left" unexplained after our model explains some of it (numerator)? (best case: 0)
-* the ratio $\frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$ is the *coefficient of determination*, R2 (best case: 1).
+* The *coefficient of determination*, R2, is equal to the ratio $\frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$ (best case: 1) for the OLS simple regression. Generally, $R2 = 1 - \frac{MSE}{\sigma_y^2}$.
 
 :::
 
@@ -750,7 +750,7 @@ Which of these tell us something about the "goodness" of our model?
 
 ::: notes
 
-The correlation coefficient $\frac{\sigma_{xy}}{\sigma_x \sigma_y}$ is fundamental to the data - it tells us how well a linear relationship can fit the data.
+The correlation coefficient $\frac{\sigma_{xy}}{\sigma_x \sigma_y}$ is fundamental to the data - it is not about a fitted model.
 
 :::
 
@@ -844,7 +844,7 @@ In Florida, a change in vote share is associated with a bigger change in vaccina
 ### Key questions
 
 * What type of relationships $f(x)$ can it represent?
-* What can we learn about the problem from the trained model?
+* What insight can we get from the trained model?
 * (How do we train the model efficiently?)
 * (How do we control the generalization error?)
 
