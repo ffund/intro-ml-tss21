@@ -593,12 +593,12 @@ for t in range(num_steps):
 GD + Momentum:
 
 \begin{lstlisting}
-grad_sq = 0
 for t in range(num_steps):
   dw = compute_grad(w)
-  <@\textcolor{magenta}{grad\_sq = gamma * grad\_sq + (1 - gamma) * dw * dw}@>
-  w -= lr * dw <@\textcolor{magenta}{/ sqrt(grad\_sq + epsilon)}@>
+  <@\textcolor{blue}{v = gamma * v + dw}@>
+  w -= lr * <@\textcolor{blue}{v}@>
 \end{lstlisting}
+
 
 GD + Adam (without bias correction):
 
