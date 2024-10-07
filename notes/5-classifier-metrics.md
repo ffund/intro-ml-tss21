@@ -105,6 +105,8 @@ Another metric, known as F1 score, combines precision ($\frac{TP}{TP + FP}$) and
 
 $$F_1 =  2  \left( \frac{ \textrm{precision} \times  \textrm{recall}}{\textrm{precision} + \textrm{recall}} \right)$$
 
+The F1 score is also considered more appropriate than accuracy when there is a class imbalance. F1 score balances precision and recall: when both are similar in value, the F1 score will also be close to their value. However, if either precision or recall is lower, the F1 score will be "dragged down" by the lower metric.
+
 The most appropriate choice of metric for evaluating a classifier depends on the context - for example, whether there is class imbalance, and what the relative cost of each type of error is. 
 
 ### Tradeoff between FPR and TPR using thresholds
