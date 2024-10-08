@@ -57,7 +57,7 @@ class="math inline">\(y_i\)</span>.</p>
 <ul>
 <li><p><strong>Classification</strong>: The output variable <span
 class="math inline">\(y\)</span> is constrained to be <span
-class="math inline">\(\in {1,2,\cdots,K}\)</span></p></li>
+class="math inline">\(\in {0, 1,\cdots,K-1}\)</span></p></li>
 <li><p><strong>Binary classification</strong>: The output variable <span
 class="math inline">\(y\)</span> is constrained to be <span
 class="math inline">\(\in {0, 1}\)</span></p></li>
@@ -95,7 +95,7 @@ decision boundary.</figcaption>
 <h3>Linear classification rule</h3>
 <ul>
 <li>Given a <strong>weight vector</strong>: <span
-class="math inline">\(\mathbf{w} = (w_0, \cdots, w_d)\)</span></li>
+class="math inline">\(\mathbf{w} = [w_0, \cdots, w_d]\)</span></li>
 <li>Compute linear combination <span class="math inline">\(z = w_0 +
 \sum_{j=1}^d w_d x_d\)</span></li>
 <li>Predict class: <span class="math display">\[  \hat{y} =
@@ -239,8 +239,8 @@ As <span class="math inline">\(w_1 \to \infty\)</span> the logistic
 model becomes a “hard” rule.</figcaption>
 </figure>
 </section>
-<section id="logistic-classifier-properties-1" class="slide level3">
-<h3>Logistic classifier properties (1)</h3>
+<section id="logistic-classifier-properties" class="slide level3">
+<h3>Logistic classifier properties</h3>
 <ul>
 <li>Class probabilities depend on distance from separating
 hyperplane</li>
@@ -249,15 +249,6 @@ class="math inline">\(\approx 0\)</span> or <span
 class="math inline">\(\approx 1\)</span></li>
 <li>When <span class="math inline">\(|| \mathbf{w}||\)</span> is larger,
 class probabilities go towards extremes (0,1) more quickly</li>
-</ul>
-</section>
-<section id="logistic-classifier-properties-2" class="slide level3">
-<h3>Logistic classifier properties (2)</h3>
-<ul>
-<li>Unlike linear regression, weights do <em>not</em> correspond to
-change in output associated with one-unit change in input.</li>
-<li>Sign of weight <em>does</em> tell us about relationship between a
-given feature and target variable.</li>
 </ul>
 </section>
 <section id="logistic-regression---illustration" class="slide level3">
@@ -272,23 +263,23 @@ contour plot.</figcaption>
 </section>
 <section id="multi-class-logistic-regression" class="slide level3">
 <h3>Multi-class logistic regression</h3>
-<p>Suppose <span class="math inline">\(y \in 1, \ldots, K\)</span>. We
+<p>Suppose <span class="math inline">\(y \in 0, \ldots, K-1\)</span>. We
 use:</p>
 <ul>
 <li><span class="math inline">\(\mathbf{W} \in R^{K\times d}\)</span>
 (parameter matrix)</li>
-<li><span class="math inline">\(\mathbf{z} = \mathbf{Wx}\)</span> (<span
-class="math inline">\(K\)</span> linear functions)</li>
+<li><span class="math inline">\(\mathbf{z} = \mathbf{Wx^T}\)</span>
+(<span class="math inline">\(K\)</span> linear functions)</li>
 </ul>
 <aside class="notes">
-<p>Assume we have stacked a 1s column so that the intercept is rolled
-into the parameter matrix.</p>
+<p>(Assume we have stacked a 1s column so that the intercept is rolled
+into the parameter matrix.)</p>
 </aside>
 </section>
 <section id="softmax-function" class="slide level3">
 <h3>Softmax function</h3>
 <p><span class="math display">\[ g_k(\mathbf{z}) =
-\frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}\]</span></p>
+\frac{e^{z_k}}{\sum_{\ell=0}^{K-1} e^{z_\ell}}\]</span></p>
 <ul>
 <li>Takes as input a vector of <span class="math inline">\(K\)</span>
 numbers</li>
@@ -302,7 +293,7 @@ proportional to the exponentials of the input numbers.</li>
 <ul>
 <li><span class="math inline">\(g_k(\mathbf{z}) \in [0,1]\)</span> for
 each <span class="math inline">\(k\)</span></li>
-<li><span class="math inline">\(\sum_{k=1}^K g_k(\mathbf{z}) =
+<li><span class="math inline">\(\sum_{k=0}^{K-1} g_k(\mathbf{z}) =
 1\)</span></li>
 <li>larger input corresponds to larger “probability”</li>
 </ul>
@@ -341,8 +332,8 @@ function.</li>
 </ul>
 </aside>
 </section>
-<section id="learning-logistic-model-parameters" class="slide level3">
-<h3>Learning logistic model parameters</h3>
+<section id="learning-model-parameters" class="slide level3">
+<h3>Learning model parameters</h3>
 <p>Weights <span class="math inline">\(\mathbf{W}\)</span> are the
 unknown <strong>model parameters</strong>:</p>
 <p><span class="math display">\[ \mathbf{z} = \mathbf{W x}, \mathbf{W}
@@ -353,6 +344,10 @@ g_k(\mathbf{Wx})\]</span></p>
 i=1,\ldots,n\)</span>, we must learn <span
 class="math inline">\(\mathbf{W}\)</span>.</p>
 <aside class="notes">
+<p>The weight matrix <span class="math inline">\(\mathbf{W}\)</span> has
+a column for each parameter, and a row for each class. (In the binary
+classification case, there is just one row, i.e. we have a weight
+vector.)</p>
 <p>Note that if the data is linearly separable, there will be more than
 one <span class="math inline">\(\mathbf{W}\)</span> that perfectly
 classifies the training data! We will choose the <em>maximum
@@ -363,9 +358,9 @@ likelihood</em> one.</p>
 <h3>Maximum likelihood estimation (1)</h3>
 <p>Let <span class="math inline">\(P(\mathbf{y}| \mathbf{X},
 \mathbf{W})\)</span> be the probability of observing class labels <span
-class="math inline">\(\mathbf{y} = (y_1, \ldots, y_n)^T\)</span></p>
-<p>given inputs <span class="math inline">\(\mathbf{X} = (\mathbf{x}_1,
-\ldots, \mathbf{x}_n)^T\)</span> and weights <span
+class="math inline">\(\mathbf{y} = [y_0, \ldots, y_n]\)</span></p>
+<p>given inputs <span class="math inline">\(\mathbf{X} = [\mathbf{x}_0,
+\ldots, \mathbf{x}_n]\)</span> and weights <span
 class="math inline">\(\mathbf{W}\)</span>.</p>
 <p>The <strong>maximum likelihood estimate</strong> is</p>
 <p><span class="math display">\[ \mathbf{\hat{W}} =
@@ -383,26 +378,26 @@ independent of one another,</p>
 <p><span class="math display">\[ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) =
 \prod_{i=1}^n P(y_i| \mathbf{x_i}, \mathbf{W})\]</span></p>
 <aside class="notes">
-<p>Note: <span class="math inline">\(P(y_i| \mathbf{x_i},
-\mathbf{W})\)</span> is equal to</p>
+<p>Note: for binary classification, <span class="math inline">\(P(y_i|
+\mathbf{x_i}, \mathbf{w})\)</span> is equal to</p>
 <ul>
 <li><span class="math inline">\(y_i P(y_i = 1| \mathbf{x_i},
-\mathbf{W})\)</span> when <span class="math inline">\(y_i =
+\mathbf{w})\)</span> when <span class="math inline">\(y_i =
 1\)</span></li>
 <li>and <span class="math inline">\((1 - y_i) P(y_i = 0| \mathbf{x_i},
-\mathbf{W})\)</span> when <span class="math inline">\(y_i =
+\mathbf{w})\)</span> when <span class="math inline">\(y_i =
 0\)</span>.</li>
 </ul>
 <p>and since only one term will be non-zero for any given <span
 class="math inline">\(y_i\)</span>, <span class="math inline">\(P(y_i|
-\mathbf{x_i}, \mathbf{W})\)</span> is equal to the sum of those:</p>
+\mathbf{x_i}, \mathbf{w})\)</span> is equal to the sum of those:</p>
 <p><span class="math display">\[y_i P(y_i  = 1| \mathbf{x_i},
-\mathbf{W}) + (1 - y_i) P(y_i = 0| \mathbf{x_i},
-\mathbf{W})\]</span></p>
+\mathbf{w}) + (1 - y_i) P(y_i = 0| \mathbf{x_i},
+\mathbf{w})\]</span></p>
 <p>This expression is familiar as the PMF of a Bernoulli random
 variable.</p>
 <p>We take the log of both sides, because then the product turns into a
-sum…</p>
+sum, and we make it negative so we can minimize instead of maximize…</p>
 </aside>
 </section>
 <section id="maximum-likelihood-estimation-3" class="slide level3">
@@ -421,24 +416,71 @@ negative log likelihood.</p>
 </section>
 <section id="maximum-likelihood-estimation-4" class="slide level3">
 <h3>Maximum likelihood estimation (4)</h3>
-<p>Now we can re-write max likelihood estimator with a loss function to
+<p>Now we can re-write max likelihood estimator as a loss function to
 minimize:</p>
 <p><span class="math display">\[ \mathbf{\hat{W}} =
 \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W}) =
 \operatorname*{argmin}_W L(\mathbf{W})\]</span></p>
 <aside class="notes">
-<p>At this point, we know we need to find</p>
-<p><span class="math display">\[ \operatorname*{argmin}_W  \left(
--\sum_{i = 1}^n y_i \ln P(y_i  = 1| \mathbf{x_i}, \mathbf{W}) + (1 -
-y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{W}) \right) \]</span></p>
-<p>The next step will be to plug in our sigmoid function, <span
-class="math inline">\(P(y_i = 1| \mathbf{x_i}, \mathbf{W}) =
-\sigma(z_i)\)</span> where <span class="math inline">\(z_i =
-\mathbf{W}\mathbf{x_i}\)</span>.</p>
+<p>We will “plug in” the model to specifically define the loss function,
+first for the binary classification case (binary cross-entropy loss) and
+then for the multi-class case (categorical cross-entropy loss).</p>
 </aside>
 </section>
-<section id="binary-cross-entropy-loss-1" class="slide level3">
-<h3>Binary cross-entropy loss (1)</h3>
+<section id="binary-cross-entropy-loss-function" class="slide level3">
+<h3>Binary cross-entropy loss function</h3>
+<p><span class="math display">\[  L(\mathbf{W}) = - \sum_{i =
+1}^n  \left( y_i \ln P(y_i  = 1| \mathbf{x_i}, \mathbf{w}) + (1 - y_i)
+\ln P(y_i = 0| \mathbf{x_i}, \mathbf{w}) \right) \]</span></p>
+</section>
+<section id="categorical-cross-entropy-loss-function-1"
+class="slide level3">
+<h3>Categorical cross-entropy loss function (1)</h3>
+<p>Define “one-hot” vector - for a sample from class <span
+class="math inline">\(k\)</span>, all entries in the vector are <span
+class="math inline">\(0\)</span> except for the entry with index <span
+class="math inline">\(k\)</span>, which is <span
+class="math inline">\(1\)</span>:</p>
+<p><span class="math display">\[r_{ik} =
+\begin{cases}
+1 \quad y_i = k \\
+0 \quad y_i \neq k
+\end{cases}
+\]</span></p>
+<p><span class="math display">\[i = 1,\ldots , n, \quad k=0, \ldots,
+K-1\]</span></p>
+<aside class="notes">
+<p>This is used for multi-class classification.</p>
+<p>For example: if the class labels are <span class="math inline">\([0,
+1, 2, 3, 4]\)</span>, for a sample for which <span
+class="math inline">\(y_i = 3\)</span>, <span
+class="math inline">\(r_{ik} = [0, 0, 0, 1, 0]\)</span>.</p>
+</aside>
+</section>
+<section id="categorical-cross-entropy-loss-function-2"
+class="slide level3">
+<h3>Categorical cross-entropy loss function (2)</h3>
+<p>Then,</p>
+<p><span class="math display">\[  L(\mathbf{W}) = - \sum_{k=0}^{K-1}
+r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})\]</span></p>
+</section>
+<section id="minimizing-cross-entropy-loss" class="slide level3">
+<h3>Minimizing cross-entropy loss</h3>
+<p>To minimize, we would take the partial derivative:</p>
+<p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} =
+0 \]</span></p>
+<p>for all <span class="math inline">\(W_{kj}\)</span></p>
+<p><strong>But</strong>, there is no closed-form expression - can only
+estimate weights via numerical optimization (e.g. gradient descent).</p>
+<aside class="notes">
+<p>We will show this for the binary classifier case only. The next step
+will be to plug in our sigmoid function, <span
+class="math inline">\(P(y_i = 1| \mathbf{x_i}, \mathbf{w}) =
+\sigma(z_i)\)</span>.</p>
+</aside>
+</section>
+<section id="minimizing-logistic-cross-entropy-1" class="slide level3">
+<h3>Minimizing logistic cross-entropy (1)</h3>
 <p>For binary classification with class labels <span
 class="math inline">\(0, 1\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
@@ -460,58 +502,82 @@ class="math inline">\(0, 1\)</span>:</p>
 1-\sigma(z)\)</span></p>
 </aside>
 </section>
-<section id="binary-cross-entropy-loss-2" class="slide level3">
-<h3>Binary cross-entropy loss (2)</h3>
-<p>Binary cross-entropy loss function (negative log likelihood) for
-<span class="math inline">\([0, 1]\)</span> class labels:</p>
+<section id="minimizing-logistic-cross-entropy-2" class="slide level3">
+<h3>Minimizing logistic cross-entropy (2)</h3>
+<p>Binary cross-entropy loss function for <span
+class="math inline">\([0, 1]\)</span> class labels:</p>
 <p><span class="math display">\[ - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i},
-\mathbf{W}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i\]</span></p>
-</section>
-<section id="cross-entropy-loss-for-multi-class-classification-1"
-class="slide level3">
-<h3>Cross-entropy loss for multi-class classification (1)</h3>
-<p>Define “one-hot” vector - for a sample from class <span
-class="math inline">\(k\)</span>, all entries in the vector are <span
-class="math inline">\(0\)</span> except for the <span
-class="math inline">\(k\)</span>th entry which is <span
-class="math inline">\(1\)</span>:</p>
-<p><span class="math display">\[r_{ik} =
-\begin{cases}
-1 \quad y_i = k \\
-0 \quad y_i \neq k
-\end{cases}
-\]</span></p>
-<p><span class="math display">\[i = 1,\ldots , n, \quad k=1, \ldots,
-K\]</span></p>
+\mathbf{w}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i\]</span></p>
 <aside class="notes">
-<p>For example: if the class labels are <span class="math inline">\([0,
-1, 2, 3, 4]\)</span>, for a sample for which <span
-class="math inline">\(y_i = 3\)</span>, <span
-class="math inline">\(r_{ik} = [0, 0, 0, 1, 0]\)</span>.</p>
+<p>Note: The categorical cross-entropy loss function for softmax
+regression will have a similar form:</p>
+<p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k
+e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] \]</span></p>
+<p>For the binary cross entropy loss, we will get the gradient descent
+update rule by applying the chain rule to the loss function -</p>
+<p><span class="math display">\[ L(w) = - \sum_{i=1}^n \ln P(y_i|
+\mathbf{x_i}, \mathbf{w}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i
+z_i\]</span></p>
+<p>Since we have expressed the loss in terms of <span
+class="math inline">\(z\)</span>, not <span
+class="math inline">\(w\)</span>, it is convenient to use the chain rule
+to do -</p>
+<p><span class="math display">\[ \frac{\partial L(w)}{\partial w_{j}} =
+\frac{\partial L(w)}{\partial z} \frac{\partial z}{\partial
+w_j}  \]</span></p>
+<p>and noting that <span class="math inline">\(\frac{\partial
+z}{\partial w_j} = x_j\)</span> (where <span
+class="math inline">\(j\)</span> is a column index, not a sample index),
+now we have</p>
+<p><span class="math display">\[ \frac{\partial L(w)}{\partial w_{j}} =
+\frac{\partial L(w)}{\partial z} x_j \]</span></p>
+<p>Then, we can work on <span class="math inline">\(\frac{\partial
+L(w)}{\partial z}\)</span> -</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial L(w)}{\partial z} &amp;= \frac{\partial }{\partial z} \ln
+(1+e^{z_i})  - \frac{\partial }{\partial z} y_i z_i  \\
+                                 &amp;=  \frac{1}{1 + e^{-z_i} }  -  y_i
+\end{aligned}
+\]</span></p>
 </aside>
 </section>
-<section id="cross-entropy-loss-for-multi-class-classification-2"
-class="slide level3">
-<h3>Cross-entropy loss for multi-class classification (2)</h3>
-<p>Then, like before</p>
-<p><span class="math display">\[ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) =
-\sum_{k=0}^{K-1} r_{ik} \ln P(y_i = k| \mathbf{x_i},
-\mathbf{W})\]</span></p>
-<p>Cross-entropy loss function is</p>
-<p><span class="math display">\[ \sum_{i=1}^n \left[ \ln \left(\sum_k
-e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right]\]</span></p>
+<section id="minimizing-logistic-cross-entropy-3" class="slide level3">
+<h3>Minimizing logistic cross-entropy (3)</h3>
+<p>Gradient descent update rule will be</p>
+<p><span class="math display">\[
+\begin{aligned}
+w^{t+1} &amp;= w^t - \alpha \sum_{i=1}^n \left( \frac{1}{1 + e^{-z_i} }
+- y_i \right) x_i \\
+        &amp;= w^t +  \alpha \sum_{i=1}^n \left(y_i - \frac{1}{1 +
+e^{-z_i} }\right) x_i                  
+\end{aligned}
+\]</span></p>
+<aside class="notes">
+<p>This is very similar to the equivalent expression we derived for a
+linear regression -</p>
+<p><span class="math display">\[ w^{t+1} = w^t + \alpha \sum_{i=1}^n
+\left(y_i - \langle w^t,x_i \rangle \right) x_i \]</span></p>
+<p>and has a similar intuition. If your model output is much larger
+(e.g. more positive) than <span class="math inline">\(y\)</span>, you
+shift your prediction in the negative direction. If your model output is
+smaller than <span class="math inline">\(y\)</span>, you shift your
+prediction in the positive direction.</p>
+</aside>
+</section></section>
+<section>
+<section id="beyond-the-recipe" class="title-slide slide level2">
+<h2>Beyond the “recipe”</h2>
+<p>As with all our models, we want to know -</p>
+<ul>
+<li>What type of relationships can we represent?</li>
+<li>How “expensive” is the model (in terms of computation)?</li>
+<li>What insight can we get from the trained model?</li>
+<li>How do we control the generalization error?</li>
+</ul>
 </section>
-<section id="minimizing-cross-entropy-loss" class="slide level3">
-<h3>Minimizing cross-entropy loss</h3>
-<p>To minimize, we would take the partial derivative:</p>
-<p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} =
-0 \]</span></p>
-<p>for all <span class="math inline">\(W_{kj}\)</span></p>
-<p><strong>But</strong>, there is no closed-form expression - can only
-estimate weights via numerical optimization (e.g. gradient descent)</p>
-</section>
-<section id="non-linear-decision-boundaries" class="slide level3">
-<h3>Non-linear decision boundaries</h3>
+<section id="relationships" class="slide level3">
+<h3>Relationships</h3>
 <ul>
 <li>Logistic regression learns linear boundary</li>
 <li>What if the “natural” decision boundary is non-linear?</li>
@@ -521,11 +587,39 @@ estimate weights via numerical optimization (e.g. gradient descent)</p>
 (if “natural” decision boundary is non-linear)</p>
 </aside>
 </section>
-<section id="bias-variance" class="slide level3">
-<h3>Bias, variance</h3>
+<section id="runtime" class="slide level3">
+<h3>Runtime</h3>
+<aside class="notes">
+<p>The logistic regression is similar to the linear regression -</p>
 <ul>
-<li>Variance increases with <span class="math inline">\(d\)</span> and
-decreases with <span class="math inline">\(n\)</span></li>
+<li>prediction: the dominant term is the computation of <span
+class="math inline">\(z_i\)</span>, which is <span
+class="math inline">\(O(d)\)</span></li>
+<li>training: for one iteration of gradient descent, we have <span
+class="math inline">\(O(d)\)</span> computations for each sample, so a
+full batch gradient descent iteration is <span
+class="math inline">\(O(nd)\)</span></li>
+</ul>
+</aside>
+</section>
+<section id="insight-from-trained-model" class="slide level3">
+<h3>Insight from trained model</h3>
+<ul>
+<li>Unlike linear regression, weights do <em>not</em> correspond to
+change in output associated with one-unit change in input. (The
+coefficient tells us about the change in <em>log odds</em>, not the
+change in output.)</li>
+<li>Sign of weight <em>does</em> tell us about relationship between a
+given feature and target variable.</li>
+</ul>
+</section>
+<section id="controlling-generalization-error" class="slide level3">
+<h3>Controlling generalization error</h3>
+<ul>
+<li>Bias occurs when there is undermodeling</li>
+<li>Variance increases with <span class="math inline">\(d\)</span>,
+stochastic noise, and decreases with <span
+class="math inline">\(n\)</span></li>
 <li>Can add a regularization penalty to loss function</li>
 </ul>
 </section></section>
@@ -535,7 +629,8 @@ class="title-slide slide level2">
 <aside class="notes">
 <ul>
 <li>Choose a <strong>model</strong>: <span class="math display">\[P(y =
-1 | x, w) = \sigma\left(w_0 + \sum_{i=1}^d w_d x_d\right)\]</span></li>
+1 | \mathbf{x}, \mathbf{w}) = \sigma\left(w_0 + \sum_{j=1}^d w_d
+x_d\right)\]</span></li>
 </ul>
 <p><span class="math display">\[ \hat{y} =
 \begin{cases}
@@ -554,8 +649,8 @@ model fits data: binary cross-entropy</li>
 z_i\]</span></p>
 <ul>
 <li>Find model <strong>parameters</strong> that minimize loss: use
-numerical optimization to find weight vector <span
-class="math inline">\(w\)</span></li>
+gradient descent to find weight vector <span
+class="math inline">\(\mathbf{w}\)</span></li>
 <li>Use model to <strong>predict</strong> <span
 class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
 </ul>
@@ -571,9 +666,9 @@ class="title-slide slide level2">
 each class, then choose the class for which the probability is
 highest.</li>
 </ul>
-<p><span class="math display">\[P(y=k | \mathbf{x}) =
-\frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}} \text{ where } \mathbf{z} =
-\mathbf{Wx}\]</span></p>
+<p><span class="math display">\[P(y=k | \mathbf{x}, \mathbf{W}) =
+\frac{e^{z_k}}{\sum_{\ell=0}^{K-1} e^{z_\ell}} \text{ where } \mathbf{z}
+= \mathbf{Wx^T}\]</span></p>
 <ul>
 <li>Get <strong>data</strong> - for supervised learning, we need
 <strong>labeled</strong> examples: <span class="math inline">\((x_i,
@@ -592,8 +687,8 @@ e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] \text{ where
 \]</span></p>
 <ul>
 <li>Find model <strong>parameters</strong> that minimize loss: use
-numerical optimization to find weight vector <span
-class="math inline">\(w\)</span></li>
+gradient descent to find weight matrix <span
+class="math inline">\(\mathbf{W}\)</span></li>
 <li>Use model to <strong>predict</strong> <span
 class="math inline">\(\hat{y}\)</span> for new, unlabeled samples.</li>
 </ul>

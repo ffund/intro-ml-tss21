@@ -19,7 +19,7 @@ author: 'Fraida Fund'
 Suppose we have a series of data points $\{(\mathbf{x_1},y_1),(\mathbf{x_2},y_2),\ldots,(\mathbf{x_n},y_n)\}$
 and there is some (unknown) relationship between $\mathbf{x_i}$ and $y_i$. 
 
-* **Classification**: The output variable $y$ is constrained to be $\in {1,2,\cdots,K}$
+* **Classification**: The output variable $y$ is constrained to be $\in {0, 1,\cdots,K-1}$
 
 * **Binary classification**: The output variable $y$ is constrained to be $\in {0, 1}$
 
@@ -49,7 +49,7 @@ and there is some (unknown) relationship between $\mathbf{x_i}$ and $y_i$.
 
 ### Linear classification rule
 
-* Given a **weight vector**: $\mathbf{w} = (w_0, \cdots, w_d)$
+* Given a **weight vector**: $\mathbf{w} = [w_0, \cdots, w_d]$
 * Compute linear combination $z = w_0 + \sum_{j=1}^d w_d x_d$
 * Predict class:
 $$  \hat{y} = 
@@ -171,16 +171,12 @@ $$
 ![Plot of $P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x$. As $w_1 \to \infty$ the logistic model becomes a "hard" rule.](../images/sigmoid-shape.png){ width=30% }
 
 
-### Logistic classifier properties (1)
+### Logistic classifier properties 
 
 * Class probabilities depend on distance from separating hyperplane
 * Points far from separating hyperplane have probability $\approx 0$ or $\approx 1$
 * When $|| \mathbf{w}||$ is larger, class probabilities go towards extremes (0,1) more quickly
 
-### Logistic classifier properties (2)
-
-* Unlike linear regression, weights do _not_ correspond to change in output associated with one-unit change in input.
-* Sign of weight _does_ tell us about relationship between a given feature and target variable.
 
 
 ### Logistic regression - illustration
@@ -192,20 +188,20 @@ $$
 
 ### Multi-class logistic regression
 
-Suppose $y \in 1, \ldots, K$. We use:
+Suppose $y \in 0, \ldots, K-1$. We use:
 
 * $\mathbf{W} \in R^{K\times d}$ (parameter matrix) 
-* $\mathbf{z} = \mathbf{Wx}$ ($K$ linear functions)
+* $\mathbf{z} = \mathbf{Wx^T}$ ($K$ linear functions)
 
 ::: notes
 
-Assume we have stacked a 1s column so that the intercept is rolled into the parameter matrix.
+(Assume we have stacked a 1s column so that the intercept is rolled into the parameter matrix.)
 
 :::
 
 ### Softmax function
 
-$$ g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}$$
+$$ g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell=0}^{K-1} e^{z_\ell}}$$
 
 * Takes as input a vector of $K$ numbers
 * Outputs $K$ probabilities proportional to the exponentials of the input numbers.
@@ -215,7 +211,7 @@ $$ g_k(\mathbf{z}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}}$$
 Acts like a probability mass function:
 
 * $g_k(\mathbf{z}) \in [0,1]$ for each $k$
-* $\sum_{k=1}^K g_k(\mathbf{z}) = 1$
+* $\sum_{k=0}^{K-1} g_k(\mathbf{z}) = 1$
 * larger input corresponds to larger "probability"
 
 
@@ -247,7 +243,7 @@ We know that to fit weights, we need
 
 :::
 
-### Learning logistic model parameters
+### Learning model parameters
 
 Weights $\mathbf{W}$ are the unknown **model parameters**:
 
@@ -259,15 +255,17 @@ Given training data $(\mathbf{x}_i, y_i), i=1,\ldots,n$, we must learn $\mathbf{
 
 :::notes
 
+The weight matrix $\mathbf{W}$ has a column for each parameter, and a row for each class. (In the binary classification case, there is just one row, i.e. we have a weight vector.)
+
 Note that if the data is linearly separable, there will be more than one $\mathbf{W}$ that perfectly classifies the training data! We will choose the *maximum likelihood* one.
 
 :::
 
 ### Maximum likelihood estimation (1)
 
-Let $P(\mathbf{y}| \mathbf{X}, \mathbf{W})$ be the probability of observing class labels $\mathbf{y} = (y_1, \ldots, y_n)^T$ 
+Let $P(\mathbf{y}| \mathbf{X}, \mathbf{W})$ be the probability of observing class labels $\mathbf{y} = [y_0, \ldots, y_n]$ 
 
-given inputs $\mathbf{X} = (\mathbf{x}_1, \ldots, \mathbf{x}_n)^T$ and weights $\mathbf{W}$.
+given inputs $\mathbf{X} = [\mathbf{x}_0, \ldots, \mathbf{x}_n]$ and weights $\mathbf{W}$.
 
 The **maximum likelihood estimate** is
 
@@ -288,18 +286,18 @@ $$ P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \prod_{i=1}^n P(y_i| \mathbf{x_i}, \m
 
 ::: notes
 
-Note: $P(y_i| \mathbf{x_i}, \mathbf{W})$ is equal to 
+Note: for binary classification, $P(y_i| \mathbf{x_i}, \mathbf{w})$ is equal to 
 
-* $y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{W})$ when $y_i = 1$
-* and $(1 - y_i) P(y_i = 0| \mathbf{x_i}, \mathbf{W})$ when $y_i = 0$.
+* $y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{w})$ when $y_i = 1$
+* and $(1 - y_i) P(y_i = 0| \mathbf{x_i}, \mathbf{w})$ when $y_i = 0$.
 
-and since only one term will be non-zero for any given $y_i$, $P(y_i| \mathbf{x_i}, \mathbf{W})$ is equal to the sum of those: 
+and since only one term will be non-zero for any given $y_i$, $P(y_i| \mathbf{x_i}, \mathbf{w})$ is equal to the sum of those: 
 
-$$y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{W}) + (1 - y_i) P(y_i = 0| \mathbf{x_i}, \mathbf{W})$$
+$$y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{w}) + (1 - y_i) P(y_i = 0| \mathbf{x_i}, \mathbf{w})$$
 
 This expression is familiar as the PMF of a Bernoulli random variable.
 
-We take the log of both sides, because then the product turns into a sum...
+We take the log of both sides, because then the product turns into a sum, and we make it negative so we can minimize instead of maximize...
 
 :::
 
@@ -324,22 +322,71 @@ Note that maximizing the likelihood is the same as minimizing the negative log l
 
 ### Maximum likelihood estimation (4)
 
-Now we can re-write max likelihood estimator with a loss function to minimize:
+Now we can re-write max likelihood estimator as a loss function to minimize:
 
 $$ \mathbf{\hat{W}} = \operatorname*{argmax}_W P(\mathbf{y}| \mathbf{X}, \mathbf{W}) = \operatorname*{argmin}_W L(\mathbf{W})$$
 
+
 ::: notes
 
-At this point, we know we need to find
-
-$$ \operatorname*{argmin}_W  \left( -\sum_{i = 1}^n y_i \ln P(y_i  = 1| \mathbf{x_i}, \mathbf{W}) + (1 - y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{W}) \right) $$
-
-
-The next step will be to plug in our sigmoid function, $P(y_i = 1| \mathbf{x_i}, \mathbf{W}) = \sigma(z_i)$ where $z_i = \mathbf{W}\mathbf{x_i}$.
+We will "plug in" the model to specifically define the loss function, first for the binary classification case (binary cross-entropy loss) and then for the multi-class case (categorical cross-entropy loss).
 
 :::
 
-### Binary cross-entropy loss (1)
+### Binary cross-entropy loss function
+
+$$  L(\mathbf{W}) = - \sum_{i = 1}^n  \left( y_i \ln P(y_i  = 1| \mathbf{x_i}, \mathbf{w}) + (1 - y_i) \ln P(y_i = 0| \mathbf{x_i}, \mathbf{w}) \right) $$
+
+
+### Categorical cross-entropy loss function (1)
+
+Define "one-hot" vector - for a sample from class $k$, all entries in the vector are $0$ except for the entry with index $k$, which is $1$:
+
+$$r_{ik} = 
+\begin{cases}
+1 \quad y_i = k \\
+0 \quad y_i \neq k
+\end{cases}
+$$
+
+$$i = 1,\ldots , n, \quad k=0, \ldots, K-1$$
+
+:::notes
+
+This is used for multi-class classification.
+
+For example: if the class labels are $[0, 1, 2, 3, 4]$, for a sample for which $y_i = 3$, $r_{ik} = [0, 0, 0, 1, 0]$.
+
+:::
+
+### Categorical cross-entropy loss function (2)
+
+Then, 
+
+$$  L(\mathbf{W}) = - \sum_{k=0}^{K-1} r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})$$
+
+
+
+\newpage
+
+### Minimizing cross-entropy loss
+
+To minimize, we would take the partial derivative:
+
+$$ \frac{\partial L(W)}{\partial W_{kj}} = 0 $$
+
+for all $W_{kj}$
+
+**But**, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent). 
+
+:::notes
+
+We will show this for the binary classifier case only. The next step will be to plug in our sigmoid function, $P(y_i = 1| \mathbf{x_i}, \mathbf{w}) = \sigma(z_i)$.
+
+:::
+
+
+### Minimizing logistic cross-entropy (1)
 
 For binary classification with class labels $0, 1$:
 
@@ -362,58 +409,80 @@ Notes: $\sigma(-z) = 1-\sigma(z)$
 
 :::
 
-### Binary cross-entropy loss (2)
+### Minimizing logistic cross-entropy (2)
 
-Binary cross-entropy loss function (negative log likelihood) for $[0, 1]$ class labels:
+Binary cross-entropy loss function for $[0, 1]$ class labels:
 
-$$ - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i}, \mathbf{W}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
+$$ - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i}, \mathbf{w}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
 
-\newpage
-### Cross-entropy loss for  multi-class classification (1)
-
-Define "one-hot" vector - for a sample from class $k$, all entries in the vector are $0$ except for the $k$th entry which is $1$:
-
-$$r_{ik} = 
-\begin{cases}
-1 \quad y_i = k \\
-0 \quad y_i \neq k
-\end{cases}
-$$
-
-$$i = 1,\ldots , n, \quad k=1, \ldots, K$$
 
 :::notes
 
-For example: if the class labels are $[0, 1, 2, 3, 4]$, for a sample for which $y_i = 3$, $r_{ik} = [0, 0, 0, 1, 0]$.
+Note: The categorical cross-entropy loss function for softmax regression will have a similar form:
+
+$$ \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right] $$
+
+\newpage
+
+For the binary cross entropy loss, we will get the gradient descent update rule by applying the chain rule to the loss function - 
+
+$$ L(w) = - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i}, \mathbf{w}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
+
+
+Since we have expressed the loss in terms of $z$, not $w$, it is convenient to use the chain rule to do - 
+
+$$ \frac{\partial L(w)}{\partial w_{j}} = \frac{\partial L(w)}{\partial z} \frac{\partial z}{\partial w_j}  $$
+
+and noting that $\frac{\partial z}{\partial w_j} = x_j$ (where $j$ is a column index, not a sample index), now we have
+
+$$ \frac{\partial L(w)}{\partial w_{j}} = \frac{\partial L(w)}{\partial z} x_j $$
+
+Then, we can work on $\frac{\partial L(w)}{\partial z}$ - 
+
+$$
+\begin{aligned} 
+\frac{\partial L(w)}{\partial z} &= \frac{\partial }{\partial z} \ln (1+e^{z_i})  - \frac{\partial }{\partial z} y_i z_i  \\
+        						 &=  \frac{1}{1 + e^{-z_i} }  -  y_i 
+\end{aligned}
+$$
 
 :::
 
-### Cross-entropy loss for  multi-class classification (2)
+### Minimizing logistic cross-entropy (3)
 
-Then, like before
-
-$$ \ln P(y_i | \mathbf{x_i}, \mathbf{W}) = \sum_{k=0}^{K-1} r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})$$
+Gradient descent update rule will be 
 
 
-Cross-entropy loss function is
+$$
+\begin{aligned} 
+w^{t+1} &= w^t - \alpha \sum_{i=1}^n \left( \frac{1}{1 + e^{-z_i} } - y_i \right) x_i \\
+        &= w^t +  \alpha \sum_{i=1}^n \left(y_i - \frac{1}{1 + e^{-z_i} }\right) x_i                  
+\end{aligned}
+$$
 
-$$ \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{ik}}\right) - \sum_k z_{ik} r_{ik} \right]$$
+:::notes
+
+This is very similar to the equivalent expression we derived for a linear regression - 
+
+$$ w^{t+1} = w^t + \alpha \sum_{i=1}^n \left(y_i - \langle w^t,x_i \rangle \right) x_i $$
+
+and has a similar intuition. If your model output is much larger (e.g. more positive) than $y$, you shift your prediction in the negative direction. If your model output is smaller than $y$, you shift your prediction in the positive direction.
+
+:::
 
 
+\newpage
 
-### Minimizing cross-entropy loss
+## Beyond the "recipe"
 
-To minimize, we would take the partial derivative:
+As with all our models, we want to know - 
 
-$$ \frac{\partial L(W)}{\partial W_{kj}} = 0 $$
+* What type of relationships can we represent?
+* How "expensive" is the model (in terms of computation)?
+* What insight can we get from the trained model?
+* How do we control the generalization error?
 
-for all $W_{kj}$
-
-**But**, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent)
-
-
-
-### Non-linear decision boundaries
+### Relationships
 
 * Logistic regression learns linear boundary
 * What if the "natural" decision boundary is non-linear?
@@ -425,10 +494,30 @@ Can use basis functions to map problem to transformed feature space (if "natural
 
 :::
 
-### Bias, variance
+### Runtime 
 
-* Variance increases with $d$ and decreases with $n$
+:::notes
+
+The logistic regression is similar to the linear regression - 
+
+* prediction: the dominant term is the computation of $z_i$, which is $O(d)$
+* training: for one iteration of gradient descent, we have $O(d)$ computations for each sample, so a full batch gradient descent iteration is $O(nd)$
+
+:::
+
+
+### Insight from trained model 
+
+* Unlike linear regression, weights do _not_ correspond to change in output associated with one-unit change in input. (The coefficient tells us about the change in *log odds*, not the change in output.)
+* Sign of weight _does_ tell us about relationship between a given feature and target variable.
+
+
+### Controlling generalization error
+
+* Bias occurs when there is undermodeling
+* Variance increases with $d$, stochastic noise, and decreases with $n$
 * Can add a regularization penalty to loss function
+
 
 
 \newpage
@@ -441,7 +530,7 @@ Can use basis functions to map problem to transformed feature space (if "natural
 :::notes
 
 * Choose a **model**: 
-$$P(y = 1 | x, w) = \sigma\left(w_0 + \sum_{i=1}^d w_d x_d\right)$$
+$$P(y = 1 | \mathbf{x}, \mathbf{w}) = \sigma\left(w_0 + \sum_{j=1}^d w_d x_d\right)$$
 
 
 $$ \hat{y} = 
@@ -457,7 +546,7 @@ $$
 
 $$\sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
 
-* Find model **parameters** that minimize loss: use numerical optimization to find weight vector $w$
+* Find model **parameters** that minimize loss: use gradient descent to find weight vector $\mathbf{w}$
 * Use model to **predict** $\hat{y}$ for new, unlabeled samples.
 
 
@@ -470,7 +559,7 @@ $$\sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
 
 * Choose a **model**: find probability of belonging to each class, then choose the class for which the probability is highest.
 
-$$P(y=k | \mathbf{x}) = \frac{e^{z_k}}{\sum_{\ell=1}^K e^{z_\ell}} \text{ where } \mathbf{z} = \mathbf{Wx}$$
+$$P(y=k | \mathbf{x}, \mathbf{W}) = \frac{e^{z_k}}{\sum_{\ell=0}^{K-1} e^{z_\ell}} \text{ where } \mathbf{z} = \mathbf{Wx^T}$$
 
 
 * Get **data** - for supervised learning, we need **labeled** examples: $(x_i, y_i), i=1,2,\cdots,n$
@@ -486,7 +575,7 @@ $$r_{ik} =
 \end{cases}
 $$
 
-* Find model **parameters** that minimize loss: use numerical optimization to find weight vector $w$
+* Find model **parameters** that minimize loss: use gradient descent to find weight matrix $\mathbf{W}$
 * Use model to **predict** $\hat{y}$ for new, unlabeled samples.
 
 :::
