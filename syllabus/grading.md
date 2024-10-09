@@ -45,7 +45,7 @@ There are 4-5 lab assignments over the course of the semester. The average time 
 
 Make sure to give yourself plenty of time, so that in case you have questions or need help, you have time to ask and get support on Ed well before the assignment is due. Late work will not be graded for credit  unless recommended by the student advocate (see "Illness or other exceptional situation").
 
-Some of the lab assignments will be individual assignments, and some (near the end of the semester) will be group assignments. In the case of group assignments, there may be some constraints or requirements related to group composition, which will be communicated in advance of the assignment.
+Some of the lab assignments (the first few) will be individual assignments, and some (near the end of the semester) will be group assignments. If it is a group assignment, you will receive specific instructions about group composition requirements, which will be communicated in advance of the assignment.
 
 
 #### Exams
