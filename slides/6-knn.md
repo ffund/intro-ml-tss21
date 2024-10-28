@@ -8,9 +8,9 @@ author: 'Fraida Fund'
 **Math prerequisites for this lecture**: You should know about
 
 
-* probabilities, conditional probabilities, 
+* probabilities, conditional probabilities, expectation of a random variable 
 * norm of a vector (Section I, Chapter 3 in Boyd and Vandenberghe)
-* expectation of a random variable
+* complexity of algorithms and especially of vector and matrix operations (Appendix B in Boyd and Vandenberghe, also the complexity part of Section I, Chapter 1 and Section II, Chapter 5)
 
 :::
 
