@@ -9,7 +9,7 @@ For this course in particular:
 * You may discuss homework/lab assignments with classmates as follows: you can verbally explain to other students the approach you used to solve a particular problem, without sharing or directly showing your materials (question, solution, failed attempt, data, figures).
 * You may not share your homework/lab with anyone else by email or other private communication channel. (Not even for "comparison", not a partial answer, not an incorrect answer, not even a question variant with no answer...)
 * You may not post questions on CourseHero, Chegg, or other sites - the course Q&A site on Ed is the only place you are allowed to post questions about homework assignments. 
-* You are not allowed to use solved homework or lab assignments from a previous semester (whether from a friend, or that you find online).  (Not even for "comparison", not a partial answer, etc...)
+* You are not allowed to use solved homework or lab assignments from a current or previous semester (whether from a friend, or that you find online).  (Not even for "comparison", not a partial answer, etc...)
 * You may not *attempt* to use any unauthorized assistance on exams. Note that even if your attempt is unsuccessful (e.g. you open ChatGPT but are "caught" before you can copy and paste a question into it), you will earn a zero grade on the exam and a record in the Office of Student Life and Services. 
 * After the class ends, some students like to share their solutions to programming assignments as part of an online "portfolio", to show off their work. However, you may only share the part that you wrote - you may not share the parts of the "template" (code or text) that were written by me.
 
