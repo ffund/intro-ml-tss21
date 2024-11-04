@@ -350,7 +350,7 @@ alt="The margin shrinks as K decreases." />
 class="math inline">\(K\)</span> decreases.</figcaption>
 </figure>
 <!--
-![ISLR Fig. 9.7: Margin shrinks as $C$ decreases.](../images/9.7.svg){ width=50% }
+![ISL Fig. 9.7: Margin shrinks as $C$ decreases.](../images/9.7.svg){ width=50% }
 -->
 </section>
 <section id="k-controls-bias-variance-tradeoff" class="slide level3">
@@ -363,11 +363,11 @@ vectors, variance is low, but bias may be high.</li>
 vectors, high variance, but low bias.</li>
 </ul>
 <aside class="notes">
-<p><strong>Terminology note</strong>: In ISLR and in the first part of
+<p><strong>Terminology note</strong>: In ISL and in the first part of
 these notes, meaning of constant is opposite its meaning in Python
 <code>sklearn</code>:</p>
 <ul>
-<li>ISLR and these notes: Large <span class="math inline">\(K\)</span>,
+<li>ISL and these notes: Large <span class="math inline">\(K\)</span>,
 wide margin.</li>
 <li>Python <code>sklearn</code>: Large <span
 class="math inline">\(C\)</span>, small margin.</li>
@@ -402,7 +402,7 @@ far from decision boundary.</li>
 ### Hinge loss vs. logistic regression
 
 
-![ISLR 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
+![ISL 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
 -->
 </section></section>
 <section>
@@ -695,6 +695,18 @@ support vectors.</li>
 </ul>
 <p>Also: the kernel trick, which we’ll discuss next…</p>
 </section>
+<section id="relationship-between-svm-and-other-models"
+class="slide level3">
+<h3>Relationship between SVM and other models</h3>
+<ul>
+<li>Like a logistic regression - linear classifier, separating
+hyperplane is <span class="math inline">\(w_0 + \sum_{j=1}^p w_j x_{ij}
+= 0\)</span></li>
+<li>Like a weighted KNN - predicted label is weighted average of labels
+for support vectors, with weights proportional to “similarity” of test
+sample and support vector.</li>
+</ul>
+</section>
 <section id="correlation-interpretation-1" class="slide level3">
 <h3>Correlation interpretation (1)</h3>
 <p>Given a new sample <span class="math inline">\(\mathbf{x}\)</span> to
@@ -713,18 +725,6 @@ and each support vector.</p>
 <p>Predicted label is weighted average of labels for support vectors,
 with weights proportional to “correlation” of test sample and support
 vector.</p>
-</section>
-<section id="relationship-between-svm-and-other-models"
-class="slide level3">
-<h3>Relationship between SVM and other models</h3>
-<ul>
-<li>Like a logistic regression - linear classifier, separating
-hyperplane is <span class="math inline">\(w_0 + \sum_{j=1}^p w_j x_{ij}
-= 0\)</span></li>
-<li>Like a weighted KNN - predicted label is weighted average of labels
-for support vectors, with weights proportional to “similarity” of test
-sample and support vector.</li>
-</ul>
 </section></section>
     </div>
   </div>

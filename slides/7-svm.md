@@ -254,7 +254,7 @@ These are the *support vectors*.
 ![The margin shrinks as $K$ decreases.](../images/6-svc-c.png){ width=45% }
 
 <!--
-![ISLR Fig. 9.7: Margin shrinks as $C$ decreases.](../images/9.7.svg){ width=50% }
+![ISL Fig. 9.7: Margin shrinks as $C$ decreases.](../images/9.7.svg){ width=50% }
 -->
 
 
@@ -265,9 +265,9 @@ These are the *support vectors*.
 
 ::: notes
 
-**Terminology note**: In ISLR and in the first part of these notes, meaning of constant is opposite its meaning in Python `sklearn`:
+**Terminology note**: In ISL and in the first part of these notes, meaning of constant is opposite its meaning in Python `sklearn`:
 
-* ISLR and these notes: Large $K$, wide margin.
+* ISL and these notes: Large $K$, wide margin.
 * Python `sklearn`: Large $C$, small margin.
 
 :::
@@ -300,7 +300,7 @@ and width of margin depends on $\sum w_j^2$.
 ### Hinge loss vs. logistic regression
 
 
-![ISLR 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
+![ISL 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
 -->
 
 
@@ -574,6 +574,12 @@ For high-dimension problems (many features), dual problem can be much faster to 
 
 Also: the kernel trick, which we'll discuss next...
 
+\newpage
+
+### Relationship between SVM and other models
+
+* Like a logistic regression - linear classifier, separating hyperplane is $w_0 + \sum_{j=1}^p w_j x_{ij} = 0$
+* Like a weighted KNN - predicted label is weighted average of labels for support vectors, with weights proportional to "similarity" of test sample and support vector.
 
 ### Correlation interpretation (1)
 
@@ -591,7 +597,3 @@ $$\hat{y}(\mathbf{x}) = \text{sign} (\hat{z}(\mathbf{x}))$$
 
 Predicted label is weighted average of labels for support vectors, with weights proportional to "correlation" of test sample and support vector.
 
-### Relationship between SVM and other models
-
-* Like a logistic regression - linear classifier, separating hyperplane is $w_0 + \sum_{j=1}^p w_j x_{ij} = 0$
-* Like a weighted KNN - predicted label is weighted average of labels for support vectors, with weights proportional to "similarity" of test sample and support vector.
