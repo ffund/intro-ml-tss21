@@ -476,12 +476,6 @@ Input standardization helps with the first hidden layer, but what about the hidd
 * Training: Mean and standard deviation per training mini-batch
 * Test: Using fixed statistics
 
-::: notes
-
-Lots of discussion about how/why BatchNorm helps - still ongoing.
-
-:::
-
 
 
 ## Gradient descent

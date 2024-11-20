@@ -308,8 +308,8 @@ or <em>misclassification rate</em>:</p>
 <p><span class="math display">\[\sum_{x_i \in  R_m} 1 (y_i \neq
 \hat{y}_{R_m})\]</span></p>
 <aside class="notes">
-<p>Not used often (less sensitive than the others), but used for
-<em>pruning</em>.</p>
+<p>Not used often (if you look at the plot - you’ll see why), but used
+for <em>pruning</em>.</p>
 </aside>
 </section>
 <section id="gini-index" class="slide level3">
@@ -579,17 +579,17 @@ trees.</figcaption>
 <h3>The good and the bad (1)</h3>
 <p>Good:</p>
 <ul>
+<li>Flexible with much faster inference time than KNN</li>
 <li>Easy to interpret, close to human decision-making</li>
 <li>Can derive feature importance</li>
 <li>Easily handles mixed types, different ranges</li>
-<li>Can find interactions that linear classifiers can’t</li>
 </ul>
 </section>
 <section id="the-good-and-the-bad-2" class="slide level3">
 <h3>The good and the bad (2)</h3>
 <p>Bad:</p>
 <ul>
-<li>Need deep tree to overcome bias</li>
+<li>Need greedy heuristic to train</li>
 <li>Deep trees have large variance</li>
 <li>Non-robust: Small change in data can cause large change in estimated
 tree</li>

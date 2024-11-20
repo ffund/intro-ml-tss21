@@ -224,7 +224,7 @@ $$\sum_{x_i \in  R_m} 1 (y_i \neq \hat{y}_{R_m})$$
 
 ::: notes
 
-Not used often (less sensitive than the others), but used for *pruning*. 
+Not used often (if you look at the plot - you'll see why), but used for *pruning*. 
 
 :::
 
@@ -451,16 +451,16 @@ Choose $\alpha$ by CV, 1-SE rule ($\uparrow \alpha, \downarrow |T|$).
 
 Good:
 
+* Flexible with much faster inference time than KNN
 * Easy to interpret, close to human decision-making
 * Can derive feature importance
 * Easily handles mixed types, different ranges
-* Can find interactions that linear classifiers can't
 
 ### The good and the bad (2)
 
 Bad:
 
-* Need deep tree to overcome bias
+* Need greedy heuristic to train
 * Deep trees have large variance
 * Non-robust: Small change in data can cause large change in estimated tree
 

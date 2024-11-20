@@ -22,9 +22,12 @@ Computers are bad at it! Why?
 ![Difficult scene conditions:  background clutter, occlusion...](../images/scene-conditions.png){ width=50% }
 
 
+<!-- 
 ### Similarity and variability
 
 ![Must identify inter-class similarity, while accommodating intra-class variability.](../images/chairs.png){ width=50% }
+
+-->
 
 ### Dimension
 
