@@ -78,7 +78,7 @@ Finally, run
 docker exec -it $(docker ps -q) jupyter server list 
 </pre>
 
-In the output of the command above, look for your server's token:
+In the output of the command above, look for your server's token, e.g.:
 
 <pre>
 Currently running servers:
