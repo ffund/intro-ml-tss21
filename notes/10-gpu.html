@@ -83,60 +83,62 @@ results.</p>
 instance</h2>
 <p>At your reserved time (not earlier!), run</p>
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:<mark>PORT</mark>:127.0.0.1:<mark>PORT</mark> cc@<mark>IP_ADDRESS</mark>
+ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
 </pre>
 <p>where</p>
 <ul>
 <li>in place of <code>IP_ADDRESS</code>, substitute the IP address of
 the GPU instance.</li>
-<li>in place of <code>PORT</code> use: 50000 + the numeric part of your
-net ID. For example, if my net ID is <code>ab123</code>, I will use:
-50123.</li>
 </ul>
 <p>This will set up a tunnel between your local sytem and the GPU
 instance. Leave this SSH session running.</p>
 <p>Inside the SSH session, run:</p>
 <pre>
-/home/cc/.local/bin/jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=<mark>PORT</mark> --NotebookApp.port_retries=0
+docker run -d --rm -p 8888:8888 --gpus all quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
 </pre>
-<p>(again substituting your <code>PORT</code> number) and leave it
-running.</p>
-<p>In the output of the command above, look for a URL in this format,
-with the word “localhost” in it:</p>
+<p>and then run</p>
 <pre>
-http://localhost:<mark>PORT</mark>/?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+docker exec -it $(docker ps -q) python -m pip install -I torch==2.4.1
 </pre>
-<p>Copy this URL - you will need it in the next step.</p>
+<p>Finally, run</p>
+<pre>
+docker exec -it $(docker ps -q) jupyter server list 
+</pre>
+<p>In the output of the command above, look for your server’s token:</p>
+<pre>
+Currently running servers:
+http://55ae26461d76:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
+</pre>
+<p>Copy this token - you will need it in the next step.</p>
 <p>Now, you can open Colab in a browser. Click on the drop-down menu for
-“Connect” in the top right and select “Connect to a local runtime”.
-Paste the URL you copied earlier into the space and click “Connect”.
-Your notebook should now be running on our GPU instance.</p>
+“Connect” in the top right and select “Connect to a local runtime”. In
+that space, paste</p>
+<pre>
+http://localhost:8888/?token=<mark>TOKEN</mark>
+</pre>
+<p>then put the token you copied earlier in place of <mark>TOKEN</mark>.
+Click “Connect”. Your notebook should now be running on our GPU
+instance.</p>
 <h2 id="when-you-are-finished">When you are finished</h2>
-<p>When you are finished working OR at the end of your reserved time
-slot, whichever comes first -</p>
-<ul>
-<li>use Ctrl+C in your terminal session to stop the Jupyter notebook
-server</li>
-<li>when prompted, type <code>y</code> and hit Enter to confirm</li>
-<li>type <code>exit</code> and hit Enter to close the SSH tunnel</li>
-</ul>
-<h2 id="addressing-common-problems">Addressing common problems</h2>
+<p>Your running container will be stopped automatically and your SSH
+session will be automatically disconnected at the end of your one hour
+slot. ## Addressing common problems</p>
 <h4 id="could-not-request-local-forwarding">“Could not request local
 forwarding”</h4>
 <p><strong>Q</strong>: When I use the SSH command</p>
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:<mark>PORT</mark>:127.0.0.1:<mark>PORT</mark> cc@IP_ADDRESS
+ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@IP_ADDRESS
 </pre>
 <p>it says:</p>
 <pre>
-bind [127.0.0.1]:<mark>PORT</mark>: Address already in use
-channel_setup_fwd_listener_tcpip: cannot listen to port: <mark>PORT</mark>
+bind [127.0.0.1]:8888: Address already in use
+channel_setup_fwd_listener_tcpip: cannot listen to port: 8888
 Could not request local forwarding.
 </pre>
 <hr />
 <p><strong>A</strong>: This will happen if you already have something
-else running on this port on your laptop. You can change the port in the
-command, e.g. use 51000 + numeric part of net ID.</p>
+else running on this port on your laptop. You may need to stop whatever
+is running on that port locally.</p>
 <h4 id="warnings-when-using-tensorflow">Warnings when using
 Tensorflow</h4>
 <p>When I import <code>tensorflow</code>, I see the following

@@ -51,42 +51,53 @@ At your reserved time (not earlier!), run
 
 
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:<mark>PORT</mark>:127.0.0.1:<mark>PORT</mark> cc@<mark>IP_ADDRESS</mark>
+ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
 </pre>
 
 where 
 
 * in place of `IP_ADDRESS`, substitute the IP address of the GPU instance.
-* in place of `PORT` use: 50000 + the numeric part of your net ID. For example, if my net ID is `ab123`, I will use: 50123.
 
 This will set up a tunnel between your local sytem and the GPU instance. Leave this SSH session running.
 
 Inside the SSH session, run:
 
 <pre>
-/home/cc/.local/bin/jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=<mark>PORT</mark> --NotebookApp.port_retries=0
+docker run -d --rm -p 8888:8888 --gpus all quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
 </pre>
 
-(again substituting your `PORT` number) and leave it running. 
-
-In the output of the command above, look for a URL in this format, with the word "localhost" in it:
+and then run
 
 <pre>
-http://localhost:<mark>PORT</mark>/?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+docker exec -it $(docker ps -q) python -m pip install -I torch==2.4.1
 </pre>
 
-Copy this URL - you will need it in the next step.
+Finally, run
 
-Now, you can open Colab in a browser. Click on the drop-down menu for "Connect" in the top right and select "Connect to a local runtime". Paste the URL you copied earlier into the space and click "Connect". Your notebook should now be running on our GPU instance.
+<pre>
+docker exec -it $(docker ps -q) jupyter server list 
+</pre>
+
+In the output of the command above, look for your server's token:
+
+<pre>
+Currently running servers:
+http://55ae26461d76:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
+</pre>
+
+Copy this token - you will need it in the next step.
+
+Now, you can open Colab in a browser. Click on the drop-down menu for "Connect" in the top right and select "Connect to a local runtime". In that space, paste
+
+<pre>
+http://localhost:8888/?token=<mark>TOKEN</mark>
+</pre>
+
+then put the token you copied earlier in place of <mark>TOKEN</mark>. Click "Connect". Your notebook should now be running on our GPU instance.
 
 ## When you are finished
 
-When you are finished working OR at the end of your reserved time slot, whichever comes first - 
-
-* use Ctrl+C in your terminal session to stop the Jupyter notebook server
-* when prompted, type `y` and hit Enter to confirm
-* type `exit` and hit Enter to close the SSH tunnel
-
+Your running container will be stopped automatically and your SSH session will be automatically disconnected at the end of your one hour slot.
 ## Addressing common problems
 
 
@@ -95,20 +106,20 @@ When you are finished working OR at the end of your reserved time slot, whicheve
 **Q**: When I use the SSH command
 
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:<mark>PORT</mark>:127.0.0.1:<mark>PORT</mark> cc@IP_ADDRESS
+ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@IP_ADDRESS
 </pre>
 
 it says:
 
 <pre>
-bind [127.0.0.1]:<mark>PORT</mark>: Address already in use
-channel_setup_fwd_listener_tcpip: cannot listen to port: <mark>PORT</mark>
+bind [127.0.0.1]:8888: Address already in use
+channel_setup_fwd_listener_tcpip: cannot listen to port: 8888
 Could not request local forwarding.
 </pre>
 
 ---
 
-**A**: This will happen if you already have something else running on this port on your laptop. You can change the port in the command, e.g. use 51000 + numeric part of net ID. 
+**A**: This will happen if you already have something else running on this port on your laptop.  You may need to stop whatever is running on that port locally.
 
 
 
