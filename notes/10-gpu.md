@@ -98,6 +98,7 @@ then put the token you copied earlier in place of <mark>TOKEN</mark>. Click "Con
 ## When you are finished
 
 Your running container will be stopped automatically and your SSH session will be automatically disconnected at the end of your one hour slot.
+
 ## Addressing common problems
 
 

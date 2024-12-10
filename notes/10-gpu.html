@@ -91,7 +91,7 @@ the GPU instance.</li>
 </ul>
 <p>This will set up a tunnel between your local sytem and the GPU
 instance. Leave this SSH session running.</p>
-<p>Inside the SSH session, run:</p>
+<p>Inside the SSH session, run (note: this is all one line):</p>
 <pre>
 docker run -d --rm -p 8888:8888 --gpus all quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
 </pre>
@@ -121,7 +121,8 @@ instance.</p>
 <h2 id="when-you-are-finished">When you are finished</h2>
 <p>Your running container will be stopped automatically and your SSH
 session will be automatically disconnected at the end of your one hour
-slot. ## Addressing common problems</p>
+slot.</p>
+<h2 id="addressing-common-problems">Addressing common problems</h2>
 <h4 id="could-not-request-local-forwarding">“Could not request local
 forwarding”</h4>
 <p><strong>Q</strong>: When I use the SSH command</p>
