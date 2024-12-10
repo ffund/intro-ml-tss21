@@ -60,7 +60,7 @@ where
 
 This will set up a tunnel between your local sytem and the GPU instance. Leave this SSH session running.
 
-Inside the SSH session, run:
+Inside the SSH session, run (note: this is all one line):
 
 <pre>
 docker run -d --rm -p 8888:8888 --gpus all quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
@@ -154,3 +154,12 @@ Is this bad?
 
 This server has different library versions and a different GPU type than the Colab hosted runtime, so you may see some warnings/notifications that you wouldn't see in Colab. It's not a cause for concern, and you can safely ignore the notifications shown above.
 
+
+<!--
+crontab rules:
+```
+@hourly docker stop $(docker ps -a -q)
+@hourly kill -9 $(ps -ef | grep sshd | grep pts | grep -v 'grep' | awk '{print $2}')
+```
+
+-->

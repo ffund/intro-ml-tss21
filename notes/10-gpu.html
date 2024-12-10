@@ -166,5 +166,13 @@ than the Colab hosted runtime, so you may see some
 warnings/notifications that you wouldn’t see in Colab. It’s not a cause
 for concern, and you can safely ignore the notifications shown
 above.</p>
+<!--
+crontab rules:
+```
+@hourly docker stop $(docker ps -a -q)
+@hourly kill -9 $(ps -ef | grep sshd | grep pts | grep -v 'grep' | awk '{print $2}')
+```
+
+-->
 </body>
 </html>
