@@ -40,7 +40,7 @@ A separate calendar link is provided for reserving GPU time.
 Please consider these guidelines when reserving GPU time:
 
 * Most students will not need extra GPU time! You should be able to complete all of the work in this course without exceeding the "free" GPU time in Google Colab, unless you are *also* using Google Colab for other projects outside of this course. If you *can* complete the work using Colab's free hosted runtime, you should.
-* You may reserve time at least 2 hours, and up to 3 days, in advance.
+* You may reserve time up to 1 day in advance.
 * You may not reserve more than 1 hour per day.
 
 You should make sure that your code is "ready to run" before the beginning of your reserved GPU time. Then you can use your reserved time to just run your notebook from beginning to end, and save the results.
