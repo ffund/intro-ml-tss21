@@ -696,8 +696,8 @@ for t in range(num_steps):
   dw = compute_grad(w)
   <@\textcolor{blue}{moment1 = b1 * moment1 + (1 - b1) * dw}@>
   <@\textcolor{magenta}{moment2 = b2 * moment2 + (1 - b2) * dw * dw}@>
-  <@\textcolor{ForestGreen}{moment2\_unbias = moment2 / (1 - b2  t) }@>
-  <@\textcolor{ForestGreen}{moment2\_unbias = moment2 / (1 - b2  t)}@>
+  <@\textcolor{ForestGreen}{moment1\_unbias = moment1 / (1 - b1 ** t) }@>
+  <@\textcolor{ForestGreen}{moment2\_unbias = moment2 / (1 - b2 ** t)}@>
   w -= lr * <@\textcolor{blue}{moment1\_unbias}@> <@\textcolor{magenta}{/ sqrt(moment2\_unbias + epsilon)}@>
 
 \end{lstlisting}
