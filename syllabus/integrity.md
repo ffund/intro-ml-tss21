@@ -29,7 +29,7 @@ Also note:
 You are permitted to use AI assistance for the following tasks:
 
 * computer translation between English and another language, e.g. you may write an explanation for a homework problem or lab assignment in another language and then submit a direct translation to English using Google Translate or a similar service. (Note: this does not include "cleaning up" or rephrasing text, which is not allowed - only direct translation is allowed. You shouldn't "clean up" text because (1) I don't care about your spelling, grammar, or vocabulary, and (2) if I am asking for an open-ended response, I want to hear *your* voice, not an LLM's voice.)
-* to generate Python code for plotting and visualization. You are fully responsible for any figures or visualizations you submit, including making sure their appearance is reasonable and the data in them is correct. But, you are permitted to use an AI assistant such as ChatGPT or Gemini to help you generate `matplotlib` or `seaborn` code to make your plots look the way you want.
+* to generate Python code for plotting and visualization. You are fully responsible for any figures or visualizations you submit, including making sure their appearance is reasonable and the data in them is correct. But, you are permitted to use an AI assistant such as ChatGPT or Gemini to help you generate `matplotlib` or `seaborn` code to make your plots look the way you want. If you do use an AI assistant, you must include your LLM prompt in your submission.
 
 With the exception of the tasks listed above, AI assistance is not permitted in this course.
 
@@ -54,6 +54,10 @@ Outside of coding problems, I also suggest you avoid using AI as a "tutor" since
 * When you answer a question on PrairieLearn, scroll down to the "Correct Answer" panel. In many cases, this will have an explanation that is **written by your instructor**.
 * If you don't understand something in the lecture, lab, or homework, post a question on Ed to get an explanation from your instructor or a course assistant.
 * Or, visit an office hour on Zoom for a "live" Q&A with humans.
+
+For open-ended text questions:
+
+* Don't use AI assistance. You are not graded on spelling, grammar, or on how eloquently you describe your observations - so even though an AI may be "better" than you on those elements of writing, it's not relevant. You are graded on what *you* have observed or understood based on the specific activities you are writing about, and an AI is *not* better than you at *that*. (AI-generated text tends to score poorly on these questions.)
 
 #### Violation of academic integrity policies
 
