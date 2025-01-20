@@ -15,7 +15,7 @@ In person, with some online asynchronous content.
 
 * "Chalkboard lecture" Thursday 11:00 AM - 1:30 PM (NYC time) in JAB 474.
 * "Colab lecture" video will be released online after the chalkboard lecture.
-* Homework problem sets will be released on Fridays before 5PM, and will be due the following Sunday (9 days later)
+* Homework problem sets will be released on Fridays by 5PM, and will be due the following Sunday (9 days later) at midnight.
 * (Lab assignments will be on a less regular schedule, and will be approximately every two weeks.)
 * Office hours: See Brightspace calendar for dates and Zoom links
 
