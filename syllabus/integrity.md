@@ -63,3 +63,4 @@ The course staff wants to spend their time and effort supporting students who wa
 * on a second instance, an F grade will be assigned for the course. Also, a record of the incident will be kept in the Office of Student Life and Services by the Office of Student Advocacy, as described in the [Student Code of Conduct](https://engineering.nyu.edu/life-tandon/student-life/student-advocacy/student-code-conduct).
 
 By design, the consequence for an academic integrity violation is always worse than the consequence for not knowing an answer - if you don't know an answer to a question, you may earn a zero on just that question. If you violate the academic integrity policies of the course, you will earn a zero on the entire assessment (problem set, lab assignment, or exam). There are no opportunities to "make up" points lost on an assignment due to an academic integrity violation.
+
