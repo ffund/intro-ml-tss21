@@ -15,8 +15,8 @@ In person, with some online asynchronous content.
 
 * "Chalkboard lecture" Thursday 11:00 AM - 1:30 PM (NYC time) in JAB 474.
 * "Colab lecture" video will be released online after the chalkboard lecture.
-* Homework problem sets will be released on Fridays at 1PM, and will be due the following Sunday (9 days later) at midnight.
-* (Lab assignments will be on a less regular schedule, and will be approximately every two weeks.)
+* Homework problem sets will be released on Fridays at 1PM, and will be due 9 days later (on a Sunday) at midnight.
+* Lab assignments will be released on Fridays for even-numbered topics (2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at midnight.
 * Office hours: See Brightspace calendar for dates and Zoom links
 
 For the Spring 2025 semester, a tentative schedule (subject to change) is:
@@ -41,7 +41,17 @@ For the Spring 2025 semester, a tentative schedule (subject to change) is:
 | 5/1          | 13: Deploying machine learning systems                                 |
 | **5/8**      | **Final exam**                                                         |
 
+<!-- 
 
+The anticipated schedule of lab assignments will be:
+
+* Lab 2: released 1/31, due 2/13
+* Lab 4: released 2/14, due 2/27
+* Lab 6: released 2/28, due 3/20
+* Lab 8: released 3/21, due 4/10
+* Lab 10: released 4/11, due 4/24
+
+-->
 
 ### Time commitment
 
