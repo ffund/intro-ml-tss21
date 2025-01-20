@@ -57,7 +57,7 @@ Outside of coding problems, I also suggest you avoid using AI as a "tutor" since
 
 For open-ended text questions:
 
-* Don't use AI assistance. You are not graded on spelling, grammar, or on how eloquently you describe your observations - so even though an AI may be "better" than you on those elements of writing, it's not relevant. You are graded on what *you* have observed or understood based on the specific activities you are writing about, and an AI is *not* better than you at *that*. (AI-generated text tends to score poorly on these questions.)
+* Don't use AI assistance. You are not graded on spelling, grammar, or on how eloquently you describe your observations - so even though an AI may be "better" than you on those elements of writing, it's not relevant. You are graded on what *you* have observed or understood based on the specific activities you are writing about, and an AI is *not* better than you at *that*. (Besides for AI use being forbidden, AI-generated text anyways tends to score poorly on these questions.)
 
 #### Violation of academic integrity policies
 
