@@ -5,30 +5,30 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Fraida Fund" />
-  <title>ECE-GY 6143 Intro Machine Learning - Fall 2024</title>
+  <title>ECE-GY 6143 Intro Machine Learning - Spring 2025</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">ECE-GY 6143 Intro Machine Learning - Fall 2024</h1>
+<h1 class="title">ECE-GY 6143 Intro Machine Learning - Spring 2025</h1>
 <p class="author">Fraida Fund</p>
-<p class="date">September 2024</p>
+<p class="date">January 2025</p>
 </header>
 <h3 id="overview">Overview</h3>
 <p>This course is an introduction to the field of machine learning,
@@ -293,11 +293,6 @@ questions or need help, you have time to ask and get support on Ed well
 before the assignment is due. Late work will not be graded for credit
 unless recommended by the student advocate (see “Illness or other
 exceptional situation”).</p>
-<p>Some of the lab assignments (the first few) will be individual
-assignments, and some (near the end of the semester) will be group
-assignments. If it is a group assignment, you will receive specific
-instructions about group composition requirements, which will be
-communicated in advance of the assignment.</p>
 <h4 id="exams">Exams</h4>
 <p>In the fall and spring semesters, there will be a midterm exam and a
 final exam.</p>
@@ -331,8 +326,9 @@ watching.</p>
 <ul>
 <li>If you are enrolled in an in-person section of Intro ML, you will
 take the exam in person.</li>
-<li>If you are enrolled in an online section of Intro ML, you will also
-take the exam in person, UNLESS:
+<li>If you are enrolled in an online section of Intro ML (in a semester
+when Intro ML is offered online), you will also take the exam in person,
+UNLESS:
 <ul>
 <li>you are not enrolled in any in-person course in NYC this semester -
 then you may take the exam online, with an online proctor. You will
@@ -423,30 +419,52 @@ Tandon Student Code of Conduct</a> (n.b. the academic misconduct
 section).</p>
 <p>For this course in particular:</p>
 <ul>
+<li>Students are expected to do all assignments individually. If a
+student shows or gives his/her work to another, then both students are
+considered to be cheating.</li>
+</ul>
+<p>If you need help with an assignment, these are the ways in which you
+are <em>permitted</em> to get help from someone else:</p>
+<ul>
 <li>You may ask questions about homework/lab assignments on the Q&amp;A
 site (Ed). It’s OK to include a partial answer or some details about
 reasoning in your question, even though it is visible to the rest of the
 class - you don’t have to worry about “giving away an answer” when
-asking a question.</li>
-<li>You may discuss homework/lab assignments with classmates as follows:
-you can verbally explain to other students the approach you used to
-solve a particular problem, without sharing or directly showing your
-materials (question, solution, failed attempt, data, figures).</li>
+asking a question. You can visit an office hour with course staff and
+ask questions there.</li>
+<li>You may discuss homework/lab assignments with classmates or other
+people who are not course staff as follows: <em>without sharing or
+directly showing your materials</em> (question, solution, failed
+attempt, data, figures), you can verbally discuss with other students
+the approach you used to solve a particular problem. (A useful guideline
+is: if there is a screen involved in this discussion, it’s not
+allowed.)</li>
+</ul>
+<p>But, these ways of getting help are <em>not permitted</em>:</p>
+<ul>
 <li>You may not share your homework/lab with anyone else by email or
 other private communication channel. (Not even for “comparison”, not a
-partial answer, not an incorrect answer, not even a question variant
-with no answer…)</li>
+partial answer, not a screenshot of your answer, not an incorrect
+answer, not even a question variant with no answer…) Note that if
+multiple students submit the same work, they will <em>all</em> get a
+zero, even if one of them can show that they originally did the work -
+because sharing the work is <em>also</em> against course policy.</li>
 <li>You may not post questions on CourseHero, Chegg, or other sites -
 the course Q&amp;A site on Ed is the only place you are allowed to post
 questions about homework assignments.</li>
 <li>You are not allowed to use solved homework or lab assignments from a
 current or previous semester (whether from a friend, or that you find
 online). (Not even for “comparison”, not a partial answer, etc…)</li>
+<li>In most cases, AI assistance is not permitted (see specifics
+below).</li>
 <li>You may not <em>attempt</em> to use any unauthorized assistance on
 exams. Note that even if your attempt is unsuccessful (e.g. you open
 ChatGPT but are “caught” before you can copy and paste a question into
 it), you will earn a zero grade on the exam and a record in the Office
 of Student Life and Services.</li>
+</ul>
+<p>Also note:</p>
+<ul>
 <li>After the class ends, some students like to share their solutions to
 programming assignments as part of an online “portfolio”, to show off
 their work. However, you may only share the part that you wrote - you
@@ -474,16 +492,68 @@ ChatGPT or Gemini to help you generate <code>matplotlib</code> or
 </ul>
 <p>With the exception of the tasks listed above, AI assistance is not
 permitted in this course.</p>
+<p>Here is some free advice for students who are using AI assistance on
+homework anyway (even though it is not permitted in this course):</p>
 <p>The sequence of assignments in this course is calibrated for human
 learners, to gradually learn the content by progressively building on
-what they have already mastered. If you use AI on un-proctored
-assessments, like homework problem sets and lab assignments, you will
-likely find yourself unprepared for the proctored exams, where you are
-not allowed to use AI.</p>
-<p>Instead of using an AI “tutor” (which often makes subtle mistakes,
-and won’t emphasize the things that your instructor wants you to pay
-attention to), please use the human assistance that is available to you
-in this course:</p>
+what they have already mastered. If you do the homework problem sets and
+lab assignments yourself (especially if you find them challenging!), you
+are “exercising” your brain in ways that make your abilities stronger,
+and prepare you to attempt more difficult problems (including problems
+that are outside the capabilities of current gen AI models). If you use
+AI extensively on un-proctored assessments, like homework problem sets
+and lab assignments, you will instead experience <a
+href="https://spencerauthor.com/cognitive-atrophy/">cognitive
+atrophy</a> - your cognitive ability (as it relates to the skills in
+this couse) gets weaker, instead of stronger. You will likely find
+yourself unprepared for difficult problems on the proctored exams, where
+you are not allowed to use AI.</p>
+<p>Some students feel like they are “learning” when they study the
+answer that an AI assistant provides. In general, reading material
+(lecture notes, homework solutions) is a popular study strategy because
+it is familiar, and feels comfortable. However, it is known to be much
+less effective in creating strong, stable memory representations than
+<em>retrieval practice</em>. The cognitive processes for receiving
+information into your brain (i.e., watching videos or reading text) are
+different from the processes for retrieving information from your brain
+(i.e., taking tests, solving problems). While receiving information can
+help you feel familiar with content (when re-reading you may feel like
+“I’ve seen this problem before!” or “I know this!”), it is much less
+effective at creating strong, stable memory than practice retrieving
+information. This is why if you “learn” primarily by reading/listening,
+even if you feel very comfortable with the material in that context, you
+may still do poorly on exams (where you are asked to retrieve and use
+information) or in other new contexts.</p>
+<p>Retrieval practice is like going to the gym. It’s not most people’s
+favorite activity because it requires effort and time, and is often
+uncomfortable, but it is necessary for growing and learning.</p>
+<p>By the way, retrieval practice - much more so than re-reading - has
+been shown to create memories that are more resistant to stress e.g. the
+stress of an exam setting, or a job interview.</p>
+<p>With all that in mind, are there ways to use AI that will cause less
+“cognitive atrophy” than other ways? Yes, here are some suggestions
+specifically for coding problems -</p>
+<ul>
+<li>Always attempt to solve a problem on your own first, without any AI
+usage. This will help you understand your own capabilities more
+precisely, i.e. to what extent are you dependent on the AI?</li>
+<li>If you are going to ask an AI assistant for help, instead of giving
+it the entire problem and letting it give you an entire solution, prompt
+it with a small piece of the problem that you know you will need, so
+that it gives you one or two lines of code to solve <em>that</em> part
+of the problem. This way, you are still practicing the skill of planning
+out the solution on your own, even if you don’t know how to write code
+to realize that solution.</li>
+<li>A week or two after submitting a solution using AI assistance, reset
+the submission (in PrairieLearn: open the workspace and click the
+“Reset” button) and re-attempt the problem without looking at your
+previous submission.</li>
+</ul>
+<p>Outside of coding problems, I also suggest you avoid using AI as a
+“tutor” since it does not have the benefit of the context of the rest of
+the course material - it does not know the specific points of emphasis
+in this course, what we have/have not learned, or how we have related
+specific concepts to one another. Instead of using AI:</p>
 <ul>
 <li>When you answer a question on PrairieLearn, scroll down to the
 “Correct Answer” panel. In many cases, this will have an explanation
@@ -521,8 +591,9 @@ always worse than the consequence for not knowing an answer - if you
 don’t know an answer to a question, you may earn a zero on just that
 question. If you violate the academic integrity policies of the course,
 you will earn a zero on the entire assessment (problem set, lab
-assignment, or exam).</p>
-<h3 id="other-important-policies">Other important policies</h3>
+assignment, or exam). There are no opportunities to “make up” points
+lost on an assignment due to an academic integrity violation. ### Other
+important policies</p>
 <h4 id="inclusion">Inclusion</h4>
 <p>The NYU Tandon School values an inclusive and equitable environment
 for all our students. I hope to foster a sense of community in this

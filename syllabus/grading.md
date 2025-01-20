@@ -45,9 +45,6 @@ There are 4-5 lab assignments over the course of the semester. The average time 
 
 Make sure to give yourself plenty of time, so that in case you have questions or need help, you have time to ask and get support on Ed well before the assignment is due. Late work will not be graded for credit  unless recommended by the student advocate (see "Illness or other exceptional situation").
 
-Some of the lab assignments (the first few) will be individual assignments, and some (near the end of the semester) will be group assignments. If it is a group assignment, you will receive specific instructions about group composition requirements, which will be communicated in advance of the assignment.
-
-
 #### Exams
 
 In the fall and spring semesters, there will be a midterm exam and a final exam.
@@ -60,11 +57,10 @@ On each exam, there will be 100 points that are divided roughly as follows:
 * 5-10 points: questions about specific case studies, visualizations, and examples in problem sets or lab assignments. These questions are designed to make sure you "take away" what is intended from these materials, rather than just earning whatever "points" are associated with them.
 * 30-35 points: code, including one "easy" and one more complicated question. The "complicated" question is designed so that you can earn points progressively, e.g. you can get a small portion of its credit for doing some basic things correct, some more credit for doing slightly more difficult things. To earn full credit, you will need to show an excellent understanding of principles of ML coding.
 
-
 You will take exams on your own computer, with a proctor watching.
 
 * If you are enrolled in an in-person section of Intro ML, you will take the exam in person.
-* If you are enrolled in an online section of Intro ML, you will also take the exam in person, UNLESS:
+* If you are enrolled in an online section of Intro ML (in a semester when Intro ML is offered online), you will also take the exam in person, UNLESS:
   * you are not enrolled in any in-person course in NYC this semester - then you may take the exam online, with an online proctor. You will share your screen and a video view of your environment with the proctor.
   * or, if you have another valid reason for requiring online exams, you should discuss this with me in the first week of the semester (before the add/drop deadline).
 
