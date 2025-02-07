@@ -267,6 +267,8 @@ After a fixed number of epochs (passes over the entire data),
    * we may end up at a better minimum (lower loss) with a small batch size,
    * *but*, the time per epoch may be longer with a small batch size.
 
+![Comparison of full batch and mini batch over one epoch.](../images/3-epoch.png){ width=65% }
+
 :::
 
 
@@ -289,6 +291,7 @@ https://sebastianraschka.com/pdf/lecture-notes/stat479ss19/L05_gradient-descent_
 -->
 
 
+\newpage
 
 ### Selecting the learning rate
 
@@ -303,7 +306,6 @@ Also note: SGD "noise ball"
 
 :::
 
-\newpage
 
 
 ### Annealing the learning rate
@@ -324,14 +326,17 @@ Can we do this in a way that is somehow "tuned" to the shape of the loss functio
 
 :::
 
+\newpage
+
 
 ### Gradient descent in a ravine (1)
 
-![Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of $w_1$.](../images/ravine-grad-descent.png){width=50%}
+![Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of $w_1$.](../images/ravine-grad-descent.png){width=70%}
+
 
 ### Gradient descent in a ravine (2)
 
-![Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of $w_1$.](../images/ravine-grad-descent2.png){width=50%}
+![Gradient descent path bounces along ridges of ravine, because surface curves much more steeply in direction of $w_1$.](../images/ravine-grad-descent2.png){width=70%}
 
 
 \newpage
