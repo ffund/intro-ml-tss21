@@ -224,7 +224,7 @@ $$\sum_{x_i \in  R_m} 1 (y_i \neq \hat{y}_{R_m})$$
 
 ::: notes
 
-Not used often (if you look at the plot - you'll see why), but used for *pruning*. 
+Not used often ([this is a good explanation re: why](https://sebastianraschka.com/faq/docs/decisiontree-error-vs-entropy.html)), but used for *pruning*. 
 
 :::
 

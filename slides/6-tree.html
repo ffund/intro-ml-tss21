@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -308,8 +311,9 @@ or <em>misclassification rate</em>:</p>
 <p><span class="math display">\[\sum_{x_i \in  R_m} 1 (y_i \neq
 \hat{y}_{R_m})\]</span></p>
 <aside class="notes">
-<p>Not used often (if you look at the plot - you’ll see why), but used
-for <em>pruning</em>.</p>
+<p>Not used often (<a
+href="https://sebastianraschka.com/faq/docs/decisiontree-error-vs-entropy.html">this
+is a good explanation re: why</a>), but used for <em>pruning</em>.</p>
 </aside>
 </section>
 <section id="gini-index" class="slide level3">
@@ -752,7 +756,7 @@ tree</li>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
