@@ -19,19 +19,19 @@ You will also need two "private" pieces of information:
 
 These will be in the GPU reservation calendar. 
 
-Save the private key in a plaintext file with the name `id_rsa_chameleon` (no file extension!) on your laptop.
+Save the private key in a plaintext file with the name `id_rsa_colab` (no file extension!) on your laptop.
 
 Your private key must have appropriate permissions set - 
 
 * On Mac or Linux, open the terminal in the same directory that you have saved the key in, then run
 
 ```
-chmod 600 id_rsa_chameleon
+chmod 600 id_rsa_colab
 ```
 
-* On Windows, you can follow [these instructions](https://superuser.com/a/1296046) to set the key permissions on `id_rsa_chameleon` using the GUI.
+* On Windows, you can follow [these instructions](https://superuser.com/a/1296046) to set the key permissions on `id_rsa_colab` using the GUI.
 
-Save the public key in a plaintext file in the same directory with the name `id_rsa_chameleon.pub`.
+Save the public key in a plaintext file in the same directory with the name `id_rsa_colab.pub`.
 
 ## Reserve GPU time
 
@@ -43,7 +43,7 @@ Please consider these guidelines when reserving GPU time:
 * You may reserve time up to 1 day in advance.
 * You may not reserve more than 1 hour per day.
 
-You should make sure that your code is "ready to run" before the beginning of your reserved GPU time. Then you can use your reserved time to just run your notebook from beginning to end, and save the results.
+You should make sure that your code is "ready to run" before the beginning of your reserved GPU time, i.e. do all your debugging on Colab (on CPU runtime) so that everything is ready. Then you can use your reserved time to just run your notebook from beginning to end, and save the results.
 
 ## Connecting to the GPU instance
 
@@ -51,7 +51,7 @@ At your reserved time (not earlier!), run
 
 
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
+ssh -i id_rsa_colab -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
 </pre>
 
 where 
@@ -62,27 +62,38 @@ This will set up a tunnel between your local sytem and the GPU instance. Leave t
 
 Inside the SSH session, run (note: this is all one line):
 
-<pre>
-docker run -d --rm -p 8888:8888 --gpus all quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
-</pre>
+<!--
+Dockerfile:
 
-and then run
+```
+FROM quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
+
+USER ${NB_UID}
+
+# Install Lightning
+RUN pip install --pre --no-cache-dir torch==2.4.1 && \
+    pip install --pre --no-cache-dir librosa zeus-ml && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+```
+
+docker build -t jupyter-zeus .
+-->
 
 <pre>
-docker exec -it $(docker ps -q) python -m pip install -I torch==2.4.1
+docker run -d -p 8888:8888 --rm --gpus all --name jupyter jupyter-zeus
 </pre>
 
 Finally, run
 
 <pre>
-docker exec -it $(docker ps -q) jupyter server list 
+docker exec -it jupyter jupyter server list 
 </pre>
 
 In the output of the command above, look for your server's token, e.g.:
 
 <pre>
-Currently running servers:
-http://55ae26461d76:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
+http://b6bab0d5ccab:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
 </pre>
 
 Copy this token - you will need it in the next step.
@@ -107,7 +118,7 @@ Your running container will be stopped automatically and your SSH session will b
 **Q**: When I use the SSH command
 
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@IP_ADDRESS
+ssh -i id_rsa_colab -L 127.0.0.1:8888:127.0.0.1:8888 cc@IP_ADDRESS
 </pre>
 
 it says:
@@ -138,7 +149,7 @@ To enable the following instructions: AVX2 AVX512F FMA, in other operations, reb
 2024-04-15 17:18:18.643115: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
 </pre>
 
-and when I try to `fit` a model, I see:
+and when I try to `fit` a model, I see other warnings:
 
 <pre>
 2024-04-15 17:20:25.275428: I external/local_xla/xla/service/service.cc:168] XLA service 0x7fe430337610 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
