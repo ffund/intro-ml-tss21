@@ -72,7 +72,7 @@ USER ${NB_UID}
 
 # Install Lightning
 RUN pip install --pre --no-cache-dir torch==2.4.1 && \
-    pip install --pre --no-cache-dir librosa zeus-ml && \
+    pip install --pre --no-cache-dir librosa zeus-ml==0.8.0 && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 ```
