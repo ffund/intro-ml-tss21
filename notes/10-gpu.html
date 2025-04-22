@@ -12,17 +12,17 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
-  <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
 </head>
 <body>
 <header id="title-block-header">
@@ -48,20 +48,20 @@ terminal.</li>
 </ul>
 <p>These will be in the GPU reservation calendar.</p>
 <p>Save the private key in a plaintext file with the name
-<code>id_rsa_chameleon</code> (no file extension!) on your laptop.</p>
+<code>id_rsa_colab</code> (no file extension!) on your laptop.</p>
 <p>Your private key must have appropriate permissions set -</p>
 <ul>
 <li>On Mac or Linux, open the terminal in the same directory that you
 have saved the key in, then run</li>
 </ul>
-<pre><code>chmod 600 id_rsa_chameleon</code></pre>
+<pre><code>chmod 600 id_rsa_colab</code></pre>
 <ul>
 <li>On Windows, you can follow <a
 href="https://superuser.com/a/1296046">these instructions</a> to set the
-key permissions on <code>id_rsa_chameleon</code> using the GUI.</li>
+key permissions on <code>id_rsa_colab</code> using the GUI.</li>
 </ul>
 <p>Save the public key in a plaintext file in the same directory with
-the name <code>id_rsa_chameleon.pub</code>.</p>
+the name <code>id_rsa_colab.pub</code>.</p>
 <h2 id="reserve-gpu-time">Reserve GPU time</h2>
 <p>A separate calendar link is provided for reserving GPU time.</p>
 <p>Please consider these guidelines when reserving GPU time:</p>
@@ -75,14 +75,15 @@ the work using Colab’s free hosted runtime, you should.</li>
 <li>You may not reserve more than 1 hour per day.</li>
 </ul>
 <p>You should make sure that your code is “ready to run” before the
-beginning of your reserved GPU time. Then you can use your reserved time
-to just run your notebook from beginning to end, and save the
-results.</p>
+beginning of your reserved GPU time, i.e. do all your debugging on Colab
+(on CPU runtime) so that everything is ready. Then you can use your
+reserved time to just run your notebook from beginning to end, and save
+the results.</p>
 <h2 id="connecting-to-the-gpu-instance">Connecting to the GPU
 instance</h2>
 <p>At your reserved time (not earlier!), run</p>
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
+ssh -i id_rsa_colab -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
 </pre>
 <p>where</p>
 <ul>
@@ -92,22 +93,34 @@ the GPU instance.</li>
 <p>This will set up a tunnel between your local sytem and the GPU
 instance. Leave this SSH session running.</p>
 <p>Inside the SSH session, run (note: this is all one line):</p>
+<!--
+Dockerfile:
+
+```
+FROM quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
+
+USER ${NB_UID}
+
+# Install Lightning
+RUN pip install --pre --no-cache-dir torch==2.4.1 && \
+    pip install --pre --no-cache-dir librosa zeus-ml==0.8.0 && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+```
+
+docker build -t jupyter-zeus .
+-->
 <pre>
-docker run -d --rm -p 8888:8888 --gpus all quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
-</pre>
-<p>and then run</p>
-<pre>
-docker exec -it $(docker ps -q) python -m pip install -I torch==2.4.1
+docker run -d -p 8888:8888 --rm --gpus all --name jupyter jupyter-zeus
 </pre>
 <p>Finally, run</p>
 <pre>
-docker exec -it $(docker ps -q) jupyter server list 
+docker exec -it jupyter jupyter server list 
 </pre>
 <p>In the output of the command above, look for your server’s token,
 e.g.:</p>
 <pre>
-Currently running servers:
-http://55ae26461d76:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
+http://b6bab0d5ccab:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
 </pre>
 <p>Copy this token - you will need it in the next step.</p>
 <p>Now, you can open Colab in a browser. Click on the drop-down menu for
@@ -128,7 +141,7 @@ slot.</p>
 forwarding”</h4>
 <p><strong>Q</strong>: When I use the SSH command</p>
 <pre>
-ssh -i id_rsa_chameleon -L 127.0.0.1:8888:127.0.0.1:8888 cc@IP_ADDRESS
+ssh -i id_rsa_colab -L 127.0.0.1:8888:127.0.0.1:8888 cc@IP_ADDRESS
 </pre>
 <p>it says:</p>
 <pre>
@@ -152,7 +165,7 @@ warnings:</p>
 To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
 2024-04-15 17:18:18.643115: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
 </pre>
-<p>and when I try to <code>fit</code> a model, I see:</p>
+<p>and when I try to <code>fit</code> a model, I see other warnings:</p>
 <pre>
 2024-04-15 17:20:25.275428: I external/local_xla/xla/service/service.cc:168] XLA service 0x7fe430337610 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
 2024-04-15 17:20:25.275483: I external/local_xla/xla/service/service.cc:176]   StreamExecutor device (0): Quadro RTX 6000, Compute Capability 7.5
