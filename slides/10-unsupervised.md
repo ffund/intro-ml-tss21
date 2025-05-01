@@ -302,7 +302,7 @@ $$\widetilde{x}_i = \sum_{j=1}^p (v_j^T \widetilde{x}_i) v_j $$
 
 Consider approximation with *first* $d < p$ coefficients: 
 
-$$\hat{x}_i = \sum_{i=1}^d (v_j^T \widetilde{x}_i) v_j$$
+$$\hat{x}_i = \sum_{j=1}^d (v_j^T \widetilde{x}_i) v_j$$
 
 ### Average approximation error
 

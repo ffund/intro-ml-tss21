@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -405,7 +408,7 @@ reconstruct the data:</p>
 \widetilde{x}_i) v_j \]</span></p>
 <p>Consider approximation with <em>first</em> <span
 class="math inline">\(d &lt; p\)</span> coefficients:</p>
-<p><span class="math display">\[\hat{x}_i = \sum_{i=1}^d (v_j^T
+<p><span class="math display">\[\hat{x}_i = \sum_{j=1}^d (v_j^T
 \widetilde{x}_i) v_j\]</span></p>
 </section>
 <section id="average-approximation-error" class="slide level3">
@@ -1100,7 +1103,7 @@ alt="Training the generator." />
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
