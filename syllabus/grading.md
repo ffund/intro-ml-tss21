@@ -72,11 +72,11 @@ During the exam, you will be permitted to use:
 * 2 sheets of 8.5x11 inch-sheet double sided (i.e. 4-page) reference that you have prepared, with whatever you think you will find useful. This reference sheet must be printed or handwritten - you should not use a digital copy. At the end of your exam, you will submit a photo of your reference sheet along with your exam.
 * [Wolfram Alpha](https://www.wolframalpha.com/) or [Desmos Scientific Calculator](https://www.desmos.com/scientific)
 * Python only inside the Jupyter environment on the exam - you may not use your own IDE/Python terminal, you may not use Colab.
-* the official scikit-learn API reference pages (any URL that starts with https://scikit-learn.org/stable/modules)
-* the official numpy API reference pages (any URL that starts with https://numpy.org/doc/stable/reference)
-* the official pandas API reference pages (any URL that starts with https://pandas.pydata.org/docs/reference)
-* the official Keras API reference pages  (any URL that starts with https://keras.io/api)
-* the official Tensorflow API reference pages (any URL that starts with https://www.tensorflow.org/api_docs/python/tf/) 
+* the official scikit-learn API reference pages (via https://scikit-learn.org/stable/api/index.html)
+* the official numpy API reference pages (via https://numpy.org/doc/stable/reference)
+* the official pandas API reference pages (via https://pandas.pydata.org/docs/reference)
+* the official Keras API reference pages  (via https://keras.io/api)
+* the official Tensorflow API reference pages (via https://www.tensorflow.org/api_docs/python/tf/) 
 * Google Translate (i.e. if you do not understand some question text or instructions during the exam, you may translate it.)
 
 If you plan to use these permitted online materials during the exam, you should open them before the exam begins - you may not use Google during the exam to find them.
