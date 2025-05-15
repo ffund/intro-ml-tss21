@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>ECE-GY 6143 Intro Machine Learning - Spring 2025</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">ECE-GY 6143 Intro Machine Learning - Spring 2025</h1>
+<p class="author">Fraida Fund</p>
+<p class="date">January 2025</p>
+</header>
+<h3 id="overview">Overview</h3>
+<p>This course is an introduction to the field of machine learning,
+covering fundamental techniques for classification, regression,
+dimensionality reduction, clustering, and model selection. A broad range
+of algorithms will be covered, such as linear and logistic regression,
+neural networks, deep learning, support vector machines, tree-based
+methods, expectation maximization, and principal components analysis.
+The course will include hands-on exercises with real data from different
+application areas (e.g. text, audio, images). Students will learn to
+train and validate machine learning models and analyze their
+performance.</p>
+<h3 id="instructor">Instructor</h3>
+<p>Fraida Fund ffund@nyu.edu (370 Jay St, Room 936). The best way to
+reach me is to post on Ed or to visit my office hour (see Brightspace
+calendar for dates and Zoom links).</p>
+<h3 id="instruction-mode">Instruction mode</h3>
+<p>Online synchronous (live Zoom meetings), with some online
+asynchronous content. (The live Zoom meetings will be recorded.)</p>
+<h3 id="schedule">Schedule</h3>
+<ul>
+<li>“Chalkboard lecture” Wednesday 11:00 AM - 1:30 PM (NYC time) live on
+Zoom.</li>
+<li>“Colab lecture” video will be released online after the chalkboard
+lecture.</li>
+<li>Homework problem sets will be released on Fridays at 1PM, and will
+be due 9 days later (on a Sunday) at midnight.</li>
+<li>Lab assignments will be released on Fridays for even-numbered topics
+(2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at
+midnight (except the last lab, which follows a slightly different
+schedule).</li>
+<li>Office hours: See Brightspace calendar for dates and Zoom links</li>
+</ul>
+<p>For the Summer 2025 semester, a tentative schedule (subject to
+change) is:</p>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 83%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Lecture Date</th>
+<th>Topic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td></td>
+<td>0: Prerequisite review, Python+numpy</td>
+</tr>
+<tr class="even">
+<td>5/21</td>
+<td>1: Intro to ML, exploratory data analysis</td>
+</tr>
+<tr class="odd">
+<td>5/28</td>
+<td>2: Linear regression</td>
+</tr>
+<tr class="even">
+<td>6/4</td>
+<td>3: Gradient descent, bias-variance tradeoff</td>
+</tr>
+<tr class="odd">
+<td>6/11</td>
+<td>4: Model selection, regularization</td>
+</tr>
+<tr class="even">
+<td>6/18</td>
+<td>5: Logistic regression for classification</td>
+</tr>
+<tr class="odd">
+<td>6/25</td>
+<td>6: K nearest neighbor, feature selection</td>
+</tr>
+<tr class="even">
+<td><strong>6/30-7/3</strong></td>
+<td><strong>Midterm exam</strong> (optional)</td>
+</tr>
+<tr class="odd">
+<td>7/2</td>
+<td>7: Decision trees, ensembles</td>
+</tr>
+<tr class="even">
+<td>7/9</td>
+<td>8: Support vector classifiers, kernels, hyperparameter
+optimization</td>
+</tr>
+<tr class="odd">
+<td>7/16</td>
+<td>9: Neural networks</td>
+</tr>
+<tr class="even">
+<td>7/23</td>
+<td>10: Deep neural networks, convolutional neural networks</td>
+</tr>
+<tr class="odd">
+<td>7/30</td>
+<td>11: Unsupervised learning</td>
+</tr>
+<tr class="even">
+<td><strong>8/6</strong></td>
+<td><strong>Final exam</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The anticipated schedule of lab assignments will be:</p>
+<ul>
+<li>Lab 2: released 5/30, due 6/12</li>
+<li>Lab 4: released 6/13, due 6/26</li>
+<li>Lab 6: released 6/27, due 7/10</li>
+<li>Lab 8: released 7/11, due 7/24</li>
+<li>Lab 10: released 7/25, due <strong>8/10</strong> (Sunday, after the
+final exam)</li>
+</ul>
+<h3 id="time-commitment">Time commitment</h3>
+<p>This is a 3-credit course. During a fall or spring semester, the
+average student should spend at least 3 hours/week/credit → 9 hours/week
+for a 3 credit course. A typical week will include:</p>
+<ul>
+<li>pre-lecture reading/activity (some weeks) or study time (0.5-1
+hours)</li>
+<li>a “chalkboard lecture” about 2-2.5 hours long</li>
+<li>a “Colab lecture” video about 1.5 hours long</li>
+<li>a homework problem set (estimated time: 1-2 hours)</li>
+<li>a lab assignment (estimated time: 2-3 hours per week, i.e. about 6
+or 7 hours per lab assignment)</li>
+</ul>
+<p>A student who is not very comfortable with the prerequisites may have
+to spend more time than the estimate above in order to do well.</p>
+<p>In the summer semester, which is 2 weeks shorter but the same number
+of credits, the estimated time commitment is slightly higher, especially
+around the midterm and final exams.</p>
+<h3 id="textbook">Textbook</h3>
+<p>You do not have to buy a textbook. A list of references, available to
+you for free with your NYU account, is on the course site: <a
+href="../notes/0-books.html">Textbooks and other resources</a>.</p>
+<h3 id="platforms">Platforms</h3>
+<p>This course uses several required third-party platforms:</p>
+<ul>
+<li>demos and labs in this course run on Google Colab</li>
+<li>homework will be on <a
+href="https://us.prairielearn.com/pl">PrairieLearn</a> and exams on <a
+href="https://us.prairietest.com/">PrairieTest</a></li>
+<li>Q&amp;A will be on <a href="https://edstem.org/">Ed</a></li>
+<li>other platforms may be used for lab assignments</li>
+</ul>
+<p>Refer to the Content &gt; Course Tools section of the Brightspace
+course site for details, and to join our course on these platforms.</p>
+<p>All of the executable content in this course should run on these
+platforms, not on your own laptop. The course staff is not able to
+support the individual operating systems, Python versions, and Python
+library versions installed on students’ personal devices.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Students enrolled in Intro ML are expected to have
+undergraduate-level probability and linear algebra. A more detailed list
+of specific math concepts that are required is available here: <a
+href="../notes/0-prerequisite-review.html">Prerequisite review</a>.</p>
+<p>Students should also have programming experience, preferably in
+Python.</p>
+<p>No prior experience in machine learning is expected.</p>
+<h3 id="grading">Grading</h3>
+<p>In the summer semester, the overall numeric course grade is
+determined as follows:</p>
+<ul>
+<li>Homework problem sets: 25%</li>
+<li>Lab assignments: 25%</li>
+<li>Midterm exam (if you take it): 25%</li>
+<li>Final exam:
+<ul>
+<li>25% if you took the midterm,</li>
+<li>50% if you did not take the midterm, or if you score better on the
+final than you did on the midterm</li>
+</ul></li>
+<li>Extra credit: See below</li>
+</ul>
+<p>Then, your letter grade is determined according to the following
+chart:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Minimum grade required for…</th>
+<th>is…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A</td>
+<td>90</td>
+</tr>
+<tr class="even">
+<td>A-</td>
+<td>85</td>
+</tr>
+<tr class="odd">
+<td>B+</td>
+<td>82</td>
+</tr>
+<tr class="even">
+<td>B</td>
+<td>75</td>
+</tr>
+<tr class="odd">
+<td>B-</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<td>C+</td>
+<td>64</td>
+</tr>
+<tr class="odd">
+<td>C</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+<p>(grades are rounded up if they are within 0.999 of the required
+grade.)</p>
+<p>The same grading policy is applied to every student, regardless of
+personal circumstances. There are no opportunities for “extra” work or
+for personal grading schemes different than the one described above. If
+it important to you to earn a specific grade, then it is up to you to
+make sure the work you submit is at that level.</p>
+<h4 id="homework-problem-sets">Homework problem sets</h4>
+<p>There are 10-12 homework problem sets assigned over the course of the
+semester. These are always due on Sunday at midnight. Make sure to give
+yourself plenty of time, so that in case you have questions or need
+help, you have time to ask and get support on Ed well before the
+assignment is due. Late work will not be graded for credit unless
+recommended by the student advocate (see “Illness or other exceptional
+situation”).</p>
+<p>There are many problem sets over the course of the semester, so each
+one individually carries relatively little weight. Therefore, if life
+circumstances on occasion prevent you from fully completing an
+assignment before the deadline, the impact on your overall course grade
+will be small. There is also an added element of “forgiveness” in the
+two lowest problem set grades counting less:</p>
+<p>The two lowest grades in the “Homework problem sets” category will be
+weighted 50%. For example: if you earn [50, 75, 80, 90, 64] on problem
+sets, your weighted problem set average is [75+80+90+(50+64)/2]/4 =
+75.5.</p>
+<p>Homework problem sets are expected to take 1-2 hours on average. Some
+homework problem sets may take less time (e.g. 30 minutes) and some may
+take more time (e.g. up to 4 hours). If you are less comfortable with
+the math or programming prerequisites for this course, you may find that
+homework problem sets take longer than 1-2 hours.</p>
+<p>Most homework problems are automatically graded, so you will have
+instant feedback regarding your answer (you will know whether it was
+correct or not, and in many cases, you will see an explanation of the
+correct answer). You have unlimited attempts to submit your answers for
+credit before the deadline. Your score will never decrease - once you
+have earned credit for a question, you keep that credit even you later
+answer the question incorrectly. After the deadline, you may continue to
+practice the homework problems, although you won’t earn credit.</p>
+<h4 id="lab-assignments">Lab assignments</h4>
+<p>There are 4-5 lab assignments over the course of the semester. The
+average time expected per lab assignment is 7 hours. Some lab
+assignments will take closer to 4-5 hours and some will take closer to
+9-10 hours. Note that lab assignments span more than one week.</p>
+<p>Make sure to give yourself plenty of time, so that in case you have
+questions or need help, you have time to ask and get support on Ed well
+before the assignment is due. Late work will not be graded for credit
+unless recommended by the student advocate (see “Illness or other
+exceptional situation”).</p>
+<h4 id="exams">Exams</h4>
+<p>In the summer semester, there will be an optional midterm exam and a
+required final exam.</p>
+<p>The midterm exam, which students may choose to take or not, will take
+place outside of the scheduled lecture time slot; there will be several
+time slots to choose from over the course of a week, including at least
+one evening time slot to accommodate students who are working during the
+summer semester.</p>
+<p>The final exam, which is required for all students, will take place
+in the last scheduled lecture time slot of the semester. The final exam
+will be cumulative, covering material from all lectures throughout the
+semester.</p>
+<p>On each exam, there will be 100 points that are divided roughly as
+follows:</p>
+<ul>
+<li>20-30 points: basic computations. You’ll show that you understand
+the mathematical operations that are carried out by machine learning
+models, by doing some of these operations yourself.</li>
+<li>20-30 points: making choices. You’ll show that you know how to
+choose a machine learning model, set it up to align with the problem you
+are trying to solve, handle the data appropriately, and follow up on
+initial results with next steps.</li>
+<li>10-15 points: fundamental facts about machine learning models and
+how they behave. These questions do not require computation - they will
+usually be multiple choice, checkbox, or matching question formats.</li>
+<li>5-10 points: questions about specific case studies, visualizations,
+and examples in problem sets or lab assignments. These questions are
+designed to make sure you “take away” what is intended from these
+materials, rather than just earning whatever “points” are associated
+with them.</li>
+<li>30-35 points: code, including one “easy” and one more complicated
+question. The “complicated” question is designed so that you can earn
+points progressively, e.g. you can get a small portion of its credit for
+doing some basic things correct, some more credit for doing slightly
+more difficult things. To earn full credit, you will need to show an
+excellent understanding of principles of ML coding.</li>
+</ul>
+<p>You will take exams online on your own computer, with a proctor
+watching. You will share your screen and a video view of your
+environment with the proctor. If you prefer not to share a video view of
+your environment with a proctor, you may arrange to take an exam in
+person instead.</p>
+<p>In addition to the “live” proctoring, you will record your own screen
+while taking the exam, and you will submit this recording after the end
+of the exam (this applies to both in person and online exams).</p>
+<p>During the exam, you will be permitted to use:</p>
+<ul>
+<li>Blank scrap paper (loose sheets, not in a notebook)</li>
+<li>2 sheets of 8.5x11 inch-sheet double sided (i.e. 4-page) reference
+that you have prepared, with whatever you think you will find useful.
+This reference sheet must be printed or handwritten - you should not use
+a digital copy. At the end of your exam, you will submit a photo of your
+reference sheet along with your exam.</li>
+<li><a href="https://www.wolframalpha.com/">Wolfram Alpha</a> or <a
+href="https://www.desmos.com/scientific">Desmos Scientific
+Calculator</a></li>
+<li>Python only inside the Jupyter environment on the exam - you may not
+use your own IDE/Python terminal, you may not use Colab.</li>
+<li>the official scikit-learn API reference pages (via
+https://scikit-learn.org/stable/api/index.html)</li>
+<li>the official numpy API reference pages (via
+https://numpy.org/doc/stable/reference)</li>
+<li>the official pandas API reference pages (via
+https://pandas.pydata.org/docs/reference)</li>
+<li>the official Keras API reference pages (via
+https://keras.io/api)</li>
+<li>the official Tensorflow API reference pages (via
+https://www.tensorflow.org/api_docs/python/tf/)</li>
+<li>Google Translate (i.e. if you do not understand some question text
+or instructions during the exam, you may translate it.)</li>
+</ul>
+<p>If you plan to use these permitted online materials during the exam,
+you should open them before the exam begins - you may not use Google
+during the exam to find them.</p>
+<p>You may not use any other online or offline materials or resources
+during the exam. You may not use the course handouts or notebooks
+(except for parts you have copied into your ‘reference sheet’). You may
+not open the homework problem sets on PrairieLearn during the exam.</p>
+<h4 id="extra-credit">Extra credit</h4>
+<p>You will have the opportunity to earn extra credit towards your final
+exam score. This extra credit will be added to your actual exam score
+before it is counted in your course grade. For example, if you earn a
+92% on your final exam and you have 4 points of extra credit, then a 96%
+score will be counted.</p>
+<p>You may earn up to 6 points toward your final exam.</p>
+<ul>
+<li><strong>Chalkboard lecture - live</strong>: in most of our live
+chalkboard lectures on Zoom, we will run some polls - if you participate
+in all of the polls in a given lecture, you will earn 0.5 points extra
+credit.</li>
+<li><strong>Colab lecture</strong>: you may earn extra credit points by
+answering all of the questions in the Colab lecture videos <em>within
+one week after the video is released</em>. Some of the questions only
+need to be answered (e.g. “What do you <em>think</em> will happen”);
+some need to be answered <em>correctly</em> (and these will be labeled
+as “Correct Answer Required”).</li>
+</ul>
+<p>Extra credit points are only awarded in 0.5 point increments if you
+do everything that is required in a given lesson - you won’t get 0.25
+points for participating in half of the polls in a chalkboard lecture,
+for example.</p>
+<p>Extra credit is capped at 6 points. The cap means that even if you
+miss some opportunities to earn a 0.5 point (for example: you cannot
+attend some live chalkboard lectures because of other responsibilities),
+you won’t be disadvantaged. There are no makeup opportunities for extra
+credit points,</p>
+<h3 id="academic-integrity-and-collaboration-policies">Academic
+integrity and collaboration policies</h3>
+<p>For general academic integrity guidelines, please review the <a
+href="https://engineering.nyu.edu/life-tandon/student-life/student-advocacy/student-code-conduct">NYU
+Tandon Student Code of Conduct</a> (n.b. the academic misconduct
+section).</p>
+<p>For this course in particular:</p>
+<ul>
+<li>Students are expected to do all assignments individually. If a
+student shows or gives his/her work to another, then both students are
+considered to be cheating.</li>
+</ul>
+<p>If you need help with an assignment, these are the ways in which you
+are <em>permitted</em> to get help from someone else:</p>
+<ul>
+<li>You may ask questions about homework/lab assignments on the Q&amp;A
+site (Ed). It’s OK to include a partial answer or some details about
+reasoning in your question, even though it is visible to the rest of the
+class - you don’t have to worry about “giving away an answer” when
+asking a question. You can visit an office hour with course staff and
+ask questions there.</li>
+<li>You may discuss homework/lab assignments with classmates or other
+people who are not course staff as follows: <em>without sharing or
+directly showing your materials</em> (question, solution, failed
+attempt, data, figures), you can verbally discuss with other students
+the approach you used to solve a particular problem. (A useful guideline
+is: if there is a screen involved in this discussion, it’s not
+allowed.)</li>
+</ul>
+<p>But, these ways of getting help are <em>not permitted</em>:</p>
+<ul>
+<li>You may not share your homework/lab with anyone else by email or
+other private communication channel. (Not even for “comparison”, not a
+partial answer, not a screenshot of your answer, not an incorrect
+answer, not even a question variant with no answer…) Note that if
+multiple students submit the same work, they will <em>all</em> get a
+zero, even if one of them can show that they originally did the work -
+because sharing the work is <em>also</em> against course policy.</li>
+<li>You may not post questions on CourseHero, Chegg, or other sites -
+the course Q&amp;A site on Ed is the only place you are allowed to post
+questions about homework assignments.</li>
+<li>You are not allowed to use solved homework or lab assignments from a
+current or previous semester (whether from a friend, or that you find
+online). (Not even for “comparison”, not a partial answer, etc…)</li>
+<li>In most cases, AI assistance is not permitted (see specifics
+below).</li>
+<li>You may not <em>attempt</em> to use any unauthorized assistance on
+exams. Note that even if your attempt is unsuccessful (e.g. you open
+ChatGPT but are “caught” before you can copy and paste a question into
+it), you will earn a zero grade on the exam and a record in the Office
+of Student Life and Services.</li>
+</ul>
+<p>Also note:</p>
+<ul>
+<li>After the class ends, some students like to share their solutions to
+programming assignments as part of an online “portfolio”, to show off
+their work. However, you may only share the part that you wrote - you
+may not share the parts of the “template” (code or text) that were
+written by me.</li>
+</ul>
+<h4 id="policy-on-use-of-ai">Policy on use of AI</h4>
+<p>You are permitted to use AI assistance for the following tasks:</p>
+<ul>
+<li>computer translation between English and another language, e.g. you
+may write an explanation for a homework problem or lab assignment in
+another language and then submit a direct translation to English using
+Google Translate or a similar service. (Note: this does not include
+“cleaning up” or rephrasing text, which is not allowed - only direct
+translation is allowed. You shouldn’t “clean up” text because (1) I
+don’t care about your spelling, grammar, or vocabulary, and (2) if I am
+asking for an open-ended response, I want to hear <em>your</em> voice,
+not an LLM’s voice.)</li>
+<li>to generate Python code for plotting and visualization. You are
+fully responsible for any figures or visualizations you submit,
+including making sure their appearance is reasonable and the data in
+them is correct. But, you are permitted to use an AI assistant such as
+ChatGPT or Gemini to help you generate <code>matplotlib</code> or
+<code>seaborn</code> code to make your plots look the way you want. If
+you do use an AI assistant, you must include your LLM prompt in your
+submission.</li>
+</ul>
+<p>With the exception of the tasks listed above, AI assistance is not
+permitted in this course.</p>
+<p>Here is some free advice for students who are using AI assistance on
+homework anyway (even though it is not permitted in this course):</p>
+<p>The sequence of assignments in this course is calibrated for human
+learners, to gradually learn the content by progressively building on
+what they have already mastered. If you do the homework problem sets and
+lab assignments yourself (especially if you find them challenging!), you
+are “exercising” your brain in ways that make your abilities stronger,
+and prepare you to attempt more difficult problems (including problems
+that are outside the capabilities of current gen AI models). If you use
+AI extensively on un-proctored assessments, like homework problem sets
+and lab assignments, you will instead experience <a
+href="https://spencerauthor.com/cognitive-atrophy/">cognitive
+atrophy</a> - your cognitive ability (as it relates to the skills in
+this couse) gets weaker, instead of stronger. You will likely find
+yourself unprepared for difficult problems on the proctored exams, where
+you are not allowed to use AI.</p>
+<p>Some students feel like they are “learning” when they study the
+answer that an AI assistant provides. In general, reading material
+(lecture notes, homework solutions) is a popular study strategy because
+it is familiar, and feels comfortable. However, it is known to be much
+less effective in creating strong, stable memory representations than
+<em>retrieval practice</em>. The cognitive processes for receiving
+information into your brain (i.e., watching videos or reading text) are
+different from the processes for retrieving information from your brain
+(i.e., taking tests, solving problems). While receiving information can
+help you feel familiar with content (when re-reading you may feel like
+“I’ve seen this problem before!” or “I know this!”), it is much less
+effective at creating strong, stable memory than practice retrieving
+information. This is why if you “learn” primarily by reading/listening,
+even if you feel very comfortable with the material in that context, you
+may still do poorly on exams (where you are asked to retrieve and use
+information) or in other new contexts.</p>
+<p>Retrieval practice is like going to the gym. It’s not most people’s
+favorite activity because it requires effort and time, and is often
+uncomfortable, but it is necessary for growing and learning.</p>
+<p>By the way, retrieval practice - much more so than re-reading - has
+been shown to create memories that are more resistant to stress e.g. the
+stress of an exam setting, or a job interview.</p>
+<p>With all that in mind, are there ways to use AI that will cause less
+“cognitive atrophy” than other ways? Yes, here are some suggestions
+specifically for coding problems -</p>
+<ul>
+<li>Always attempt to solve a problem on your own first, without any AI
+usage. This will help you understand your own capabilities more
+precisely, i.e. to what extent are you dependent on the AI?</li>
+<li>If you are going to ask an AI assistant for help, instead of giving
+it the entire problem and letting it give you an entire solution, prompt
+it with a small piece of the problem that you know you will need, so
+that it gives you one or two lines of code to solve <em>that</em> part
+of the problem. This way, you are still practicing the skill of planning
+out the solution on your own, even if you don’t know how to write code
+to realize that solution.</li>
+<li>A week or two after submitting a solution using AI assistance, reset
+the submission (in PrairieLearn: open the workspace and click the
+“Reset” button) and re-attempt the problem without looking at your
+previous submission.</li>
+</ul>
+<p>Outside of coding problems, I also suggest you avoid using AI as a
+“tutor” since it does not have the benefit of the context of the rest of
+the course material - it does not know the specific points of emphasis
+in this course, what we have/have not learned, or how we have related
+specific concepts to one another. Instead of using AI:</p>
+<ul>
+<li>When you answer a question on PrairieLearn, scroll down to the
+“Correct Answer” panel. In many cases, this will have an explanation
+that is <strong>written by your instructor</strong>.</li>
+<li>If you don’t understand something in the lecture, lab, or homework,
+post a question on Ed to get an explanation from your instructor or a
+course assistant.</li>
+<li>Or, visit an office hour on Zoom for a “live” Q&amp;A with
+humans.</li>
+</ul>
+<p>For open-ended text questions:</p>
+<ul>
+<li>Don’t use AI assistance. You are not graded on spelling, grammar, or
+on how eloquently you describe your observations - so even though an AI
+may be “better” than you on those elements of writing, it’s not
+relevant. You are graded on what <em>you</em> have observed or
+understood based on the specific activities you are writing about, and
+an AI is <em>not</em> better than you at <em>that</em>. (Besides for AI
+use being forbidden, AI-generated text anyways tends to score poorly on
+these questions.)</li>
+</ul>
+<h4 id="violation-of-academic-integrity-policies">Violation of academic
+integrity policies</h4>
+<p>The course staff wants to spend their time and effort supporting
+students who want to learn, not policing students’ avoidance of
+learning. However, when we <em>do</em> detect a violation of these
+policies (e.g. on grading a manually graded question on a homework or
+lab assignment, on “spot checks” of autograded questions, or on manual
+review of exams), we take it very seriously.</p>
+<ul>
+<li>on the first instance of a violation of these academic integrity
+policies, a zero grade will be applied for the assessment. Also, a
+record of the incident will be kept in the Office of Student Life and
+Services by the Office of Student Advocacy, as described in the <a
+href="https://engineering.nyu.edu/life-tandon/student-life/student-advocacy/student-code-conduct">Student
+Code of Conduct</a>.</li>
+<li>on a second instance, an F grade will be assigned for the course.
+Also, a record of the incident will be kept in the Office of Student
+Life and Services by the Office of Student Advocacy, as described in the
+<a
+href="https://engineering.nyu.edu/life-tandon/student-life/student-advocacy/student-code-conduct">Student
+Code of Conduct</a>.</li>
+</ul>
+<p>By design, the consequence for an academic integrity violation is
+always worse than the consequence for not knowing an answer - if you
+don’t know an answer to a question, you may earn a zero on just that
+question. If you violate the academic integrity policies of the course,
+you will earn a zero on the entire assessment (problem set, lab
+assignment, or exam). There are no opportunities to “make up” points
+lost on an assignment due to an academic integrity violation.</p>
+<h3 id="other-important-policies">Other important policies</h3>
+<h4 id="inclusion">Inclusion</h4>
+<p>The NYU Tandon School values an inclusive and equitable environment
+for all our students. I hope to foster a sense of community in this
+class and consider it a place where individuals of all backgrounds,
+beliefs, ethnicities, national origins, gender identities, sexual
+orientations, religious and political affiliations, and abilities will
+be treated with respect. It is my intent that all students’ learning
+needs be addressed both in and out of class, and that the diversity that
+students bring to this class be viewed as a resource, strength and
+benefit. If this standard is not being upheld, please feel free to speak
+with me.</p>
+<h4 id="disability">Disability</h4>
+<p>If you are student with a disability who is requesting
+accommodations, please contact New York University’s Moses Center for
+Students with Disabilities (CSD) at 212-998-4980 or mosescsd@nyu.edu.
+You must be registered with CSD to receive accommodations. Information
+about the Moses Center can be found at www.nyu.edu/csd. The Moses Center
+is located at 726 Broadway on the 3rd floor.</p>
+<p>Note for those who require accommodations for timed assessments: the
+exams in this class are timed exams.</p>
+<h4 id="illness-or-other-exceptional-situation">Illness or other
+exceptional situation</h4>
+<p>If you are experiencing an illness or any other situation that might
+affect your academic performance in a class, please contact the student
+advocate:
+https://engineering.nyu.edu/life-tandon/student-life/student-advocacy
+who will reach out to the course instructor on your behalf for
+accommodations when warranted.</p>
+<p>Students who need an excused absence (e.g. an extended deadline on an
+assignment due to illness) should complete the “Excused Absence” form on
+the Student Advocacy website.</p>
+</body>
+</html>
