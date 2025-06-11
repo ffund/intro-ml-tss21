@@ -53,7 +53,7 @@ $$ \phi (w) = \alpha \sum_{j=1}^d | w_j | $$
 ### Common features: Ridge and LASSO
 
 * Both penalize large $w_j$
-* Both have parameter $\alpha$ that controls level of regularization
+* Both have hyperparameter $\alpha$ that controls level of regularization
 * Intercept $w_0$ not included in regularization sum (starts at 1!), this depends on mean of $y$ and should not be constrained.
 
 

@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -99,8 +102,8 @@ LS to 0.</figcaption>
 <h3>Common features: Ridge and LASSO</h3>
 <ul>
 <li>Both penalize large <span class="math inline">\(w_j\)</span></li>
-<li>Both have parameter <span class="math inline">\(\alpha\)</span> that
-controls level of regularization</li>
+<li>Both have hyperparameter <span class="math inline">\(\alpha\)</span>
+that controls level of regularization</li>
 <li>Intercept <span class="math inline">\(w_0\)</span> not included in
 regularization sum (starts at 1!), this depends on mean of <span
 class="math inline">\(y\)</span> and should not be constrained.</li>
@@ -140,9 +143,9 @@ parameters is zero.</p>
 <em>standardize</em> each feature and target to have zero mean, unit
 variance:</p>
 <ul>
-<li><span class="math inline">\(x_{i,j} \rightarrow \frac{x_{i,j} -
+<li><span class="math inline">\(x_{i,j} \rightarrow  \frac{x_{i,j} -
 \bar{x}_j}{s_{x_j}}\)</span></li>
-<li><span class="math inline">\(y_{i} \rightarrow \frac{y_{i} -
+<li><span class="math inline">\(y_{i} \rightarrow  \frac{y_{i} -
 \bar{y}}{s_{y}}\)</span></li>
 </ul>
 </section>
@@ -420,7 +423,7 @@ class="math inline">\(\alpha\)</span></li>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
