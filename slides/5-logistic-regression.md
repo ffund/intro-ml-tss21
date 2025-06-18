@@ -23,11 +23,24 @@ and there is some (unknown) relationship between $\mathbf{x_i}$ and $y_i$.
 
 * **Binary classification**: The output variable $y$ is constrained to be $\in {0, 1}$
 
+::: notes
+
+In regression problems, we are modeling
+
+$$\hat{y} = f(x)$$ 
+
+where $y$ is continuous valued.
+
+In classification problems, we are modeling 
+
+$$\hat{y} = f(x)$$
+
+where $\hat{y}$ is discrete. Alternatively, instead of/in addition to directly learning $f(x)$ (the class labels), we can learn a *decision boundary*.  
+
+:::
 
 
 ## Linear classifiers
-
-
 
 
 
@@ -42,6 +55,9 @@ and there is some (unknown) relationship between $\mathbf{x_i}$ and $y_i$.
 
 
 ![Binary classification problem with linear decision boundary.](../images/4-linear-classifier.png){ width=40% }
+
+
+In higher dimensions, there is a separating hyperplane (instead of a separating line).
 
 
 :::
@@ -59,7 +75,6 @@ $$  \hat{y} =
 	\end{cases}
  $$
 
-\newpage
 
 ### Multi-class classification: illustration
 
@@ -69,12 +84,11 @@ of $C_i$ from the examples of all other classes.](../images/hyperplane.png){ wid
 
 ### Linear separability 
 
-Given training data 
-
-$$(\mathbf{x}_i, y_i), i=1,\cdots,N$$ 
+Given training data samples $(\mathbf{x}, y)$...
 
 The problem is **perfectly linearly separable** if there exists a **separating hyperplane** $H_i$ such that all $\mathbf{x} \in C_i$ lie on its positive side, and all $\mathbf{x} \in C_j, j \neq i$ lie on its negative side.
 
+\newpage
 
 ### Non-uniqueness of separating hyperplane
 
@@ -84,7 +98,6 @@ When a separating hyperplane exists, it is not unique (there are in fact infinit
 
 ![Several separating hyperplanes.](../images/4-linear-classifier-non-unique.png){ width=40% }
 
-\newpage
 
 :::
 
@@ -106,7 +119,21 @@ Which hyperplane to choose?
 
 We will try to find the hyperplane that minimizes loss according to some **loss function**.
 
+::: notes
+
 Will revisit several times this semester.
+
+Today, logistic regression:  
+
+* we model the decision boundary as a line/hyperplane (in other words, it is a linear classifier)
+* we choose the hyperplane which the probability of having observed this particular data is maximized ("maximum likelihood")
+* we model as a continuous function, the *probability of belonging* to the positive class
+* we apply a *threshold* rule to turn the "soft" probability as a "hard" decision
+
+
+::: 
+
+\newpage
 
 
 ## Logistic regression
@@ -124,8 +151,10 @@ $$ P(y_i = 1 | x_i) = f(x_i), P(y_i = 0 | x_i) = 1 - f(x_i)$$
 
 ::: notes
 
-We need a function that takes a real value and maps it to range $[0,1]$. What function should we use?
+Suppose we have the weights of a linear decision boundary. For any point in the feature space, 
+we can compute the linear combination $z = w_0 + \sum_{j=1}^d w_d x_d$.
 
+Now we want to map that real-valued $z$ to the range $[0,1]$ (representing a probability). 
 
 :::
 
@@ -153,6 +182,7 @@ $$ P(y=1|\mathbf{x}) = \frac{1}{1 + e^{-z}}, \quad  P(y=0|\mathbf{x}) = \frac{e^
 
 (note: $P(y=1) + P(y=0) = 1$)
 
+
 ### Logistic function with threshold
 
 Choose a threshold $t$, then
@@ -164,11 +194,9 @@ $$ \hat{y} =
 \end{cases}
 $$
 
-\newpage
-
 ### Logistic model as a "soft" classifier
 
-![Plot of $P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x$. As $w_1 \to \infty$ the logistic model becomes a "hard" rule.](../images/sigmoid-shape.png){ width=30% }
+![Plot of $P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x$. As the magnitude of the weight increases, the slope of the curve becomes steep - the logistic model becomes a "hard" rule.](../images/sigmoid-shape.png){ width=30% }
 
 
 ### Logistic classifier properties 
@@ -181,7 +209,7 @@ $$
 
 ### Logistic regression - illustration
 
-![Logistic regression, illustrated with contour plot.](../images/logistic-regression-contour-plot.png){ width=60% }
+![Logistic regression, illustrated with contour plot.](../images/logistic-regression-contour-plot.png){ width=40% }
 
 \newpage
 
@@ -297,7 +325,7 @@ $$y_i P(y_i  = 1| \mathbf{x_i}, \mathbf{w}) + (1 - y_i) P(y_i = 0| \mathbf{x_i},
 
 This expression is familiar as the PMF of a Bernoulli random variable.
 
-We take the log of both sides, because then the product turns into a sum, and we make it negative so we can minimize instead of maximize...
+We take the log of both sides, because then the product turns into a sum (better for numeric stability!), and we make it negative so we can minimize instead of maximize...
 
 :::
 
@@ -375,18 +403,18 @@ To minimize, we would take the partial derivative:
 
 $$ \frac{\partial L(W)}{\partial W_{kj}} = 0 $$
 
-for all $W_{kj}$
-
-**But**, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent). 
+for all $W_{kj}$. **But**, there is no closed-form expression - can only estimate weights via numerical optimization (e.g. gradient descent). 
 
 :::notes
+
+To get the gradient descent update rule, we need to get the gradient of the loss function. 
 
 We will show this for the binary classifier case only. The next step will be to plug in our sigmoid function, $P(y_i = 1| \mathbf{x_i}, \mathbf{w}) = \sigma(z_i)$.
 
 :::
 
 
-### Minimizing logistic cross-entropy (1)
+### Binary cross-entropy loss function for logistic regression (1)
 
 For binary classification with class labels $0, 1$:
 
@@ -409,7 +437,7 @@ Notes: $\sigma(-z) = 1-\sigma(z)$
 
 :::
 
-### Minimizing logistic cross-entropy (2)
+### Binary cross-entropy loss function for logistic regression (2)
 
 Binary cross-entropy loss function for $[0, 1]$ class labels:
 
@@ -429,7 +457,7 @@ For the binary cross entropy loss, we will get the gradient descent update rule 
 $$ L(w) = - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i}, \mathbf{w}) = \sum_{i=1}^n \ln (1+e^{z_i}) - y_i z_i$$
 
 
-Since we have expressed the loss in terms of $z$, not $w$, it is convenient to use the chain rule to do - 
+Since we have expressed the loss in terms of $z$, not $w$, it is convenient to use the chain rule to do
 
 $$ \frac{\partial L(w)}{\partial w_{j}} = \frac{\partial L(w)}{\partial z} \frac{\partial z}{\partial w_j}  $$
 
@@ -448,7 +476,7 @@ $$
 
 :::
 
-### Minimizing logistic cross-entropy (3)
+### Gradient descent update rule for logistic regression
 
 Gradient descent update rule will be 
 
@@ -466,7 +494,7 @@ This is very similar to the equivalent expression we derived for a linear regres
 
 $$ w^{t+1} = w^t + \alpha \sum_{i=1}^n \left(y_i - \langle w^t,x_i \rangle \right) x_i $$
 
-and has a similar intuition. If your model output is much larger (e.g. more positive) than $y$, you shift your prediction in the negative direction. If your model output is smaller than $y$, you shift your prediction in the positive direction.
+and has a similar intuition. In both cases, we compute the difference between the true value $y$ and the model output. If your model output is much larger (e.g. more positive) than $y$, you shift your prediction in the negative direction. If your model output is smaller than $y$, you shift your prediction in the positive direction.
 
 :::
 
@@ -490,7 +518,7 @@ As with all our models, we want to know -
 
 :::notes
 
-Can use basis functions to map problem to transformed feature space (if "natural" decision boundary is non-linear)
+Can use basis functions to map problem to transformed feature space where it *is* linearly separable.
 
 :::
 

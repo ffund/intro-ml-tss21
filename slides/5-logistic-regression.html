@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -62,6 +65,18 @@ class="math inline">\(\in {0, 1,\cdots,K-1}\)</span></p></li>
 class="math inline">\(y\)</span> is constrained to be <span
 class="math inline">\(\in {0, 1}\)</span></p></li>
 </ul>
+<aside class="notes">
+<p>In regression problems, we are modeling</p>
+<p><span class="math display">\[\hat{y} = f(x)\]</span></p>
+<p>where <span class="math inline">\(y\)</span> is continuous
+valued.</p>
+<p>In classification problems, we are modeling</p>
+<p><span class="math display">\[\hat{y} = f(x)\]</span></p>
+<p>where <span class="math inline">\(\hat{y}\)</span> is discrete.
+Alternatively, instead of/in addition to directly learning <span
+class="math inline">\(f(x)\)</span> (the class labels), we can learn a
+<em>decision boundary</em>.</p>
+</aside>
 </section>
 
 <section>
@@ -89,6 +104,8 @@ alt="Binary classification problem with linear decision boundary." />
 <figcaption aria-hidden="true">Binary classification problem with linear
 decision boundary.</figcaption>
 </figure>
+<p>In higher dimensions, there is a separating hyperplane (instead of a
+separating line).</p>
 </aside>
 </section>
 <section id="linear-classification-rule" class="slide level3">
@@ -120,9 +137,8 @@ classes.</figcaption>
 </section>
 <section id="linear-separability" class="slide level3">
 <h3>Linear separability</h3>
-<p>Given training data</p>
-<p><span class="math display">\[(\mathbf{x}_i, y_i),
-i=1,\cdots,N\]</span></p>
+<p>Given training data samples <span class="math inline">\((\mathbf{x},
+y)\)</span>…</p>
 <p>The problem is <strong>perfectly linearly separable</strong> if there
 exists a <strong>separating hyperplane</strong> <span
 class="math inline">\(H_i\)</span> such that all <span
@@ -162,7 +178,20 @@ style="width:40.0%" alt="This data is not separable." />
 <p>Which hyperplane to choose?</p>
 <p>We will try to find the hyperplane that minimizes loss according to
 some <strong>loss function</strong>.</p>
+<aside class="notes">
 <p>Will revisit several times this semester.</p>
+<p>Today, logistic regression:</p>
+<ul>
+<li>we model the decision boundary as a line/hyperplane (in other words,
+it is a linear classifier)</li>
+<li>we choose the hyperplane which the probability of having observed
+this particular data is maximized (“maximum likelihood”)</li>
+<li>we model as a continuous function, the <em>probability of
+belonging</em> to the positive class</li>
+<li>we apply a <em>threshold</em> rule to turn the “soft” probability as
+a “hard” decision</li>
+</ul>
+</aside>
 </section></section>
 <section>
 <section id="logistic-regression" class="title-slide slide level2">
@@ -180,8 +209,12 @@ that</p>
 <p><span class="math display">\[ P(y_i = 1 | x_i) = f(x_i), P(y_i = 0 |
 x_i) = 1 - f(x_i)\]</span></p>
 <aside class="notes">
-<p>We need a function that takes a real value and maps it to range <span
-class="math inline">\([0,1]\)</span>. What function should we use?</p>
+<p>Suppose we have the weights of a linear decision boundary. For any
+point in the feature space, we can compute the linear combination <span
+class="math inline">\(z = w_0 + \sum_{j=1}^d w_d x_d\)</span>.</p>
+<p>Now we want to map that real-valued <span
+class="math inline">\(z\)</span> to the range <span
+class="math inline">\([0,1]\)</span> (representing a probability).</p>
 </aside>
 </section>
 <section id="logisticsigmoid-function" class="slide level3">
@@ -232,11 +265,11 @@ e^{-z}}, \quad  P(y=0|\mathbf{x}) = \frac{e^{-z}}{1 + e^{-z}}
 <h3>Logistic model as a “soft” classifier</h3>
 <figure>
 <img data-src="../images/sigmoid-shape.png" style="width:30.0%"
-alt="Plot of P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x. As w_1 \to \infty the logistic model becomes a “hard” rule." />
+alt="Plot of P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x. As the magnitude of the weight increases, the slope of the curve becomes steep - the logistic model becomes a “hard” rule." />
 <figcaption aria-hidden="true">Plot of <span
 class="math inline">\(P(y=1|x) = \frac{1}{1+e^{-z}}, z=w_1 x\)</span>.
-As <span class="math inline">\(w_1 \to \infty\)</span> the logistic
-model becomes a “hard” rule.</figcaption>
+As the magnitude of the weight increases, the slope of the curve becomes
+steep - the logistic model becomes a “hard” rule.</figcaption>
 </figure>
 </section>
 <section id="logistic-classifier-properties" class="slide level3">
@@ -255,7 +288,7 @@ class probabilities go towards extremes (0,1) more quickly</li>
 <h3>Logistic regression - illustration</h3>
 <figure>
 <img data-src="../images/logistic-regression-contour-plot.png"
-style="width:60.0%"
+style="width:40.0%"
 alt="Logistic regression, illustrated with contour plot." />
 <figcaption aria-hidden="true">Logistic regression, illustrated with
 contour plot.</figcaption>
@@ -381,7 +414,7 @@ independent of one another,</p>
 <p>Note: for binary classification, <span class="math inline">\(P(y_i|
 \mathbf{x_i}, \mathbf{w})\)</span> is equal to</p>
 <ul>
-<li><span class="math inline">\(y_i P(y_i = 1| \mathbf{x_i},
+<li><span class="math inline">\(y_i P(y_i  = 1| \mathbf{x_i},
 \mathbf{w})\)</span> when <span class="math inline">\(y_i =
 1\)</span></li>
 <li>and <span class="math inline">\((1 - y_i) P(y_i = 0| \mathbf{x_i},
@@ -397,7 +430,8 @@ class="math inline">\(y_i\)</span>, <span class="math inline">\(P(y_i|
 <p>This expression is familiar as the PMF of a Bernoulli random
 variable.</p>
 <p>We take the log of both sides, because then the product turns into a
-sum, and we make it negative so we can minimize instead of maximize…</p>
+sum (better for numeric stability!), and we make it negative so we can
+minimize instead of maximize…</p>
 </aside>
 </section>
 <section id="maximum-likelihood-estimation-3" class="slide level3">
@@ -469,18 +503,22 @@ r_{ik} \ln P(y_i = k| \mathbf{x_i}, \mathbf{W})\]</span></p>
 <p>To minimize, we would take the partial derivative:</p>
 <p><span class="math display">\[ \frac{\partial L(W)}{\partial W_{kj}} =
 0 \]</span></p>
-<p>for all <span class="math inline">\(W_{kj}\)</span></p>
-<p><strong>But</strong>, there is no closed-form expression - can only
+<p>for all <span class="math inline">\(W_{kj}\)</span>.
+<strong>But</strong>, there is no closed-form expression - can only
 estimate weights via numerical optimization (e.g. gradient descent).</p>
 <aside class="notes">
+<p>To get the gradient descent update rule, we need to get the gradient
+of the loss function.</p>
 <p>We will show this for the binary classifier case only. The next step
 will be to plug in our sigmoid function, <span
 class="math inline">\(P(y_i = 1| \mathbf{x_i}, \mathbf{w}) =
 \sigma(z_i)\)</span>.</p>
 </aside>
 </section>
-<section id="minimizing-logistic-cross-entropy-1" class="slide level3">
-<h3>Minimizing logistic cross-entropy (1)</h3>
+<section
+id="binary-cross-entropy-loss-function-for-logistic-regression-1"
+class="slide level3">
+<h3>Binary cross-entropy loss function for logistic regression (1)</h3>
 <p>For binary classification with class labels <span
 class="math inline">\(0, 1\)</span>:</p>
 <p><span class="math display">\[\begin{equation}
@@ -502,8 +540,10 @@ class="math inline">\(0, 1\)</span>:</p>
 1-\sigma(z)\)</span></p>
 </aside>
 </section>
-<section id="minimizing-logistic-cross-entropy-2" class="slide level3">
-<h3>Minimizing logistic cross-entropy (2)</h3>
+<section
+id="binary-cross-entropy-loss-function-for-logistic-regression-2"
+class="slide level3">
+<h3>Binary cross-entropy loss function for logistic regression (2)</h3>
 <p>Binary cross-entropy loss function for <span
 class="math inline">\([0, 1]\)</span> class labels:</p>
 <p><span class="math display">\[ - \sum_{i=1}^n \ln P(y_i| \mathbf{x_i},
@@ -521,7 +561,7 @@ z_i\]</span></p>
 <p>Since we have expressed the loss in terms of <span
 class="math inline">\(z\)</span>, not <span
 class="math inline">\(w\)</span>, it is convenient to use the chain rule
-to do -</p>
+to do</p>
 <p><span class="math display">\[ \frac{\partial L(w)}{\partial w_{j}} =
 \frac{\partial L(w)}{\partial z} \frac{\partial z}{\partial
 w_j}  \]</span></p>
@@ -542,8 +582,9 @@ L(w)}{\partial z}\)</span> -</p>
 \]</span></p>
 </aside>
 </section>
-<section id="minimizing-logistic-cross-entropy-3" class="slide level3">
-<h3>Minimizing logistic cross-entropy (3)</h3>
+<section id="gradient-descent-update-rule-for-logistic-regression"
+class="slide level3">
+<h3>Gradient descent update rule for logistic regression</h3>
 <p>Gradient descent update rule will be</p>
 <p><span class="math display">\[
 \begin{aligned}
@@ -558,11 +599,13 @@ e^{-z_i} }\right) x_i
 linear regression -</p>
 <p><span class="math display">\[ w^{t+1} = w^t + \alpha \sum_{i=1}^n
 \left(y_i - \langle w^t,x_i \rangle \right) x_i \]</span></p>
-<p>and has a similar intuition. If your model output is much larger
-(e.g. more positive) than <span class="math inline">\(y\)</span>, you
-shift your prediction in the negative direction. If your model output is
-smaller than <span class="math inline">\(y\)</span>, you shift your
-prediction in the positive direction.</p>
+<p>and has a similar intuition. In both cases, we compute the difference
+between the true value <span class="math inline">\(y\)</span> and the
+model output. If your model output is much larger (e.g. more positive)
+than <span class="math inline">\(y\)</span>, you shift your prediction
+in the negative direction. If your model output is smaller than <span
+class="math inline">\(y\)</span>, you shift your prediction in the
+positive direction.</p>
 </aside>
 </section></section>
 <section>
@@ -584,7 +627,7 @@ prediction in the positive direction.</p>
 </ul>
 <aside class="notes">
 <p>Can use basis functions to map problem to transformed feature space
-(if “natural” decision boundary is non-linear)</p>
+where it <em>is</em> linearly separable.</p>
 </aside>
 </section>
 <section id="runtime" class="slide level3">
@@ -1014,7 +1057,7 @@ discriminative model!</p>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
