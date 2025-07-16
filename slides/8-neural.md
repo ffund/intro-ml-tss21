@@ -516,7 +516,7 @@ $$\delta_j = \frac{\partial L}{\partial z_j} = \frac{\partial L}{\partial u_j}\f
 ![Computing backpropagation error at output unit.](../images/9-output-backprop.png){width=50%}
 
 
-For example, in a regression network:
+For example, in a regression network, $z_O = u_O$, then:
 
 
 $$L =  \frac{1}{2}\sum_n (y_n - z_{O,n})^2$$
@@ -543,7 +543,7 @@ Then $\delta_O = \frac{\partial L}{\partial z_O} = -  (y - z_{O})$.
 ### Output unit: derivative vs input weights (local)
 
 - At a node $j$, $z_j = \sum_i w_{j,i} u_{i} = w_{j,i} u_i + \ldots$ (sum over inputs to the node)
-- When taking $\frac{\partial z_j}{\partial w_{j,i}}$ the only term left is $w_{j,i} u_i$
+- When taking $\frac{\partial z_j}{\partial w_{j,i}}$ the only term that matters is $w_{j,i} u_i$
 - So $\frac{\partial z_j}{\partial w_{j,i} } = u_i$
 
 :::notes
@@ -553,12 +553,15 @@ Then $\delta_O = \frac{\partial L}{\partial z_O} = -  (y - z_{O})$.
 
 The derivative of the loss with respect to a weight $w_{j,i}$ input to the node, $\frac{\partial L}{\partial w_{j,i}}$, is the product of:
 
-* $\delta_j = \frac{\partial L}{\partial z_j}$ (the "accumulated" part)
-* $u_i = \frac{\partial z_j}{\partial w_{j,i}}$ (the "local" part)
+* $\frac{\partial L}{\partial z_j} = \delta_j$ (the "accumulated" part)
+* $\frac{\partial z_j}{\partial w_{j,i}} = u_i$ (the "local" part)
 
 so finally, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$.
 
-(We save the computations of all the $u_i$ values from the forward pass, so that we can reuse them for backpropagation.)
+Note:
+
+* we only need to compute $\delta_j$ once per node $j$, then we re-use that value when we compute (one per weight input to node $j$) $\frac{\partial L}{\partial w_{j,i}}$ 
+* we save the computations of all the $u_i$ values from the forward pass, so that we can reuse them here without having to compute them again.
 
 :::
 
@@ -593,7 +596,7 @@ Since
 
 $$z_k = \sum_l w_{k,l} u_l$$
 
-(sum over inputs to node $k$), but for the derivative with respect to $z_j$ the only term left is $w_{k,j} u_j$. So,
+(sum over inputs to node $k$), but for the derivative with respect to $z_j$ only the $w_{k,j} u_j$ term matters. So,
 
 $$
 \begin{aligned}
@@ -619,8 +622,8 @@ Same as output unit - $\frac{\partial z_j}{\partial w_{j,i} } = u_i$
 
 As at output unit, the derivative of the loss with respect to a weight $w_{j,i}$ input to the node, $\frac{\partial L}{\partial w_{j,i}}$, is the product of:
 
-* $\delta_j = \frac{\partial L}{\partial z_j}$ (the "accumulated" part)
-* $u_i = \frac{\partial z_j}{\partial w_{j,i}}$ (the "local" part)
+* $\frac{\partial L}{\partial z_j} = \delta_j$ (the "accumulated" part)
+* $\frac{\partial z_j}{\partial w_{j,i}} = u_i$ (the "local" part)
 
 so for a hidden unit, too, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
 
@@ -652,7 +655,9 @@ so for a hidden unit, too, $\frac{\partial L}{\partial w_{j,i}} = \delta_j u_i$
 
 ### Backpropagation + gradient descent algorithm (1)
 
-1. Start with random (small) weights. Apply input $x_n$ to network and propagate values forward using $z_j = \sum_i w_{j,i} u_i$ and $u_j = g(z_j)$. (Sum is over all inputs to node $j$.)
+Start with random (small) weights.
+
+1. Apply input $x_n$ to network and propagate values forward using $z_j = \sum_i w_{j,i} u_i$ and $u_j = g(z_j)$. (Sum is over all inputs to node $j$.)
 2. Evaluate $\delta_j$ for all output units.
 
 ### Backpropagation + gradient descent algorithm (2)

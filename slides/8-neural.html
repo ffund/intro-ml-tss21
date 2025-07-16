@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -162,8 +165,8 @@ class="math inline">\(\mathbb{R}^4\)</span>.</p>
 <ul>
 <li>At output node, first compute: <span class="math inline">\(z_O =
 \mathbf{w}^T_O [1, \mathbf{u}_H]\)</span></li>
-<li>Then, compute: <span class="math inline">\(u_O = g_O(z_O) =
-\frac{1}{1+e^{-z_{O}}}\)</span></li>
+<li>Then, compute: <span class="math inline">\(u_O = g_O(z_O)
+=  \frac{1}{1+e^{-z_{O}}}\)</span></li>
 <li>(Not in the graph): apply a threshold to get <span
 class="math inline">\(\hat{y}\)</span></li>
 </ul>
@@ -295,7 +298,7 @@ class="math inline">\(y=1,\ldots, K\)</span>:</p>
 <ul>
 <li>Use softmax activation <span class="math inline">\(g_O\)</span>,
 output will be: <span class="math inline">\(u_{O, k} = P(y=k|
-x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K e^{z_\ell}}\)</span></li>
+x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}\)</span></li>
 <li><span class="math inline">\(u_O\)</span> is vector <span
 class="math inline">\([u_0, \ldots, u_K]\)</span> - need <span
 class="math inline">\(K\)</span> output nodes</li>
@@ -695,11 +698,12 @@ alt="Computing backpropagation error at output unit." />
 <figcaption aria-hidden="true">Computing backpropagation error at output
 unit.</figcaption>
 </figure>
-<p>For example, in a regression network:</p>
+<p>For example, in a regression network, <span class="math inline">\(z_O
+= u_O\)</span>, then:</p>
 <p><span class="math display">\[L =  \frac{1}{2}\sum_n (y_n -
 z_{O,n})^2\]</span></p>
 <p>Then <span class="math inline">\(\delta_O = \frac{\partial
-L}{\partial z_O} = - (y - z_{O})\)</span>.</p>
+L}{\partial z_O} = -  (y - z_{O})\)</span>.</p>
 </aside>
 <!-- 
 \begin{tikzpicture}
@@ -721,7 +725,7 @@ class="slide level3">
 class="math inline">\(z_j = \sum_i w_{j,i} u_{i} = w_{j,i} u_i +
 \ldots\)</span> (sum over inputs to the node)</li>
 <li>When taking <span class="math inline">\(\frac{\partial z_j}{\partial
-w_{j,i}}\)</span> the only term left is <span
+w_{j,i}}\)</span> the only term that matters is <span
 class="math inline">\(w_{j,i} u_i\)</span></li>
 <li>So <span class="math inline">\(\frac{\partial z_j}{\partial w_{j,i}
 } = u_i\)</span></li>
@@ -738,16 +742,25 @@ class="math inline">\(w_{j,i}\)</span> input to the node, <span
 class="math inline">\(\frac{\partial L}{\partial w_{j,i}}\)</span>, is
 the product of:</p>
 <ul>
-<li><span class="math inline">\(\delta_j = \frac{\partial L}{\partial
-z_j}\)</span> (the “accumulated” part)</li>
-<li><span class="math inline">\(u_i = \frac{\partial z_j}{\partial
-w_{j,i}}\)</span> (the “local” part)</li>
+<li><span class="math inline">\(\frac{\partial L}{\partial z_j} =
+\delta_j\)</span> (the “accumulated” part)</li>
+<li><span class="math inline">\(\frac{\partial z_j}{\partial w_{j,i}} =
+u_i\)</span> (the “local” part)</li>
 </ul>
 <p>so finally, <span class="math inline">\(\frac{\partial L}{\partial
 w_{j,i}} = \delta_j u_i\)</span>.</p>
-<p>(We save the computations of all the <span
+<p>Note:</p>
+<ul>
+<li>we only need to compute <span
+class="math inline">\(\delta_j\)</span> once per node <span
+class="math inline">\(j\)</span>, then we re-use that value when we
+compute (one per weight input to node <span
+class="math inline">\(j\)</span>) <span
+class="math inline">\(\frac{\partial L}{\partial w_{j,i}}\)</span></li>
+<li>we save the computations of all the <span
 class="math inline">\(u_i\)</span> values from the forward pass, so that
-we can reuse them for backpropagation.)</p>
+we can reuse them here without having to compute them again.</li>
+</ul>
 </aside>
 </section>
 <section id="hidden-unit-backpropagation-error-accumulated"
@@ -783,8 +796,8 @@ z_j}\)</span>.</p>
 <p><span class="math display">\[z_k = \sum_l w_{k,l} u_l\]</span></p>
 <p>(sum over inputs to node <span class="math inline">\(k\)</span>), but
 for the derivative with respect to <span
-class="math inline">\(z_j\)</span> the only term left is <span
-class="math inline">\(w_{k,j} u_j\)</span>. So,</p>
+class="math inline">\(z_j\)</span> only the <span
+class="math inline">\(w_{k,j} u_j\)</span> term matters. So,</p>
 <p><span class="math display">\[
 \begin{aligned}
 \frac{\partial z_k}{\partial z_j} \quad
@@ -818,10 +831,10 @@ weight <span class="math inline">\(w_{j,i}\)</span> input to the node,
 <span class="math inline">\(\frac{\partial L}{\partial
 w_{j,i}}\)</span>, is the product of:</p>
 <ul>
-<li><span class="math inline">\(\delta_j = \frac{\partial L}{\partial
-z_j}\)</span> (the “accumulated” part)</li>
-<li><span class="math inline">\(u_i = \frac{\partial z_j}{\partial
-w_{j,i}}\)</span> (the “local” part)</li>
+<li><span class="math inline">\(\frac{\partial L}{\partial z_j} =
+\delta_j\)</span> (the “accumulated” part)</li>
+<li><span class="math inline">\(\frac{\partial z_j}{\partial w_{j,i}} =
+u_i\)</span> (the “local” part)</li>
 </ul>
 <p>so for a hidden unit, too, <span class="math inline">\(\frac{\partial
 L}{\partial w_{j,i}} = \delta_j u_i\)</span></p>
@@ -849,12 +862,13 @@ L}{\partial w_{j,i}} = \delta_j u_i\)</span></p>
 <section id="backpropagation-gradient-descent-algorithm-1"
 class="slide level3">
 <h3>Backpropagation + gradient descent algorithm (1)</h3>
+<p>Start with random (small) weights.</p>
 <ol type="1">
-<li>Start with random (small) weights. Apply input <span
-class="math inline">\(x_n\)</span> to network and propagate values
-forward using <span class="math inline">\(z_j = \sum_i w_{j,i}
-u_i\)</span> and <span class="math inline">\(u_j = g(z_j)\)</span>. (Sum
-is over all inputs to node <span class="math inline">\(j\)</span>.)</li>
+<li>Apply input <span class="math inline">\(x_n\)</span> to network and
+propagate values forward using <span class="math inline">\(z_j = \sum_i
+w_{j,i} u_i\)</span> and <span class="math inline">\(u_j =
+g(z_j)\)</span>. (Sum is over all inputs to node <span
+class="math inline">\(j\)</span>.)</li>
 <li>Evaluate <span class="math inline">\(\delta_j\)</span> for all
 output units.</li>
 </ol>
@@ -1123,7 +1137,7 @@ size of the <em>output</em>.</li>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
