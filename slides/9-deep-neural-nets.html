@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -66,8 +69,8 @@ alt="Image is based on a figure in Deep learning, by Goodfellow, Bengio, Courvil
 learning, by Goodfellow, Bengio, Courville.</figcaption>
 </figure>
 <p>A neural network with non-linear activation, with one hidden layer
-and many units in it <em>can</em> approximate virtually any continuous
-real-valued function, with the right weights. (Refer to the
+and many units in that layer <em>can</em> approximate virtually any
+continuous real-valued function, with the right weights. (Refer to the
 <em>Universal Approximation Theorem</em>.) But (1) it may need a very
 large number of units to represent the function, and (2) those weights
 might not be learned by gradient descent - the loss surface is very
@@ -105,52 +108,6 @@ apply an activation function, and that’s the unit output</li>
 number of hidden units in a layer its “width.”</p>
 </aside>
 </section>
-<section id="challenges-with-deep-neural-networks" class="slide level3">
-<h3>Challenges with deep neural networks</h3>
-<ul>
-<li>Efficient learning</li>
-<li>Generalization</li>
-</ul>
-</section>
-<section id="loss-landscape" class="slide level3">
-<h3>Loss landscape</h3>
-<figure>
-<img data-src="../images/resnet56_noshort_small.jpg" style="width:30.0%"
-alt="“Loss landscape” of a deep neural network in a “slice” of the high-dimensional feature space." />
-<figcaption aria-hidden="true">“Loss landscape” of a deep neural network
-in a “slice” of the high-dimensional feature space.</figcaption>
-</figure>
-<aside class="notes">
-<p>Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and
-Tom Goldstein. Visualizing the Loss Landscape of Neural Nets. NIPS,
-2018.</p>
-<p>Neural networks are optimized using backpropagation over the
-computational graph, where the loss is a very challenging function of
-<em>all</em> the weights. (Not convex!)</p>
-</aside>
-</section>
-<section id="double-descent-curve" class="slide level3">
-<h3>Double descent curve</h3>
-<figure>
-<img data-src="../images/8-double-descent.png" style="width:100.0%"
-alt="Double descent curve (left) and realization in a real neural network (right)." />
-<figcaption aria-hidden="true">Double descent curve (left) and
-realization in a real neural network (right).</figcaption>
-</figure>
-<aside class="notes">
-<p>Interpolation threshold: where the model is just big enough to fit
-the training data exactly.</p>
-<ul>
-<li>too-small models: can’t represent the “true” function well</li>
-<li>too-big models (before interpolation threshold): memorizes the
-input, doesn’t generalize well to unseen data (very sensitive to
-noise)</li>
-<li>REALLY big models: many possible weights that memorize the input,
-but SGD finds weight combination that memorizes the input <em>and</em>
-does well on unseen data</li>
-</ul>
-</aside>
-</section>
 <section id="double-descent-animation" class="slide level3">
 <h3>Double descent: animation</h3>
 <figure>
@@ -180,23 +137,58 @@ can fit the data, and (under certain conditions) SGD will select the
 minimal norm one, which will make the interpolation smoother and
 smoother and actually result in better performance.</p>
 </blockquote>
-<p>What this means: in practice, we let the network get big (have
-capacity to learn complicated data representations!) and use other
-methods to help select a “good” set of weights from all these
-candidates.</p>
+</aside>
+</section>
+<section id="double-descent-curve" class="slide level3">
+<h3>Double descent curve</h3>
+<figure>
+<img data-src="../images/8-double-descent.png" style="width:100.0%"
+alt="Double descent curve (left) and realization in a real neural network (right)." />
+<figcaption aria-hidden="true">Double descent curve (left) and
+realization in a real neural network (right).</figcaption>
+</figure>
+<aside class="notes">
+<p>With a deep neural network, we are not trying to operate in the
+“classical ML” bias-variance tradeoff regime (to the left of the
+interpolation threshold).</p>
+<p>(Interpolation threshold: where the model is just big enough to fit
+the training data exactly.)</p>
+<ul>
+<li>too-small models: can’t represent the “true” function well (lacks
+capacity to learn complicated data representations!)</li>
+<li>too-big models (before interpolation threshold): memorizes the
+input, doesn’t generalize well to unseen data (very sensitive to
+noise)</li>
+<li>REALLY big models: many possible weights that memorize the input,
+our challenge is to find the weight combination that memorizes the input
+<em>and</em> does well on unseen data</li>
+</ul>
+<p>This is complicated by the “loss landscape” of a deep neural network
+(trained using backpropagation over the computational graph) looking not
+so friendly…</p>
+</aside>
+</section>
+<section id="loss-landscape" class="slide level3">
+<h3>Loss landscape</h3>
+<figure>
+<img data-src="../images/resnet56_noshort_small.jpg" style="width:30.0%"
+alt="“Loss landscape” of a deep neural network in a “slice” of the high-dimensional feature space." />
+<figcaption aria-hidden="true">“Loss landscape” of a deep neural network
+in a “slice” of the high-dimensional feature space.</figcaption>
+</figure>
+<aside class="notes">
+<p>Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and
+Tom Goldstein. Visualizing the Loss Landscape of Neural Nets. NIPS,
+2018.</p>
+<p>There are a variety of techniques we can use to improve the network’s
+ability to learn good weights + find them efficiently, even on this
+difficult loss surface. (Including what we call “conditioning”
+techniques, and some broader techniques.)</p>
 </aside>
 </section>
 <section id="addressing-the-challenges" class="slide level3">
 <h3>Addressing the challenges</h3>
-<ul>
-<li>Efficient learning</li>
-<li>Generalization</li>
-</ul>
 <aside class="notes">
-<p>In deep learning, we don’t want to use “smaller” (simpler) models,
-which won’t be as capable of learning good feature representations.
-Instead, lots of work around (1) finding good weights quickly, and (2)
-finding weights that will generalize.</p>
 <figure>
 <img data-src="../images/deep-learning-markmap.svg" style="width:60.0%"
 alt="Image credit: Sebastian Raschka" />
@@ -237,7 +229,7 @@ from the unlabeled data. e.g. GPT is trained to predict “next
 word”.</li>
 <li>In semi-supervised/weakly-supervised learning learining, we generate
 labels (probably imperfectly) for unlabeled data (maybe using a smaller
-volume of labeled data to train a model!)</li>
+volume of labeled data to train a model to label the data!)</li>
 </ul>
 <p>These are mostly out of scope of this course. But we <em>will</em>
 talk about data augmentation and transfer learning…</p>
@@ -266,18 +258,16 @@ etc.</li>
 <section id="transfer-learning" class="slide level3">
 <h3>Transfer learning</h3>
 <p>Idea: leverage model trained on <em>related</em> data.</p>
-</section>
-<section id="using-pre-trained-networks" class="slide level3">
-<h3>Using pre-trained networks</h3>
-<ul>
-<li>State-of-the-art networks involve millions of parameters, huge
-datasets, and days of training on GPU clusters</li>
-<li>Idea: share pre-trained networks (network architecture and
-weights)</li>
-<li>Some famous networks for image classification: Inception, ResNet,
-and more</li>
-<li>Can be loaded directly in Keras</li>
-</ul>
+<aside class="notes">
+<p>State-of-the-art networks involve millions of parameters, huge
+datasets, and days of training on GPU clusters</p>
+<p>But you don’t have to repeat this process “from scratch” each time
+you train a neural network. (For many tasks, you may not even have
+enough data to get good results by training a network “from
+scratch”.)</p>
+<p>The “feature extraction” part of a neural network trained on related
+data, is likely still very useful for a slightly different task.</p>
+</aside>
 </section>
 <section id="transfer-learning-from-pre-trained-networks"
 class="slide level3">
@@ -289,14 +279,14 @@ parameters</li>
 <li>Only train small number of parameters at the end</li>
 </ul>
 <aside class="notes">
-<p>Base model is a powerful feature extractor (learns transformation
+<p>The base model is a powerful feature extractor (learns transformation
 into a more useful feature space), then you just have to train for the
 mapping from this feature space to the target variable.</p>
 <p>In practice: when applying deep learning, we almost always use a
 pre-trained base model! It saves time, energy, and cost.</p>
 <p>Example: To pre-train the 7B parameter (smallest) Llama 2, Meta’s
 open source language model, takes 184,320 GPU hours (21 GPU YEARS!) and
-anywhere from $100,000-800,000 (depending on cost of GPU instance).</p>
+anywhere from $100,000-800,000 (depending on cost of GPU instances).</p>
 </aside>
 </section>
 <section id="transfer-learning-illustration-1" class="slide level3">
@@ -322,7 +312,7 @@ relevant, may fine-tune more layers.</figcaption>
 <section id="architecturesetup" class="title-slide slide level2">
 <h2>Architecture/setup</h2>
 <ul>
-<li><strong>Activation functions</strong></li>
+<li><strong>Activation functions</strong> (+ skip connections)</li>
 <li><strong>Weight initialization</strong></li>
 <li><strong>Convolutional units</strong></li>
 <li>Recurrent units</li>
@@ -330,7 +320,7 @@ relevant, may fine-tune more layers.</figcaption>
 </ul>
 <aside class="notes">
 <p>Again, this is mostly out of scope of this course, but we’ll talk
-about the first three items very briefly.</p>
+about some of these items very briefly.</p>
 </aside>
 </section>
 <section id="recall-activation-functions" class="slide level3">
@@ -388,7 +378,7 @@ class="math inline">\(\sigma &#39;\)</span> terms.</li>
 <section id="sigmoid-vanishing-gradient-2" class="slide level3">
 <h3>Sigmoid: vanishing gradient (2)</h3>
 <figure>
-<img data-src="../images/deep-vanishing-sigmoid.png" style="width:60.0%"
+<img data-src="../images/deep-vanishing-sigmoid.png" style="width:40.0%"
 alt="Sigmoid function and its derivative." />
 <figcaption aria-hidden="true">Sigmoid function and its
 derivative.</figcaption>
@@ -416,7 +406,7 @@ advantages - still has vanishing gradient.)</p>
 <section id="relu-dead-relu" class="slide level3">
 <h3>ReLU: Dead ReLU</h3>
 <figure>
-<img data-src="../images/deep-dead-relu.png" style="width:60.0%"
+<img data-src="../images/deep-dead-relu.png" style="width:40.0%"
 alt="ReLU function and its derivative." />
 <figcaption aria-hidden="true">ReLU function and its
 derivative.</figcaption>
@@ -437,7 +427,7 @@ sigmoid/tanh.)</p>
 <section id="relu-leaky-relu" class="slide level3">
 <h3>ReLU: Leaky ReLU</h3>
 <figure>
-<img data-src="../images/deep-leaky-relu.png" style="width:60.0%"
+<img data-src="../images/deep-leaky-relu.png" style="width:40.0%"
 alt="Leaky ReLU function and its derivative." />
 <figcaption aria-hidden="true">Leaky ReLU function and its
 derivative.</figcaption>
@@ -446,30 +436,58 @@ derivative.</figcaption>
 <p>When input is less than 0, the ReLU (and downstream units) is
 <em>completely</em> dead (not only very small!)</p>
 <p>Alternative: <strong>leaky ReLU</strong> has small (non-zero)
-gradient in the negative region - can recover.</p>
+gradient <span class="math inline">\(\alpha\)</span> in the negative
+region - can recover.</p>
 <p><span class="math display">\[f(x) = \text{max}(\alpha x,
 x)\]</span></p>
-<p>(<span class="math inline">\(\alpha\)</span> is a
-hyperparameter.)</p>
 </aside>
-</section>
-<section id="other-activations" class="slide level3">
-<h3>Other activations</h3>
-<figure>
-<img data-src="../images/sample-activation-functions-square.png"
-style="width:60.0%"
-alt="Other activations. Image via Sefik Ilkin Serengil." />
-<figcaption aria-hidden="true">Other activations. Image via <a
-href="https://sefiks.com/2020/02/02/dance-moves-of-deep-learning-activation-functions/">Sefik
-Ilkin Serengil</a>.</figcaption>
-</figure>
 <!-- 
-### Skip connections
 
-* Direct connection between some higher layers and lower layers
-* A "highway" for gradient info to go directly back to lower layers
+### Other activations
+
+![Other activations. Image via [Sefik Ilkin Serengil](https://sefiks.com/2020/02/02/dance-moves-of-deep-learning-activation-functions/).](../images/sample-activation-functions-square.png){ width=60% }
+
 
 -->
+</section>
+<section id="skip-connections" class="slide level3">
+<h3>Skip connections</h3>
+<p>Alternative solution for “vanishing gradient”:</p>
+<ul>
+<li>Direct connection between some higher layers and lower layers</li>
+<li>A “highway” for gradient info to go directly back to lower
+layers</li>
+</ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/deep-learning-skip.png"
+alt="Diagram of skip connection." />
+<figcaption aria-hidden="true">Diagram of skip connection.</figcaption>
+</figure>
+<p>Suppose we want this sequence of layers to learn <span
+class="math inline">\(z = H(x)\)</span>.</p>
+<p>Instead of learning <span class="math inline">\(H(x)\)</span>
+directly, the network learns the <strong>residual function</strong>:</p>
+<p><span class="math display">\[\mathcal{F}(x) = H(x) - x\]</span></p>
+<p>Then it reconstructs the desired transformation as:</p>
+<p><span class="math display">\[H(x) = \mathcal{F}(x) + x\]</span></p>
+<p>This helps avoid vanishing gradient.</p>
+<p>In the standard neural network, we would have:</p>
+<p><span class="math display">\[\frac{dL}{dx} = \frac{dL}{dz} \cdot
+g&#39;(h(x)) \cdot h&#39;(x)\]</span></p>
+<p>where <span class="math inline">\(g&#39;()\)</span> and <span
+class="math inline">\(h&#39;()\)</span> multiply the gradient that
+backpropagates from the higher layers, <span
+class="math inline">\(\frac{dL}{dz}\)</span>, and scale it down. But
+with the skip connection, we now have</p>
+<p><span class="math display">\[\frac{dL}{dx} = \frac{dL}{dz} \cdot
+\left( \frac{d\mathcal{F}(x)}{dx} + I \right)
+= \frac{dL}{dz} \cdot \left( g&#39;(h(x)) \cdot h&#39;(x) + I
+\right)\]</span></p>
+<p>The identity matrix <span class="math inline">\(I\)</span> passes on
+the gradient from higher layers as an additive term, without scaling it
+down.</p>
+</aside>
 </section>
 <section id="weight-initialization" class="slide level3">
 <h3>Weight initialization</h3>
@@ -503,7 +521,7 @@ values are bad - it makes the outputs “explode” at later layers.</li>
 <h3>Weight initialization - normal</h3>
 <figure>
 <img data-src="../images/deep-weight-init-normal.png"
-style="width:80.0%"
+style="width:75.0%"
 alt="Initial weights and ReLU unit outputs for each layer in a network." />
 <figcaption aria-hidden="true">Initial weights and ReLU unit outputs for
 each layer in a network.</figcaption>
@@ -540,7 +558,7 @@ class="slide level3">
 <ul>
 <li>For tanh: Xavier scales by <span
 class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span></li>
-<li>For ReLU: He by <span
+<li>For ReLU: He scales by <span
 class="math inline">\(\frac{2}{\sqrt{N_{in}}}\)</span></li>
 </ul>
 <p><span class="math inline">\(N_{in}\)</span> is the number of inputs
@@ -568,6 +586,225 @@ the layers is: 100, 150, 200, 250, 300.</figcaption>
 ![Activation function outputs with Xavier initialization of weights. Image source: Justin Johnson.](../images/8-init-xavier.png){ width=70% }
 
 -->
+</section>
+<section id="convolutional-units" class="slide level3">
+<h3>Convolutional units</h3>
+<!-- 
+
+https://ajcr.net/stride-guide-part-2/
+
+Explaining how it is implemented "flat" by matrix multiplication
+https://ca.meron.dev/blog/Vectorized-CNN/
+
+-->
+</section>
+<section id="problems-with-fully-connected-layers-for-images"
+class="slide level3">
+<h3>Problems with “fully connected” layers for images</h3>
+<figure>
+<img data-src="../images/deep-image-data.svg" style="width:60.0%"
+alt="Problems with fully connected layers." />
+<figcaption aria-hidden="true">Problems with fully connected
+layers.</figcaption>
+</figure>
+<aside class="notes">
+<p>Convolutional neural networks address two major problems that make it
+difficult to train a “fully connected” neural network:</p>
+<ol type="1">
+<li>Each pixel is a feature, images tend to be very large, so a “fully
+connected” layer requires a very large number of parameters. (Each
+“neuron” in the first layer requires a weight for every pixel in the
+image!)</li>
+<li>Each learned weight corresponds to specific pixels in the imgae. If
+the relevant pixels are at a different position in the image, the
+weights that were learned are not helpful for that other position.
+(i.e. it is not <em>spatial translation invariant</em>.)</li>
+</ol>
+</aside>
+</section>
+<section id="using-convolution-to-address-the-problem"
+class="slide level3">
+<h3>Using convolution to address the problem</h3>
+<figure>
+<img data-src="../images/deep-image-conv.svg" style="width:60.0%"
+alt="Addressing the problem." />
+<figcaption aria-hidden="true">Addressing the problem.</figcaption>
+</figure>
+<aside class="notes">
+<p>With a convolutional layer (not “fully connected”):</p>
+<ol type="1">
+<li>The unit connects to one “patch” of the image at a time, so it only
+needs as many weights as there are pixels in the patch. The same weights
+are <em>shared</em> as the unit moves across the image, one patch at a
+time.</li>
+<li>It can “match” a specific arrangement of pixels <em>anywhere</em> it
+occurs in the image, not only one specific location.</li>
+</ol>
+</aside>
+</section>
+<section id="the-convolution-operation---one-patch"
+class="slide level3">
+<h3>The convolution operation - one “patch”</h3>
+<figure>
+<img data-src="../images/deep-image-conv-op.png" style="width:80.0%"
+alt="Convolution on one patch." />
+<figcaption aria-hidden="true">Convolution on one patch.</figcaption>
+</figure>
+<aside class="notes">
+<ul>
+<li>Layer has a set of learnable “filters” (illustration shows one
+filter)</li>
+<li>Each filter has small width and height, but full depth</li>
+<li>During forward pass, filter “slides” across width and height of
+input, and computes dot product</li>
+<li>Effectively performs “convolution”</li>
+</ul>
+</aside>
+</section>
+<section id="the-convolution-operation---stride-and-padding"
+class="slide level3">
+<h3>The convolution operation - stride and padding</h3>
+<figure>
+<img data-src="../images/deep-conv-stride-pad.png" style="width:80.0%"
+alt="Stride and padding." />
+<figcaption aria-hidden="true">Stride and padding.</figcaption>
+</figure>
+</section>
+<section id="the-convolution-operation---full-depth"
+class="slide level3">
+<h3>The convolution operation - full depth</h3>
+<figure>
+<img data-src="../images/deep-image-conv-depth.png" style="width:80.0%"
+alt="Convolution across full depth." />
+<figcaption aria-hidden="true">Convolution across full
+depth.</figcaption>
+</figure>
+</section>
+<section id="the-convolution-operation---multiple-filters"
+class="slide level3">
+<h3>The convolution operation - multiple filters</h3>
+<figure>
+<img data-src="../images/deep-conv-multi-filter.png" style="width:80.0%"
+alt="Convolution with multiple filters." />
+<figcaption aria-hidden="true">Convolution with multiple
+filters.</figcaption>
+</figure>
+<aside class="notes">
+<p>Note that the output is a 3D volume - can be input to another conv
+layer!</p>
+<p>Basic dimension arithmetic:</p>
+<ul>
+<li>Accepts input volume <span class="math inline">\(W_1 \times H_1
+\times D_1\)</span></li>
+<li>Four hyperparameters: number of filters <span
+class="math inline">\(K\)</span>, filter size <span
+class="math inline">\(F\)</span>, stride <span
+class="math inline">\(S\)</span>, amount of zero padding <span
+class="math inline">\(P\)</span></li>
+<li>Produces volume of size</li>
+</ul>
+<p><span class="math display">\[W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2
+=  \frac{H_1 - F + 2P}{S} + 1 \]</span> <span class="math display">\[D_2
+= K \]</span></p>
+<ul>
+<li>With parameter sharing: <span class="math inline">\(F \cdot F \cdot
+D_1\)</span> weights per filter, for <span class="math inline">\(F \cdot
+F \cdot D_1 \cdot K\)</span> weights and <span
+class="math inline">\(K\)</span> biases</li>
+</ul>
+</aside>
+</section>
+<section id="the-convolution-operation---all-together"
+class="slide level3">
+<h3>The convolution operation - all together</h3>
+<figure>
+<img data-src="../images/convolution-example.png" style="width:90.0%"
+alt="Animated demo at https://cs231n.github.io/assets/conv-demo/index.html" />
+<figcaption aria-hidden="true">Animated demo at <a
+href="https://cs231n.github.io/assets/conv-demo/index.html">https://cs231n.github.io/assets/conv-demo/index.html</a></figcaption>
+</figure>
+<p>Basic insight - parameter sharing:</p>
+<ul>
+<li>A particular filter with a set of weights represents a feature to
+look for</li>
+<li>If it is useful to look for a feature at position <span
+class="math inline">\(x,y\)</span>, it is probably useful to look for
+the same feature at <span
+class="math inline">\(x&#39;,y&#39;\)</span></li>
+<li>All neurons within a “depth slice” can share the same weights.</li>
+</ul>
+<!-- 
+
+### Receptive field
+
+
+
+Important for VGG -->
+</section>
+<section id="activation" class="slide level3">
+<h3>Activation</h3>
+<ul>
+<li>Convolutional typically followed by non-linear activation function
+e.g. ReLU</li>
+<li>Several Conv + ReLU layers may be followed by a <em>pooling</em>
+layer</li>
+</ul>
+</section>
+<section id="pooling-layer" class="slide level3">
+<h3>Pooling layer</h3>
+<figure>
+<img data-src="../images/deep-conv-pool.png" style="width:70.0%"
+alt="Example of pooling layer." />
+<figcaption aria-hidden="true">Example of pooling layer.</figcaption>
+</figure>
+<aside class="notes">
+<ul>
+<li>No parameters! Just applies an aggregating function</li>
+<li>Typically uses max operation (other possible operations: mean,
+median)</li>
+<li>Reduces spatial size of image (reduce computation, prevent
+overfitting)</li>
+<li>Typical example: 2x2 filter size, stride of 2, downsamples by a
+factor of 2 along width and height</li>
+<li>Works independently on each depth slice</li>
+</ul>
+<p>Pooling math:</p>
+<ul>
+<li>Accepts input volume <span class="math inline">\(W_1 \times H_1
+\times D_1\)</span></li>
+<li>Two hyperparameters: filter size <span
+class="math inline">\(F\)</span>, stride <span
+class="math inline">\(S\)</span></li>
+<li>Produces volume of size</li>
+</ul>
+<p><span class="math display">\[W_2 = \frac{W_1 - F}{S} + 1 , H_2
+=  \frac{H_1 - F}{S} + 1 , D_2 = D_1 \]</span></p>
+</aside>
+</section>
+<section id="the-typical-lenet-like-architecture" class="slide level3">
+<h3>The typical “LeNet”-like architecture</h3>
+<figure>
+<img data-src="../images/deep-conv-lenet-like.png" style="width:80.0%"
+alt="“LeNet”-like architecture." />
+<figcaption aria-hidden="true">“LeNet”-like architecture.</figcaption>
+</figure>
+</section>
+<section id="actual-lenet-5-1998" class="slide level3">
+<h3>Actual LeNet-5 (1998)</h3>
+<figure>
+<img data-src="../images/deep-conv-lenet-5.png" style="width:100.0%"
+alt="LeNet-5." />
+<figcaption aria-hidden="true">LeNet-5.</figcaption>
+</figure>
+</section>
+<section id="recurrent-neural-networks" class="slide level3">
+<h3>Recurrent neural networks</h3>
+<ul>
+<li>Where ConvNet find <em>spatial</em> patterns wherever they occur in
+images,</li>
+<li>RNNs find <em>temporal patterns</em> wherever they occur in a
+sequence</li>
+</ul>
 </section></section>
 <section>
 <section id="normalization" class="title-slide slide level2">
@@ -616,7 +853,7 @@ CS231n.</figcaption>
 </figure>
 <aside class="notes">
 <p>Input standardization helps with the first hidden layer, but what
-about the hidden layers?</p>
+about the intermediate hidden layers?</p>
 </aside>
 </section>
 <section id="batch-normalization" class="slide level3">
@@ -842,7 +1079,7 @@ Why does it work? Some ideas:
 <section id="dropout" class="slide level3">
 <h3>Dropout</h3>
 <figure>
-<img data-src="../images/8-dropout.jpeg" style="width:40.0%"
+<img data-src="../images/8-dropout.jpeg" style="width:35.0%"
 alt="Dropout networks." />
 <figcaption aria-hidden="true">Dropout networks.</figcaption>
 </figure>
@@ -868,6 +1105,14 @@ validation/test loss seems better than the training loss! Why?</p>
 Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo/
 
 -->
+<aside class="notes">
+<hr />
+<p>Big picture: What are all these techniques for?</p>
+<ul>
+<li>Allow us to train models with more ‘capacity’</li>
+<li>Improve performance even without adding ‘capacity’</li>
+</ul>
+</aside>
 </section></section>
 <section
 id="example-deep-neural-nets-33-years-ago-and-33-years-from-now"
@@ -884,8 +1129,8 @@ example.</figcaption>
 network for handwritten digit classification, that was used in the late
 90s to process 10-20% of all checks in the US.</p>
 <ul>
-<li>The original paper had 5% error</li>
-<li>Our realization has about 4.14%</li>
+<li>The original paper had 5% error, our realization has about
+4.14%</li>
 <li>With a bunch of these changes (but keeping the basic network the
 same) we get to 2.09%</li>
 <li>The original model without any changes, but with more training data,
@@ -895,6 +1140,23 @@ gets to 3.05%</li>
 <p>What does it mean that we can do this without changing the basic
 network? It means the network always had the <em>capacity</em> to do
 this well, but wasn’t learning the best weights.</p>
+</aside>
+</section>
+
+<section id="example-progress-on-imagenet"
+class="title-slide slide level2">
+<h2>Example: Progress on ImageNet</h2>
+<ul>
+<li>Data: 1.2M images from 1000 categories</li>
+<li>ImageNet Large Scale Visual Recognition Challenge (ILSVRC): running
+since 2010</li>
+</ul>
+<aside class="notes">
+<figure>
+<img data-src="../images/deep-conv-imagenet.png" style="width:80.0%"
+alt="Progress on ImageNet." />
+<figcaption aria-hidden="true">Progress on ImageNet.</figcaption>
+</figure>
 </aside>
 </section>
     </div>
@@ -1054,7 +1316,7 @@ this well, but wasn’t learning the best weights.</p>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

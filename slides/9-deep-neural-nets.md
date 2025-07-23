@@ -35,7 +35,7 @@ by the designer.
 
 ![Image is based on a figure in Deep learning, by Goodfellow, Bengio, Courville. ](../images/8-deep-learning-motivation.png){ width=100% }
 
-A neural network with non-linear activation, with one hidden layer and many units in it *can* approximate virtually any continuous real-valued function, with the right weights.  (Refer to the *Universal Approximation Theorem*.) But (1) it may need a very large number of units to represent the function, and (2) those weights might not be learned by gradient descent - the loss surface is very unfriendly.
+A neural network with non-linear activation, with one hidden layer and many units in that layer *can* approximate virtually any continuous real-valued function, with the right weights.  (Refer to the *Universal Approximation Theorem*.) But (1) it may need a very large number of units to represent the function, and (2) those weights might not be learned by gradient descent - the loss surface is very unfriendly.
 
 Instead of a single hidden layer, if we use multiple hidden layers they can "compose" functions learned by the previous layers into more complex functions - use fewer units, and tends to learn better weights .
 
@@ -67,21 +67,17 @@ We call the number of layers the "depth" of the network and the number of hidden
 
 :::
 
-### Challenges with deep neural networks 
+### Double descent: animation
 
-* Efficient learning
-* Generalization
-
-
-### Loss landscape
-
-!["Loss landscape" of a deep neural network in a "slice" of the high-dimensional feature space.](../images/resnet56_noshort_small.jpg){ width=30% }
+![Polynomial model before and after the interpolation threshold. Image source: [Boaz Barak, click link to see animation](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/8-polynomial-animation.gif){ width=40% }
 
 ::: notes
 
-Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and Tom Goldstein. Visualizing the Loss Landscape of Neural Nets. NIPS, 2018.
+Explanation (via [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)):
 
-Neural networks are optimized using backpropagation over the computational graph, where the loss is a very challenging function of *all* the weights. (Not convex!)
+> When $d$ of the model is less than $d_t$ of the polynomial, we are "under-fitting" and will not get good performance. As $d$ increases between $d_t$ and $n$, we fit more and more of the noise, until for $d=n$ we have a perfect interpolating polynomial that will have perfect training but very poor test performance. When $d$ grows beyond $n$, more than one polynomial can fit the data, and (under certain conditions) SGD will select the minimal norm one, which will make the interpolation smoother and smoother and actually result in better performance.
+
+
 
 :::
 
@@ -95,30 +91,29 @@ Neural networks are optimized using backpropagation over the computational graph
 
 ::: notes
 
+With a deep neural network, we are not trying to operate in the "classical ML" bias-variance tradeoff regime (to the left of the interpolation threshold). 
 
-Interpolation threshold: where the model is just big enough to fit the training data exactly.
+(Interpolation threshold: where the model is just big enough to fit the training data exactly.)
 
-- too-small models: can't represent the "true" function well
+- too-small models: can't represent the "true" function well (lacks capacity to learn complicated data representations!)
 - too-big models (before interpolation threshold): memorizes the input, doesn't generalize well to unseen data (very sensitive to noise)
-- REALLY big models: many possible weights that memorize the input, but SGD finds weight combination that memorizes the input *and* does well on unseen data
+- REALLY big models: many possible weights that memorize the input, our challenge is to find the weight combination that memorizes the input *and* does well on unseen data
 
-
+This is complicated by the "loss landscape" of a deep neural network (trained using backpropagation over the computational graph) looking not so friendly...
 
 :::
 
 
-### Double descent: animation
 
-![Polynomial model before and after the interpolation threshold. Image source: [Boaz Barak, click link to see animation](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/).](../images/8-polynomial-animation.gif){ width=40% }
+### Loss landscape
+
+!["Loss landscape" of a deep neural network in a "slice" of the high-dimensional feature space.](../images/resnet56_noshort_small.jpg){ width=30% }
 
 ::: notes
 
-Explanation (via [Boaz Barak](https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/)):
+Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and Tom Goldstein. Visualizing the Loss Landscape of Neural Nets. NIPS, 2018.
 
-> When $d$ of the model is less than $d_t$ of the polynomial, we are "under-fitting" and will not get good performance. As $d$ increases between $d_t$ and $n$, we fit more and more of the noise, until for $d=n$ we have a perfect interpolating polynomial that will have perfect training but very poor test performance. When $d$ grows beyond $n$, more than one polynomial can fit the data, and (under certain conditions) SGD will select the minimal norm one, which will make the interpolation smoother and smoother and actually result in better performance.
-
-
-What this means: in practice, we let the network get big (have capacity to learn complicated data representations!) and use other methods to help select a "good" set of weights from all these candidates.
+There are a variety of techniques we can use to improve the network's ability to learn good weights + find them efficiently, even on this difficult loss surface. (Including what we call "conditioning" techniques, and some broader techniques.)
 
 :::
 
@@ -126,15 +121,10 @@ What this means: in practice, we let the network get big (have capacity to learn
 
 ### Addressing the challenges
 
-* Efficient learning
-* Generalization
 
 ::: notes
 
-In deep learning, we don't want to use "smaller" (simpler) models, which won't be as capable of learning good feature representations. Instead, lots of work around (1) finding good weights quickly, and (2) finding weights that will generalize.
-
 ![Image credit: Sebastian Raschka](../images/deep-learning-markmap.svg){ width=60% }
-
 
 :::
 
@@ -157,7 +147,7 @@ We won't talk much about getting more data, but if it's possible to get more lab
 It's not always possible to get a lot of *labeled* data for training a supervised learning model. But sometimes we can use *unlabeled* data, which is much easier to get. For example:
 
 * In self-supervised learning, the label can be inferred automatically from the unlabeled data. e.g. GPT is trained to predict "next word".
-* In semi-supervised/weakly-supervised learning learining, we generate labels (probably imperfectly) for unlabeled data (maybe using a smaller volume of labeled data to train a model!)
+* In semi-supervised/weakly-supervised learning learining, we generate labels (probably imperfectly) for unlabeled data (maybe using a smaller volume of labeled data to train a model to label the data!)
 
 These are mostly out of scope of this course. But we *will* talk about data augmentation and transfer learning...
 
@@ -181,17 +171,20 @@ It doesn't restrict network capacity - but it helps generalization by increasing
 * For audio you can adjust pitch or speed, add background noise etc.
 
 :::
+
 ### Transfer learning
 
 Idea: leverage model trained on *related* data.
 
-### Using pre-trained networks
+::: notes
 
-* State-of-the-art networks involve millions of parameters, huge datasets, and days of training on GPU clusters
-* Idea: share pre-trained networks (network architecture and weights)
-* Some famous networks for image classification: Inception, ResNet, and more
-* Can be loaded directly in Keras
+State-of-the-art networks involve millions of parameters, huge datasets, and days of training on GPU clusters
 
+But you don't have to repeat this process "from scratch" each time you train a neural network. (For many tasks, you may not even have enough data to get good results by training a network "from scratch".)
+
+The "feature extraction" part of a neural network trained on related data, is likely still very useful for a slightly different task.
+
+:::
 
 ### Transfer learning from pre-trained networks
 
@@ -202,12 +195,12 @@ Use pre-trained network for a different task
 
 :::notes
 
-Base model is a powerful feature extractor (learns transformation into a more useful feature space), then you just have to train for the mapping from this feature space to the target variable.
+The base model is a powerful feature extractor (learns transformation into a more useful feature space), then you just have to train for the mapping from this feature space to the target variable.
 
 In practice: when applying deep learning, we almost always use a pre-trained base model! It saves time, energy, and cost. 
 
 
-Example: To pre-train the 7B parameter (smallest) Llama 2, Meta's open source language model, takes 184,320 GPU hours (21 GPU YEARS!) and anywhere from $100,000-800,000 (depending on cost of GPU instance).
+Example: To pre-train the 7B parameter (smallest) Llama 2, Meta's open source language model, takes 184,320 GPU hours (21 GPU YEARS!) and anywhere from $100,000-800,000 (depending on cost of GPU instances).
 
 :::
 
@@ -226,7 +219,7 @@ Example: To pre-train the 7B parameter (smallest) Llama 2, Meta's open source la
 
 ## Architecture/setup
 
-- **Activation functions**
+- **Activation functions** (+ skip connections)
 - **Weight initialization**
 - **Convolutional units**
 - Recurrent units
@@ -234,7 +227,7 @@ Example: To pre-train the 7B parameter (smallest) Llama 2, Meta's open source la
 
 :::notes
 
-Again, this is mostly out of scope of this course, but we'll talk about the first three items very briefly. 
+Again, this is mostly out of scope of this course, but we'll talk about some of these items very briefly. 
 
 :::
 ### Recall: activation functions
@@ -282,7 +275,7 @@ Suppose we want to compute the gradient of the loss with respect to the weight s
 
 ### Sigmoid: vanishing gradient (2)
 
-![Sigmoid function and its derivative.](../images/deep-vanishing-sigmoid.png){ width=60% }
+![Sigmoid function and its derivative.](../images/deep-vanishing-sigmoid.png){ width=40% }
 
 ::: notes
 
@@ -308,7 +301,7 @@ Even the maximum value of the gradient is only 0.25 - so the gradient is always 
 ### ReLU: Dead ReLU
 
 
-![ReLU function and its derivative.](../images/deep-dead-relu.png){ width=60% }
+![ReLU function and its derivative.](../images/deep-dead-relu.png){ width=40% }
 
 
 ::: notes
@@ -323,37 +316,71 @@ But, can "die" in the negative region. Once we end up there (e.g. by learning ne
 (ReLU is also more subject to "exploding" gradient than sigmoid/tanh.)
 
 :::
+
+\newpage
+
 ### ReLU: Leaky ReLU
 
-![Leaky ReLU function and its derivative.](../images/deep-leaky-relu.png){ width=60% }
+![Leaky ReLU function and its derivative.](../images/deep-leaky-relu.png){ width=40% }
 
 :::notes
 
 When input is less than 0, the ReLU (and downstream units) is *completely* dead (not only very small!)
 
-Alternative: **leaky ReLU** has small (non-zero) gradient in the negative region - can recover. 
+Alternative: **leaky ReLU** has small (non-zero) gradient $\alpha$ in the negative region - can recover. 
 
 $$f(x) = \text{max}(\alpha x, x)$$
 
-($\alpha$ is a hyperparameter.)
-
 :::
+
+<!-- 
 
 ### Other activations
 
 ![Other activations. Image via [Sefik Ilkin Serengil](https://sefiks.com/2020/02/02/dance-moves-of-deep-learning-activation-functions/).](../images/sample-activation-functions-square.png){ width=60% }
 
 
+-->
 
-<!-- 
+
 ### Skip connections
+
+Alternative solution for "vanishing gradient":
 
 * Direct connection between some higher layers and lower layers
 * A "highway" for gradient info to go directly back to lower layers
 
--->
+::: notes
 
-\newpage
+
+![Diagram of skip connection.](../images/deep-learning-skip.png)
+
+Suppose we want this sequence of layers to learn $z = H(x)$.
+
+Instead of learning $H(x)$ directly, the network learns the **residual function**:
+
+$$\mathcal{F}(x) = H(x) - x$$
+
+Then it reconstructs the desired transformation as:
+
+$$H(x) = \mathcal{F}(x) + x$$
+
+This helps avoid vanishing gradient.
+
+
+In the standard neural network, we would have:
+
+$$\frac{dL}{dx} = \frac{dL}{dz} \cdot g'(h(x)) \cdot h'(x)$$
+
+where $g'()$ and $h'()$ multiply the gradient that backpropagates from the higher layers, $\frac{dL}{dz}$, and scale it down. But with the skip connection, we now have
+
+$$\frac{dL}{dx} = \frac{dL}{dz} \cdot \left( \frac{d\mathcal{F}(x)}{dx} + I \right)
+= \frac{dL}{dz} \cdot \left( g'(h(x)) \cdot h'(x) + I \right)$$
+
+The identity matrix $I$ passes on the gradient from higher layers as an additive term, without scaling it down.
+
+:::
+
 
 ### Weight initialization
 
@@ -372,10 +399,11 @@ What if we initialize weights to:
 
 :::
 
+\newpage
 
 ### Weight initialization - normal
 
-![Initial weights and ReLU unit outputs for each layer in a network.](../images/deep-weight-init-normal.png){ width=80% }
+![Initial weights and ReLU unit outputs for each layer in a network.](../images/deep-weight-init-normal.png){ width=75% }
 
 
 :::notes
@@ -387,7 +415,6 @@ What if we initialize weights to:
 <!-- Image via [Andre Perunicic](https://intoli.com/blog/neural-network-initialization/) -->
 :::
 
-\newpage
 
 ### Desirable properties for initial weights - principle
 
@@ -403,7 +430,7 @@ If you are interested, [here's a derivation](https://www.deeplearning.ai/ai-note
 ### Desirable properties for initial weights - practice
 
 * For tanh: Xavier scales by $\frac{1}{\sqrt{N_{in}}}$
-* For ReLU: He by $\frac{2}{\sqrt{N_{in}}}$
+* For ReLU: He scales by $\frac{2}{\sqrt{N_{in}}}$
 
 $N_{in}$ is the number of inputs to the layer ("fan-in").
 
@@ -427,6 +454,167 @@ $N_{in}$ is the number of inputs to the layer ("fan-in").
 -->
 
 \newpage
+
+### Convolutional units
+
+<!-- 
+
+https://ajcr.net/stride-guide-part-2/
+
+Explaining how it is implemented "flat" by matrix multiplication
+https://ca.meron.dev/blog/Vectorized-CNN/
+
+-->
+
+### Problems with "fully connected" layers for images 
+
+
+![Problems with fully connected layers.](../images/deep-image-data.svg){ width=60%}
+
+::: notes
+
+Convolutional neural networks address two major problems that make it difficult to train a "fully connected" neural network:
+
+1. Each pixel is a feature, images tend to be very large, so a "fully connected" layer requires a very large number of parameters. (Each "neuron" in the first layer requires a weight for every pixel in the image!)
+2. Each learned weight corresponds to specific pixels in the imgae. If the relevant pixels are at a different position in the image, the weights that were learned are not helpful for that other position. (i.e. it is not *spatial translation invariant*.)
+
+::::
+
+### Using convolution to address the problem 
+
+![Addressing the problem.](../images/deep-image-conv.svg){ width=60%}
+
+::: notes
+
+With a convolutional layer (not "fully connected"):
+
+1. The unit connects to one "patch" of the image at a time, so it only needs as many weights as there are pixels in the patch. The same weights are *shared* as the unit moves across the image, one patch at a time.
+2. It can "match" a specific arrangement of pixels *anywhere* it occurs in the image, not only one specific location.
+
+:::
+
+\newpage
+
+
+### The convolution operation - one "patch"
+
+![Convolution on one patch.](../images/deep-image-conv-op.png){ width=80%}
+
+
+::: notes
+
+* Layer has a set of learnable "filters" (illustration shows one filter)
+* Each filter has small width and height, but full depth
+* During forward pass, filter "slides" across width and height of input, and computes dot product
+* Effectively performs "convolution"
+
+:::
+
+
+### The convolution operation - stride and padding 
+
+![Stride and padding.](../images/deep-conv-stride-pad.png){ width=80%}
+
+\newpage
+
+### The convolution operation - full depth
+
+![Convolution across full depth.](../images/deep-image-conv-depth.png){ width=80%}
+
+
+
+### The convolution operation - multiple filters
+
+![Convolution with multiple filters.](../images/deep-conv-multi-filter.png){ width=80%}
+
+::: notes
+
+Note that the output is a 3D volume - can be input to another conv layer!
+
+Basic dimension arithmetic:
+
+* Accepts input volume $W_1 \times H_1 \times D_1$
+* Four hyperparameters: number of filters $K$, filter size $F$, stride $S$, amount of zero padding $P$
+* Produces volume of size 
+
+$$W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 $$
+$$D_2 = K $$
+
+* With parameter sharing: $F \cdot F \cdot D_1$ weights per filter, for $F \cdot F \cdot D_1 \cdot K$ weights and $K$ biases
+
+:::
+
+\newpage
+
+### The convolution operation - all together
+
+![Animated demo at [https://cs231n.github.io/assets/conv-demo/index.html](https://cs231n.github.io/assets/conv-demo/index.html)](../images/convolution-example.png){ width=90%}
+
+Basic insight - parameter sharing:
+
+* A particular filter with a set of weights represents a feature to look for
+* If it is useful to look for a feature at position $x,y$, it is probably useful to look for the same feature at $x',y'$
+* All neurons within a "depth slice" can share the same weights.
+
+
+
+
+<!-- 
+
+### Receptive field
+
+
+
+Important for VGG -->
+
+### Activation
+
+* Convolutional typically followed by non-linear activation function e.g. ReLU
+* Several Conv + ReLU layers may be followed by a *pooling* layer
+
+\newpage
+
+### Pooling layer
+
+![Example of pooling layer.](../images/deep-conv-pool.png){ width=70% }
+
+
+::: notes
+
+* No parameters! Just applies an aggregating function
+* Typically uses max operation (other possible operations: mean, median)
+* Reduces spatial size of image (reduce computation, prevent overfitting)
+* Typical example: 2x2 filter size, stride of 2, downsamples by a factor of 2 along width and height
+* Works independently on each depth slice
+
+Pooling math:
+
+* Accepts input volume $W_1 \times H_1 \times D_1$
+* Two hyperparameters: filter size $F$, stride $S$
+* Produces volume of size 
+
+$$W_2 = \frac{W_1 - F}{S} + 1 , H_2 =  \frac{H_1 - F}{S} + 1 , D_2 = D_1 $$
+
+
+:::
+
+### The typical "LeNet"-like architecture 
+
+!["LeNet"-like architecture.](../images/deep-conv-lenet-like.png){ width=80% }
+
+\newpage
+
+### Actual LeNet-5 (1998) 
+
+![LeNet-5.](../images/deep-conv-lenet-5.png){ width=100% }
+
+
+### Recurrent neural networks
+
+* Where ConvNet find *spatial* patterns wherever they occur in images,
+* RNNs find *temporal patterns* wherever they occur in a sequence
+
+
 
 ## Normalization 
 
@@ -458,6 +646,8 @@ There are several reasons why this helps. We already discussed the "ravine" in t
 
 ![Image source: Stanford CS231n.](../images/8-preprocessing-1.jpeg){ width=50% }
 
+\newpage
+
 ### Data preprocessing (2)
 
 ![Image source: Stanford CS231n.](../images/8-preprocessing-2.jpeg){ width=50% }
@@ -466,7 +656,7 @@ There are several reasons why this helps. We already discussed the "ravine" in t
 
 ::: notes
 
-Input standardization helps with the first hidden layer, but what about the hidden layers?
+Input standardization helps with the first hidden layer, but what about the intermediate hidden layers?
 
 :::
 
@@ -646,8 +836,6 @@ Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 \newpage
 -->
 
-\newpage
-
 ## Regularization
 
 - **L2 or L1 regularization**
@@ -709,7 +897,7 @@ Why does it work? Some ideas:
 
 ### Dropout 
 
-![Dropout networks.](../images/8-dropout.jpeg){ width=40% }
+![Dropout networks.](../images/8-dropout.jpeg){ width=35% }
 
 ::: notes
 
@@ -735,7 +923,19 @@ Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo
 
 -->
 
-\newpage
+
+
+
+::: notes
+
+---
+
+Big picture: What are all these techniques for?
+
+* Allow us to train models with more 'capacity'
+* Improve performance even without adding 'capacity'
+
+:::
 
 ## Example: Deep Neural Nets: 33 years ago and 33 years from now
 
@@ -745,12 +945,23 @@ Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo
 
 In the Colab lesson, we will reproduce a 1989 paper about a neural network for handwritten digit classification, that was used in the late 90s to process 10-20% of all checks in the US.
 
-* The original paper had 5% error
-* Our realization has about 4.14%
+* The original paper had 5% error, our realization has about 4.14%
 * With a bunch of these changes (but keeping the basic network the same) we get to 2.09%
 * The original model without any changes, but with more training data, gets to 3.05%
 * With our changes + more data, we get to 1.31%
 
 What does it mean that we can do this without changing the basic network? It means the network always had the *capacity* to do this well, but wasn't learning the best weights.
+
+
+:::
+
+## Example: Progress on ImageNet
+
+* Data: 1.2M images from 1000 categories
+* ImageNet Large Scale Visual Recognition Challenge (ILSVRC): running since 2010
+
+::: notes
+
+![Progress on ImageNet.](../images/deep-conv-imagenet.png){ width=80%}
 
 :::
