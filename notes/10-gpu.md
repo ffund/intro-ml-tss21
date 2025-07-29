@@ -136,38 +136,6 @@ Could not request local forwarding.
 
 
 
-#### Warnings when using Tensorflow
-
-
-When I import `tensorflow`, I see the following warnings:
-
-<pre>
-2024-04-15 17:18:17.943887: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
-2024-04-15 17:18:17.943917: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
-2024-04-15 17:18:17.945316: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
-2024-04-15 17:18:17.952572: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
-To enable the following instructions: AVX2 AVX512F FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2024-04-15 17:18:18.643115: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
-</pre>
-
-and when I try to `fit` a model, I see other warnings:
-
-<pre>
-2024-04-15 17:20:25.275428: I external/local_xla/xla/service/service.cc:168] XLA service 0x7fe430337610 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
-2024-04-15 17:20:25.275483: I external/local_xla/xla/service/service.cc:176]   StreamExecutor device (0): Quadro RTX 6000, Compute Capability 7.5
-2024-04-15 17:20:25.290127: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
-2024-04-15 17:20:25.323029: I external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:454] Loaded cuDNN version 8907
-WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-I0000 00:00:1713201625.466265    3250 device_compiler.h:186] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
-</pre>
-
-Is this bad?
-
----
-
-This server has different library versions and a different GPU type than the Colab hosted runtime, so you may see some warnings/notifications that you wouldn't see in Colab. It's not a cause for concern, and you can safely ignore the notifications shown above.
-
-
 <!--
 crontab rules:
 ```
