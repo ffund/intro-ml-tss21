@@ -66,15 +66,15 @@ Inside the SSH session, run (note: this is all one line):
 Dockerfile:
 
 ```
-FROM quay.io/jupyter/tensorflow-notebook:cuda-tensorflow-2.16.1
+FROM quay.io/jupyter/pytorch-notebook:cuda12-latest                                                                                                                                    
 
 USER ${NB_UID}
 
-# Install Lightning
-RUN pip install --pre --no-cache-dir torch==2.4.1 && \
-    pip install --pre --no-cache-dir librosa zeus-ml==0.8.0 && \
+# Install librosa, zeus
+RUN pip install --pre --no-cache-dir librosa zeus && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
+
 ```
 
 docker build -t jupyter-zeus .
@@ -90,21 +90,22 @@ Finally, run
 docker exec -it jupyter jupyter server list 
 </pre>
 
-In the output of the command above, look for your server's token, e.g.:
+In the output of the command above, look for the URL with the token, e.g.:
 
 <pre>
-http://b6bab0d5ccab:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark> :: /home/jovyan
+http://localhost:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark>
 </pre>
 
-Copy this token - you will need it in the next step.
+Copy this URL - you will need it in the next step.
 
-Now, you can open Colab in a browser. Click on the drop-down menu for "Connect" in the top right and select "Connect to a local runtime". In that space, paste
+Now, you can open Colab in a browser. Click on the drop-down menu for "Connect" in the top right and select "Connect to a local runtime". In that space, paste the URL you copied
+earlier, which is in the form
 
 <pre>
 http://localhost:8888/?token=<mark>TOKEN</mark>
 </pre>
 
-then put the token you copied earlier in place of <mark>TOKEN</mark>. Click "Connect". Your notebook should now be running on our GPU instance.
+Click "Connect". Your notebook should now be running on our GPU instance.
 
 ## When you are finished
 
