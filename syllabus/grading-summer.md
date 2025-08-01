@@ -76,8 +76,7 @@ During the exam, you will be permitted to use:
 * the official scikit-learn API reference pages (via https://scikit-learn.org/stable/api/index.html)
 * the official numpy API reference pages (via https://numpy.org/doc/stable/reference)
 * the official pandas API reference pages (via https://pandas.pydata.org/docs/reference)
-* the official Keras API reference pages  (via https://keras.io/api)
-* the official Tensorflow API reference pages (via https://www.tensorflow.org/api_docs/python/tf/) 
+* the official Pytorch API reference pages  (via https://docs.pytorch.org/docs/stable/index.html)
 * Google Translate (i.e. if you do not understand some question text or instructions during the exam, you may translate it.)
 
 If you plan to use these permitted online materials during the exam, you should open them before the exam begins - you may not use Google during the exam to find them.
