@@ -6,9 +6,6 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 
 ## Week 0: Course Intro
 
-* [Notes: FAQ for in person section](notes/0-live-faq) <a href="notes/0-live-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* [Notes: FAQ for online section with scheduled meeting time](notes/0-online-faq) <a href="notes/0-online-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* [Notes: FAQ for online section with no scheduled meeting time](notes/0-online-async-faq) <a href="notes/0-online-async-faq.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Python + numpy tutorial <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/1-python-numpy-tutorial.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-python-numpy-tutorial.ipynb)
 * Notebook: Colab tutorial [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-colab-tour.ipynb)
 * [Notes: Prerequisite review](notes/0-prerequisite-review) <a href="notes/0-prerequisite-review.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
@@ -19,7 +16,7 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 
 * [Notes: This Date in History - 1964 World’s Fair](notes/1-handwritten-digits) <a href="notes/1-handwritten-digits.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Intro to Machine Learning <a href="slides/1-intro-ml.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Handout: Explore your data <a href="slides/1-explore-data.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Working with data <a href="slides/1-explore-data.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Exploratory data analysis <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/1-exploratory-data-analysis.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-exploratory-data-analysis.ipynb)
 
 
@@ -61,11 +58,12 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 ## Week 5: Logistic regression for classification
 
 * [Notes: Classifier metrics](notes/5-classifier-metrics.html) <a href="notes/5-classifier-metrics.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* [Notes: Classifier fairness](notes/5-fairness.html)  <a href="notes/5-fairness.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* [Outside reference: Machine bias](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing)
+* [Outside reference: Can you make AI fairer than a judge?](https://www.technologyreview.com/2019/10/17/75285/ai-fairer-than-judge-criminal-risk-assessment-algorithm/)
 * Handout: Logistic regression <a href="slides/5-logistic-regression.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Logistic regression in depth <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/5-logistic-regression-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-logistic-regression-in-depth.ipynb)
 * Notebook: Logistic regression for handwritten digits classification <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/5-logistic-regression-digits.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-logistic-regression-digits.ipynb)
-* [Outside reference: Machine bias](https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing)
-* [Outside reference: Can you make AI fairer than a judge?](https://www.technologyreview.com/2019/10/17/75285/ai-fairer-than-judge-criminal-risk-assessment-algorithm/)
 * Notebook: COMPAS case study <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/5-compas-case-study.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-compas-case-study.ipynb)
 
 * Notebook: Classify your own handwritten digit (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/5-hw-logistic-regression.ipynb)
@@ -75,7 +73,7 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 * Handout: K nearest neighbor <a href="slides/6-knn.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Feature selection <a href="slides/6-feature.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: K nearest neighbor in depth <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/6-k-nearest-neighbors-in-depth.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-k-nearest-neighbors-in-depth.ipynb)
-* Notebook: Voter classification with K nearest neighbor (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-knn-voter-classification-hw.ipynb)
+* Notebook: Voter classification with K nearest neighbor (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/6-knn-voter-classification-2020-hw.ipynb)
 
 ## Week 7: Decision trees, ensembles
 
@@ -94,39 +92,38 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 * Notebook: Bias and variance of SVM <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-svm-bias-variance.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-svm-bias-variance.ipynb)
 * Notebook: Handwritten digits classification <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/7-demo-digits-classifiers.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/7-demo-digits-classifiers.ipynb)
 
-* Notebook: UAV assisted wireless localization with Bayesian Optimization and Gaussian Process Regression (homework) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/teaching-on-testbeds/uav-wireless-localization/blob/main/8_kernel_find_a_rover.ipynb) (requires [Hello, AERPAW](https://teaching-on-testbeds.github.io/hello-aerpaw/))
+* Notebook: UAV assisted wireless localization with Bayesian Optimization and Gaussian Process Regression (homework) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/teaching-on-testbeds/uav-wireless-localization/blob/main/kernel_find_a_rover_synthetic.ipynb) and [on AERPAW](https://teaching-on-testbeds.github.io/uav-wireless-localization/)
 
 ## Week 9: Neural networks
 
 * Handout: Neural networks <a href="slides/8-neural.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Notebook: Draw your own classification problem for a neural network [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw.ipynb)
 * Notebook: Draw your own classification problem for a neural network (Pytorch version) [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-neural-net-demo-draw-torch.ipynb)
 * Notebook: Backpropagation <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/8-demo-backprop.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-demo-backprop.ipynb)
-* Notebook: Neural networks for music classification (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-lab-neural-net-music-classification.ipynb)
+* Notebook: Neural networks for music classification (homework)  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-lab-neural-net-music-classification-torch.ipynb)
 
 ## Week 10: Deep neural networks, convolutional neural networks
 
 * Handout: Deep neural networks <a href="slides/9-deep-neural-nets.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Handout: Convolutional neural networks <a href="slides/9-convolutional.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Notebook: the Slash dataset <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/9-slash-dataset.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-slash-dataset.ipynb)
+* Notebook: the Slash dataset [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-slash-dataset.ipynb)
 * Notebook: Convolutional neural networks <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/9-convolutional-neural-networks.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-convolutional-neural-networks.ipynb)
-* Notebook: Transfer learning on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/8-fine-tune-rock-paper-scissors.ipynb)
+* Notebook: Transfer learning on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/9-fine-tune-rock-paper-scissors.ipynb)
 * Notebook: Deep neural nets from 1989 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/teaching-on-testbeds/deep-nets-reproducing/blob/main/Deep_Neural_Nets_33_years_ago.ipynb)
 
-## Week 11: Deploying machine learning systems
-
-* [Outside reference: Using Deep Learning at Scale in Twitter’s Timelines](https://blog.twitter.com/engineering/en_us/topics/insights/2017/using-deep-learning-at-scale-in-twitters-timelines)
-* Handout: Deploying machine learning systems <a href="slides/10-deployment.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Activity: <a href="https://github.com/teaching-on-testbeds/k8s-ml/blob/gh-pages/README.md">Deploying machine learning systems on Kubernetes</a>
-
-## Week 12: Unsupervised learning
+## Week 11: Unsupervised learning
 
 * Handout: Unsupervised learning <a href="slides/10-unsupervised.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Clustering [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1bYGtfCpb3UCqfVHo_x06oKlwgjjhN7zl)
 * Notebook: PCA on handwritten digits [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1EU3YyE94ghKyxmmmuRNygZLAfTQ-6jwb)
 * Notebook: PCA on rock, paper, scissors [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1xOppWFpoaQbbU9mE5KuxNFPSiuxfMoRB)
 
-## Week 13: Reinforcement learning
+
+## Week 12: Reinforcement learning
 
 * Handout: Reinforcement learning <a href="slides/10-rl.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Reinforcement learning [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1MnFeOnv3AlTRX_fAxVz-M2ZckOHp_C_T?usp=sharing)
+
+## Week 13: Deploying machine learning systems
+
+* [Outside reference: Using Deep Learning at Scale in Twitter’s Timelines](https://blog.twitter.com/engineering/en_us/topics/insights/2017/using-deep-learning-at-scale-in-twitters-timelines)
+* Handout: Deploying machine learning systems <a href="slides/10-deployment.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Activity: <a href="https://github.com/teaching-on-testbeds/k8s-ml/blob/gh-pages/README.md">Deploying machine learning systems on Kubernetes</a>
