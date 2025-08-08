@@ -90,7 +90,7 @@ You will have the opportunity to earn extra credit towards your final exam score
 You may earn up to 6 points toward your final exam.
 
 * **Chalkboard lecture - live**: in most of our live chalkboard lectures on Zoom, we will run some polls - if you participate in all of the polls in a given lecture, you will earn 0.5 points extra credit. 
-* **Colab lecture**: you may earn extra credit points by answering all of the questions in the Colab lecture videos _within one week after the video is released_. Some of the questions only need to be answered (e.g. "What do you *think* will happen"); some need to be answered *correctly* (and these will be labeled as "Correct Answer Required").
+* **Colab lecture**: you may earn extra credit points by answering all of the questions in the Colab lecture videos _within one week after the video is released_. Some of the questions only need to be answered (e.g. "What do you *think* will happen"); some need to be answered *correctly* (and these will be labeled as "✅").
 
 Extra credit points are only awarded in 0.5 point increments if you do everything that is required in a given lesson - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
 

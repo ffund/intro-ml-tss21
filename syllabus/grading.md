@@ -90,7 +90,7 @@ You may earn up to 4 points toward your midterm exam and 5 points toward your fi
 
 * **Chalkboard lecture - in person**: in most of our in-person chalkboard lectures, we will run some live polls - if you participate in all of the polls in a given lecture, you will earn 0.5 points extra credit. 
 * **Chalkboard lecture - online**: for students enrolled in the online asynchronous section, you may earn the 0.5 points by correctly answering all of the questions embedded in the chalkboard lecture video _within one week after the video is released_.
-* **Colab lecture**: you may earn extra credit points by answering all of the questions in the Colab lecture videos _within one week after the video is released_. Some of the questions only need to be answered (e.g. "What do you *think* will happen"); some need to be answered *correctly* (and these will be labeled as "Correct Answer Required").
+* **Colab lecture**: you may earn extra credit points by answering all of the questions in the Colab lecture videos _within one week after the video is released_. Some of the questions only need to be answered (e.g. "What do you *think* will happen"); some need to be answered *correctly* (and these will be labeled as "✅").
 
 Extra credit points are only awarded in 0.5 point increments if you do everything that is required in a given lesson - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
 
