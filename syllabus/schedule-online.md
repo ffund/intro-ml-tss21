@@ -15,33 +15,42 @@ Online asynchronous (no scheduled meetings - just prerecorded video) <span style
 ### Schedule
 
 * "Chalkboard lecture" video will be released every week on Tuesday.
-* "Colab lecture" video will be released every week on Thursday.
-* Homework problem sets will be released on Fridays before 5PM. (Lab assignments will be less regular.)
-* Office hours are held most weekdays -  see Brightspace calendar for dates and Zoom links.
+* "Colab lecture" video will be released every week on Friday.
+* Homework problem sets will be released on Fridays before 5PM, and will be due 9 days later (on a Sunday) at midnight.
+* Lab assignments will be released on Fridays for even-numbered topics (2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
+* Office hours: See Brightspace calendar for dates and Zoom links
 
 This is *not* a self-paced course - it is designed for students who will keep up with course material on a regular basis, e.g. will usually work through content within a week of its release.
 
-For the Fall 2024 semester, a tentative schedule (subject to change) is:
+For the Fall 2025 semester, a tentative schedule (subject to change) is:
 
-| Week            | Topic                                                                  |
+| Chalkboard Lecture Date   | Topic                                                                  |
 |-----------------|------------------------------------------------------------------------|
-| 9/3-9/8         | 0: Prerequisite review, Python+numpy                                   |
-| 9/9-9/15        | 1: Intro to ML, exploratory data analysis                              |
-| 9/16-9/22       | 2: Linear regression                                                   |
-| 9/23-9/29       | 3: Gradient descent, bias-variance tradeoff                            |
-| 9/30-10/6       | 4: Model selection, regularization                                     |
-| 10/7-10/15      | 5: Logistic regression for classification                              |
-| *10/15*-10/20   | 6: K nearest neighbor, feature selection (*note: holiday week*)        |
-| **10/21-10/27** | **Midterm exam** (several time slots will be offered during the week)  |
-| 10/28-11/3      | 7: Decision trees, ensembles                                           |
-| 11/4-11/10      | 8: Support vector classifiers, kernels, hyperparameter optimization    |
-| 11/11-11/17     | 9: Neural networks                                                     |
-| 11/18-11/24     | 10: Deep neural networks, convolutional neural networks                |
-| 11/25-12/8      | 11: Unsupervised learning (extended time frame for holiday weekend)    |
-| 12/2-12/8       | 12: Deploying machine learning systems                                 |
-| 12/9-12/13      | 13: Reinforcement learning (optional, extra lesson)                    |
-| **12/16-12/20** | **Final exam** (several time slots will be offered during the week)    |
+|                 | 0: Prerequisite review, Python+numpy                                   |
+| 9/4             | 1: Intro to ML, exploratory data analysis                              |
+| 9/11            | 2: Linear regression                                                   |
+| 9/18            | 3: Gradient descent, bias-variance tradeoff                            |
+| 9/25            | 4: Model selection, regularization                                     |
+| 10/2            | 5: Logistic regression for classification (prerecorded, no meeting)    |
+| 10/9            | 6: K nearest neighbor, feature selection                               |
+| **10/13-10/17** | **Midterm exam** (several time slots will be offered during the week)  |
+| 10/23           | 7: Decision trees, ensembles                                           |
+| 10/30           | 8: Support vector classifiers, kernels, hyperparameter optimization    |
+| 11/6            | 9: Neural networks                                                     |
+| 11/13           | 10: Deep neural networks, convolutional neural networks                |
+| 11/20           | 11: Unsupervised learning                                              |
+|                 | *Thanksgiving break*                                                   |
+| 12/4            | 12: Reinforcement learning                                             |
+| 12/11           | 13: Deploying machine learning systems                                 |
+| **12/15-12/19** | **Final exam** (several time slots will be offered during the week)    |
 
+The anticipated schedule of lab assignments will be:
+
+* Lab 2: released 9/12, due 9/25
+* Lab 4: released 9/26, due 10/9
+* Lab 6: released 10/10, due 10/30
+* Lab 8: released 10/31, due 11/13
+* Lab 10: released 11/14, due 12/4
 
 
 ### Time commitment

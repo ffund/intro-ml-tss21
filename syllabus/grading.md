@@ -80,7 +80,7 @@ During the exam, you will be permitted to use:
 
 If you plan to use these permitted online materials during the exam, you should open them before the exam begins - you may not use Google during the exam to find them.
 
-You may not use any other online or offline materials or resources during the exam. You may not use the course handouts or notebooks (except for parts you have copied into your 'reference sheet'). You may not open the homework problem sets on PrairieLearn during the exam.
+You may not use any other online or offline materials or resources during the exam. You may not use the course handouts or notebooks (except for parts you have copied into your 'reference sheet'). You may not open the homework problem sets on PrairieLearn during the exam. You may not use a handheld calculator or any electronic device except the computer on which you are taking the exam.
 
 #### Extra credit
 
