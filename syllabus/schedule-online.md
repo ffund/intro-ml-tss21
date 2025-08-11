@@ -14,7 +14,7 @@ Online asynchronous (no scheduled meetings - just prerecorded video) <span style
 
 ### Schedule
 
-* "Chalkboard lecture" video will be released every week on Tuesday.
+* "Chalkboard lecture" video will be released every week on Thursday.
 * "Colab lecture" video will be released every week on Friday.
 * Homework problem sets will be released on Fridays before 5PM, and will be due 9 days later (on a Sunday) at midnight.
 * Lab assignments will be released on Fridays for even-numbered topics (2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
