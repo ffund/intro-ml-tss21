@@ -5,7 +5,7 @@ Fraida Fund ffund@nyu.edu (370 Jay St, Room 936). The best way to reach me is to
 
 ### Course assistants
 
-Utkarsh Jain, Shaktidar Kanamarla, Moin Khan, Rameen Mahmood, Angelo Wu. The course assistants are available to answer questions in their respective office hours (see Brightspace calendar for dates and Zoom links). They aren't available by email; for written communication with course staff, please use Ed.
+Anup Raj Niroula, Tse Heng Hsueh. The course assistants are available to answer questions in their respective office hours (see Brightspace calendar for dates and Zoom links). They aren't available by email; for written communication with course staff, please use Ed.
 
 ### Instruction mode
 
@@ -57,10 +57,10 @@ The anticipated schedule of lab assignments will be:
 
 This is a 3-credit course. During a fall or spring semester, the average student should spend at least 3 hours/week/credit → 9 hours/week for a 3 credit course. A typical week will include:
 
- - pre-lecture reading/activity (some weeks) or study time (30-60 minutes)
- - a "chalkboard lecture" about 120 minutes long
- - a "Colab lecture" video about 90-120 minutes long
+ - pre-lecture reading/activity (some weeks) or study time (0.5-1 hours)
+ - a "chalkboard lecture" about 2-2.5 hours long
+ - a "Colab lecture" video about 1.5 hours long
  - a homework problem set (estimated time: 1-2 hours)
- - a lab assignment (estimated time: 2-3 hours per week)
+ - a lab assignment (estimated time: 2-3 hours per week, i.e. about 6 or 7 hours per lab assignment)
 
 A student who is not very comfortable with the prerequisites may have to spend more time than the estimate above in order to do well. 

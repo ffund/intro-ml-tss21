@@ -5,7 +5,7 @@ Fraida Fund ffund@nyu.edu (370 Jay St, Room 936). The best way to reach me is to
 
 ### Course assistants
 
-Anup Raj Niroula, others TBD. The course assistants are available to answer questions in their respective office hours (see Brightspace calendar for dates and Zoom links). They aren't available by email; for written communication with course staff, please use Ed.
+Anup Raj Niroula, Tse Heng Hsueh. The course assistants are available to answer questions in their respective office hours (see Brightspace calendar for dates and Zoom links). They aren't available by email; for written communication with course staff, please use Ed.
 
 ### Instruction mode
 
