@@ -31,7 +31,10 @@ You are permitted to use AI assistance for the following tasks:
 * computer translation between English and another language, e.g. you may write an explanation for a homework problem or lab assignment in another language and then submit a direct translation to English using Google Translate or a similar service. (Note: this does not include "cleaning up" or rephrasing text, which is not allowed - only direct translation is allowed. You shouldn't "clean up" text because (1) I don't care about your spelling, grammar, or vocabulary, and (2) if I am asking for an open-ended response, I want to hear *your* voice, not an LLM's voice.)
 * to generate Python code for plotting and visualization. You are fully responsible for any figures or visualizations you submit, including making sure their appearance is reasonable and the data in them is correct. But, you are permitted to use an AI assistant such as ChatGPT or Gemini to help you generate `matplotlib` or `seaborn` code to make your plots look the way you want. If you do use an AI assistant, you must include your LLM prompt in your submission.
 
-With the exception of the tasks listed above, AI assistance is not permitted in this course.
+With the exception of the tasks listed above, AI assistance is not permitted in this course. In particular, for open-ended text questions:
+
+* Don't use AI assistance. You are not graded on spelling, grammar, or on how eloquently you describe your observations - so even though an AI may be "better" than you on those elements of writing, it's not relevant. You are graded on what *you* have observed or understood based on the specific activities you are writing about, and an AI is *not* better than you at *that*. (Besides for AI use being forbidden, AI-generated text anyways tends to score poorly on these questions, because it lacks sufficient context about the assignment.)
+
 
 Here is some free advice for students who are using AI assistance on homework anyway (even though it is not permitted in this course):
 
@@ -49,15 +52,12 @@ With all that in mind, are there ways to use AI that will cause less "cognitive 
 * If you are going to ask an AI assistant for help, instead of giving it the entire problem and letting it give you an entire solution, prompt it with a small piece of the problem that you know you will need, so that it gives you one or two lines of code to solve *that* part of the problem. This way, you are still practicing the skill of planning out the solution on your own, even if you don't know how to write code to realize that solution.
 * A week or two after submitting a solution using AI assistance, reset the submission (in PrairieLearn: open the workspace and click the "Reset" button) and re-attempt the problem without looking at your previous submission.
 
-Outside of coding problems, I also suggest you avoid using AI as a "tutor" since it does not have the benefit of the context of the rest of the course material - it does not know the specific points of emphasis in this course, what we have/have not learned, or how we have related specific concepts to one another. Instead of using AI: 
+Outside of coding problems, I also suggest you be careful about using AI as a "tutor" since it does not have the benefit of the context of the rest of the course material - it does not know the specific points of emphasis in this course, what we have/have not learned, or how we have related specific concepts to one another. Instead, try to make the best use possible of the human and non-human resources that are available to you as a student in this course: 
 
 * When you answer a question on PrairieLearn, scroll down to the "Correct Answer" panel. In many cases, this will have an explanation that is **written by your instructor**.
 * If you don't understand something in the lecture, lab, or homework, post a question on Ed to get an explanation from your instructor or a course assistant.
 * Or, visit an office hour on Zoom for a "live" Q&A with humans.
 
-For open-ended text questions:
-
-* Don't use AI assistance. You are not graded on spelling, grammar, or on how eloquently you describe your observations - so even though an AI may be "better" than you on those elements of writing, it's not relevant. You are graded on what *you* have observed or understood based on the specific activities you are writing about, and an AI is *not* better than you at *that*. (Besides for AI use being forbidden, AI-generated text anyways tends to score poorly on these questions.)
 
 #### Violation of academic integrity policies
 
