@@ -90,12 +90,42 @@ You may earn up to 4 points toward your midterm exam and 5 points toward your fi
 
 Extra credit points may be earned by the following activities:
 
-| Activity                               | Extra Credit Opportunity                    | How to earn it      |     
-|----------------------------------------|---------------------------------------------|---------------------
-| Chalkboard lecture – in person section | 0.5 points per lecture                      | Participate in **all live polls** during the lecture. Your answers don't need to be correct.                    |
-| Chalkboard lecture – online section    | 0.5 points per lecture                      | Correctly answer **all embedded questions** in the lecture videos within **1 week** of release                  |
-| Colab lecture                          | 0.5 points per lecture                      | Answer **all questions** in Colab videos within **1 week**; some must be answered correctly (marked with "✅")  |
-| Review quiz (weeks 3, 5, 7, 9, 11)     | 0.5 points per quiz                         | Score **100%** on a review quiz on previous weeks' material (available Mon 9AM – Thu midnight on PrairieLearn; 15-minute limit once you start)   |
+<table style="width:100%; table-layout:fixed;">
+  <colgroup>
+    <col style="width:22%">
+    <col style="width:18%">
+    <col style="width:60%">
+  </colgroup>
+  <thead>
+    <tr>
+      <th scope="col">Activity</th>
+      <th scope="col">Extra Credit Opportunity</th>
+      <th scope="col">How to earn it</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Chalkboard lecture – in person section</td>
+      <td>0.5 points per lecture</td>
+      <td>Participate in <strong>all live polls</strong> during the lecture. Your answers don't need to be correct.</td>
+    </tr>
+    <tr>
+      <td>Chalkboard lecture – online section</td>
+      <td>0.5 points per lecture</td>
+      <td>Correctly answer <strong>all embedded questions</strong> in the lecture videos within <strong>1 week</strong> of release.</td>
+    </tr>
+    <tr>
+      <td>Colab lecture</td>
+      <td>0.5 points per lecture</td>
+      <td>Answer <strong>all questions</strong> in Colab videos within <strong>1 week</strong>; some must be answered correctly (marked with “✅”).</td>
+    </tr>
+    <tr>
+      <td>Review quiz (weeks 3, 5, 7, 9, 11)</td>
+      <td>0.5 points per quiz</td>
+      <td>Score <strong>100%</strong> on a review quiz on previous weeks' material (available Mon 9AM – Thu midnight on PrairieLearn; 15-minute limit once you start).</td>
+    </tr>
+  </tbody>
+</table>
 
 
 Extra credit points are only awarded in 0.5 point increments - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
