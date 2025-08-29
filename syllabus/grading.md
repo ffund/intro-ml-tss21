@@ -41,7 +41,7 @@ Most homework problems are automatically graded, so you will have instant feedba
 
 #### Lab assignments
 
-There are 4-5 lab assignments over the course of the semester. The average time expected per lab assignment is 7 hours. Some lab assignments will take closer to 4-5 hours and some will take closer to 9-10 hours. Note that lab assignments span more than one week.  
+There will be 5 lab assignments over the course of the semester. The average time expected per lab assignment is 7 hours. Some lab assignments will take closer to 4-5 hours and some will take closer to 9-10 hours. Note that lab assignments span more than one week.  
 
 Make sure to give yourself plenty of time, so that in case you have questions or need help, you have time to ask and get support on Ed well before the assignment is due. Late work will not be graded for credit  unless recommended by the student advocate (see "Illness or other exceptional situation").
 
@@ -84,15 +84,21 @@ You may not use any other online or offline materials or resources during the ex
 
 #### Extra credit
 
-You will have the opportunity to earn extra credit towards your midterm and final exam scores. This extra credit will be added to your actual exam score before it is counted in your course grade. For example, if you earn a 92% on your midterm exam and you have 4 points of extra credit toward your midterm, then a 96% score will be counted.
+You will have the opportunity to earn extra credit towards your midterm and final exam scores.  This extra credit will be added to your actual exam score before it is counted in your course grade. For example, if you earn a 92% on your midterm exam and you have 4 points of extra credit toward your midterm, then a 96% score will be counted.
 
 You may earn up to 4 points toward your midterm exam and 5 points toward your final exam.
 
-* **Chalkboard lecture - in person**: in most of our in-person chalkboard lectures, we will run some live polls - if you participate in all of the polls in a given lecture, you will earn 0.5 points extra credit. 
-* **Chalkboard lecture - online**: for students enrolled in the online asynchronous section, you may earn the 0.5 points by correctly answering all of the questions embedded in the chalkboard lecture video _within one week after the video is released_.
-* **Colab lecture**: you may earn extra credit points by answering all of the questions in the Colab lecture videos _within one week after the video is released_. Some of the questions only need to be answered (e.g. "What do you *think* will happen"); some need to be answered *correctly* (and these will be labeled as "✅").
+Extra credit points may be earned by the following activities:
 
-Extra credit points are only awarded in 0.5 point increments if you do everything that is required in a given lesson - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
+| Activity                               | Extra Credit Opportunity                    | How to earn it      |     
+|----------------------------------------|---------------------------------------------|---------------------
+| Chalkboard lecture – in person section | 0.5 points per lecture                      | Participate in **all live polls** during the lecture. Your answers don't need to be correct.                    |
+| Chalkboard lecture – online section    | 0.5 points per lecture                      | Correctly answer **all embedded questions** in the lecture videos within **1 week** of release                  |
+| Colab lecture                          | 0.5 points per lecture                      | Answer **all questions** in Colab videos within **1 week**; some must be answered correctly (marked with "✅")  |
+| Review quiz (weeks 3, 5, 7, 9, 11)     | 0.5 points per quiz                         | Score **100%** on a review quiz on previous weeks' material (available Mon 9AM – Thu midnight on PrairieLearn; 15-minute limit once you start)   |
+
+
+Extra credit points are only awarded in 0.5 point increments - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
 
 Any extra credit you earn from the Week 1, 2, 3, 4, or 5 lectures will be applied to the midterm exam, but capped at 4 points. Any extra credit you earn from the Week 6, 7, 8, 9, 10, 11, 12 lectures will be applied to the final exam, but capped at 5 points. The cap means that even if you miss an opportunity to earn a 0.5 point or two (for example: you are late to class because of subway delays, and miss a poll as a result), you won't be disadvantaged. There are no makeup opportunities for extra credit points, 
 
