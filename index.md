@@ -16,7 +16,7 @@ _These materials are for your personal use. Please do not redistribute (e.g. pos
 
 * [Notes: This Date in History - 1964 World’s Fair](notes/1-handwritten-digits) <a href="notes/1-handwritten-digits.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Handout: Intro to Machine Learning <a href="slides/1-intro-ml.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
-* Handout: Working with data <a href="slides/1-explore-data.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
+* Handout: Working with data <a href="slides/1-working-with-data.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"></a>
 * Notebook: Exploratory data analysis <a href="https://github.com/ffund/ml-notebooks/raw/master/notebooks/1-exploratory-data-analysis.pdf"><img src="/intro-ml-tss21/pdf.svg" alt="PDF" height="20px"> [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ffund/ml-notebooks/blob/master/notebooks/1-exploratory-data-analysis.ipynb)
 
 
