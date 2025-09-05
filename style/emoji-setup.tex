@@ -1,0 +1,8 @@
+\usepackage{fontspec}
+\setmainfont{Fira Sans}
+
+% Monochrome emoji works with XeLaTeX
+\newfontfamily\emojifont{Noto Emoji}[Scale=MatchLowercase]
+
+\usepackage{ucharclasses}
+\setTransitionsForSymbols{\emojifont}{}

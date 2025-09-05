@@ -400,21 +400,6 @@ If you tried it -
 * were you able to get it to give a high score to a bad or irrelevant comment?
 * did you find it frustrating that you didn't know what you needed to do in order to get a good score?
 
-:::
-
-:::
-
-\newpage
-
-::: {.cell .markdown}
-
-### Grading students' annotated readings in Perusall (1)
-
-![Many students struggle with Perusall grading.](../images/perusall.png){width=90%}
-
-
-:::notes
-
 
 * **Takeaway**: The ML model does not explain its score to students, frustrating them when their own idea of a "good annotation" does not align with the model's. 
 * **Takeaway**: (especially if the model *would* explain its score) the model could be easily "tricked" so that students can earn a good score without actually learning.
@@ -489,6 +474,8 @@ Do you think the video (not audio) of your interview is a good predictor of how 
 * See the report by [Bayerischer Rundfunk (German Public Broadcasting)](https://web.br.de/interaktiv/ki-bewerbung/en/).
 
 **Takeaway**: an ML system will "find" meaningless patterns, if we let it. In this case, the thing we asked the model to predict is not observable or measurable, and is probably unrelated to the data we give it. Its scores are not auditable or explainable, and it may introduce or exacerbate bias.
+
+Because of *automation bias*, people may give more weight to the output of such a system than they would to their own (possibly biased) intuition.
 
 :::
 

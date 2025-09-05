@@ -2,6 +2,7 @@
 SOURCES := $(wildcard *.md)
 SOURCES := 1-intro-ml.md
 SOURCES += 1-explore-data.md
+SOURCES += 1-working-with-data.md
 SOURCES += 2-linear.md
 SOURCES += 3-gradient-descent.md
 SOURCES += 3-bias-variance-tradeoff.md
@@ -32,7 +33,7 @@ PANDOCFLAGS=--pdf-engine=xelatex\
          -V geometry:margin=1in \
          --highlight-style pygments \
 	 --listings --variable urlcolor=Maroon --toc \
-	 -H ../style/listings-setup.tex -H ../style/keystroke-setup.tex -H ../style/includes.tex
+	 -H ../style/listings-setup.tex -H ../style/keystroke-setup.tex -H ../style/emoji-setup.tex -H ../style/includes.tex
 
 %.pdf: %.md
 	cat $^ | sed 's/mathbf/symbf/g' > $^.tmp

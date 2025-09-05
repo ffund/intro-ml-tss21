@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -388,30 +391,16 @@ class="slide level3 cell markdown">
 <aside class="notes">
 <p>If you tried it -</p>
 <ul>
-<li>were you able to get it to give a high score to a bad or irrelevant
-comment?</li>
-<li>did you find it frustrating that you didn’t know what you needed to
-do in order to get a good score?</li>
-</ul>
-</aside>
-</section>
-<section id="grading-students-annotated-readings-in-perusall-1"
-class="slide level3 cell markdown">
-<h3>Grading students’ annotated readings in Perusall (1)</h3>
-<figure>
-<img data-src="../images/perusall.png" style="width:90.0%"
-alt="Many students struggle with Perusall grading." />
-<figcaption aria-hidden="true">Many students struggle with Perusall
-grading.</figcaption>
-</figure>
-<aside class="notes">
-<ul>
-<li><strong>Takeaway</strong>: The ML model does not explain its score
-to students, frustrating them when their own idea of a “good annotation”
-does not align with the model’s.</li>
-<li><strong>Takeaway</strong>: (especially if the model <em>would</em>
-explain its score) the model could be easily “tricked” so that students
-can earn a good score without actually learning.</li>
+<li><p>were you able to get it to give a high score to a bad or
+irrelevant comment?</p></li>
+<li><p>did you find it frustrating that you didn’t know what you needed
+to do in order to get a good score?</p></li>
+<li><p><strong>Takeaway</strong>: The ML model does not explain its
+score to students, frustrating them when their own idea of a “good
+annotation” does not align with the model’s.</p></li>
+<li><p><strong>Takeaway</strong>: (especially if the model
+<em>would</em> explain its score) the model could be easily “tricked” so
+that students can earn a good score without actually learning.</p></li>
 </ul>
 </aside>
 </section>
@@ -485,6 +474,9 @@ patterns, if we let it. In this case, the thing we asked the model to
 predict is not observable or measurable, and is probably unrelated to
 the data we give it. Its scores are not auditable or explainable, and it
 may introduce or exacerbate bias.</p>
+<p>Because of <em>automation bias</em>, people may give more weight to
+the output of such a system than they would to their own (possibly
+biased) intuition.</p>
 </aside>
 </section>
 <!--
@@ -1108,7 +1100,7 @@ Now we'll look more closely at the *data*, which is key in either case.
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
