@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -709,26 +712,22 @@ know <span class="math inline">\(r_{xy} \in [-1, 1]\)</span>)</p>
 <section id="mse-for-optimal-simple-linear-regression"
 class="slide level3 cell markdown">
 <h3>MSE for optimal simple linear regression</h3>
-<p><span class="math display">\[L(w_0^*, w_1^*) = \sigma_y^2 -
-\frac{\sigma_{xy}^2}{\sigma_{x}^2} \]</span></p>
-<p><span class="math display">\[\implies \frac{L(w_0^*,
-w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2
-\sigma_{y}^2}\]</span></p>
+<p><span class="math display">\[L(w_0^*, w_1^*) = {\sigma_e^2 } =
+\sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} \]</span></p>
+<p><span class="math display">\[R2 = 1 -  \frac{\sigma_e^2 }{\sigma_y^2}
+\]</span></p>
 <aside class="notes">
 <p><strong>If</strong> we fit a simple regression model using this
 ordinary least squares solution,</p>
 <ul>
-<li>the ratio <span class="math inline">\(\frac{L(w_0^*,
-w_1^*)}{\sigma_y^2}\)</span> is the <em>fraction of unexplained
-variance</em>: of all the variance in <span
-class="math inline">\(y\)</span> (denominator), how much is still “left”
-unexplained after our model explains some of it (numerator)? (best case:
+<li>the ratio <span class="math inline">\(\frac{\sigma_e^2
+}{\sigma_y^2}\)</span> is the <em>fraction of unexplained variance</em>:
+of all the variance in <span class="math inline">\(y\)</span>
+(denominator), how much is still “left” unexplained after our model
+explains some of it (numerator, variance of residual)? (best case:
 0)</li>
-<li>The <em>coefficient of determination</em>, R2, is equal to the ratio
-<span class="math inline">\(\frac{\sigma_{xy}^2}{\sigma_{x}^2
-\sigma_{y}^2}\)</span> (best case: 1) for the OLS simple regression.
-Generally, <span class="math inline">\(R2 = 1 -
-\frac{MSE}{\sigma_y^2}\)</span>.</li>
+<li>The <em>coefficient of determination</em>, R2, is the <em>fraction
+of explained variance</em>. (best case: 1)</li>
 </ul>
 </aside>
 </section></section>
@@ -1137,7 +1136,7 @@ can it represent?</li>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

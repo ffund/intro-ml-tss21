@@ -622,18 +622,17 @@ $r_{xy} = \frac{\sigma_{xy}}{\sigma_x \sigma_y}$.
 
 ### MSE for optimal simple linear regression
 
-$$L(w_0^*, w_1^*) = \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} $$ 
+$$L(w_0^*, w_1^*) = {\sigma_e^2 } = \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} $$ 
 
-$$\implies \frac{L(w_0^*, w_1^*)}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$$
+$$R2 = 1 -  \frac{\sigma_e^2 }{\sigma_y^2} $$
 
 
 ::: notes
 
 **If** we fit a simple regression model using this ordinary least squares solution,
 
-* the ratio $\frac{L(w_0^*, w_1^*)}{\sigma_y^2}$ is the *fraction of unexplained variance*: of all the variance in $y$ (denominator), how much is still "left" unexplained after our model explains some of it (numerator)? (best case: 0)
-* The *coefficient of determination*, R2, is equal to the ratio $\frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2}$ (best case: 1) for the OLS simple regression. Generally, $R2 = 1 - \frac{MSE}{\sigma_y^2}$.
-
+* the ratio $\frac{\sigma_e^2 }{\sigma_y^2}$ is the *fraction of unexplained variance*: of all the variance in $y$ (denominator), how much is still "left" unexplained after our model explains some of it (numerator, variance of residual)? (best case: 0)
+* The *coefficient of determination*, R2, is the *fraction of explained variance*. (best case: 1)
 :::
 
 :::
