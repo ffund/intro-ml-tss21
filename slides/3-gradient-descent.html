@@ -235,11 +235,19 @@ w^t)
 <aside class="notes">
 <p>To update <span class="math inline">\(\mathbf{w}\)</span>, must
 compute <span class="math inline">\(n\)</span> loss functions and
-gradients - each iteration is <span
+gradients - <strong>each iteration</strong> is <span
 class="math inline">\(O(nd)\)</span>. We need multiple iterations, but
 in many cases it’s more efficient than the previous approach.</p>
 <p>However, if <span class="math inline">\(n\)</span> is large, it may
 still be expensive!</p>
+</aside>
+<aside class="notes">
+<figure>
+<img data-src="../images/3-gradient-descent-example.png"
+alt="Example: gradient descent for linear regression, with too-small and too-big initial guesses." />
+<figcaption aria-hidden="true">Example: gradient descent for linear
+regression, with too-small and too-big initial guesses.</figcaption>
+</figure>
 </aside>
 </section></section>
 <section>
@@ -365,9 +373,9 @@ TensorFlow, 2nd Edition, by Aurélien Géron.</p>
 <h3>Annealing the learning rate</h3>
 <p>One approach: decay learning rate slowly over time, such as</p>
 <ul>
-<li>Exponential decay: <span class="math inline">\(\alpha_t = \alpha_0
+<li>Exponential decay: <span class="math inline">\(\alpha^t = \alpha_0
 e^{-k t}\)</span></li>
-<li>1/t decay: <span class="math inline">\(\alpha_t = \alpha_0 / (1 + k
+<li>1/t decay: <span class="math inline">\(\alpha^t = \alpha_0 / (1 + k
 t )\)</span></li>
 </ul>
 <p>(where <span class="math inline">\(k\)</span> is tuning

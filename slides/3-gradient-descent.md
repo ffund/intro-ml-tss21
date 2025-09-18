@@ -187,11 +187,24 @@ $$
 ::: notes
 
 
-To update $\mathbf{w}$, must compute $n$ loss functions and gradients - each iteration is $O(nd)$. We need multiple iterations, but in many cases it's more efficient than the previous approach.
+To update $\mathbf{w}$, must compute $n$ loss functions and gradients - **each iteration** is $O(nd)$. We need multiple iterations, but in many cases it's more efficient than the previous approach.
 
 However, if $n$ is large, it may still be expensive!
 
 :::
+
+
+\newpage
+
+
+
+::: notes
+
+
+![Example: gradient descent for linear regression, with too-small and too-big initial guesses.](../images/3-gradient-descent-example.png)
+
+:::
+
 
 \newpage
 
@@ -206,7 +219,6 @@ Two main "knobs" to turn:
 * learning rate
 
 :::
-
 ### Stochastic gradient descent 
 
 Idea: 
@@ -312,8 +324,8 @@ Also note: SGD "noise ball"
 
 One approach: decay learning rate slowly over time, such as 
 
-* Exponential decay: $\alpha_t = \alpha_0 e^{-k t}$
-* 1/t decay: $\alpha_t = \alpha_0 / (1 + k t )$ 
+* Exponential decay: $\alpha^t = \alpha_0 e^{-k t}$
+* 1/t decay: $\alpha^t = \alpha_0 / (1 + k t )$ 
 
 (where $k$ is tuning parameter).
 
