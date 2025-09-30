@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -40,7 +43,13 @@
 <section class="slide level3">
 
 <aside class="notes">
-<p><strong>Math prerequisites for this lecture</strong>: None</p>
+<p><strong>Math prerequisites for this lecture</strong>: You should know
+about:</p>
+<ul>
+<li>Variance of a random variable</li>
+<li>Independence of random variables</li>
+<li>Variance of sum of random variables</li>
+</ul>
 </aside>
 </section>
 <section>
@@ -122,15 +131,115 @@ calculate <span class="math inline">\(\hat{f}_1(x) \ldots,
 <h3>Bagging trees</h3>
 <ul>
 <li>Construct <span class="math inline">\(B\)</span> trees using <span
-class="math inline">\(B\)</span> bootstrapped training sets.</li>
-<li>Let the trees grow deep, no pruning.</li>
-<li>Each individual tree has low bias, high variance.</li>
-<li>Average the prediction of the trees to reduce variance.</li>
+class="math inline">\(B\)</span> bootstrapped training sets</li>
+<li>Let the trees grow deep, no pruning</li>
+<li>Each individual tree has low bias, high variance</li>
+<li>Average the prediction of the trees to reduce variance (if
+independent!)</li>
 </ul>
+</section>
+<section id="variance-reduction-rule" class="slide level3">
+<h3>Variance reduction rule</h3>
+<p><span class="math display">\[\begin{align}
+\mathrm{Var}(\bar X)
+&amp;= \mathrm{Var}\!\left(\frac{1}{n}\sum_{i=1}^n X_i\right) \\
+&amp;= \frac{1}{n^2}\,\mathrm{Var}\!\left(\sum_{i=1}^n X_i\right) \\
+&amp;= \frac{1}{n^2}\left(\sum_{i=1}^n \mathrm{Var}(X_i) +
+2\sum_{i&lt;j}\mathrm{Cov}(X_i,X_j)\right) \\
+&amp;= \frac{1}{n^2}\cdot n  \mathrm{Var}(X_i) \quad \text{(if $X_i$
+i.i.d.)} \\
+&amp;= \frac{1}{n}\,\mathrm{Var}(X_i).
+\end{align}\]</span></p>
+<aside class="notes">
+<p>where:</p>
+<ol type="1">
+<li>uses definition of the sample mean: <span class="math inline">\(\bar
+X = \tfrac{1}{n}\sum_{i=1}^n X_i\)</span>.</li>
+<li>uses the scaling rule: <span class="math inline">\(\mathrm{Var}(aY)
+= a^2\,\mathrm{Var}(Y)\)</span> with <span
+class="math inline">\(a=\tfrac{1}{n}\)</span>.</li>
+<li>uses variance of sum (+ symmetry of covariance): <span
+class="math display">\[\mathrm{Var}(\sum_i X_i)= \sum_i
+\mathrm{Var}(X_i)+  \sum_{\substack{j=1\\ j\neq i}}
+\mathrm{Cov}(X_i,X_j) = \sum_i
+\mathrm{Var}(X_i)+2\sum_{i&lt;j}\mathrm{Cov}(X_i,X_j)\]</span></li>
+<li>because independence <span class="math inline">\(\Rightarrow
+\mathrm{Cov}(X_i,X_j)=0\)</span> for <span class="math inline">\(i\neq
+j\)</span>, and iid means <span
+class="math inline">\(\mathrm{Var}(X_i)\)</span> is same for all <span
+class="math inline">\(i\)</span>.</li>
+</ol>
+</aside>
+</section>
+<section id="variance-reduction-rule-general" class="slide level3">
+<h3>Variance reduction rule (general)</h3>
+<p>For <span class="math inline">\(n\)</span> i.i.d. random variables,
+the variance of their mean decreases with <span
+class="math inline">\(n\)</span>:</p>
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>General RV</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The average</td>
+<td><span class="math inline">\(\bar{X} = \frac{1}{n}\sum_{i=1}^n
+X_i\)</span></td>
+</tr>
+<tr class="even">
+<td>Variance with independence</td>
+<td><span class="math inline">\(\mathrm{Var}(\bar{X}) =
+\frac{1}{n}\mathrm{Var}(X_i)\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="variance-reduction-rule-bagged-trees" class="slide level3">
+<h3>Variance reduction rule (bagged trees)</h3>
+<p>For <span class="math inline">\(B\)</span> independent bagged trees,
+variance decreases with <span class="math inline">\(B\)</span>:</p>
+<table>
+<colgroup>
+<col style="width: 44%" />
+<col style="width: 55%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><strong>Bagged Trees</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The average</td>
+<td><span class="math inline">\(\hat{f}_{bag}(x) =
+\frac{1}{B}\sum_{b=1}^B \hat{f}_b(x)\)</span></td>
+</tr>
+<tr class="even">
+<td>Variance with independence</td>
+<td><span class="math inline">\(\mathrm{Var}(\hat{f}_{bag}(x)) =
+\frac{1}{B}\mathrm{Var}(\hat{f}_b(x))\)</span></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="correlated-trees" class="slide level3">
 <h3>Correlated trees</h3>
-<p>Problem: trees produced by bagging are highly correlated.</p>
+<p>Problem: trees produced by bagging are highly correlated, and:</p>
+<p><span class="math display">\[
+\mathrm{Var}(\bar{X}) = \frac{\sigma^2}{n}\left[1 + (n-1)\rho\right]
+\]</span></p>
+<p>where <span class="math inline">\(\rho = \mathrm{Corr}(X_i, X_j)
+= \frac{\mathrm{Cov}(X_i,
+X_j)}{\sqrt{\mathrm{Var}(X_i)\,\mathrm{Var}(X_j)}}\)</span></p>
+<aside class="notes">
 <ul>
 <li>Imagine there is one feature that is strong predictor, several
 moderate predictors</li>
@@ -138,6 +247,7 @@ moderate predictors</li>
 <li>Averaging correlated quantities does not reduce variance as
 much.</li>
 </ul>
+</aside>
 </section>
 <section id="random-forests" class="slide level3">
 <h3>Random forests</h3>
@@ -443,7 +553,7 @@ prediction: better predictive accuracy, less interpretability</li>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

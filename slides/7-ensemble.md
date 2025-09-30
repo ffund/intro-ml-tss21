@@ -5,7 +5,11 @@ author: 'Fraida Fund'
 
 :::notes
 
-**Math prerequisites for this lecture**: None
+**Math prerequisites for this lecture**: You should know about:
+
+* Variance of a random variable
+* Independence of random variables
+* Variance of sum of random variables
 
 :::
 
@@ -49,6 +53,9 @@ to create an **ensemble** with better prediction
 * Each "bootstrap training set" is *same size* as full training set, and is created by sampling with replacement
 * Some samples will appear more than once, some samples not at all
 
+
+
+
 ### Bootstrap aggregation
 
 * Create multiple versions $1, \ldots, B$ of training set with bootstrap 
@@ -57,23 +64,82 @@ to create an **ensemble** with better prediction
 
 $$\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}_b (x)$$
 
-
-
 ### Bagging trees
 
-* Construct $B$ trees using $B$ bootstrapped training sets. 
-* Let the trees grow deep, no pruning.
-* Each individual tree has low bias, high variance.
-* Average the prediction of the trees to reduce variance.
+* Construct $B$ trees using $B$ bootstrapped training sets
+* Let the trees grow deep, no pruning
+* Each individual tree has low bias, high variance
+* Average the prediction of the trees to reduce variance (if independent!)
 
+### Variance reduction rule 
+
+\begin{align}
+\mathrm{Var}(\bar X) 
+&= \mathrm{Var}\!\left(\frac{1}{n}\sum_{i=1}^n X_i\right) \\
+&= \frac{1}{n^2}\,\mathrm{Var}\!\left(\sum_{i=1}^n X_i\right) \\
+&= \frac{1}{n^2}\left(\sum_{i=1}^n \mathrm{Var}(X_i) + 2\sum_{i<j}\mathrm{Cov}(X_i,X_j)\right) \\
+&= \frac{1}{n^2}\cdot n  \mathrm{Var}(X_i) \quad \text{(if $X_i$ i.i.d.)} \\
+&= \frac{1}{n}\,\mathrm{Var}(X_i).
+\end{align}
+
+::: notes
+
+where:
+
+1. uses definition of the sample mean: $\bar X = \tfrac{1}{n}\sum_{i=1}^n X_i$.
+2. uses the scaling rule: $\mathrm{Var}(aY) = a^2\,\mathrm{Var}(Y)$ with $a=\tfrac{1}{n}$.
+3. uses variance of sum (+ symmetry of covariance): 
+$$\mathrm{Var}(\sum_i X_i)= \sum_i \mathrm{Var}(X_i)+  \sum_{\substack{j=1\\ j\neq i}} \mathrm{Cov}(X_i,X_j) = \sum_i \mathrm{Var}(X_i)+2\sum_{i<j}\mathrm{Cov}(X_i,X_j)$$
+4. because independence $\Rightarrow \mathrm{Cov}(X_i,X_j)=0$ for $i\neq j$, and iid means $\mathrm{Var}(X_i)$ is same for all $i$.
+
+
+:::
+
+
+### Variance reduction rule (general)
+
+For $n$ i.i.d.\ random variables, the variance of their mean decreases with $n$:
+
+
+|              | **General RV** | 
+|-------------|----------------|
+| The average | $\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i$ |
+| Variance with independence | $\mathrm{Var}(\bar{X}) = \frac{1}{n}\mathrm{Var}(X_i)$ | 
+
+### Variance reduction rule (bagged trees)
+
+For $B$ independent bagged trees, variance decreases with $B$:
+
+
+|             | **Bagged Trees** |
+|-------------|----------------|
+| The average | $\hat{f}_{bag}(x) = \frac{1}{B}\sum_{b=1}^B \hat{f}_b(x)$ |
+| Variance with independence  | $\mathrm{Var}(\hat{f}_{bag}(x)) = \frac{1}{B}\mathrm{Var}(\hat{f}_b(x))$ |
+
+
+\newpage
 
 ### Correlated trees
 
-Problem: trees produced by bagging are highly correlated.
+Problem: trees produced by bagging are highly correlated, and:
+
+$$
+\mathrm{Var}(\bar{X}) = \frac{\sigma^2}{n}\left[1 + (n-1)\rho\right]
+$$
+
+where $\rho = \mathrm{Corr}(X_i, X_j) 
+= \frac{\mathrm{Cov}(X_i, X_j)}{\sqrt{\mathrm{Var}(X_i)\,\mathrm{Var}(X_j)}}$
+
+
+::: notes
 
 * Imagine there is one feature that is strong predictor, several moderate predictors
 * Most/all trees will split on this feature
 * Averaging correlated quantities does not reduce variance as much.
+
+
+:::
+
 
 ### Random forests
 
