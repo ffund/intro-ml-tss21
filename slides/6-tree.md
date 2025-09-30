@@ -5,11 +5,12 @@ author: 'Fraida Fund'
 
 
 
-\newpage
 
 :::notes
 
-**Math prerequisites for this lecture**: None
+**Math prerequisites for this lecture**: You should know about
+
+* Variance of the mean of i.i.d. random variables
 
 :::
 
@@ -20,7 +21,6 @@ author: 'Fraida Fund'
 * Bias and variance of decision trees
 
 
-## Recap
 
 <!--
 
@@ -89,7 +89,7 @@ Next: flexible decisions, non-parametric approach, fast prediction
 
 What if we define "neighborhoods" and their values in advance, at training time? Then at inference time, we only need to determine which "neighborhood" a test point belongs in.
 
-However, we run into another **computationally hard** problem! To *partition* the feature space into optimal neighborhoods is too expensive. Instead, we will rely on some heuristics and get a non-optimal, but good enough, partition.
+However, we run into another **computationally hard** problem! To partition the feature space into *optimal* neighborhoods is too expensive. Instead, we will rely on some heuristics and get a non-optimal, but good enough, partition.
 
 :::
 
@@ -111,15 +111,18 @@ However, we run into another **computationally hard** problem! To *partition* th
 
 ### Note on notation
 
-Following notation of ISLR, Chapter 8:
+Following notation of ISL, Chapter 8:
 
 * $X_j$ is feature $j$
 * $x_i$ is sample $i$
 
+\newpage
+
 
 ### Stratification of feature space (1)
 
-* Given set of possible predictors, $X_1, \ldots, X_p$
+Given set of possible predictors, $X_1, \ldots, X_p$
+
 * Training: Divide predictor space (set of possible values of $X$) into $J$ non-overlapping regions: $R_1, \ldots, R_J$, by splitting sequentially on one feature at a time.
 
 ::: notes
@@ -130,21 +133,15 @@ Following notation of ISLR, Chapter 8:
 
 ### Stratification of feature space (2)
 
-
-* Prediction: For each observation that falls in region $R_j$, predict
-  - mean of labels of training points in $R_j$ (regression)
-  - mode of labels of training points in $R_j$ (classification)
-
-
-### Tree representation
+Prediction: 
 
 * At node that is not a leaf: test one feature $X_i$
 * Branch from node depending on value of $X_i$
-* Each leaf node: predict $\hat{y}_{R_m}$ 
+* At leaf node: for observation that falls in region $R_j$, predict $\hat{y}_{R_j}$ 
 
+  - mean of labels of training points in $R_j$ (regression)
+  - mode of labels of training points in $R_j$ (classification)
 
-
-\newpage
 
 ### Stratification of feature space - illustration
 
@@ -156,18 +153,34 @@ The stratification on the top left cannot be produced by a decision tree using r
 
 :::
 
+\newpage
+
+### Approximation using steps
+
+::: notes
+
+![Representation using step functions.](../images/6-tree-step.png){ width=100% }
+
+:::
+
+\newpage
+
 ## Training a decision tree
 
 
-### Basic idea (1)
+### Basic idea 
 
 * Goal: find the high-dimensional rectangles that minimize error
-* Computationally expensive to consider every possible partition
+* Practical approach: recursive binary splitting (top-down, greedy approach) 
 
-### Basic idea (2)
+::: notes
 
-* Instead: recursive binary splitting (top-down, greedy approach) 
-* Greedy: at each step, make the best decision at that step, without looking ahead and making a decision that might yield better results at future steps
+It is too computationally expensive to consider every possible partition. Instead, we'll use a greedy algorithm: at each step, make the best "local" decision at that step, without looking ahead and making a decision that might yield better results at future steps
+
+
+
+
+:::
 
 
 ### Recursive binary splitting steps
@@ -175,16 +188,11 @@ The stratification on the top left cannot be produced by a decision tree using r
 Start at root of the tree, considering all training samples.
 
 1. At the current node,
-2. Find feature $X_j$ and *cutpoint* $s$ that minimizes some loss function (?)
+2. Find feature $X_j$ and *cutpoint* $s$ that minimizes some *local* loss function (?)
 3. Split training samples at that node into two leaf nodes
 4. Stop when no training error (?)
 5. Otherwise, repeat at leaf nodes
 
-::: notes
-
-At step 2, we apply a greedy heuristic - we are choosing the feature that minimizes a loss function in *this* iteration only.
-
-:::
 
 ### Recursive binary splitting
 
@@ -197,17 +205,21 @@ where $\{X|X_j < s\}$ is the region of predictor space in which $X_j$ takes on a
 
 ### Loss function for regression tree 
 
-For regression: look for feature $j$ and cutpoint $s$ that leads to the greatest possible reduction in squared error, where the "new" squared error is:
+For regression: look for feature $j$ and cutpoint $s$ that leads to the greatest possible reduction in squared error, where the "new" squared error is ($\hat{y}_{R_j}$ is the prediction for the samples in $R_j$):
 
 $$\sum_{i: x_i \in R_1(j,s)} (y_i - \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i - \hat{y}_{R_2})^2$$ 
 
-($\hat{y}_{R_j}$ is the prediction for the samples in $R_j$.)
 
 ::: notes
 
 ![Training a regression tree.](../images/5-train-regression-tree.png){ width=70% }
 
+Note: we are *not* computing the average loss of each region, we want the loss to be weighted by the number of samples it applies to!
+
 :::
+
+\newpage
+
 
 ### Loss function for classification tree 
 
@@ -281,10 +293,9 @@ $$\text{Entropy}(S|X) = \sum_v \frac{|S_v|}{|S|} \text{Entropy}(S_v)$$
 
 $$\text{Gain}(S, X) := \text{Entropy}(S) - \text{Entropy}(S|X)$$
 
-\newpage
 
 
-### Example: should I play tennis? (1)
+## Example: should I play tennis? (1)
 
 ![Via Tom Mitchell.](../images/play-tennis-dt.png){width=60%}
 
@@ -311,7 +322,7 @@ Considering the Strong branch:
 
 ::: notes
 
-![Considering the split on Wind.](../images/5-tennis-example.png){ width=45% }
+![Considering the split on Wind.](../images/5-tennis-example.png){ width=65% }
 
 :::
 
@@ -335,6 +346,8 @@ $\text{Gain}(S, \text{Wind}) = 0.94-0.89 = 0.05$
 
 $\rightarrow$ Split on Outlook!
 
+### Variations
+
 ::: notes
 
 In this example, the data had only categorical variables, and no missing values.
@@ -350,7 +363,12 @@ e.g. C4.5 introduces the idea that if a sample has a missing value for a feature
 
 :::
 
-### Feature importance
+\newpage
+
+## Interpretability
+
+
+## Feature importance
 
 * For each feature $X_j$, find all nodes where the feature was used as the split variable
 * Add up information gain due to split (or for GINI index, difference in loss weighted by number of samples.)
@@ -364,6 +382,8 @@ It tends to do reasonable things both with (1) features that are only useful in 
 
 :::
 
+
+
 ## Bias and variance
 
 ### Managing tree depth
@@ -373,12 +393,11 @@ It tends to do reasonable things both with (1) features that are only useful in 
 
 ::: notes
 
-![The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff.](../images/5-tree-bias-variance.png){ width=60% }
+![The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff.](../images/5-tree-bias-variance.png){ width=70% }
 
 :::
 
 
-\newpage
 
 ### Stopping criteria
 
@@ -400,9 +419,7 @@ Other stopping criteria:
 
 * With greedy algorithm - a very good split may descend from a less-good split
 
-### Pruning classification trees
-
-We usually prune classification trees using classification error rate as loss function, even if tree was built using GINI or entropy.
+\newpage
 
 
 ### Weakest link pruning (1)
@@ -418,6 +435,7 @@ $$\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}$$
 
 ![Weakest link pruning.](../images/5-tree-pruning.png){ width=60% }
 
+We usually prune classification trees using classification error rate as loss function, even if tree was built using GINI or entropy.
 
 :::
 
@@ -434,6 +452,7 @@ $$\frac{Err(T_1)-Err(T_0)}{|T_0| - |T_1|}$$
 
 :::
 
+\newpage
 
 
 ### Cost complexity pruning 
@@ -443,6 +462,71 @@ Equivalent to: Minimize
 $$ \sum_{m=1}^{|T|} \sum_{x_i \in R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|$$
 
 Choose $\alpha$ by CV, 1-SE rule ($\uparrow \alpha, \downarrow |T|$).
+
+
+## Inference time
+
+$O(d)$ where $d$ is depth of tree
+
+* Worst case: $O(n)$
+* Well-balanced: $O( \log  n)$
+
+::: notes
+
+(In a well-balanced tree, we halve the number of samples in each split. )
+
+![Comparisons in worst-case and well-balanced trees.](../images/6-tree-depth-worst-best.png){ width=60% }
+
+:::
+
+\newpage
+
+
+## Training time (binary tree)
+
+At a node $i$ with $n_i$ samples,
+
+* consider up to $n_i - 1$ split points
+* for $p$ features $\rightarrow O(p n_i)$
+
+Balanced case total: $O(p n \log n)$
+
+::: notes
+
+This assumes feature values are sorted once at the beginning - much faster than naive way! 
+
+Naive way: 
+
+* for each cutpoint, count samples of each class to the left vs right of the split: $O(n_i)$
+* do this for $n_i - 1$ split points
+* cost per feature, per node is $O(n_i ^2)$
+
+![Efficient computation of $p_{mk}$ with linear scan.](../images/6-tree-efficient-compute.png){ width=80% }
+
+With sorted features, using linear scan:
+
+* start with empty $<$ side, $>$ side
+* move one node between each cutpoint: $O(1)$
+
+Then, going from node -> tree: 
+
+**Balanced case**: At each depth level of the tree, we handle all $n$ samples, so the total cost is: 
+
+cost per depth level $\times$ number of levels
+
+total: $O(p n \log n)$.
+
+**Worst case** (tree depth $n$):
+
+* cost at level $i$ is $p n_i = p (n - i)$
+* sum across levels $p (1 + 2 + \ldots + (n-2) + (n-1) + n)$
+* using the rule for sum of integers up to $n$: $p\frac{n (n-1)}{2}$
+
+so total is $O(p n^2)$
+
+:::
+
+\newpage
 
 ## Summary - so far
 

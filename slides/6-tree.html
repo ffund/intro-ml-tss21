@@ -43,9 +43,14 @@
 <section class="slide level3">
 
 <aside class="notes">
-<p><strong>Math prerequisites for this lecture</strong>: None</p>
+<p><strong>Math prerequisites for this lecture</strong>: You should know
+about</p>
+<ul>
+<li>Variance of the mean of i.i.d. random variables</li>
+</ul>
 </aside>
 </section>
+<section>
 <section id="in-this-lecture" class="title-slide slide level2">
 <h2>In this lecture</h2>
 <ul>
@@ -53,11 +58,6 @@
 <li>Training decision trees</li>
 <li>Bias and variance of decision trees</li>
 </ul>
-</section>
-
-<section>
-<section id="recap" class="title-slide slide level2">
-<h2>Recap</h2>
 <!--
 
 
@@ -128,7 +128,7 @@ point and then give it the value of training points in that
 training time? Then at inference time, we only need to determine which
 “neighborhood” a test point belongs in.</p>
 <p>However, we run into another <strong>computationally hard</strong>
-problem! To <em>partition</em> the feature space into optimal
+problem! To partition the feature space into <em>optimal</em>
 neighborhoods is too expensive. Instead, we will rely on some heuristics
 and get a non-optimal, but good enough, partition.</p>
 </aside>
@@ -155,7 +155,7 @@ leaf nodes)</li>
 </section>
 <section id="note-on-notation" class="slide level3">
 <h3>Note on notation</h3>
-<p>Following notation of ISLR, Chapter 8:</p>
+<p>Following notation of ISL, Chapter 8:</p>
 <ul>
 <li><span class="math inline">\(X_j\)</span> is feature <span
 class="math inline">\(j\)</span></li>
@@ -165,9 +165,9 @@ class="math inline">\(i\)</span></li>
 </section>
 <section id="stratification-of-feature-space-1" class="slide level3">
 <h3>Stratification of feature space (1)</h3>
+<p>Given set of possible predictors, <span class="math inline">\(X_1,
+\ldots, X_p\)</span></p>
 <ul>
-<li>Given set of possible predictors, <span class="math inline">\(X_1,
-\ldots, X_p\)</span></li>
 <li>Training: Divide predictor space (set of possible values of <span
 class="math inline">\(X\)</span>) into <span
 class="math inline">\(J\)</span> non-overlapping regions: <span
@@ -186,26 +186,21 @@ decision tree.</figcaption>
 </section>
 <section id="stratification-of-feature-space-2" class="slide level3">
 <h3>Stratification of feature space (2)</h3>
+<p>Prediction:</p>
 <ul>
-<li>Prediction: For each observation that falls in region <span
-class="math inline">\(R_j\)</span>, predict
+<li><p>At node that is not a leaf: test one feature <span
+class="math inline">\(X_i\)</span></p></li>
+<li><p>Branch from node depending on value of <span
+class="math inline">\(X_i\)</span></p></li>
+<li><p>At leaf node: for observation that falls in region <span
+class="math inline">\(R_j\)</span>, predict <span
+class="math inline">\(\hat{y}_{R_j}\)</span></p>
 <ul>
 <li>mean of labels of training points in <span
 class="math inline">\(R_j\)</span> (regression)</li>
 <li>mode of labels of training points in <span
 class="math inline">\(R_j\)</span> (classification)</li>
 </ul></li>
-</ul>
-</section>
-<section id="tree-representation" class="slide level3">
-<h3>Tree representation</h3>
-<ul>
-<li>At node that is not a leaf: test one feature <span
-class="math inline">\(X_i\)</span></li>
-<li>Branch from node depending on value of <span
-class="math inline">\(X_i\)</span></li>
-<li>Each leaf node: predict <span
-class="math inline">\(\hat{y}_{R_m}\)</span></li>
 </ul>
 </section>
 <section id="stratification-of-feature-space---illustration"
@@ -222,27 +217,36 @@ tree using recursive binary splitting. The other three subfigures
 represent a single stratification. Note that the decision tree fits a
 piecewise step function!</p>
 </aside>
+</section>
+<section id="approximation-using-steps" class="slide level3">
+<h3>Approximation using steps</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/6-tree-step.png" style="width:100.0%"
+alt="Representation using step functions." />
+<figcaption aria-hidden="true">Representation using step
+functions.</figcaption>
+</figure>
+</aside>
 </section></section>
 <section>
 <section id="training-a-decision-tree" class="title-slide slide level2">
 <h2>Training a decision tree</h2>
 
 </section>
-<section id="basic-idea-1" class="slide level3">
-<h3>Basic idea (1)</h3>
+<section id="basic-idea" class="slide level3">
+<h3>Basic idea</h3>
 <ul>
 <li>Goal: find the high-dimensional rectangles that minimize error</li>
-<li>Computationally expensive to consider every possible partition</li>
+<li>Practical approach: recursive binary splitting (top-down, greedy
+approach)</li>
 </ul>
-</section>
-<section id="basic-idea-2" class="slide level3">
-<h3>Basic idea (2)</h3>
-<ul>
-<li>Instead: recursive binary splitting (top-down, greedy approach)</li>
-<li>Greedy: at each step, make the best decision at that step, without
-looking ahead and making a decision that might yield better results at
-future steps</li>
-</ul>
+<aside class="notes">
+<p>It is too computationally expensive to consider every possible
+partition. Instead, we’ll use a greedy algorithm: at each step, make the
+best “local” decision at that step, without looking ahead and making a
+decision that might yield better results at future steps</p>
+</aside>
 </section>
 <section id="recursive-binary-splitting-steps" class="slide level3">
 <h3>Recursive binary splitting steps</h3>
@@ -251,15 +255,11 @@ future steps</li>
 <li>At the current node,</li>
 <li>Find feature <span class="math inline">\(X_j\)</span> and
 <em>cutpoint</em> <span class="math inline">\(s\)</span> that minimizes
-some loss function (?)</li>
+some <em>local</em> loss function (?)</li>
 <li>Split training samples at that node into two leaf nodes</li>
 <li>Stop when no training error (?)</li>
 <li>Otherwise, repeat at leaf nodes</li>
 </ol>
-<aside class="notes">
-<p>At step 2, we apply a greedy heuristic - we are choosing the feature
-that minimizes a loss function in <em>this</em> iteration only.</p>
-</aside>
 </section>
 <section id="recursive-binary-splitting" class="slide level3">
 <h3>Recursive binary splitting</h3>
@@ -278,18 +278,21 @@ class="math inline">\(s\)</span>.</p>
 <p>For regression: look for feature <span
 class="math inline">\(j\)</span> and cutpoint <span
 class="math inline">\(s\)</span> that leads to the greatest possible
-reduction in squared error, where the “new” squared error is:</p>
+reduction in squared error, where the “new” squared error is (<span
+class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction for the
+samples in <span class="math inline">\(R_j\)</span>):</p>
 <p><span class="math display">\[\sum_{i: x_i \in R_1(j,s)} (y_i -
 \hat{y}_{R_1})^2 \quad + \sum_{i: x_i \in R_2(j,s)} (y_i -
 \hat{y}_{R_2})^2\]</span></p>
-<p>(<span class="math inline">\(\hat{y}_{R_j}\)</span> is the prediction
-for the samples in <span class="math inline">\(R_j\)</span>.)</p>
 <aside class="notes">
 <figure>
 <img data-src="../images/5-train-regression-tree.png"
 style="width:70.0%" alt="Training a regression tree." />
 <figcaption aria-hidden="true">Training a regression tree.</figcaption>
 </figure>
+<p>Note: we are <em>not</em> computing the average loss of each region,
+we want the loss to be weighted by the number of samples it applies
+to!</p>
 </aside>
 </section>
 <section id="loss-function-for-classification-tree"
@@ -378,9 +381,11 @@ class="math inline">\(X\)</span>:</li>
 </ul>
 <p><span class="math display">\[\text{Gain}(S, X) := \text{Entropy}(S) -
 \text{Entropy}(S|X)\]</span></p>
-</section>
-<section id="example-should-i-play-tennis-1" class="slide level3">
-<h3>Example: should I play tennis? (1)</h3>
+</section></section>
+<section>
+<section id="example-should-i-play-tennis-1"
+class="title-slide slide level2">
+<h2>Example: should I play tennis? (1)</h2>
 <figure>
 <img data-src="../images/play-tennis-dt.png" style="width:60.0%"
 alt="Via Tom Mitchell." />
@@ -414,7 +419,7 @@ alt="Via Tom Mitchell." />
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tennis-example.png" style="width:45.0%"
+<img data-src="../images/5-tennis-example.png" style="width:65.0%"
 alt="Considering the split on Wind." />
 <figcaption aria-hidden="true">Considering the split on
 Wind.</figcaption>
@@ -445,6 +450,9 @@ Wind.</figcaption>
 </ul>
 <p><span class="math inline">\(\rightarrow\)</span> Split on
 Outlook!</p>
+</section>
+<section id="variations" class="slide level3">
+<h3>Variations</h3>
 <aside class="notes">
 <p>In this example, the data had only categorical variables, and no
 missing values.</p>
@@ -464,9 +472,14 @@ feature is defined</li>
 probable</li>
 </ul>
 </aside>
+</section></section>
+<section id="interpretability" class="title-slide slide level2">
+<h2>Interpretability</h2>
+
 </section>
-<section id="feature-importance" class="slide level3">
-<h3>Feature importance</h3>
+
+<section id="feature-importance" class="title-slide slide level2">
+<h2>Feature importance</h2>
 <ul>
 <li>For each feature <span class="math inline">\(X_j\)</span>, find all
 nodes where the feature was used as the split variable</li>
@@ -480,7 +493,8 @@ weighting!</p>
 <p>It tends to do reasonable things both with (1) features that are only
 useful in combination and (2) features that are highly correlated.</p>
 </aside>
-</section></section>
+</section>
+
 <section>
 <section id="bias-and-variance" class="title-slide slide level2">
 <h2>Bias and variance</h2>
@@ -494,7 +508,7 @@ useful in combination and (2) features that are highly correlated.</p>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/5-tree-bias-variance.png" style="width:60.0%"
+<img data-src="../images/5-tree-bias-variance.png" style="width:70.0%"
 alt="The depth/size of the tree (number of regions) controls the complexity of the regression line or decision boundaries, and the bias variance tradeoff." />
 <figcaption aria-hidden="true">The depth/size of the tree (number of
 regions) controls the complexity of the regression line or decision
@@ -525,11 +539,6 @@ boundaries, and the bias variance tradeoff.</figcaption>
 less-good split</p></li>
 </ul>
 </section>
-<section id="pruning-classification-trees" class="slide level3">
-<h3>Pruning classification trees</h3>
-<p>We usually prune classification trees using classification error rate
-as loss function, even if tree was built using GINI or entropy.</p>
-</section>
 <section id="weakest-link-pruning-1" class="slide level3">
 <h3>Weakest link pruning (1)</h3>
 <p>Prune a large tree from leaves to root:</p>
@@ -546,6 +555,8 @@ class="math inline">\(T_1\)</span> by minimizing:</li>
 alt="Weakest link pruning." />
 <figcaption aria-hidden="true">Weakest link pruning.</figcaption>
 </figure>
+<p>We usually prune classification trees using classification error rate
+as loss function, even if tree was built using GINI or entropy.</p>
 </aside>
 </section>
 <section id="weakest-link-pruning-2" class="slide level3">
@@ -574,6 +585,88 @@ trees.</figcaption>
 (<span class="math inline">\(\uparrow \alpha, \downarrow
 |T|\)</span>).</p>
 </section></section>
+<section id="inference-time" class="title-slide slide level2">
+<h2>Inference time</h2>
+<p><span class="math inline">\(O(d)\)</span> where <span
+class="math inline">\(d\)</span> is depth of tree</p>
+<ul>
+<li>Worst case: <span class="math inline">\(O(n)\)</span></li>
+<li>Well-balanced: <span class="math inline">\(O( \log  n)\)</span></li>
+</ul>
+<aside class="notes">
+<p>(In a well-balanced tree, we halve the number of samples in each
+split. )</p>
+<figure>
+<img data-src="../images/6-tree-depth-worst-best.png"
+style="width:60.0%"
+alt="Comparisons in worst-case and well-balanced trees." />
+<figcaption aria-hidden="true">Comparisons in worst-case and
+well-balanced trees.</figcaption>
+</figure>
+</aside>
+</section>
+
+<section id="training-time-binary-tree"
+class="title-slide slide level2">
+<h2>Training time (binary tree)</h2>
+<p>At a node <span class="math inline">\(i\)</span> with <span
+class="math inline">\(n_i\)</span> samples,</p>
+<ul>
+<li>consider up to <span class="math inline">\(n_i - 1\)</span> split
+points</li>
+<li>for <span class="math inline">\(p\)</span> features <span
+class="math inline">\(\rightarrow O(p n_i)\)</span></li>
+</ul>
+<p>Balanced case total: <span class="math inline">\(O(p n \log
+n)\)</span></p>
+<aside class="notes">
+<p>This assumes feature values are sorted once at the beginning - much
+faster than naive way!</p>
+<p>Naive way:</p>
+<ul>
+<li>for each cutpoint, count samples of each class to the left vs right
+of the split: <span class="math inline">\(O(n_i)\)</span></li>
+<li>do this for <span class="math inline">\(n_i - 1\)</span> split
+points</li>
+<li>cost per feature, per node is <span class="math inline">\(O(n_i
+^2)\)</span></li>
+</ul>
+<figure>
+<img data-src="../images/6-tree-efficient-compute.png"
+style="width:80.0%"
+alt="Efficient computation of p_{mk} with linear scan." />
+<figcaption aria-hidden="true">Efficient computation of <span
+class="math inline">\(p_{mk}\)</span> with linear scan.</figcaption>
+</figure>
+<p>With sorted features, using linear scan:</p>
+<ul>
+<li>start with empty <span class="math inline">\(&lt;\)</span> side,
+<span class="math inline">\(&gt;\)</span> side</li>
+<li>move one node between each cutpoint: <span
+class="math inline">\(O(1)\)</span></li>
+</ul>
+<p>Then, going from node -&gt; tree:</p>
+<p><strong>Balanced case</strong>: At each depth level of the tree, we
+handle all <span class="math inline">\(n\)</span> samples, so the total
+cost is:</p>
+<p>cost per depth level <span class="math inline">\(\times\)</span>
+number of levels</p>
+<p>total: <span class="math inline">\(O(p n \log n)\)</span>.</p>
+<p><strong>Worst case</strong> (tree depth <span
+class="math inline">\(n\)</span>):</p>
+<ul>
+<li>cost at level <span class="math inline">\(i\)</span> is <span
+class="math inline">\(p n_i = p (n - i)\)</span></li>
+<li>sum across levels <span class="math inline">\(p (1 + 2 + \ldots +
+(n-2) + (n-1) + n)\)</span></li>
+<li>using the rule for sum of integers up to <span
+class="math inline">\(n\)</span>: <span class="math inline">\(p\frac{n
+(n-1)}{2}\)</span></li>
+</ul>
+<p>so total is <span class="math inline">\(O(p n^2)\)</span></p>
+</aside>
+</section>
+
 <section>
 <section id="summary---so-far" class="title-slide slide level2">
 <h2>Summary - so far</h2>
