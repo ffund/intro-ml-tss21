@@ -8,9 +8,7 @@ author: 'Fraida Fund'
 
 :::notes
 
-**Math prerequisites for this lecture**: You should know about
-
-* Variance of the mean of i.i.d. random variables
+**Math prerequisites for this lecture**: None
 
 :::
 
