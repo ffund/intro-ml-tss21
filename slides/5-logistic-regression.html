@@ -585,20 +585,23 @@ L(w)}{\partial z}\)</span> -</p>
 <section id="gradient-descent-update-rule-for-logistic-regression"
 class="slide level3">
 <h3>Gradient descent update rule for logistic regression</h3>
-<p>Gradient descent update rule will be</p>
+<p>Gradient descent update rule will be -</p>
 <p><span class="math display">\[
 \begin{aligned}
-w^{t+1} &amp;= w^t - \alpha \sum_{i=1}^n \left( \frac{1}{1 + e^{-z_i} }
-- y_i \right) x_i \\
-        &amp;= w^t +  \alpha \sum_{i=1}^n \left(y_i - \frac{1}{1 +
-e^{-z_i} }\right) x_i                  
+w^{t+1} &amp;= w^t - \alpha \frac{1}{n} \sum_{i=1}^n \left( \frac{1}{1 +
+e^{-z_i} } - y_i \right) x_i \\
+        &amp;= w^t +  \alpha \frac{1}{n} \sum_{i=1}^n \left(y_i -
+\frac{1}{1 + e^{-z_i} }\right) x_i                  
 \end{aligned}
 \]</span></p>
 <aside class="notes">
+<p>(we added a <span class="math inline">\(\frac{1}{n}\)</span> term for
+scale-invariance and numerical stability.)</p>
 <p>This is very similar to the equivalent expression we derived for a
 linear regression -</p>
-<p><span class="math display">\[ w^{t+1} = w^t + \alpha \sum_{i=1}^n
-\left(y_i - \langle w^t,x_i \rangle \right) x_i \]</span></p>
+<p><span class="math display">\[ w^{t+1} = w^t + \alpha \frac{1}{n}
+\sum_{i=1}^n \left(y_i - \langle w^t,x_i \rangle \right) x_i
+\]</span></p>
 <p>and has a similar intuition. In both cases, we compute the difference
 between the true value <span class="math inline">\(y\)</span> and the
 model output. If your model output is much larger (e.g. more positive)
@@ -641,7 +644,7 @@ class="math inline">\(O(d)\)</span></li>
 <li>training: for one iteration of gradient descent, we have <span
 class="math inline">\(O(d)\)</span> computations for each sample, so a
 full batch gradient descent iteration is <span
-class="math inline">\(O(nd)\)</span></li>
+class="math inline">\(O(nd)\)</span> per iteration</li>
 </ul>
 </aside>
 </section>
@@ -817,7 +820,7 @@ https://sebastianraschka.com/faq/docs/naive-bayes-vs-logistic-regression.html
 </section>
 <section id="class-conditional-probability-1" class="slide level3">
 <h3>Class conditional probability (1)</h3>
-<p>“Naive” assumption conditional independence of features:</p>
+<p>“Naive” assumption: conditional independence of features:</p>
 <p><span class="math display">\[
 \begin{aligned}
 P(\mathbf{x}_i | y_k) &amp;= P(x_{i,1} | y_k) P(x_{i,2} | y_k) \ldots

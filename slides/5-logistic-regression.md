@@ -478,21 +478,23 @@ $$
 
 ### Gradient descent update rule for logistic regression
 
-Gradient descent update rule will be 
+Gradient descent update rule will be - 
 
 
 $$
 \begin{aligned} 
-w^{t+1} &= w^t - \alpha \sum_{i=1}^n \left( \frac{1}{1 + e^{-z_i} } - y_i \right) x_i \\
-        &= w^t +  \alpha \sum_{i=1}^n \left(y_i - \frac{1}{1 + e^{-z_i} }\right) x_i                  
+w^{t+1} &= w^t - \alpha \frac{1}{n} \sum_{i=1}^n \left( \frac{1}{1 + e^{-z_i} } - y_i \right) x_i \\
+        &= w^t +  \alpha \frac{1}{n} \sum_{i=1}^n \left(y_i - \frac{1}{1 + e^{-z_i} }\right) x_i                  
 \end{aligned}
 $$
 
 :::notes
 
+(we added a $\frac{1}{n}$ term for scale-invariance and numerical stability.) 
+
 This is very similar to the equivalent expression we derived for a linear regression - 
 
-$$ w^{t+1} = w^t + \alpha \sum_{i=1}^n \left(y_i - \langle w^t,x_i \rangle \right) x_i $$
+$$ w^{t+1} = w^t + \alpha \frac{1}{n} \sum_{i=1}^n \left(y_i - \langle w^t,x_i \rangle \right) x_i $$
 
 and has a similar intuition. In both cases, we compute the difference between the true value $y$ and the model output. If your model output is much larger (e.g. more positive) than $y$, you shift your prediction in the negative direction. If your model output is smaller than $y$, you shift your prediction in the positive direction.
 
@@ -529,7 +531,7 @@ Can use basis functions to map problem to transformed feature space where it *is
 The logistic regression is similar to the linear regression - 
 
 * prediction: the dominant term is the computation of $z_i$, which is $O(d)$
-* training: for one iteration of gradient descent, we have $O(d)$ computations for each sample, so a full batch gradient descent iteration is $O(nd)$
+* training: for one iteration of gradient descent, we have $O(d)$ computations for each sample, so a full batch gradient descent iteration is $O(nd)$ per iteration
 
 :::
 
@@ -545,6 +547,7 @@ The logistic regression is similar to the linear regression -
 * Bias occurs when there is undermodeling
 * Variance increases with $d$, stochastic noise, and decreases with $n$
 * Can add a regularization penalty to loss function
+
 
 
 
@@ -679,7 +682,7 @@ https://sebastianraschka.com/faq/docs/naive-bayes-vs-logistic-regression.html
 
 ### Class conditional probability (1)
 
-"Naive" assumption conditional independence of features:
+"Naive" assumption: conditional independence of features:
 
 $$
 \begin{aligned}
