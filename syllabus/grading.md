@@ -70,7 +70,7 @@ During the exam, you will be permitted to use:
 
 * Blank scrap paper (loose sheets, not in a notebook)
 * 2 sheets of 8.5x11 inch-sheet double sided (i.e. 4-page) reference that you have prepared, with whatever you think you will find useful. This reference sheet must be printed or handwritten - you should not use a digital copy. At the end of your exam, you will submit a photo of your reference sheet along with your exam.
-* [Wolfram Alpha](https://www.wolframalpha.com/) or [Desmos Scientific Calculator](https://www.desmos.com/scientific)
+* [Wolfram Alpha](https://www.wolframalpha.com/) or [Desmos Scientific Calculator](https://www.desmos.com/scientific) (a handheld calculator is not allowed)
 * Python only inside the Jupyter environment on the exam - you may not use your own IDE/Python terminal, you may not use Colab.
 * the official scikit-learn API reference pages (via https://scikit-learn.org/stable/api/index.html)
 * the official numpy API reference pages (via https://numpy.org/doc/stable/reference)
