@@ -19,15 +19,18 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -38,7 +41,7 @@
     }
     @media print {
     pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
     }
     pre.numberSource code
       { counter-reset: source-line 0; }
@@ -197,8 +200,8 @@ features</p>
 <section id="search-naive-heuristic" class="slide level3">
 <h3>Search: naive heuristic</h3>
 <ul>
-<li>sort <span class="math inline">\(d\)</span> features in order of
-“goodness”</li>
+<li>evaluate <span class="math inline">\(d\)</span> features, sort in
+order of “goodness”</li>
 <li>select top <span class="math inline">\(k\)</span> features from the
 list (use CV to choose <span class="math inline">\(k\)</span>?)</li>
 </ul>
@@ -238,34 +241,33 @@ the feature that gave you the best performance.</li>
 </ul>
 <aside class="notes">
 <p>This is not necessarily going to find the best feature subset! But,
-it is a lot faster than the exhaustive search, and is less likely to
+it is a lot faster than the exhaustive search (on order of <span
+class="math inline">\(d^2\)</span> subsets), and is less likely to
 include redundant features than naive approach.</p>
 </aside>
 </section>
-<section id="search-sequential-forward-selection-as-a-tree"
+<section id="search-sequential-forward-selection-as-a-graph"
 class="slide level3">
-<h3>Search: sequential forward selection as a tree</h3>
+<h3>Search: sequential forward selection as a graph</h3>
 <figure>
 <img data-src="../images/6-sequential-forward-tree.png"
-style="width:60.0%" alt="Tree representation" />
-<figcaption aria-hidden="true">Tree representation</figcaption>
+style="width:60.0%" alt="Graph representation" />
+<figcaption aria-hidden="true">Graph representation</figcaption>
 </figure>
 </section>
-<section id="search-sequential-backward-elimination-as-a-tree"
+<section id="search-sequential-backward-elimination-as-a-graph"
 class="slide level3">
-<h3>Search: sequential backward elimination as a tree</h3>
+<h3>Search: sequential backward elimination as a graph</h3>
 <figure>
 <img data-src="../images/6-sequential-reverse-elimnination.png"
-style="width:60.0%" alt="Tree representation" />
-<figcaption aria-hidden="true">Tree representation</figcaption>
+style="width:60.0%" alt="Graph representation" />
+<figcaption aria-hidden="true">Graph representation</figcaption>
 </figure>
 <aside class="notes">
 <p>“Backward” alternative: start with all features, and “prune” one at a
 time.</p>
-<p>This is not necessarily going to find the best feature subset! But,
-it is a lot faster than the exhaustive search. Compared to “forward”
-search it is, more likely to keep features that are useful in
-combination with another feature.</p>
+<p>Compared to “forward” search, it is more likely to keep features that
+are useful in combination with another feature.</p>
 <figure>
 <img data-src="../images/6-feature-search-strategy.png"
 style="width:90.0%" alt="Feature selection search strategies." />
@@ -604,7 +606,7 @@ everything</li>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

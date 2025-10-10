@@ -97,7 +97,7 @@ Computationally **hard** - even on small problems. In practice, we won't ever ha
 
 ### Search: naive heuristic
 
-* sort $d$ features in order of "goodness"
+* evaluate $d$ features, sort in order of "goodness"
 * select top $k$ features from the list (use CV to choose $k$?)
 
 
@@ -123,20 +123,20 @@ Computationally **hard** - even on small problems. In practice, we won't ever ha
 
 :::notes
 
-This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search, and is less likely to include redundant features than naive approach.
+This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search (on order of $d^2$ subsets), and is less likely to include redundant features than naive approach.
 
 :::
 
-### Search: sequential forward selection as a tree
+### Search: sequential forward selection as a graph
 
-![Tree representation](../images/6-sequential-forward-tree.png){ width=60% }
+![Graph representation](../images/6-sequential-forward-tree.png){ width=60% }
 
 
 \newpage
 
-### Search: sequential backward elimination as a tree
+### Search: sequential backward elimination as a graph
 
-![Tree representation](../images/6-sequential-reverse-elimnination.png){ width=60% }
+![Graph representation](../images/6-sequential-reverse-elimnination.png){ width=60% }
 
 
 
@@ -145,7 +145,7 @@ This is not necessarily going to find the best feature subset! But, it is a lot 
 
 "Backward" alternative: start with all features, and "prune" one at a time.
 
-This is not necessarily going to find the best feature subset! But, it is a lot faster than the exhaustive search. Compared to "forward" search it is, more likely to keep features that are useful in combination with another feature.
+Compared to "forward" search, it is more likely to keep features that are useful in combination with another feature.
 
 
 ![Feature selection search strategies.](../images/6-feature-search-strategy.png){ width=90% }
