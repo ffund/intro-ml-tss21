@@ -203,8 +203,9 @@ X_i\)</span></td>
 </section>
 <section id="variance-reduction-rule-bagged-trees" class="slide level3">
 <h3>Variance reduction rule (bagged trees)</h3>
-<p>For <span class="math inline">\(B\)</span> independent bagged trees,
-variance decreases with <span class="math inline">\(B\)</span>:</p>
+<p>For <span class="math inline">\(B\)</span>
+<strong>independent</strong> bagged trees, variance decreases with <span
+class="math inline">\(B\)</span>:</p>
 <table>
 <colgroup>
 <col style="width: 44%" />
@@ -229,6 +230,7 @@ variance decreases with <span class="math inline">\(B\)</span>:</p>
 </tr>
 </tbody>
 </table>
+<p>…but, they are not really independent!</p>
 </section>
 <section id="correlated-trees" class="slide level3">
 <h3>Correlated trees</h3>
@@ -301,8 +303,8 @@ model.</li>
 <h3>AdaBoost (Adaptive Boosting)</h3>
 <p>Adjust <em>weights</em> so that each successive model focuses on more
 “difficult” samples.</p>
-<p>Consider classification problem, where sign of model output gives
-estimated class label and magnitude gives confidence in label.</p>
+<p>Consider a binary classification problem, where <span
+class="math inline">\(y_i\in \{-1, +1\} \forall i\)</span>.</p>
 </section>
 <section id="adaboost-algorithm" class="slide level3">
 <h3>AdaBoost algorithm</h3>
@@ -315,24 +317,28 @@ estimated class label and magnitude gives confidence in label.</p>
 <section id="adaboost-algorithm-inner-loop" class="slide level3">
 <h3>AdaBoost algorithm (inner loop)</h3>
 <ul>
-<li><p>Fit a tree <span class="math inline">\(\hat{f}^m\)</span>,
-compute weighted error <span class="math inline">\(err_m\)</span> using
-weights on training samples <span
-class="math inline">\(w_i\)</span>:</p>
+<li><p>Fit weak learner <span class="math inline">\(\hat{f}^m\)</span>,
+on training data with sample weights <span
+class="math inline">\(w_i\)</span>.</p></li>
+<li><p>Compute weighted error <span
+class="math inline">\(err_m\)</span>:</p>
 <p><span class="math display">\[err_m = \frac{\sum_{i=1}^N w_i 1(y_i
 \neq \hat{f}^m(x_i))}{\sum_{i=1}^N w_i}\]</span></p></li>
 <li><p>Compute coefficient <span class="math inline">\(\alpha_m = \log
 \left( \frac{1-err_m}{err_m} \right)\)</span></p></li>
 <li><p>Update weights: <span class="math inline">\(w_i \leftarrow w_i
-e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}\)</span></p></li>
+e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}\)</span> (for misclassified
+samples, scale weight by <span
+class="math inline">\(e^{\alpha_m}\)</span>)</p></li>
 </ul>
 </section>
 <section id="adaboost-algorithm-final-step" class="slide level3">
 <h3>AdaBoost algorithm (final step)</h3>
 <ol start="3" type="1">
-<li>Output boosted model: <span class="math display">\[\hat{f}(x) =
-\text{sign} \left[\sum_{m=1}^M \alpha_m
-\hat{f}^m(x)\right]\]</span></li>
+<li><p>Output final ensemble model:</p>
+<p><span class="math display">\[f_M(x) = \sum_{m=1}^{M} \alpha_m
+\hat{f}^{m}(x),  \quad  \hat{y}(x) =
+\mathrm{sign}[f_M(x)]\]</span></p></li>
 </ol>
 <!-- 
 
@@ -385,6 +391,66 @@ descent algorithm that minimizes exponential loss function.</p></li>
 each stage, find the local gradient of loss function, and take steps in
 direction of steepest descent.</p></li>
 </ul>
+<aside class="notes">
+<p>Gradient boosting can be viewed as <em>functional gradient
+descent</em>. We have a differentiable loss function</p>
+<p><span class="math display">\[L(y, f(x)),\]</span></p>
+<p>(exponential loss function, in the case of AdaBoost), and an additive
+model:</p>
+<p><span class="math display">\[f_M(x) = \sum_{m=1}^{M} \alpha_m
+\hat{f}^m(x),\]</span></p>
+<p>where each weak learner <span
+class="math inline">\(\hat{f}^m(x)\)</span> acts like a basis
+function.</p>
+<p>Each iteration performs an update:</p>
+<p><span class="math display">\[f_m(x) = f_{m-1}(x) + \alpha_m
+\hat{f}^m(x).\]</span></p>
+<p>where at each step:</p>
+<ul>
+<li><span class="math inline">\(\hat{f}^m(x)\)</span> - the weak learner
+- is chosen to align with the direction of the negative gradient of the
+loss,</li>
+<li><span class="math inline">\(\alpha_m\)</span> - the coefficient -
+determines the step size in that direction.</li>
+</ul>
+<!--
+---
+
+In AdaBoost, we aim to minimize the exponential loss function:
+
+$$L(f) = \sum_{i=1}^N \exp(-y_i f(x_i))$$
+
+The derivative of the loss with respect to the model output is:
+
+$$\frac{\partial L}{\partial f(x_i)} = -y_i \exp(-y_i f_{m-1}(x_i))$$
+
+Therefore, the negative gradient is
+
+$$r_i = y_i \exp(-y_i f_{m-1}(x_i))$$
+
+Minimizing the weighted classification error is equivalent to choosing $\hat{f}^m(x)$ that is most correlated with the negative gradient direction:
+
+$$\hat{f}^m(x) \approx \operatorname{sign}(r_i)$$
+
+The next weak learner $\hat{f}^m(x)$ is chosen to minimize the weighted classification error:
+
+$$err_m = \frac{\sum_i w_i \mathbf{1}[y_i \neq h_m(x_i)]}{\sum_i w_i}$$
+
+where the sample weights are **proportional to the magnitude of the gradient term** in $r_i$.:
+
+$$w_i = \exp(-y_i f_{m-1}(x_i))$$
+
+
+The inner product:
+
+$$\sum_i r_i\, h_m(x_i)$$
+
+represents the alignment between the weak learner's predictions and the negative gradient of the loss, and our $\hat{f}^m(x)$ maximizes this.
+
+In summary: Selecting (from among candidate weak learners) the one that minimizes the weighted error is **equivalent** to selecting the learner that best aligns with the negative gradient of the exponential loss function.
+
+-->
+</aside>
 </section></section>
 <section id="summary-of-selected-ensemble-methods"
 class="title-slide slide level2">

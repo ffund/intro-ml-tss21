@@ -108,7 +108,7 @@ For $n$ i.i.d.\ random variables, the variance of their mean decreases with $n$:
 
 ### Variance reduction rule (bagged trees)
 
-For $B$ independent bagged trees, variance decreases with $B$:
+For $B$ **independent** bagged trees, variance decreases with $B$:
 
 
 |             | **Bagged Trees** |
@@ -116,6 +116,7 @@ For $B$ independent bagged trees, variance decreases with $B$:
 | The average | $\hat{f}_{bag}(x) = \frac{1}{B}\sum_{b=1}^B \hat{f}_b(x)$ |
 | Variance with independence  | $\mathrm{Var}(\hat{f}_{bag}(x)) = \frac{1}{B}\mathrm{Var}(\hat{f}_b(x))$ |
 
+...but, they are not really independent!
 
 \newpage
 
@@ -177,7 +178,8 @@ Typically $m = \frac{p}{3}$ but this should be considered a tuning parameter.
 
 Adjust *weights* so that each successive model focuses on more "difficult" samples.
 
-Consider classification problem, where sign of model output gives estimated class label and magnitude gives confidence in label.
+Consider a binary classification problem, where $y_i\in \{-1, +1\} \forall i$.
+
 
 ### AdaBoost algorithm
 
@@ -185,20 +187,24 @@ Consider classification problem, where sign of model output gives estimated clas
 1. Let $w_i = \frac{1}{N}$ for all $i$ in training set.
 2. For $m=1,\ldots,M$, repeat:
 
+
 ### AdaBoost algorithm (inner loop)
 
-* Fit a tree $\hat{f}^m$, compute weighted error $err_m$ using weights on training samples $w_i$:
+* Fit weak learner $\hat{f}^m$, on training data with sample weights $w_i$. 
+
+* Compute weighted error $err_m$:
 
   $$err_m = \frac{\sum_{i=1}^N w_i 1(y_i \neq \hat{f}^m(x_i))}{\sum_{i=1}^N w_i}$$
 
 * Compute coefficient $\alpha_m = \log \left( \frac{1-err_m}{err_m} \right)$
 
-* Update weights: $w_i \leftarrow w_i e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}$
+* Update weights: $w_i \leftarrow w_i e^{\alpha_m 1(y_i \neq \hat{f}^m(x_i))}$ (for misclassified samples, scale weight by $e^{\alpha_m}$)
 
 ### AdaBoost algorithm (final step)
 
-3. Output boosted model:
-$$\hat{f}(x) = \text{sign} \left[\sum_{m=1}^M \alpha_m \hat{f}^m(x)\right]$$
+3. Output final ensemble model:
+   
+   $$f_M(x) = \sum_{m=1}^{M} \alpha_m \hat{f}^{m}(x),  \quad  \hat{y}(x) = \mathrm{sign}[f_M(x)]$$
 
 
 <!-- 
@@ -240,6 +246,8 @@ Tuning parameters to select by CV:
 
 -->
 
+\newpage
+
 ### Gradient Boosting
 
 * General goal of boosting: find the model at each stage that minimizes loss function on ensemble (computationally difficult!)
@@ -248,6 +256,67 @@ Tuning parameters to select by CV:
 
 * Gradient boosting: works for any differentiable loss function. At each stage, find the local gradient of loss function, and take steps in direction of steepest descent.
 
+::: notes
+
+Gradient boosting can be viewed as *functional gradient descent*. We have a differentiable loss function
+
+$$L(y, f(x)),$$
+
+(exponential loss function, in the case of AdaBoost), and an additive model:
+
+$$f_M(x) = \sum_{m=1}^{M} \alpha_m \hat{f}^m(x),$$
+
+where each weak learner $\hat{f}^m(x)$ acts like a basis function.
+
+Each iteration performs an update:
+
+$$f_m(x) = f_{m-1}(x) + \alpha_m \hat{f}^m(x).$$
+
+where at each step:
+
+* $\hat{f}^m(x)$ - the weak learner - is chosen to align with the direction of the negative gradient of the loss,
+* $\alpha_m$ - the coefficient - determines the step size in that direction.
+
+<!--
+---
+
+In AdaBoost, we aim to minimize the exponential loss function:
+
+$$L(f) = \sum_{i=1}^N \exp(-y_i f(x_i))$$
+
+The derivative of the loss with respect to the model output is:
+
+$$\frac{\partial L}{\partial f(x_i)} = -y_i \exp(-y_i f_{m-1}(x_i))$$
+
+Therefore, the negative gradient is
+
+$$r_i = y_i \exp(-y_i f_{m-1}(x_i))$$
+
+Minimizing the weighted classification error is equivalent to choosing $\hat{f}^m(x)$ that is most correlated with the negative gradient direction:
+
+$$\hat{f}^m(x) \approx \operatorname{sign}(r_i)$$
+
+The next weak learner $\hat{f}^m(x)$ is chosen to minimize the weighted classification error:
+
+$$err_m = \frac{\sum_i w_i \mathbf{1}[y_i \neq h_m(x_i)]}{\sum_i w_i}$$
+
+where the sample weights are **proportional to the magnitude of the gradient term** in $r_i$.:
+
+$$w_i = \exp(-y_i f_{m-1}(x_i))$$
+
+
+The inner product:
+
+$$\sum_i r_i\, h_m(x_i)$$
+
+represents the alignment between the weak learner's predictions and the negative gradient of the loss, and our $\hat{f}^m(x)$ maximizes this.
+
+In summary: Selecting (from among candidate weak learners) the one that minimizes the weighted error is **equivalent** to selecting the learner that best aligns with the negative gradient of the exponential loss function.
+
+-->
+
+
+:::
 
 ## Summary of (selected) ensemble methods
 
