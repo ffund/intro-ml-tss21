@@ -157,7 +157,7 @@ The stratification on the top left cannot be produced by a decision tree using r
 
 ::: notes
 
-![Representation using step functions.](../images/6-tree-step.png){ width=100% }
+![Like nearest neighbor, a tree represents an arbitrary function using steps.](../images/6-tree-step.png){ width=100% }
 
 :::
 
@@ -174,6 +174,8 @@ The stratification on the top left cannot be produced by a decision tree using r
 ::: notes
 
 It is too computationally expensive to consider every possible partition. Instead, we'll use a greedy algorithm: at each step, make the best "local" decision at that step, without looking ahead and making a decision that might yield better results at future steps
+
+![Example showing how a greedy algorithm might not find the best tree.](../images/7-tree-greedy.png){ width=100% }
 
 
 
@@ -462,7 +464,9 @@ $$ \sum_{m=1}^{|T|} \sum_{x_i \in R_m} (y_i - \hat{y}_{R_m})^2 + \alpha |T|$$
 Choose $\alpha$ by CV, 1-SE rule ($\uparrow \alpha, \downarrow |T|$).
 
 
-## Inference time
+## Runtime 
+
+### Inference time
 
 $O(d)$ where $d$ is depth of tree
 
@@ -473,46 +477,45 @@ $O(d)$ where $d$ is depth of tree
 
 (In a well-balanced tree, we halve the number of samples in each split. )
 
-![Comparisons in worst-case and well-balanced trees.](../images/6-tree-depth-worst-best.png){ width=60% }
+![Tree depth in worst-case and well-balanced trees.](../images/6-tree-depth-worst-best.png){ width=60% }
 
 :::
 
 \newpage
 
 
-## Training time (binary tree)
+### Training time (binary tree)
 
-At a node $i$ with $n_i$ samples,
-
-* consider up to $n_i - 1$ split points
-* for $p$ features $\rightarrow O(p n_i)$
-
-Balanced case total: $O(p n \log n)$
 
 ::: notes
 
-This assumes feature values are sorted once at the beginning - much faster than naive way! 
+At a node with $n_i$ samples,
+
+* consider up to $n_i - 1$ cutpoints
+* for $p$ features $\rightarrow  O(p n_i)$ impurity computations per node
+
+What is the cost of computing impurity? If we sort at the beginning (cost: $O(p n \log n)$ for sorting), we can do it much faster than the naive way!
 
 Naive way: 
 
-* for each cutpoint, count samples of each class to the left vs right of the split: $O(n_i)$
+* count samples of each class to the left vs right of the cut: $O(n_i)$
 * do this for $n_i - 1$ split points
-* cost per feature, per node is $O(n_i ^2)$
-
-![Efficient computation of $p_{mk}$ with linear scan.](../images/6-tree-efficient-compute.png){ width=80% }
 
 With sorted features, using linear scan:
 
 * start with empty $<$ side, $>$ side
-* move one node between each cutpoint: $O(1)$
+* move one (sorted) sample from the right to the left of the cut: $O(1)$
 
-Then, going from node -> tree: 
+![Efficient computation of $p_{mk}$ with linear scan.](../images/6-tree-efficient-compute.png){ width=80% }
+
+Then, going from node $\rightarrow$ tree: 
 
 **Balanced case**: At each depth level of the tree, we handle all $n$ samples, so the total cost is: 
 
-cost per depth level $\times$ number of levels
+$O(pn)$ cost per depth level $\times$ $\log n$ number of levels
 
-total: $O(p n \log n)$.
+$\rightarrow$ total cost of recursive splitting for balanced case: $O(p n \log n)$.
+
 
 **Worst case** (tree depth $n$):
 
@@ -520,7 +523,7 @@ total: $O(p n \log n)$.
 * sum across levels $p (1 + 2 + \ldots + (n-2) + (n-1) + n)$
 * using the rule for sum of integers up to $n$: $p\frac{n (n-1)}{2}$
 
-so total is $O(p n^2)$
+$\rightarrow$ total cost of recursive splitting for worst case: $O(p n^2)$
 
 :::
 

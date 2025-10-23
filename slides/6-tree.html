@@ -219,9 +219,9 @@ piecewise step function!</p>
 <aside class="notes">
 <figure>
 <img data-src="../images/6-tree-step.png" style="width:100.0%"
-alt="Representation using step functions." />
-<figcaption aria-hidden="true">Representation using step
-functions.</figcaption>
+alt="Like nearest neighbor, a tree represents an arbitrary function using steps." />
+<figcaption aria-hidden="true">Like nearest neighbor, a tree represents
+an arbitrary function using steps.</figcaption>
 </figure>
 </aside>
 </section></section>
@@ -242,6 +242,12 @@ approach)</li>
 partition. Instead, we’ll use a greedy algorithm: at each step, make the
 best “local” decision at that step, without looking ahead and making a
 decision that might yield better results at future steps</p>
+<figure>
+<img data-src="../images/7-tree-greedy.png" style="width:100.0%"
+alt="Example showing how a greedy algorithm might not find the best tree." />
+<figcaption aria-hidden="true">Example showing how a greedy algorithm
+might not find the best tree.</figcaption>
+</figure>
 </aside>
 </section>
 <section id="recursive-binary-splitting-steps" class="slide level3">
@@ -581,8 +587,13 @@ trees.</figcaption>
 (<span class="math inline">\(\uparrow \alpha, \downarrow
 |T|\)</span>).</p>
 </section></section>
-<section id="inference-time" class="title-slide slide level2">
-<h2>Inference time</h2>
+<section>
+<section id="runtime" class="title-slide slide level2">
+<h2>Runtime</h2>
+
+</section>
+<section id="inference-time" class="slide level3">
+<h3>Inference time</h3>
 <p><span class="math inline">\(O(d)\)</span> where <span
 class="math inline">\(d\)</span> is depth of tree</p>
 <ul>
@@ -595,37 +606,39 @@ split. )</p>
 <figure>
 <img data-src="../images/6-tree-depth-worst-best.png"
 style="width:60.0%"
-alt="Comparisons in worst-case and well-balanced trees." />
-<figcaption aria-hidden="true">Comparisons in worst-case and
+alt="Tree depth in worst-case and well-balanced trees." />
+<figcaption aria-hidden="true">Tree depth in worst-case and
 well-balanced trees.</figcaption>
 </figure>
 </aside>
 </section>
-
-<section id="training-time-binary-tree"
-class="title-slide slide level2">
-<h2>Training time (binary tree)</h2>
-<p>At a node <span class="math inline">\(i\)</span> with <span
-class="math inline">\(n_i\)</span> samples,</p>
-<ul>
-<li>consider up to <span class="math inline">\(n_i - 1\)</span> split
-points</li>
-<li>for <span class="math inline">\(p\)</span> features <span
-class="math inline">\(\rightarrow O(p n_i)\)</span></li>
-</ul>
-<p>Balanced case total: <span class="math inline">\(O(p n \log
-n)\)</span></p>
+<section id="training-time-binary-tree" class="slide level3">
+<h3>Training time (binary tree)</h3>
 <aside class="notes">
-<p>This assumes feature values are sorted once at the beginning - much
-faster than naive way!</p>
+<p>At a node with <span class="math inline">\(n_i\)</span> samples,</p>
+<ul>
+<li>consider up to <span class="math inline">\(n_i - 1\)</span>
+cutpoints</li>
+<li>for <span class="math inline">\(p\)</span> features <span
+class="math inline">\(\rightarrow  O(p n_i)\)</span> impurity
+computations per node</li>
+</ul>
+<p>What is the cost of computing impurity? If we sort at the beginning
+(cost: <span class="math inline">\(O(p n \log n)\)</span> for sorting),
+we can do it much faster than the naive way!</p>
 <p>Naive way:</p>
 <ul>
-<li>for each cutpoint, count samples of each class to the left vs right
-of the split: <span class="math inline">\(O(n_i)\)</span></li>
+<li>count samples of each class to the left vs right of the cut: <span
+class="math inline">\(O(n_i)\)</span></li>
 <li>do this for <span class="math inline">\(n_i - 1\)</span> split
 points</li>
-<li>cost per feature, per node is <span class="math inline">\(O(n_i
-^2)\)</span></li>
+</ul>
+<p>With sorted features, using linear scan:</p>
+<ul>
+<li>start with empty <span class="math inline">\(&lt;\)</span> side,
+<span class="math inline">\(&gt;\)</span> side</li>
+<li>move one (sorted) sample from the right to the left of the cut:
+<span class="math inline">\(O(1)\)</span></li>
 </ul>
 <figure>
 <img data-src="../images/6-tree-efficient-compute.png"
@@ -634,20 +647,17 @@ alt="Efficient computation of p_{mk} with linear scan." />
 <figcaption aria-hidden="true">Efficient computation of <span
 class="math inline">\(p_{mk}\)</span> with linear scan.</figcaption>
 </figure>
-<p>With sorted features, using linear scan:</p>
-<ul>
-<li>start with empty <span class="math inline">\(&lt;\)</span> side,
-<span class="math inline">\(&gt;\)</span> side</li>
-<li>move one node between each cutpoint: <span
-class="math inline">\(O(1)\)</span></li>
-</ul>
-<p>Then, going from node -&gt; tree:</p>
+<p>Then, going from node <span
+class="math inline">\(\rightarrow\)</span> tree:</p>
 <p><strong>Balanced case</strong>: At each depth level of the tree, we
 handle all <span class="math inline">\(n\)</span> samples, so the total
 cost is:</p>
-<p>cost per depth level <span class="math inline">\(\times\)</span>
-number of levels</p>
-<p>total: <span class="math inline">\(O(p n \log n)\)</span>.</p>
+<p><span class="math inline">\(O(pn)\)</span> cost per depth level <span
+class="math inline">\(\times\)</span> <span class="math inline">\(\log
+n\)</span> number of levels</p>
+<p><span class="math inline">\(\rightarrow\)</span> total cost of
+recursive splitting for balanced case: <span class="math inline">\(O(p n
+\log n)\)</span>.</p>
 <p><strong>Worst case</strong> (tree depth <span
 class="math inline">\(n\)</span>):</p>
 <ul>
@@ -659,10 +669,11 @@ class="math inline">\(p n_i = p (n - i)\)</span></li>
 class="math inline">\(n\)</span>: <span class="math inline">\(p\frac{n
 (n-1)}{2}\)</span></li>
 </ul>
-<p>so total is <span class="math inline">\(O(p n^2)\)</span></p>
+<p><span class="math inline">\(\rightarrow\)</span> total cost of
+recursive splitting for worst case: <span class="math inline">\(O(p
+n^2)\)</span></p>
 </aside>
-</section>
-
+</section></section>
 <section>
 <section id="summary---so-far" class="title-slide slide level2">
 <h2>Summary - so far</h2>
