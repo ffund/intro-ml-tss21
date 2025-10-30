@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -81,6 +84,12 @@ its positive side, and</li>
 <li>all <span class="math inline">\(\mathbf{x} \in C_j, j \neq
 i\)</span> lie on its negative side.</li>
 </ul>
+<aside class="notes">
+<p>In the binary classification case: The data are linearly separable if
+we can find a hyperplane that places all <span
+class="math inline">\(y=1\)</span> points on one side and all <span
+class="math inline">\(y=-1\)</span> on the other.</p>
+</aside>
 </section>
 <section id="separating-hyperplane-1" class="slide level3">
 <h3>Separating hyperplane (1)</h3>
@@ -98,13 +107,17 @@ class="math inline">\(i=1,\ldots,n\)</span>,</p>
 y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) &gt; 0
 \label{eq:sep-no-margin}
 \end{equation}\]</span></p>
+<aside class="notes">
+<p>(we mention this compact form because we will use it in our
+formulation of the classifier.)</p>
+</aside>
 </section>
 <section id="using-the-hyperplane-to-classify" class="slide level3">
 <h3>Using the hyperplane to classify</h3>
 <p>Then, we can classify a new sample <span
 class="math inline">\(\mathbf{x}\)</span> using the sign of</p>
 <p><span class="math display">\[z = w_0 + \sum_{j=1}^p w_j
-x_{ij}\]</span></p>
+x_{j}\]</span></p>
 <p>and we can use the magnitude of <span
 class="math inline">\(z\)</span> to determine how confident we are about
 our classification. (Larger <span class="math inline">\(z\)</span> =
@@ -113,45 +126,50 @@ farther from hyperplane = more confident about classification.)</p>
 <section id="which-separating-hyperplane-is-best" class="slide level3">
 <h3>Which separating hyperplane is best?</h3>
 <figure>
-<img data-src="../images/6-many-hyperplanes.png" style="width:25.0%"
+<img data-src="../images/6-many-hyperplanes.png" style="width:35.0%"
 alt="If the data is linearly separable, there are many separating hyperplanes." />
 <figcaption aria-hidden="true">If the data is linearly separable, there
 are many separating hyperplanes.</figcaption>
 </figure>
 <aside class="notes">
-<p>Previously, with the logistic regression classifier, we found the
-maximum likelihood classifier: the hyperplane that maximizes the
-probability of these particular observations.</p>
+<p>We said there will be infinitely many separating hyperplanes, if
+there is one:</p>
+<ul>
+<li>Previously, with the logistic regression, we found the maximum
+likelihood classifier: the hyperplane that maximizes the probability of
+these particular observations.</li>
+<li>This time, we’ll find a different one.</li>
+</ul>
 </aside>
 </section>
 <section id="margin" class="slide level3">
 <h3>Margin</h3>
 <p>For any “candidate” hyperplane,</p>
 <ul>
-<li>Compute perpendicular distance from each sample to separating
-hyperplane.</li>
+<li>Compute distance from each sample to separating hyperplane.</li>
 <li>Smallest distance among all samples is called the
 <strong>margin</strong>.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/6-mm-margin.png" style="width:25.0%"
+<img data-src="../images/6-mm-margin.png" style="width:35.0%"
 alt="For this hyperplane, bold lines show the smallest distance (tie among several samples)." />
 <figcaption aria-hidden="true">For this hyperplane, bold lines show the
 smallest distance (tie among several samples).</figcaption>
 </figure>
 </aside>
 </section>
-<section id="maximal-margin-classifier-1" class="slide level3">
-<h3>Maximal margin classifier</h3>
+<section id="classifier-that-maximizes-the-margin" class="slide level3">
+<h3>Classifier that maximizes the margin</h3>
 <ul>
-<li>Choose the line that maximizes the margin!</li>
-<li>Find the widest “slab” we can fit between the two classes.</li>
-<li>Choose the midline of this “slab” as the decision boundary.</li>
+<li>Among all separating hyperplanes, choose the one with the largest
+margin!</li>
+<li>Find the widest “slab” we can fit between the two classes; use the
+midline of this “slab”.</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/6-mm-classifier.png" style="width:25.0%"
+<img data-src="../images/6-mm-classifier.png" style="width:35.0%"
 alt="Maximal margin classifier. Width of the “slab” is 2x the margin." />
 <figcaption aria-hidden="true">Maximal margin classifier. Width of the
 “slab” is 2x the margin.</figcaption>
@@ -222,13 +240,14 @@ a margin.)</p>
 0\)</span>, then for any <span class="math inline">\(k \neq 0\)</span>,
 <span class="math inline">\(k\left( w_0 + \sum_{j=1}^{p} w_j
 x_{ij}\right) = 0\)</span> is also a separating hyperplane.</p>
-<p>This “constraint” just scales weights so that distance from <span
+<p>This “constraint” just scales <span
+class="math inline">\(\mathbf{w}\)</span> so that distance from <span
 class="math inline">\(i\)</span>th sample to the hyperplane is given by
 <span class="math inline">\(y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij}
 \right)\)</span>. This is what make the previous constraint
 meaningful!</p>
 <figure>
-<img data-src="../images/6-mm-simple.png" style="width:30.0%"
+<img data-src="../images/6-mm-simple.png" style="width:35.0%"
 alt="Maximal margin classifier." />
 <figcaption aria-hidden="true">Maximal margin classifier.</figcaption>
 </figure>
@@ -289,10 +308,10 @@ class="slide level3">
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
 y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq
-\gamma(1-\epsilon_i), \forall i
+\gamma(1-\epsilon_i), \quad \forall i
 \end{equation}\]</span></p>
 <p><span class="math display">\[\begin{equation}
-\epsilon_i \geq 0 \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
+\epsilon_i \geq 0, \quad \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
 \end{equation}\]</span></p>
 <aside class="notes">
 <figure>
@@ -324,9 +343,8 @@ classifier</li>
 <li><span class="math inline">\(K &gt; 0\)</span>, no more than <span
 class="math inline">\(K\)</span> observations may be on wrong side of
 hyperplane</li>
-<li>As <span class="math inline">\(K\)</span> increases, margin widens;
-as <span class="math inline">\(K\)</span> decreases, margin
-narrows.</li>
+<li>As <span class="math inline">\(K\)</span> increases, more violations
+allowed, margin can be wider</li>
 </ul>
 </aside>
 </section>
@@ -357,10 +375,10 @@ class="math inline">\(K\)</span> decreases.</figcaption>
 <h3><span class="math inline">\(K\)</span> controls bias-variance
 tradeoff</h3>
 <ul>
-<li>When <span class="math inline">\(K\)</span> is large: many support
-vectors, variance is low, but bias may be high.</li>
-<li>When <span class="math inline">\(K\)</span> is small: few support
-vectors, high variance, but low bias.</li>
+<li>Wide margin (<span class="math inline">\(K\)</span> large): many
+support vectors, low variance, high bias.</li>
+<li>Narrow margin (<span class="math inline">\(K\)</span> small): few
+support vectors, high variance, low bias.</li>
 </ul>
 <aside class="notes">
 <p><strong>Terminology note</strong>: In ISL and in the first part of
@@ -373,37 +391,6 @@ wide margin.</li>
 class="math inline">\(C\)</span>, small margin.</li>
 </ul>
 </aside>
-</section>
-<section id="loss-function" class="slide level3">
-<h3>Loss function</h3>
-<p>This problem is equivalent to minimizing hinge loss:</p>
-<p><span class="math display">\[\operatorname*{minimize}_{\mathbf{w}}
-\left( \sum_{i=1}^n \text{max} [0, 1-y_i ( w_0 + \sum_{j=1}^p w_j
-x_{ij})] + \lambda \sum_{j=1}^p w_j^2 \right)\]</span></p>
-<p>where <span class="math inline">\(\lambda\)</span> is non-negative
-tuning parameter.</p>
-<aside class="notes">
-<p>Zero loss for observations where</p>
-<p><span class="math display">\[y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij}
-\right) \geq 1\]</span></p>
-<p>and width of margin depends on <span class="math inline">\(\sum
-w_j^2\)</span>.</p>
-</aside>
-</section>
-<section id="compared-to-logistic-regression" class="slide level3">
-<h3>Compared to logistic regression</h3>
-<ul>
-<li><strong>Hinge loss</strong>: zero for points on correct side of
-margin.</li>
-<li><strong>Logistic regression loss</strong>: small for points that are
-far from decision boundary.</li>
-</ul>
-<!--
-### Hinge loss vs. logistic regression
-
-
-![ISL 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
--->
 </section></section>
 <section>
 <section id="solution" class="title-slide slide level2">
@@ -418,7 +405,7 @@ far from decision boundary.</li>
 &amp;  \gamma \\
 \text{subject to} \quad &amp;\sum_{j=1}^{p} w_j^2 = 1 \\
 &amp; y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq
-\gamma(1-\epsilon_i), \forall i \\
+\gamma(1-\epsilon_i), \quad \forall i \\
 &amp;  \epsilon_i \geq 0, \quad \forall i \\
 &amp; \sum_{i=1}^n \epsilon_i \leq K
 \end{aligned}
@@ -427,10 +414,12 @@ far from decision boundary.</li>
 <section id="problem-formulation---equivalent" class="slide level3">
 <h3>Problem formulation - equivalent</h3>
 <aside class="notes">
-<p>Remember that any scaled version of the hyperplane is the same line.
-So let’s make <span class="math inline">\(||w||\)</span> inversely
-proportional to <span class="math inline">\(\gamma\)</span>. Then we can
-formulate the equivalent problem:</p>
+<p>Remember that scaling <span class="math inline">\(\mathbf{w}\)</span>
+doesn’t change the separating hyperplane. If we scale so that the margin
+boundaries are at <span class="math inline">\(+1\)</span> and <span
+class="math inline">\(-1\)</span>, then <span
+class="math inline">\(\gamma = \frac{1}{||w||}\)</span>, and we can
+formulate the equivalent minimization problem:</p>
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
@@ -446,7 +435,8 @@ formulate the equivalent problem:</p>
 <section id="problem-formulation---equivalent-2" class="slide level3">
 <h3>Problem formulation - equivalent (2)</h3>
 <aside class="notes">
-<p>Or, move the “budget” into the objective function:</p>
+<p>Next, move the “budget” into the objective function (easier to
+compute):</p>
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
@@ -509,10 +499,16 @@ g(x)\]</span></p>
 <p>over <span class="math inline">\(x\)</span> and <span
 class="math inline">\(\lambda\)</span>.</p>
 <aside class="notes">
-<p>(“Solve” in the usual way if the function is convex: by taking
-partial derivative of <span class="math inline">\(L(x,\lambda)\)</span>
-with respect to each argument, and setting it to zero. The solution to
-the original function will be a saddle point in the Lagrangian.)</p>
+<p>(“Solve” in the usual way for convex function: taking partial
+derivative of <span class="math inline">\(L(x,\lambda)\)</span> with
+respect to each argument, and setting to zero. The solution to the
+original function will be a saddle point in the Lagrangian.)</p>
+<ul>
+<li>We minimize over <span class="math inline">\(x\)</span> (the
+solution we want)</li>
+<li>We maximize over <span class="math inline">\(\lambda\)</span>
+(penalty for violating the constraint)</li>
+</ul>
 </aside>
 </section>
 <section id="background-solving-with-lagrangian-3" class="slide level3">
@@ -522,9 +518,8 @@ the original function will be a saddle point in the Lagrangian.)</p>
 g(x)\]</span></p>
 <p>Suppose that for the <span class="math inline">\(x\)</span> that
 minimizes <span class="math inline">\(f(x)\)</span>, <span
-class="math inline">\(g(x) \leq 0\)</span></p>
-<p>(i.e. <strong><span class="math inline">\(x\)</span> is in the
-feasible set</strong>.)</p>
+class="math inline">\(g(x) \leq 0\)</span> (i.e. <strong><span
+class="math inline">\(x\)</span> is in the feasible set</strong>.)</p>
 <p>If <span class="math inline">\(g(x) &lt; 0\)</span> (constraint is
 not active),</p>
 <ul>
@@ -542,9 +537,9 @@ g(x) = 0\)</span></li>
 g(x)\]</span></p>
 <p>Suppose that for the <span class="math inline">\(x\)</span> that
 minimizes <span class="math inline">\(f(x)\)</span>, <span
-class="math inline">\(g(x) &gt; 0\)</span></p>
-<p>(<strong><span class="math inline">\(x\)</span> is not in the
-feasible set.</strong>)</p>
+class="math inline">\(g(x) &gt; 0\)</span> (<strong><span
+class="math inline">\(x\)</span> is not in the feasible
+set.</strong>)</p>
 <ul>
 <li>to maximize: we want <span class="math inline">\(\lambda &gt;
 0\)</span></li>
@@ -563,11 +558,10 @@ pulls toward the feasible set,</li>
 class="math inline">\(x\)</span> on the edge of the feasible set (<span
 class="math inline">\(g(x) = 0\)</span>, constraint is active) for which
 <span class="math inline">\(f(x)\)</span> is smallest.</p>
-<p>This is called the KKT complementary slackness condition: for every
-constraint, <span class="math inline">\(\lambda g(x) = 0\)</span>,
-either because <span class="math inline">\(\lambda = 0\)</span>
-(inactive constraint) or <span class="math inline">\(g(x) = 0\)</span>
-(active constraint).</p>
+<p>This is called complementary slackness: for every constraint, <span
+class="math inline">\(\lambda g(x) = 0\)</span>, either because <span
+class="math inline">\(\lambda = 0\)</span> (inactive constraint) or
+<span class="math inline">\(g(x) = 0\)</span> (active constraint).</p>
 </aside>
 </section>
 <section id="background-activeinactive-constraint" class="slide level3">
@@ -594,7 +588,11 @@ problem:</p>
 class="slide level3">
 <h3>Problem formulation - Lagrangian primal</h3>
 <aside class="notes">
-<p>Back to our SVC problem - let’s form the Lagrangian and optimize:</p>
+<p>Back to our SVC problem - let’s form the Lagrangian (introducing
+<span class="math inline">\(\alpha_i\)</span> multipliers for the
+contraint on the margin violation and <span
+class="math inline">\(\mu_i\)</span> multipliers for the non-negativity
+constraint on slack variables):</p>
 </aside>
 <p><span class="math display">\[
 \begin{aligned}
@@ -629,15 +627,94 @@ class="slide level3">
 \end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>We solve this by taking the derivatives with respect to <span
-class="math inline">\(\mathbf{w}, \mathbf{\epsilon}\)</span> and setting
-them to zero. Then, we plug those values back into the dual
-equation…</p>
+<p>To solve, we take partial derivatives of the Lagrangian with respect
+to <span class="math inline">\(\mathbf{w}\)</span> and <span
+class="math inline">\(\mathbf{\epsilon}\)</span>, and set them to
+zero.</p>
 </aside>
 </section>
-<section id="problem-formulation---lagrangian-dual-2"
+<section id="partial-derivative-with-respect-to-mathbfw"
 class="slide level3">
-<h3>Problem formulation - Lagrangian dual (2)</h3>
+<h3>Partial derivative with respect to <span
+class="math inline">\(\mathbf{w}\)</span></h3>
+<p>Optimal coefficients for <span
+class="math inline">\(j=1,\ldots,p\)</span> are:</p>
+<p><span class="math display">\[\mathbf{w} = \sum_{i=1}^n {\alpha_i} y_i
+\mathbf{x}_{i}\]</span></p>
+<p>where <span class="math inline">\({\alpha_i}\)</span> come from the
+solution to the dual problem.</p>
+<aside class="notes">
+<hr />
+<p>Only two parts of the Lagrangian <span
+class="math inline">\(L\)</span> depend on <span
+class="math inline">\(\mathbf{w}\)</span>:</p>
+<p><span class="math display">\[
+\frac{1}{2} \sum_{j=1}^{p} w_j^2
+\qquad \text{and} \qquad
+- \sum_{i=1}^{n} \alpha_i y_i \sum_{j=1}^{p} w_j x_{ij}
+\]</span></p>
+<p>Differentiate:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \mathbf{w}}
+\left( \frac{1}{2} \sum_{j=1}^{p} w_j^2 \right)
+= \mathbf{w}
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \mathbf{w}}
+\left( - \sum_{i=1}^{n} \alpha_i y_i \sum_{j=1}^{p} w_j x_{ij} \right)
+= - \sum_{i=1}^{n} \alpha_i y_i \mathbf{x}_i
+\]</span></p>
+<p>Set derivative to zero:</p>
+<p><span class="math display">\[
+\mathbf{w} - \sum_{i=1}^{n} \alpha_i y_i \mathbf{x}_i = 0
+\]</span></p>
+<p>Therefore:</p>
+<p><span class="math display">\[
+\boxed{
+\mathbf{w}
+=
+\sum_{i=1}^{n} \alpha_i y_i \mathbf{x}_i
+}
+\]</span></p>
+</aside>
+</section>
+<section id="partial-derivative-with-respect-to-epsilon_i"
+class="slide level3">
+<h3>Partial derivative with respect to <span
+class="math inline">\(\epsilon_i\)</span></h3>
+<p>We find that</p>
+<p><span class="math display">\[0 \le \alpha_i \le C\]</span></p>
+<aside class="notes">
+<hr />
+<p>Terms involving <span class="math inline">\(\epsilon_i\)</span> in
+the Lagrangian:</p>
+<p><span class="math display">\[
+C \epsilon_i + \alpha_i \epsilon_i - \mu_i \epsilon_i
+= (C - \alpha_i - \mu_i)\epsilon_i
+\]</span></p>
+<p>Differentiate:</p>
+<p><span class="math display">\[
+\frac{\partial L}{\partial \epsilon_i}
+= C - \alpha_i - \mu_i
+\]</span></p>
+<p>Set equal to zero:</p>
+<p><span class="math display">\[
+C - \alpha_i - \mu_i = 0
+\]</span></p>
+<p>Therefore:</p>
+<p><span class="math display">\[
+\alpha_i = C - \mu_i
+\]</span></p>
+<p>Because <span class="math inline">\(\mu_i \ge 0\)</span>, we get:</p>
+<p><span class="math display">\[
+\boxed{
+0 \le \alpha_i \le C
+}
+\]</span></p>
+</aside>
+</section>
+<section id="substituting-into-the-lagrangian" class="slide level3">
+<h3>Substituting into the Lagrangian</h3>
 <p><span class="math display">\[
 \begin{aligned}
 \operatorname*{maximize}_{\alpha_i \geq 0, \forall i }  \quad
@@ -648,39 +725,24 @@ class="slide level3">
 \end{aligned}
 \]</span></p>
 <aside class="notes">
-<p>This turns out to be not too terrible to solve. <span
+<p>After some algebra, the remaining optimization depends only on <span
+class="math inline">\(\alpha\)</span>. Note that <span
 class="math inline">\(\alpha\)</span> is non-zero only when the
-constraint is active - only for support vectors.</p>
+constraint on margin violation is active - only for support vectors.</p>
 </aside>
 </section>
 <section id="solution-1" class="slide level3">
-<h3>Solution (1)</h3>
-<p>Optimal coefficients for <span
+<h3>Solution</h3>
+<p>Once we solve for <span class="math inline">\(\alpha\)</span>,
+optimal coefficients for <span
 class="math inline">\(j=1,\ldots,p\)</span> are:</p>
-<p><span class="math display">\[\mathbf{w}^* = \sum_{i=1}^n {\alpha_i^*}
-y_i \mathbf{x}_{i}\]</span></p>
-<p>where <span class="math inline">\({\alpha_i^*}\)</span> come from the
-solution to the dual problem.</p>
-</section>
-<section id="solution-2" class="slide level3">
-<h3>Solution (2)</h3>
-<ul>
-<li><span class="math inline">\({\alpha_i^*} &gt; 0\)</span> only when
-<span class="math inline">\(x_i\)</span> is a support vector (active
-constraint).</li>
-<li>Otherwise, <span class="math inline">\({\alpha_i^*} = 0\)</span>
-(inactive constraint).</li>
-</ul>
-</section>
-<section id="solution-3" class="slide level3">
-<h3>Solution (3)</h3>
-<p>That leaves <span class="math inline">\(w_0^*\)</span> - we can
-solve</p>
-<p><span class="math display">\[w_0^* = y_i - \sum_{j=1}^p w_j
-\mathbf{x}_{i}\]</span></p>
-<p>using any sample <span class="math inline">\(i\)</span> where <span
-class="math inline">\(\alpha_i^* &gt; 0\)</span>, i.e. any support
-vector.</p>
+<p><span class="math display">\[
+\mathbf{w} = \sum_{i=1}^n \alpha_i\, y_i\, \mathbf{x}_i
+\]</span></p>
+<p>and we solve <span class="math inline">\(w_0 = y_i - \sum_{j=1}^p w_j
+x_{ij}\)</span> using any sample <span class="math inline">\(i\)</span>
+where <span class="math inline">\(\alpha_i &gt; 0\)</span>, i.e. any
+support vector.</p>
 </section>
 <section id="why-solve-dual-problem" class="slide level3">
 <h3>Why solve dual problem?</h3>
@@ -693,7 +755,78 @@ class="math inline">\(p+1\)</span> coefficients.</li>
 dual variables, but there are only as many non-zero ones as there are
 support vectors.</li>
 </ul>
-<p>Also: the kernel trick, which we’ll discuss next…</p>
+<p>But mainly: the kernel trick, which we’ll discuss next, works for the
+dual formulation, because the data only appears inside inner product
+<span class="math inline">\(\mathbf{x}_i^T \mathbf{x}_j\)</span>!</p>
+</section>
+<section id="loss-function" class="slide level3">
+<h3>Loss function</h3>
+<p>This problem is equivalent to minimizing hinge loss:</p>
+<p><span class="math display">\[\operatorname*{minimize}_{\mathbf{w}}
+\left( \sum_{i=1}^n \max  \big(0,\, 1 - y_i z_i\big) + \frac{1}{C}
+\sum_{j=1}^p w_j^2 \right)\]</span></p>
+<p>where <span class="math inline">\(z_i = w_0 + \sum_{j=1}^{p} w_j
+x_{ij}\)</span>.</p>
+<aside class="notes">
+<p>For a labeled observation <span class="math inline">\((\mathbf{x}_i,
+y_i)\)</span> with <span class="math inline">\(y_i \in \{-1,
+1\}\)</span>, let</p>
+<p><span class="math display">\[z_i = w_0 + \sum_{j=1}^{p} w_j
+x_{ij}\]</span></p>
+<p>The hinge loss for this observation is <span
+class="math inline">\(\max \left(0,\, 1 - y_i z_i \right)\)</span>.</p>
+<table>
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 44%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value of <span class="math inline">\(y_i z_i\)</span></th>
+<th>Interpretation</th>
+<th>Hinge loss: <span class="math inline">\(\max(0,\,1 - y_i
+z_i)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(&gt; 1\)</span></td>
+<td>Correct and outside the margin</td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(= 1\)</span></td>
+<td>Right on the margin</td>
+<td><span class="math inline">\(0\)</span></td>
+</tr>
+<tr class="odd">
+<td>Between <span class="math inline">\(0\)</span> and <span
+class="math inline">\(1\)</span></td>
+<td>Correct but inside the margin</td>
+<td><span class="math inline">\(1 - y_i z_i\)</span> (greater than <span
+class="math inline">\(0\)</span>)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\le 0\)</span></td>
+<td>Misclassified</td>
+<td><span class="math inline">\(1 - y_i z_i\)</span> (greater than <span
+class="math inline">\(0\)</span>)</td>
+</tr>
+</tbody>
+</table>
+<p>Hinge loss penalizes points only when they are inside the margin or
+misclassified!</p>
+</aside>
+</section>
+<section id="compared-to-logistic-regression" class="slide level3">
+<h3>Compared to logistic regression</h3>
+<ul>
+<li><strong>Hinge loss</strong>: zero for points that are correct and
+outside margin.</li>
+<li><strong>Logistic regression loss</strong>: small but non-zero loss
+for points far from separating hyperplane.</li>
+</ul>
 </section>
 <section id="relationship-between-svm-and-other-models"
 class="slide level3">
@@ -711,9 +844,15 @@ sample and support vector.</li>
 <h3>Correlation interpretation (1)</h3>
 <p>Given a new sample <span class="math inline">\(\mathbf{x}\)</span> to
 classify, compute</p>
-<p><span class="math display">\[\hat{z}(\mathbf{x}) = w_0 + \sum_{j=1}^p
-w_j x_{j} = w_0 + \sum_{i=1}^n \alpha_i y_i \sum_{j=1}^p  x_{ij}
-x_{j}\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+z(\mathbf{x})
+&amp;= w_0 + \sum_{j=1}^p w_j x_j \\[6pt]
+&amp;= w_0 + \sum_{i=1}^n \alpha_i y_i \left( \sum_{j=1}^p x_{ij} x_j
+\right) \\[6pt]
+&amp;= w_0 + \sum_{i=1}^n \alpha_i y_i \, (\mathbf{x}_i^\top \mathbf{x})
+\end{aligned}
+\]</span></p>
 <p>Measures inner product (a kind of “correlation”) between new sample
 and each support vector.</p>
 </section>
@@ -721,10 +860,16 @@ and each support vector.</p>
 <h3>Correlation interpretation (2)</h3>
 <p>Classifier output (assuming -1,1 labels):</p>
 <p><span class="math display">\[\hat{y}(\mathbf{x}) = \text{sign}
-(\hat{z}(\mathbf{x}))\]</span></p>
+({z}(\mathbf{x}))\]</span></p>
 <p>Predicted label is weighted average of labels for support vectors,
 with weights proportional to “correlation” of test sample and support
 vector.</p>
+<!--
+### Hinge loss vs. logistic regression
+
+
+![ISL 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
+-->
 </section></section>
     </div>
   </div>
@@ -883,7 +1028,7 @@ vector.</p>
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

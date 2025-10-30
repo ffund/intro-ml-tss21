@@ -131,7 +131,7 @@ directly:</p>
 addition, subtraction) are needed?</p>
 <aside class="notes">
 <p>For each computation of <span class="math inline">\(\langle
-\mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle\)</span>, we need
+\mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t})  \rangle\)</span>, we need
 five operations:</p>
 <ul>
 <li>(one square) find <span class="math inline">\(\phi(x_i) = (x_i,
@@ -190,24 +190,42 @@ inner product, so the kernel works there as well.</p>
 <p>Another example:</p>
 <p><span class="math display">\[
 \begin{aligned}
-    K(x,z) &amp; = (x^Tz + c )^2
-    \\
-    &amp; =  \sum_{i,j}^n (x_i x_j )(z_i z_j) + \sum_i^n (\sqrt{2c} x_i)
-(\sqrt{2c} x_i) + c^2
+K(x,z)
+&amp;= (x^T z + c)^2 \\
+&amp;= (x^T z)(x^T z) + 2c(x^T z) + c^2 \\
+&amp;= \sum_{i=1}^{p} \sum_{j=1}^{p} (x_i x_j)(z_i z_j)
+   \;+\;
+   2c \sum_{i=1}^{p} x_i z_i
+   \;+\;
+   c^2
 \end{aligned}
 \]</span></p>
-<p>corresponds to the feature mapping:</p>
-<p><span class="math display">\[\phi(x) = \begin{bmatrix} x_1 x_1 \\ x_1
-x_2 \\ x_2x_1 \\ x_2 x_2 \\  \sqrt{2c} x_1 \\ \sqrt{2c}
-x_2\end{bmatrix}\]</span></p>
-<p>More generally: <span class="math inline">\(K(x,z) = (x^Tz +
-c)^d\)</span> is the polynomial kernel of degreee <span
+<p>This corresponds to the feature mapping:</p>
+<p><span class="math display">\[
+\phi(x)
+=
+\begin{bmatrix}
+x_1 x_1 \\
+x_1 x_2 \\
+\vdots \\
+x_p x_p \\
+\sqrt{2c}\,x_1 \\
+\vdots \\
+\sqrt{2c}\,x_p \\
+c
+\end{bmatrix}
+\]</span></p>
+<p>More generally:</p>
+<p><span class="math display">\[
+K(x,z) = (x^T z + c)^d
+\]</span></p>
+<p>is the polynomial kernel of degree <span
 class="math inline">\(d\)</span>. If each sample has <span
-class="math inline">\(p\)</span> features, it corresponds to a feature
-mapping to an <span class="math inline">\(\binom{p + d}{d}\)</span>
-feature space. Although it works in <span
-class="math inline">\(O(p^d)\)</span> feature space, computing the
-kernel is just an inner product which is <span
+class="math inline">\(p\)</span> features, this corresponds to a feature
+mapping into a <span class="math inline">\(\binom{p + d}{d}\)</span>
+dimensional feature space, which grows on the order of <span
+class="math inline">\(O(p^d)\)</span>. But computing the kernel only
+requires an inner product, which is <span
 class="math inline">\(O(p)\)</span>.</p>
 </aside>
 <!--
@@ -334,22 +352,18 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 &amp;= \exp\Big(-\frac{1}{2} \langle \mathbf{x}_i-\mathbf{x}_t,
 \mathbf{x}_i-\mathbf{x}_t \rangle \Big)
 \\
-&amp;\stackrel{\star}{=} \exp\Big(-\frac{1}{2}( \langle \mathbf{x}_i,
-\mathbf{x}_i-\mathbf{x}_t \rangle - \langle \mathbf{x}_t,
-\mathbf{x}_i-\mathbf{x}_t \rangle ) \Big)
-\\
-&amp;\stackrel{\star}{=} \exp\Big(-\frac{1}{2} (\langle \mathbf{x}_i,
-\mathbf{x}_i \rangle - \langle \mathbf{x}_i, \mathbf{x}_t \rangle -
-\big[ \langle \mathbf{x}_t, \mathbf{x}_i \rangle - \langle \mathbf{x}_t,
-\mathbf{x}_t \rangle \big] \rangle )\Big)
+&amp;\stackrel{\star}{=} \exp\Big(-\frac{1}{2}\big( \langle
+\mathbf{x}_i, \mathbf{x}_i \rangle - \langle \mathbf{x}_i, \mathbf{x}_t
+\rangle - \langle \mathbf{x}_t, \mathbf{x}_i \rangle + \langle
+\mathbf{x}_t, \mathbf{x}_t \rangle \big)\Big)
 \\
 &amp;= \exp\Big(-\frac{1}{2} (\langle \mathbf{x}_i, \mathbf{x}_i \rangle
 + \langle \mathbf{x}_t, \mathbf{x}_t \rangle - 2 \langle \mathbf{x}_i,
 \mathbf{x}_t \rangle ) \Big)
 \\
-&amp;= \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big)
-\exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big) \exp\Big(
-\langle \mathbf{x}_i, \mathbf{x}_t \rangle \Big)
+&amp;= \exp\Big(-\frac{1}{2} \lVert \mathbf{x}_i \rVert^2 \Big)\,
+   \exp\Big(-\frac{1}{2} \lVert \mathbf{x}_t \rVert^2 \Big)\,
+   \exp\Big( \langle \mathbf{x}_i, \mathbf{x}_t \rangle \Big)
 \end{align*}\]</span></p>
 <p>where the steps marked with a star use the fact that for inner
 products, <span class="math inline">\(\langle \mathbf{u} + \mathbf{v},
@@ -389,9 +403,13 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 &amp;= C \sum_{r=0}^{\infty} \frac{ \langle \mathbf{x}_i, \mathbf{x}_t
 \rangle^r}{r!}
 \\
-&amp;= C \sum_{r}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i,
+&amp;= C \sum_{r=0}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i,
 \mathbf{x}_t)}{r!}
 \end{align*}\]</span></p>
+<aside class="notes">
+<p>TL;DR: RBF kernel is like comparing similarity of two samples on
+<em>infinite features</em> without computing them.</p>
+</aside>
 <!-- http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf -->
 </section>
 <section id="feature-mapping-vs-kernel" class="slide level3">

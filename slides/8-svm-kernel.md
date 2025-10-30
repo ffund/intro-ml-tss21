@@ -71,7 +71,6 @@ $$((-3, 9) +1), ((-2, 4) +1), ((3, 9) +1)$$
 
 This data *is* linearly separable in $\mathbb{R}^2$.
 
-
 ### Example (3)
 
 Suppose we compute $\langle \mathbf{\phi}({x}_i), \mathbf{\phi}({x}_{t}) \rangle$ directly:
@@ -131,17 +130,42 @@ Another example:
 
 $$
 \begin{aligned}
-    K(x,z) & = (x^Tz + c )^2
-    \\
-    & =  \sum_{i,j}^n (x_i x_j )(z_i z_j) + \sum_i^n (\sqrt{2c} x_i) (\sqrt{2c} x_i) + c^2
+K(x,z)
+&= (x^T z + c)^2 \\
+&= (x^T z)(x^T z) + 2c(x^T z) + c^2 \\
+&= \sum_{i=1}^{p} \sum_{j=1}^{p} (x_i x_j)(z_i z_j)
+   \;+\;
+   2c \sum_{i=1}^{p} x_i z_i
+   \;+\;
+   c^2
 \end{aligned}
 $$
 
-corresponds to the feature mapping:
+This corresponds to the feature mapping:
 
-$$\phi(x) = \begin{bmatrix} x_1 x_1 \\ x_1 x_2 \\ x_2x_1 \\ x_2 x_2 \\  \sqrt{2c} x_1 \\ \sqrt{2c} x_2\end{bmatrix}$$
+$$
+\phi(x)
+=
+\begin{bmatrix}
+x_1 x_1 \\
+x_1 x_2 \\
+\vdots \\
+x_p x_p \\
+\sqrt{2c}\,x_1 \\
+\vdots \\
+\sqrt{2c}\,x_p \\
+c
+\end{bmatrix}
+$$
 
-More generally: $K(x,z) = (x^Tz + c)^d$ is the polynomial kernel of degreee $d$. If each sample has $p$ features, it corresponds to a feature mapping to an $\binom{p + d}{d}$ feature space. Although it works in $O(p^d)$ feature space, computing the kernel is just an inner product which is $O(p)$.
+More generally:
+
+$$
+K(x,z) = (x^T z + c)^d
+$$
+
+is the polynomial kernel of degree $d$. If each sample has $p$ features, this corresponds to a feature mapping into a $\binom{p + d}{d}$ dimensional feature space, which grows on the order of $O(p^d)$. But computing the kernel only requires
+an inner product, which is $O(p)$.
 
 :::
 <!--
@@ -226,9 +250,7 @@ $$K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t) = \exp\Big(-\gamma\lVert\mathbf{x
 
 Let $\gamma=\frac{1}{2}$ and let $K_{\texttt{poly}(r)}$ be the polynomial kernel of degree $r$. Then
 
-
 ### Infinite-dimensional feature space (extra steps not shown in class)
-
 
 \begin{align*}
 K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
@@ -236,17 +258,16 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 \\
 &= \exp\Big(-\frac{1}{2} \langle \mathbf{x}_i-\mathbf{x}_t, \mathbf{x}_i-\mathbf{x}_t \rangle \Big)
 \\
-&\stackrel{\star}{=} \exp\Big(-\frac{1}{2}( \langle \mathbf{x}_i, \mathbf{x}_i-\mathbf{x}_t \rangle - \langle \mathbf{x}_t, \mathbf{x}_i-\mathbf{x}_t \rangle ) \Big)
-\\
-&\stackrel{\star}{=} \exp\Big(-\frac{1}{2} (\langle \mathbf{x}_i, \mathbf{x}_i \rangle - \langle \mathbf{x}_i, \mathbf{x}_t \rangle - \big[ \langle \mathbf{x}_t, \mathbf{x}_i \rangle - \langle \mathbf{x}_t, \mathbf{x}_t \rangle \big] \rangle )\Big)
+&\stackrel{\star}{=} \exp\Big(-\frac{1}{2}\big( \langle \mathbf{x}_i, \mathbf{x}_i \rangle - \langle \mathbf{x}_i, \mathbf{x}_t \rangle - \langle \mathbf{x}_t, \mathbf{x}_i \rangle + \langle \mathbf{x}_t, \mathbf{x}_t \rangle \big)\Big)
 \\
 &= \exp\Big(-\frac{1}{2} (\langle \mathbf{x}_i, \mathbf{x}_i \rangle + \langle \mathbf{x}_t, \mathbf{x}_t \rangle - 2 \langle \mathbf{x}_i, \mathbf{x}_t \rangle ) \Big)
 \\
-&= \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_i \lVert^2 \Big) \exp\Big(-\frac{1}{2} \rVert \mathbf{x}_t \lVert^2 \Big) \exp\Big( \langle \mathbf{x}_i, \mathbf{x}_t \rangle \Big)
+&= \exp\Big(-\frac{1}{2} \lVert \mathbf{x}_i \rVert^2 \Big)\,
+   \exp\Big(-\frac{1}{2} \lVert \mathbf{x}_t \rVert^2 \Big)\,
+   \exp\Big( \langle \mathbf{x}_i, \mathbf{x}_t \rangle \Big)
 \end{align*}
 
 where the steps marked with a star use the fact that for inner products, $\langle \mathbf{u} + \mathbf{v}, \mathbf{w} \rangle = \langle \mathbf{u}, \mathbf{w} \rangle + \langle \mathbf{v}, \mathbf{w} \rangle$.
-
 
 Also recall that $\langle x, x \rangle = \rVert x \lVert ^2$.
 
@@ -281,8 +302,14 @@ K_{\texttt{RBF}}(\mathbf{x}_i, \mathbf{x}_t)
 \\
 &= C \sum_{r=0}^{\infty} \frac{ \langle \mathbf{x}_i, \mathbf{x}_t \rangle^r}{r!}
 \\
-&= C \sum_{r}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i, \mathbf{x}_t)}{r!}
+&= C \sum_{r=0}^{\infty} \frac{K_{\texttt{poly(r)}}(\mathbf{x}_i, \mathbf{x}_t)}{r!}
 \end{align*} 
+
+::: notes
+
+TL;DR: RBF kernel is like comparing similarity of two samples on *infinite features* without computing them.
+
+:::
 
 <!-- http://pages.cs.wisc.edu/~matthewb/pages/notes/pdf/svms/RBFKernel.pdf -->
 

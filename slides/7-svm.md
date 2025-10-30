@@ -19,6 +19,8 @@ author: 'Fraida Fund'
 
 -->
 
+\newpage
+
 ## Maximal margin classifier
 
 ### Binary classification problem 
@@ -33,6 +35,13 @@ The problem is **perfectly linearly separable** if there exists a **separating h
 * all $\mathbf{x} \in C_i$ lie on its positive side, and 
 * all $\mathbf{x} \in C_j, j \neq i$ lie on its negative side.
 
+
+:::notes
+
+In the binary classification case: The data are linearly separable if we can find a hyperplane that places all 
+$y=1$ points on one side and all $y=-1$ on the other.
+
+:::
 
 ### Separating hyperplane (1)
 
@@ -51,11 +60,17 @@ y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) > 0
 \label{eq:sep-no-margin}
 \end{equation}
 
+::: notes
+
+(we mention this compact form because we will use it in our formulation of the classifier.)
+
+:::
+
 ### Using the hyperplane to classify
 
 Then, we can classify a new sample $\mathbf{x}$ using the sign of 
 
-$$z = w_0 + \sum_{j=1}^p w_j x_{ij}$$
+$$z = w_0 + \sum_{j=1}^p w_j x_{j}$$
 
 and we can use the magnitude of $z$ to determine how confident we are about our classification. (Larger $z$ = farther from hyperplane = more confident about classification.)
 
@@ -63,12 +78,15 @@ and we can use the magnitude of $z$ to determine how confident we are about our 
 
 ### Which separating hyperplane is best? 
 
-![If the data is linearly separable, there are many separating hyperplanes.](../images/6-many-hyperplanes.png){ width=25% }
+![If the data is linearly separable, there are many separating hyperplanes.](../images/6-many-hyperplanes.png){ width=35% }
 
 
 ::: notes
 
-Previously, with the logistic regression classifier, we found the maximum likelihood classifier: the hyperplane that maximizes the probability of these particular observations.
+We said there will be infinitely many separating hyperplanes, if there is one:
+
+* Previously, with the logistic regression, we found the maximum likelihood classifier: the hyperplane that maximizes the probability of these particular observations. 
+* This time, we'll find a different one.
 
 :::
 
@@ -76,30 +94,30 @@ Previously, with the logistic regression classifier, we found the maximum likeli
 
 For any "candidate" hyperplane, 
 
-* Compute perpendicular distance from each sample to separating hyperplane.
+* Compute distance from each sample to separating hyperplane.
 * Smallest distance among all samples is called the **margin**. 
 
 ::: notes
 
-![For this hyperplane, bold lines show the smallest distance (tie among several samples).](../images/6-mm-margin.png){ width=25% }
+![For this hyperplane, bold lines show the smallest distance (tie among several samples).](../images/6-mm-margin.png){ width=35% }
 
 :::
 
-### Maximal margin classifier
+\newpage
 
-* Choose the line that maximizes the margin!
-* Find the widest "slab" we can fit between the two classes.
-* Choose the midline of this "slab" as the decision boundary.
+### Classifier that maximizes the margin
+
+* Among all separating hyperplanes, choose the one with the largest margin!
+* Find the widest "slab" we can fit between the two classes; use the midline of this "slab".
 
 ::: notes
 
 
 
-![Maximal margin classifier. Width of the "slab" is 2x the margin.](../images/6-mm-classifier.png){ width=25% }
+![Maximal margin classifier. Width of the "slab" is 2x the margin.](../images/6-mm-classifier.png){ width=35% }
 
 :::
 
-\newpage
 
 ### Support vectors
 
@@ -155,9 +173,9 @@ $$\text{and } \sum_{j=1}^{p} w_j^2 = 1$$
 
 is not really a constraint: if a separating hyperplane is defined by $w_0 + \sum_{j=1}^{p} w_j x_{ij} = 0$, then for any $k \neq 0$, $k\left( w_0 + \sum_{j=1}^{p} w_j x_{ij}\right) = 0$ is also a separating hyperplane.
 
-This "constraint" just scales weights so that distance from $i$th sample to the hyperplane is given by $y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right)$. This is what make the previous constraint meaningful!
+This "constraint" just scales $\mathbf{w}$ so that distance from $i$th sample to the hyperplane is given by $y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right)$. This is what make the previous constraint meaningful!
 
-![Maximal margin classifier.](../images/6-mm-simple.png){ width=30% }
+![Maximal margin classifier.](../images/6-mm-simple.png){ width=35% }
 
 :::
 
@@ -206,11 +224,11 @@ and $\gamma$ is maximized.
 
 
 \begin{equation}
-y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i
+y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \quad \forall i
 \end{equation}
 
 \begin{equation}
-\epsilon_i \geq 0 \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
+\epsilon_i \geq 0, \quad \forall i, \quad \sum_{i=1}^n \epsilon_i \leq K
 \end{equation}
 
 ::: notes
@@ -233,7 +251,7 @@ $K$ is the **budget** that determines the number and severity of margin violatio
 
 * $K=0 \rightarrow$ same as MM classifier
 * $K > 0$, no more than $K$ observations may be on wrong side of hyperplane
-* As $K$ increases, margin widens; as $K$ decreases, margin narrows.
+* As $K$ increases, more violations allowed, margin can be wider
 
 :::
 
@@ -260,8 +278,8 @@ These are the *support vectors*.
 
 ### $K$ controls bias-variance tradeoff
 
-* When $K$ is large: many support vectors, variance is low, but bias may be high.
-* When $K$ is small: few support vectors, high variance, but low bias.
+* Wide margin ($K$ large): many support vectors, low variance, high bias.
+* Narrow margin ($K$ small): few support vectors, high variance, low bias.
 
 ::: notes
 
@@ -271,37 +289,6 @@ These are the *support vectors*.
 * Python `sklearn`: Large $C$, small margin.
 
 :::
-
-### Loss function
-
-This problem is equivalent to minimizing hinge loss: 
-
-$$\operatorname*{minimize}_{\mathbf{w}} \left( \sum_{i=1}^n \text{max} [0, 1-y_i ( w_0 + \sum_{j=1}^p w_j x_{ij})] + \lambda \sum_{j=1}^p w_j^2 \right)$$
-
-where $\lambda$ is non-negative tuning parameter.
-
-::: notes
-
-Zero loss for observations where
-
-$$y_i \left(w_0 + \sum_{j=1}^p w_j x_{ij} \right) \geq 1$$
-
-and width of margin depends on $\sum w_j^2$.
-
-:::
-
-### Compared to logistic regression
-
-* **Hinge loss**: zero for points on correct side of margin.
-* **Logistic regression loss**: small for points that are far from decision boundary.
-
-
-<!--
-### Hinge loss vs. logistic regression
-
-
-![ISL 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
--->
 
 
 
@@ -317,7 +304,7 @@ $$
 \begin{aligned}
 \operatorname*{maximize}_{\mathbf{w}, \mathbf{\epsilon}, \gamma} \quad &  \gamma \\
 \text{subject to} \quad &\sum_{j=1}^{p} w_j^2 = 1 \\
-& y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \forall i \\
+& y_i \left(w_0 + \sum_{j=1}^{p} w_j x_{ij} \right) \geq \gamma(1-\epsilon_i), \quad \forall i \\
 &  \epsilon_i \geq 0, \quad \forall i \\
 & \sum_{i=1}^n \epsilon_i \leq K 
 \end{aligned}
@@ -329,7 +316,7 @@ $$
 
 ::: notes
 
-Remember that any scaled version of the hyperplane is the same line. So let's make $||w||$ inversely proportional to $\gamma$. Then we can formulate the equivalent problem:
+Remember that scaling $\mathbf{w}$ doesn't change the separating hyperplane. If we scale so that the margin boundaries are at $+1$ and $-1$, then $\gamma = \frac{1}{||w||}$, and we can formulate the equivalent minimization problem:
 
 :::
 
@@ -346,7 +333,7 @@ $$
 
 ::: notes
 
-Or, move the "budget" into the objective function:
+Next, move the "budget" into the objective function (easier to compute):
 
 :::
 
@@ -414,7 +401,10 @@ over $x$ and $\lambda$.
 
 :::notes
 
-("Solve" in the usual way if the function is convex: by taking partial derivative of $L(x,\lambda)$ with respect to each argument, and setting it to zero. The solution to the original function will be a saddle point in the Lagrangian.)
+("Solve" in the usual way for convex function: taking partial derivative of $L(x,\lambda)$ with respect to each argument, and setting to zero. The solution to the original function will be a saddle point in the Lagrangian.)
+
+* We minimize over $x$ (the solution we want)
+* We maximize over $\lambda$ (penalty for violating the constraint)
 
 
 :::
@@ -425,10 +415,7 @@ over $x$ and $\lambda$.
 $$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)$$
 
 
-Suppose that for the $x$ that minimizes $f(x)$, $g(x) \leq 0$
-
-
-(i.e. **$x$ is in the feasible set**.) 
+Suppose that for the $x$ that minimizes $f(x)$, $g(x) \leq 0$ (i.e. **$x$ is in the feasible set**.) 
 
 If $g(x) < 0$ (constraint is not active), 
 
@@ -441,9 +428,7 @@ If $g(x) < 0$ (constraint is not active),
 
 $$\operatorname*{minimize}_{x} \operatorname*{maximize}_{\lambda \geq 0 } f(x) + \lambda g(x)$$
 
-Suppose that for the $x$ that minimizes $f(x)$, $g(x) > 0$
-
-(**$x$ is not in the feasible set.**)
+Suppose that for the $x$ that minimizes $f(x)$, $g(x) > 0$ (**$x$ is not in the feasible set.**)
 
   * to maximize: we want $\lambda > 0$
   * to minimize: we want small $g(x)$ and $f(x)$.
@@ -457,15 +442,15 @@ In this case, the "pull" between
 
 ends up making the constraint "tight". We will use the $x$ on the edge of the feasible set ($g(x) = 0$, constraint is active) for which $f(x)$ is smallest.
 
-
-This is called the KKT complementary slackness condition: for every constraint, $\lambda g(x) = 0$, either because $\lambda = 0$ (inactive constraint) or $g(x) = 0$ (active constraint).
-
+This is called complementary slackness: for every constraint, $\lambda g(x) = 0$, either because $\lambda = 0$ (inactive constraint) or $g(x) = 0$ (active constraint).
 
 :::
 
 ### Background: Active/inactive constraint
 
 ![Optimization with inactive, active constraint.](../images/6-active-inactive.png){ width=80% }
+
+
 
 ### Background: Primal and dual formulation
 
@@ -483,7 +468,7 @@ $$\operatorname*{maximize}_{\lambda \geq 0 } \operatorname*{minimize}_{x} L(x, \
 
 ::: notes
 
-Back to our SVC problem - let's form the Lagrangian and optimize:
+Back to our SVC problem - let's form the Lagrangian (introducing $\alpha_i$ multipliers for the contraint on the margin violation and $\mu_i$ multipliers for the non-negativity constraint on slack variables):
 
 :::
 
@@ -521,12 +506,114 @@ $$
 
 ::: notes
 
-We solve this by taking the derivatives with respect to $\mathbf{w}, \mathbf{\epsilon}$ and setting them to zero. Then, we plug those values back into the dual equation...
+
+To solve, we take partial derivatives of the Lagrangian with respect to $\mathbf{w}$ and $\mathbf{\epsilon}$, and set them to zero.
+
 
 :::
 
-### Problem formulation - Lagrangian dual (2)
 
+### Partial derivative with respect to $\mathbf{w}$
+
+Optimal coefficients for $j=1,\ldots,p$ are:
+
+$$\mathbf{w} = \sum_{i=1}^n {\alpha_i} y_i \mathbf{x}_{i}$$
+
+where ${\alpha_i}$ come from the solution to the dual problem.
+
+::: notes
+
+---
+
+Only two parts of the Lagrangian $L$ depend on $\mathbf{w}$:
+
+$$
+\frac{1}{2} \sum_{j=1}^{p} w_j^2
+\qquad \text{and} \qquad
+- \sum_{i=1}^{n} \alpha_i y_i \sum_{j=1}^{p} w_j x_{ij}
+$$
+
+Differentiate:
+
+$$
+\frac{\partial}{\partial \mathbf{w}}
+\left( \frac{1}{2} \sum_{j=1}^{p} w_j^2 \right)
+= \mathbf{w}
+$$
+
+$$
+\frac{\partial}{\partial \mathbf{w}}
+\left( - \sum_{i=1}^{n} \alpha_i y_i \sum_{j=1}^{p} w_j x_{ij} \right)
+= - \sum_{i=1}^{n} \alpha_i y_i \mathbf{x}_i
+$$
+
+Set derivative to zero:
+
+$$
+\mathbf{w} - \sum_{i=1}^{n} \alpha_i y_i \mathbf{x}_i = 0
+$$
+
+Therefore:
+
+$$
+\boxed{
+\mathbf{w}
+=
+\sum_{i=1}^{n} \alpha_i y_i \mathbf{x}_i
+}
+$$
+
+:::
+
+\newpage
+
+### Partial derivative with respect to $\epsilon_i$
+
+We find that
+
+$$0 \le \alpha_i \le C$$
+
+::: notes
+
+---
+
+Terms involving $\epsilon_i$ in the Lagrangian:
+
+$$
+C \epsilon_i + \alpha_i \epsilon_i - \mu_i \epsilon_i
+= (C - \alpha_i - \mu_i)\epsilon_i
+$$
+
+Differentiate:
+
+$$
+\frac{\partial L}{\partial \epsilon_i}
+= C - \alpha_i - \mu_i
+$$
+
+Set equal to zero:
+
+$$
+C - \alpha_i - \mu_i = 0
+$$
+
+Therefore:
+
+$$
+\alpha_i = C - \mu_i
+$$
+
+Because $\mu_i \ge 0$, we get:
+
+$$
+\boxed{
+0 \le \alpha_i \le C
+}
+$$
+
+:::
+
+### Substituting into the Lagrangian
 
 $$
 \begin{aligned}
@@ -538,32 +625,21 @@ $$
 
 ::: notes
 
-This turns out to be not too terrible to solve. $\alpha$ is non-zero only when the constraint is active - only for support vectors.
+After some algebra, the remaining optimization depends only on $\alpha$. Note that $\alpha$ is non-zero only when the constraint on margin violation is active - only for support vectors.
 
 :::
 
 
+### Solution 
 
-### Solution (1)
+Once we solve for $\alpha$, optimal coefficients for $j=1,\ldots,p$ are:
 
-Optimal coefficients for $j=1,\ldots,p$ are:
+$$
+\mathbf{w} = \sum_{i=1}^n \alpha_i\, y_i\, \mathbf{x}_i
+$$
 
-$$\mathbf{w}^* = \sum_{i=1}^n {\alpha_i^*} y_i \mathbf{x}_{i}$$
 
-where ${\alpha_i^*}$ come from the solution to the dual problem.
-
-### Solution (2)
-
-* ${\alpha_i^*} > 0$ only when $x_i$ is a support vector (active constraint).
-* Otherwise, ${\alpha_i^*} = 0$ (inactive constraint).
-
-### Solution (3)
-
-That leaves $w_0^*$ - we can solve
-
-$$w_0^* = y_i - \sum_{j=1}^p w_j \mathbf{x}_{i}$$
-
-using any sample $i$ where $\alpha_i^* > 0$, i.e. any support vector.
+and we solve $w_0 = y_i - \sum_{j=1}^p w_j x_{ij}$ using any sample $i$ where $\alpha_i > 0$, i.e. any support vector.
 
 ### Why solve dual problem?
 
@@ -572,7 +648,42 @@ For high-dimension problems (many features), dual problem can be much faster to 
 * Primal problem: optimize over $p+1$ coefficients.
 * Dual problem: optimize over $n$ dual variables, but there are only as many non-zero ones as there are support vectors.
 
-Also: the kernel trick, which we'll discuss next...
+But mainly: the kernel trick, which we'll discuss next, works for the dual formulation, because the data only appears inside inner product $\mathbf{x}_i^T \mathbf{x}_j$!
+
+
+### Loss function
+
+This problem is equivalent to minimizing hinge loss: 
+
+$$\operatorname*{minimize}_{\mathbf{w}} \left( \sum_{i=1}^n \max  \big(0,\, 1 - y_i z_i\big) + \frac{1}{C} \sum_{j=1}^p w_j^2 \right)$$
+
+where $z_i = w_0 + \sum_{j=1}^{p} w_j x_{ij}$.
+
+::: notes
+
+For a labeled observation $(\mathbf{x}_i, y_i)$ with $y_i \in \{-1, 1\}$, let
+
+$$z_i = w_0 + \sum_{j=1}^{p} w_j x_{ij}$$
+
+The hinge loss for this observation is $\max \left(0,\, 1 - y_i z_i \right)$.
+
+| Value of $y_i z_i$      | Interpretation                                   | Hinge loss: $\max(0,\,1 - y_i z_i)$  |
+|-------------------------|--------------------------------------------------|--------------------------------------|
+| $> 1$           | Correct and outside the margin                   | $0$                                  |
+| $= 1$           | Right on the margin                              | $0$                                  |
+| Between $0$ and $1$       | Correct but inside the margin          | $1 - y_i z_i$ (greater than $0$)     |
+| $\le 0$         | Misclassified                                      | $1 - y_i z_i$ (greater than $0$)    |
+
+
+
+Hinge loss penalizes points only when they are inside the margin or misclassified! 
+
+:::
+
+### Compared to logistic regression
+
+* **Hinge loss**: zero for points that are correct and outside margin.
+* **Logistic regression loss**: small but non-zero loss for points far from separating hyperplane.
 
 \newpage
 
@@ -585,7 +696,14 @@ Also: the kernel trick, which we'll discuss next...
 
 Given a new sample $\mathbf{x}$ to classify, compute
 
-$$\hat{z}(\mathbf{x}) = w_0 + \sum_{j=1}^p w_j x_{j} = w_0 + \sum_{i=1}^n \alpha_i y_i \sum_{j=1}^p  x_{ij} x_{j}$$
+$$
+\begin{aligned}
+z(\mathbf{x})
+&= w_0 + \sum_{j=1}^p w_j x_j \\[6pt]
+&= w_0 + \sum_{i=1}^n \alpha_i y_i \left( \sum_{j=1}^p x_{ij} x_j \right) \\[6pt]
+&= w_0 + \sum_{i=1}^n \alpha_i y_i \, (\mathbf{x}_i^\top \mathbf{x})
+\end{aligned}
+$$
 
 Measures inner product (a kind of "correlation") between new sample and each support vector.
 
@@ -593,7 +711,17 @@ Measures inner product (a kind of "correlation") between new sample and each sup
 
 Classifier output (assuming -1,1 labels):
 
-$$\hat{y}(\mathbf{x}) = \text{sign} (\hat{z}(\mathbf{x}))$$
+$$\hat{y}(\mathbf{x}) = \text{sign} ({z}(\mathbf{x}))$$
 
 Predicted label is weighted average of labels for support vectors, with weights proportional to "correlation" of test sample and support vector.
+
+\newpage
+
+
+<!--
+### Hinge loss vs. logistic regression
+
+
+![ISL 9.12. Hinge loss is zero for points on correct side of margin.](../images/9.12.svg){ width=50% }
+-->
 
