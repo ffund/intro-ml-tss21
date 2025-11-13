@@ -16,6 +16,7 @@ markmap:
 
 - Activation functions
 - Weight initialization
+- Skip connections
 - Convolutional units
 - Recurrent units
 

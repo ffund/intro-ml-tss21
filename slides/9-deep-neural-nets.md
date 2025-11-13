@@ -147,7 +147,7 @@ We won't talk much about getting more data, but if it's possible to get more lab
 It's not always possible to get a lot of *labeled* data for training a supervised learning model. But sometimes we can use *unlabeled* data, which is much easier to get. For example:
 
 * In self-supervised learning, the label can be inferred automatically from the unlabeled data. e.g. GPT is trained to predict "next word".
-* In semi-supervised/weakly-supervised learning learining, we generate labels (probably imperfectly) for unlabeled data (maybe using a smaller volume of labeled data to train a model to label the data!)
+* In semi-supervised/weakly-supervised learning, we generate labels (probably imperfectly) for unlabeled data (maybe using a smaller volume of labeled data to train a model to label the data!)
 
 These are mostly out of scope of this course. But we *will* talk about data augmentation and transfer learning...
 
@@ -476,7 +476,7 @@ https://ca.meron.dev/blog/Vectorized-CNN/
 Convolutional neural networks address two major problems that make it difficult to train a "fully connected" neural network:
 
 1. Each pixel is a feature, images tend to be very large, so a "fully connected" layer requires a very large number of parameters. (Each "neuron" in the first layer requires a weight for every pixel in the image!)
-2. Each learned weight corresponds to specific pixels in the imgae. If the relevant pixels are at a different position in the image, the weights that were learned are not helpful for that other position. (i.e. it is not *spatial translation invariant*.)
+2. Each learned weight corresponds to specific pixels in the image. If the relevant pixels are at a different position in the image, the weights that were learned are not helpful for that other position. (i.e. it is not *spatial translation invariant*.)
 
 ::::
 

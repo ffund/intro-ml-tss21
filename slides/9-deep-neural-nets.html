@@ -227,9 +227,9 @@ training a supervised learning model. But sometimes we can use
 <li>In self-supervised learning, the label can be inferred automatically
 from the unlabeled data. e.g. GPT is trained to predict “next
 word”.</li>
-<li>In semi-supervised/weakly-supervised learning learining, we generate
-labels (probably imperfectly) for unlabeled data (maybe using a smaller
-volume of labeled data to train a model to label the data!)</li>
+<li>In semi-supervised/weakly-supervised learning, we generate labels
+(probably imperfectly) for unlabeled data (maybe using a smaller volume
+of labeled data to train a model to label the data!)</li>
 </ul>
 <p>These are mostly out of scope of this course. But we <em>will</em>
 talk about data augmentation and transfer learning…</p>
@@ -615,7 +615,7 @@ difficult to train a “fully connected” neural network:</p>
 connected” layer requires a very large number of parameters. (Each
 “neuron” in the first layer requires a weight for every pixel in the
 image!)</li>
-<li>Each learned weight corresponds to specific pixels in the imgae. If
+<li>Each learned weight corresponds to specific pixels in the image. If
 the relevant pixels are at a different position in the image, the
 weights that were learned are not helpful for that other position.
 (i.e. it is not <em>spatial translation invariant</em>.)</li>
