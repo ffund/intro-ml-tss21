@@ -964,4 +964,9 @@ What does it mean that we can do this without changing the basic network? It mea
 
 ![Progress on ImageNet.](../images/deep-conv-imagenet.png){ width=80%}
 
+If you want to learn more, including receptive field, 1x1 convolution, and ConvNet architectures, I recommend:
+
+* [Lecture 2A](https://fullstackdeeplearning.com/spring2021/lecture-2a/) and [Lecture 2B](https://fullstackdeeplearning.com/spring2021/lecture-2b/) from FSDL 2021
+* [Chapter 7](https://d2l.ai/chapter_convolutional-neural-networks/index.html) and [Chapter 8](https://d2l.ai/chapter_convolutional-modern/index.html) of Dive into Deep Learning
+
 :::
