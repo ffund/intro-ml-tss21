@@ -51,7 +51,7 @@ At your reserved time (not earlier!), run
 
 
 <pre>
-ssh -i id_rsa_colab -L 127.0.0.1:8888:127.0.0.1:8888 cc@<mark>IP_ADDRESS</mark>
+ssh -i id_rsa_colab -L 127.0.0.1:9000:127.0.0.1:9000 cc@<mark>IP_ADDRESS</mark>
 </pre>
 
 where 
@@ -61,6 +61,10 @@ where
 This will set up a tunnel between your local sytem and the GPU instance. Leave this SSH session running.
 
 Inside the SSH session, run (note: this is all one line):
+
+<pre>
+docker run --gpus=all -p 9000:8080 us-docker.pkg.dev/colab-images/public/runtime
+</pre>
 
 <!--
 Dockerfile:
@@ -78,7 +82,6 @@ RUN pip install --pre --no-cache-dir librosa zeus && \
 ```
 
 docker build -t jupyter-zeus .
--->
 
 <pre>
 docker run -d -p 8888:8888 --rm --gpus all --name jupyter jupyter-zeus
@@ -90,10 +93,12 @@ Finally, run
 docker exec -it jupyter jupyter server list 
 </pre>
 
+-->
+
 In the output of the command above, look for the URL with the token, e.g.:
 
 <pre>
-http://localhost:8888/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark>
+http://127.0.0.1:9000/?token=<mark>0723ea2a17f709d998b52a255066845f00b625814259cfe6</mark>
 </pre>
 
 Copy this URL - you will need it in the next step.
@@ -102,7 +107,7 @@ Now, you can open Colab in a browser. Click on the drop-down menu for "Connect" 
 earlier, which is in the form
 
 <pre>
-http://localhost:8888/?token=<mark>TOKEN</mark>
+http://localhost:9000/?token=<mark>TOKEN</mark>
 </pre>
 
 Click "Connect". Your notebook should now be running on our GPU instance.
@@ -110,6 +115,8 @@ Click "Connect". Your notebook should now be running on our GPU instance.
 ## When you are finished
 
 Your running container will be stopped automatically and your SSH session will be automatically disconnected at the end of your one hour slot.
+
+<!--
 
 ## Addressing common problems
 
@@ -134,7 +141,7 @@ Could not request local forwarding.
 
 **A**: This will happen if you already have something else running on this port on your laptop.  You may need to stop whatever is running on that port locally.
 
-
+-->
 
 <!--
 crontab rules:
