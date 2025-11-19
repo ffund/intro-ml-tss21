@@ -116,6 +116,7 @@ Click "Connect". Your notebook should now be running on our GPU instance.
 
 Your running container will be stopped automatically and your SSH session will be automatically disconnected at the end of your one hour slot.
 
+
 <!--
 
 ## Addressing common problems
