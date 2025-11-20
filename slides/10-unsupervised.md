@@ -277,7 +277,9 @@ and the shared explanatory power came from the relationship *between* features, 
 
 ::: notes
 
-If we would repeat our linear regression lab on PCA-transformed features, we will see the same R2 score on a multiple regression (no loss of information if we keep all PCs!), but each PC will have the same coefficient on the multiple regression as it did on a simple regression.
+If we would repeat our linear regression lab on PCA-transformed features, we will see the same R2 score on a multiple regression (no loss of information if we keep all PCs!) Linear regression is invariant to full rank linear transformation of the data, and that's what PCA is.
+
+But (unlike with original features) each PC will have the same coefficient on the multiple regression as it did on a simple regression.
 
 :::
 
