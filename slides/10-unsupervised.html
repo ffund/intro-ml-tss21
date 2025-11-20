@@ -77,7 +77,7 @@ class="slide level3">
 x_d)\]</span></p>
 <p>We want to learn something about the underlying <em>structure</em> of
 the data.</p>
-<p>No labels!</p>
+<p>No labels! Key issue: objective on which to train.</p>
 <aside class="notes">
 <figure>
 <img data-src="../images/10-unsupervised.png" style="width:55.0%"
@@ -161,8 +161,8 @@ are the vectors on the line spanned by <span
 class="math inline">\(v\)</span>, then <span
 class="math inline">\(\text{Proj}_v (z)\)</span> is the closest vector
 in <span class="math inline">\(V\)</span> to <span
-class="math inline">\(z\)</span>: <span class="math inline">\(\hat{z} =
-\operatorname*{argmin}_{w \in V} || z - w ||^2\)</span>.</p>
+class="math inline">\(z\)</span>: <span class="math inline">\(\hat{z}
+=  \operatorname*{argmin}_{w \in V} || z - w ||^2\)</span>.</p>
 <aside class="notes">
 <figure>
 <img data-src="../images/9-projection.png" style="width:35.0%"
@@ -216,6 +216,8 @@ alt="Pythagorean decomposition. Keeping reconstruction error minimized (on avera
 reconstruction error minimized (on average) is the same as keeping
 variance of projection high (on average).</figcaption>
 </figure>
+<p>It is helpful to think about these as “captured variance in
+projection” vs “lost variance in projection” (reconstruction error).</p>
 <p>The intuition is that, by Pythagorean decomposition: the variance of
 the data (a fixed quantity) is equal to the variance of the projected
 data (which we want to be large) plus the reconstruction error (which we
@@ -341,8 +343,8 @@ v||^2 -1]\]</span></p>
 \implies Qv - \lambda v = 0\]</span></p>
 <p>Therefore, <span class="math inline">\(v\)</span> is an eigenvector
 of <span class="math inline">\(Q\)</span>.</p>
-<p>For a nice, detailed proof of this, I recommend <a
-href="http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf">this
+<p>For a detailed proof of this, see <a
+href="https://www.stat.cmu.edu/~cshalizi/uADA/15/lectures/17.pdf">this
 set of notes</a> by Cosma Shalizi at CMU.</p>
 </aside>
 </section>
@@ -353,14 +355,94 @@ class="slide level3">
 <li>Eigenvectors are orthogonal: <span class="math inline">\(v_j^T v_k =
 0\)</span> if <span class="math inline">\(j \neq k\)</span></li>
 <li>So the projections of the data onto eigenvectors are
-uncorrelated</li>
+uncorrelated:</li>
 </ul>
+<p><span class="math display">\[z_j = X v_j, \quad z_k = X v_k
+\rightarrow Cov(z_j, z_k) = 0 \quad (j \neq k)\]</span></p>
 <aside class="notes">
-<p>These are called the <em>principal components</em></p>
+<p>These projections are called the <em>principal components</em>, and
+we use them to approximate the data.</p>
 </aside>
 </section>
-<section id="pca-intuition-5" class="slide level3">
-<h3>PCA intuition (5)</h3>
+<section id="recall-fwl-theorem" class="slide level3">
+<h3>Recall: FWL theorem</h3>
+<p>In the context of linear regression, we saw:</p>
+<ul>
+<li>a feature may have some independent explanatory power,</li>
+<li>and some shared explanatory power</li>
+</ul>
+<p>and the shared explanatory power came from the relationship
+<em>between</em> features, it exists before we even look at the target
+variable. PCA restructures data so there is no more relationship between
+features.</p>
+<aside class="notes">
+<p>If we would repeat our linear regression lab on PCA-transformed
+features, we will see the same R2 score on a multiple regression (no
+loss of information if we keep all PCs!), but each PC will have the same
+coefficient on the multiple regression as it did on a simple
+regression.</p>
+</aside>
+</section>
+<section id="approximating-data" class="slide level3">
+<h3>Approximating data</h3>
+<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>,
+<span class="math inline">\(i=1, \ldots, N\)</span>, and PCs <span
+class="math inline">\(v_1, \ldots, v_p\)</span>, we can project +
+exactly reconstruct the data:</p>
+<p><span class="math display">\[\widetilde{x}_i = \sum_{j=1}^p (v_j^T
+\widetilde{x}_i) v_j \]</span></p>
+<p>or we can approximate with <em>first</em> <span
+class="math inline">\(d &lt; p\)</span> coefficients:</p>
+<p><span class="math display">\[\hat{x}_i = \sum_{j=1}^d (v_j^T
+\widetilde{x}_i) v_j\]</span></p>
+</section>
+<section id="average-approximation-error" class="slide level3">
+<h3>Average approximation error</h3>
+<p>For sample <span class="math inline">\(i\)</span>, error is:</p>
+<p><span class="math display">\[\widetilde{x}_i - \hat{x}_i =
+\sum_{j=d+1}^p (v_j^T \widetilde{x}_i) v_j\]</span></p>
+<p>which, on average, is sum of smallest <span
+class="math inline">\(p-d\)</span> eigenvalues:</p>
+<p><span class="math display">\[\frac{1}{N} \sum_{i=1}^N
+||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p
+\lambda_j\]</span></p>
+<aside class="notes">
+<p>The projection onto the first principal components carries the most
+information; the projection onto the last principal components carries
+the least. So the error due to missing the last PCs is small!</p>
+</aside>
+<!-- see page 14 of https://www.dcs.bbk.ac.uk/~ale/dsta/dsta-7/zaki-data_mining_and_analysis-ch7.pdf -->
+</section>
+<section id="proportion-of-variance-explained" class="slide level3">
+<h3>Proportion of variance explained</h3>
+<p>The <em>proportion of variance</em> explained by <span
+class="math inline">\(d\)</span> PCs is:</p>
+<p><span class="math display">\[PoV(d) = \frac{\sum_{j=1}^d \lambda_j}
+{\sum_{j=1}^p \lambda_j }\]</span></p>
+<p>where the denominator is variance of projected data: <span
+class="math inline">\(\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 =
+\sum_{j=1}^p \lambda_j\)</span></p>
+<aside class="notes">
+<p>If we would repeat our linear regression lab on PCA-transformed
+features, we will see the same R2 score on a multiple regression (no
+loss of information!), but each PC will have the same coefficient on the
+multiple regression as it did on a simple regression.</p>
+</aside>
+<!--
+
+### PCA demo
+
+[Notebook link](https://colab.research.google.com/drive/18mMQF9VK8A7ehR1v8G4k5yiopoHsptNv)
+
+
+### PCA reference
+
+Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf)
+
+-->
+</section>
+<section id="pca-intuition-4" class="slide level3">
+<h3>PCA intuition (4)</h3>
 <figure>
 <img data-src="../images/pca-animation.gif" style="width:50.0%"
 alt="In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). View animation here." />
@@ -374,8 +456,8 @@ href="https://stats.stackexchange.com/a/140579/41284">View animation
 here.</a></figcaption>
 </figure>
 </section>
-<section id="pca-in-summary-1" class="slide level3">
-<h3>PCA in summary (1)</h3>
+<section id="pca-in-summary" class="slide level3">
+<h3>PCA in summary</h3>
 <p>Given high-dimensional data,</p>
 <ol type="1">
 <li>Center data (remove mean)</li>
@@ -397,57 +479,6 @@ alt="PCA summary." />
 <figcaption aria-hidden="true">PCA summary.</figcaption>
 </figure>
 </aside>
-</section>
-<section id="approximating-data" class="slide level3">
-<h3>Approximating data</h3>
-<p>Given data <span class="math inline">\(\widetilde{x}_i\)</span>,
-<span class="math inline">\(i=1, \ldots, N\)</span>, and PCs <span
-class="math inline">\(v_1, \ldots, v_p\)</span>, we can project + then
-reconstruct the data:</p>
-<p><span class="math display">\[\widetilde{x}_i = \sum_{j=1}^p (v_j^T
-\widetilde{x}_i) v_j \]</span></p>
-<p>Consider approximation with <em>first</em> <span
-class="math inline">\(d &lt; p\)</span> coefficients:</p>
-<p><span class="math display">\[\hat{x}_i = \sum_{j=1}^d (v_j^T
-\widetilde{x}_i) v_j\]</span></p>
-</section>
-<section id="average-approximation-error" class="slide level3">
-<h3>Average approximation error</h3>
-<p>For sample <span class="math inline">\(i\)</span>, error is:</p>
-<p><span class="math display">\[\widetilde{x}_i - \hat{x}_i =
-\sum_{j=d+1}^p (v_j^T \widetilde{x}_i) v_j\]</span></p>
-<aside class="notes">
-<p>The projection onto the first principal components carries the most
-information; the projection onto the last principal components carries
-the least. So the error due to missing the last PCs is small!</p>
-</aside>
-<!--
-which, on average, is sum of smallest $p-d$ eigenvalues:
-
-$$\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \lambda_j$$ -->
-<!-- see page 14 of https://www.dcs.bbk.ac.uk/~ale/dsta/dsta-7/zaki-data_mining_and_analysis-ch7.pdf -->
-</section>
-<section id="proportion-of-variance-explained" class="slide level3">
-<h3>Proportion of variance explained</h3>
-<p>The <em>proportion of variance</em> explained by <span
-class="math inline">\(d\)</span> PCs is:</p>
-<p><span class="math display">\[PoV(d) = \frac{\sum_{j=1}^d \lambda_j}
-{\sum_{j=1}^p \lambda_j }\]</span></p>
-<p>where the denominator is variance of projected data: <span
-class="math inline">\(\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 =
-\sum_{j=1}^p \lambda_j\)</span></p>
-<!--
-
-### PCA demo
-
-[Notebook link](https://colab.research.google.com/drive/18mMQF9VK8A7ehR1v8G4k5yiopoHsptNv)
-
-
-### PCA reference
-
-Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf)
-
--->
 </section></section>
 <section>
 <section id="clustering" class="title-slide slide level2">
@@ -472,14 +503,17 @@ class="math inline">\(\sigma_n = \sigma_m\)</span></p></li>
 <section id="k-means-clustering" class="slide level3">
 <h3>K-means clustering</h3>
 <p>We want to minimize</p>
-<p><span class="math display">\[J = \sum_{i=1}^K \sum_{n\in C_i} || x_n
-- \mu_j || ^2 \]</span></p>
+<p><span class="math display">\[J = \sum_{i=1}^K \sum_{n \in C_i} \lVert
+x_n - \mu_i \rVert^2\]</span></p>
 <ul>
-<li><span class="math inline">\(u_i\)</span> is the mean of each
-cluster</li>
+<li><span class="math inline">\(\mu_i\)</span> is the mean (centroid) of
+cluster <span class="math inline">\(i\)</span></li>
 <li><span class="math inline">\(\sigma_n \in \{1, \ldots, K\}\)</span>
-is the cluster that <span class="math inline">\(x_n\)</span> belongs
-to</li>
+is the cluster label assigned to <span
+class="math inline">\(x_n\)</span></li>
+<li><span class="math inline">\(C_i = \{n : \sigma_n = i\}\)</span> is
+the set of points assigned to cluster <span
+class="math inline">\(i\)</span></li>
 </ul>
 <!-- _
 ![Clustering objective.](../images/10-clustering-objective.png){ width=70% }
@@ -509,6 +543,16 @@ class="math inline">\(C_i\)</span></li>
 style="width:90.0%" alt="K-means clustering." />
 <figcaption aria-hidden="true">K-means clustering.</figcaption>
 </figure>
+<p>K-means can be viewed as an example of the more general
+<em>expectation–maximization</em> (EM) approach. We assume each sample
+belongs to some hidden category (in K-means, it’s cluster), and we
+alternate between guessing and updating. But,</p>
+<ul>
+<li>K-means makes hard assignments (each point is in exactly one
+cluster).</li>
+<li>More general EM algorithms make soft assignments - estimate
+probabilities of belonging.</li>
+</ul>
 </aside>
 </section>
 <section id="k-means-visualization" class="slide level3">
@@ -559,11 +603,10 @@ class="slide level3">
 <h3>Dimensionality reduction using an autoencoder</h3>
 <p>An <em>autoencoder</em> is a learner that includes:</p>
 <ul>
-<li>Encoder: produces low-dimensional representation of input, <span
+<li>Encoder: produces a representation of input, <span
 class="math inline">\(x \rightarrow z\)</span></li>
-<li>Decoder: reconstructs an estimate of input from the low-dimensional
-representation, <span class="math inline">\(z \rightarrow
-\hat{x}\)</span></li>
+<li>Decoder: reconstructs an estimate of input from the representation,
+<span class="math inline">\(z \rightarrow \hat{x}\)</span></li>
 <li><span class="math inline">\(z\)</span> known as <em>latent
 variables</em>, <em>latent representation</em>, or <em>code</em></li>
 </ul>
@@ -600,8 +643,8 @@ class="math inline">\(k\times d\)</span> matrix of cluster centers.</li>
 <section id="k-means-as-an-autoencoder-3" class="slide level3">
 <h3>K-means as an autoencoder (3)</h3>
 <ul>
-<li>Encoder performs non-linear mapping, expresses result as one-hot
-vector in <span class="math inline">\(Z\)</span>.</li>
+<li>Encoder performs mapping, expresses result as one-hot vector in
+<span class="math inline">\(Z\)</span>.</li>
 <li>Decoder is linear:</li>
 </ul>
 <p><span class="math display">\[X\approx \hat{X} = ZD\]</span></p>
@@ -658,78 +701,60 @@ non-linear features</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/10-neural-autoencoder.png" style="width:70.0%"
+<img data-src="../images/10-neural-autoencoder.png" style="width:50.0%"
 alt="Neural autoencoder." />
 <figcaption aria-hidden="true">Neural autoencoder.</figcaption>
 </figure>
-<p>What should the architecture of the network be?</p>
+<p>What should the architecture of the network be? We want to make sure
+it doesn’t just learn the identify function - we need it to learn a
+useful</p>
 </aside>
 </section>
-<section id="overcomplete-autoencoder" class="slide level3">
-<h3>Overcomplete autoencoder</h3>
-<figure>
-<img data-src="../images/overcomplete-autoencoder.svg"
-style="width:30.0%"
-alt="If we train this network to minimize reconstruction loss, it may literally learn the identity function - not useful." />
-<figcaption aria-hidden="true">If we train this network to minimize
-reconstruction loss, it may literally learn the identity function - not
-useful.</figcaption>
-</figure>
-</section>
-<section id="undercomplete-autoencoder" class="slide level3">
-<h3>Undercomplete autoencoder</h3>
-<figure>
-<img data-src="../images/undercomplete-autoencoder.svg"
-style="width:30.0%"
-alt="Is this network forced to learn a low-dimensional representation?" />
-<figcaption aria-hidden="true">Is this network forced to learn a
-low-dimensional representation?</figcaption>
-</figure>
-</section>
-<section id="sparse-autoencoder-1" class="slide level3">
-<h3>Sparse autoencoder (1)</h3>
+<section id="learning-a-useful-representation" class="slide level3">
+<h3>Learning a useful representation</h3>
 <ul>
-<li>Does a small “bottleneck” force autoencoder to learn useful latent
-features?</li>
-<li>Even if “bottleneck” is very small, can still memorize data by
-encoding index</li>
-<li>Instead of limiting number of hidden nodes, add a penalty function
-on <em>activations</em></li>
+<li>Undercomplete autoencoder: make latent dimension smaller than
+input</li>
+<li>Denoising: input <span class="math inline">\(\tilde{x} = x +
+\text{noise}\)</span>, target <span
+class="math inline">\(x\)</span></li>
+<li>Variational autoencoder: encoder outputs a distribution, latent
+vector sampled from it, and loss includes reconstruction + penalty
+enforcing smooth latent representation</li>
 </ul>
-<!-- https://www.jeremyjordan.me/autoencoders/ -->
-</section>
-<section id="sparse-autoencoder-2" class="slide level3">
-<h3>Sparse autoencoder (2)</h3>
-<p>Allow many hidden units, but for a given input, most of them must
-produce a very small activation.</p>
-<ul>
-<li>Add penalty term to loss function, like regularization, but not on
-weights!</li>
-<li>Penalty is on average activation value (over all the training
-samples)</li>
-</ul>
-</section>
-<section id="autoencoder-comparison" class="slide level3">
-<h3>Autoencoder comparison</h3>
-<ul>
-<li><strong>Undercomplete autoencoder</strong>: uses entire network for
-each sample. Limits capacity to memorize, but also limits capacity to
-extract complex features.</li>
-<li><strong>Sparse autoencoder</strong>: different parts of network can
-“specialize” depending on input. Limits capacity to memorize, but can
-still extract complex features.</li>
-</ul>
-</section>
-<section id="what-are-autoencoders-good-for" class="slide level3">
-<h3>What are autoencoders good for?</h3>
-<ul>
-<li>Not typically useful for compression - too data-specific</li>
-<li>Can use to initialize supervised learning model - throw away
-decoder, fine-tune with classifier</li>
-<li>Can use for dimensionality reduction for data visualization (often
-in combination with other unsupervised learning methods)</li>
-<li>Can use for data denoising</li>
-</ul>
+<aside class="notes">
+<p>The bottleneck approach is less central in modern deep learning
+autoencoders — instead we rely more on regularization strategies like
+denoising or VAEs. (In the special case of a linear encoder/decoder and
+MSE loss, an undercomplete autoencoder reduces to PCA.)</p>
+<p>Denoising autoencoders are used to clean up inputs - e.g. remove
+noise from audio in a Zoom call.</p>
+<p>VAEs are used for generative modeling - e.g., creating new images by
+sampling from the latent space.</p>
+</aside>
+<!-- 
+### Overcomplete autoencoder
+
+![If we train this network to minimize reconstruction loss, it may literally learn the identity function - not useful.](../images/overcomplete-autoencoder.svg){ width=30% }
+
+### Undercomplete autoencoder
+
+![Is this network forced to learn a low-dimensional representation?](../images/undercomplete-autoencoder.svg){ width=30% }
+
+
+
+### Sparse autoencoder (2)
+
+Allow many hidden units, but for a given input, most of them must produce a very small activation.
+
+* Add penalty term to loss function, like regularization, but not on weights!
+* Penalty is on average activation value (over all the training samples)
+
+* **Undercomplete autoencoder**: uses entire network for each sample. Limits capacity to memorize, but also limits capacity to extract complex features.
+* **Sparse autoencoder**: different parts of network can "specialize" depending on input. Limits capacity to memorize, but can still extract complex features.
+
+
+-->
 <!--
 ### Autoencoder demo
 
@@ -758,6 +783,102 @@ alt="Image via Hinton et al “Reducing the dimensionality of data with neural n
 dimensionality of data with neural networks”, Science,
 2006.</figcaption>
 </figure>
+</section></section>
+<section>
+<section id="word-embedding" class="title-slide slide level2">
+<h2>Word embedding</h2>
+
+</section>
+<section id="converting-text-to-numeric-representation"
+class="slide level3">
+<h3>Converting text to numeric representation</h3>
+<ul>
+<li><strong>Step 1</strong>: Split into tokens (e.g. word, partial
+words)</li>
+<li><strong>Step 2</strong>: Assign ID to each token</li>
+</ul>
+<aside class="notes">
+<p>Now we have a sequence of integers. But token 7 isn’t “closer” to
+token 8 than token 300.</p>
+</aside>
+</section>
+<section id="bag-of-words-and-tfidf" class="slide level3">
+<h3>Bag of words and TF/IDF</h3>
+<p>We learned how to represent a document as a vector of counts:</p>
+<ul>
+<li><strong>Bag of Words</strong>: count how many times each word/token
+appears</li>
+<li><strong>TF-IDF</strong>: down-weight common words</li>
+</ul>
+<aside class="notes">
+<p>This is a sum of one-hot encodings of token IDs in the document. But
+it’s not a great representation:</p>
+<ul>
+<li>very high-dimensional, sparse</li>
+<li>cannot generalize to new words not in training set (cannot recognize
+that )</li>
+<li>no “similarlity” - model would have to learn same pattern for every
+synonym</li>
+</ul>
+</aside>
+</section>
+<section id="word-embedding-as-a-latent-representation"
+class="slide level3">
+<h3>Word embedding as a latent representation</h3>
+<p>Representation that is:</p>
+<ul>
+<li>learned from data</li>
+<li>low dimension (much smaller than vocab size)</li>
+<li>encodes meaningful relationships</li>
+</ul>
+<aside class="notes">
+<p>An autoencoder is a general tool for learning latent representations
+in any domain (images, audio, etc.) - a word embedding learns a
+representation. But, in order to make it learn meaningful relationships,
+we don’t train it to reconstruct the input!</p>
+</aside>
+</section>
+<section id="training-a-word-embedding-model-using-context"
+class="slide level3">
+<h3>Training a word embedding model using context</h3>
+<ul>
+<li>CBOW: predict <em>center</em> word from <em>context</em></li>
+<li>Skip gram: predict <em>context</em> from <em>center</em> word</li>
+<li>Negative sampling: classifier of real vs. noise context pairs</li>
+</ul>
+<aside class="notes">
+<p>Example: <strong>Cats chase playful mice</strong></p>
+<ul>
+<li>Tokenized: <code>["cats", "chase", "playful", "mice"]</code></li>
+<li>CBOW with context window 1: given context
+<code>["cats", "playful"]</code>, predict <code>"chase"</code></li>
+<li>Skip gram: given <code>"chase"</code>, predict targets
+<code>"cats"</code>, <code>"playful"</code></li>
+<li>Negative sampling: predict **positive* for the pair
+<code>("chase", "playful")</code> and <em>negative</em> for these random
+wrong pairs <code>("chase", "banana")</code>,
+<code>("chase", "calendar")</code>, <code>("chase", "socks")</code>.
+(This is much easier than computing probabilities over entire
+vocabulary, like with the original skip gram.)</li>
+</ul>
+<p>Words that are similar end up near one another in the latent space.
+So, even if I have not learned that e.g. “dogs chase”, if I have learned
+that cats and dogs are generally similar (and near one another in the
+latent space) then I can probably predict “dogs chase”</p>
+</aside>
+</section>
+<section id="other-domains" class="slide level3">
+<h3>Other domains</h3>
+<aside class="notes">
+<p>Embeddings are everywhere! the key is to figure out how to train
+them.</p>
+<ul>
+<li>image embedding: can train by “masking” part of the image, and
+training to predict that part</li>
+<li>image + text: predict if image/caption pair is positive or
+negative</li>
+</ul>
+</aside>
 </section></section>
 <section>
 <section id="density-estimation" class="title-slide slide level2">

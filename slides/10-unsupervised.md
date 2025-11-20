@@ -33,7 +33,7 @@ $$\mathbf{x} = (x_1, x_2,..., x_d)$$
 
 We want to learn something about the underlying *structure* of the data.
 
-No labels!
+No labels! Key issue: objective on which to train.
 
 ::: notes
 
@@ -139,7 +139,11 @@ Suppose we have a zero-centered data set ($\bar{x} = 0$) and consider a single d
 
 ![Pythagorean decomposition. Keeping reconstruction error minimized (on average) is the same as keeping variance of projection high (on average).](../images/9-pythagorean.png){ width=50% }
 
+It is helpful to think about these as "captured variance in projection" vs "lost variance in projection" (reconstruction error).
+
+
 The intuition is that, by Pythagorean decomposition: the variance of the data (a fixed quantity) is equal to the variance of the projected data (which we want to be large) plus the reconstruction error (which we want to be small).
+
 
 <!--
 OR, you can think of it as: data variance = remaining variance + lost variance!
@@ -243,7 +247,7 @@ $$\frac{\partial L}{\partial v} = 0 \implies Qv - \lambda v = 0$$
 
 Therefore, $v$ is an eigenvector of $Q$.
 
-For a nice, detailed proof of this, I recommend [this set of notes](http://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf) by Cosma Shalizi at CMU.
+For a detailed proof of this, see [this set of notes](https://www.stat.cmu.edu/~cshalizi/uADA/15/lectures/17.pdf) by Cosma Shalizi at CMU.
 
 :::
 
@@ -251,25 +255,102 @@ For a nice, detailed proof of this, I recommend [this set of notes](http://www.s
 ### Projections onto eigenvectors: uncorrelated features
 
 * Eigenvectors are orthogonal: $v_j^T v_k = 0$ if $j \neq k$
-* So the projections of the data onto eigenvectors are uncorrelated
+* So the projections of the data onto eigenvectors are uncorrelated:  
+
+$$z_j = X v_j, \quad z_k = X v_k \rightarrow Cov(z_j, z_k) = 0 \quad (j \neq k)$$
 
 
 ::: notes
  
- These are called the _principal components_
+ These projections are called the _principal components_, and we use them to approximate the data.
  
 ::: 
 
+### Recall: FWL theorem
 
+In the context of linear regression, we saw:
 
-### PCA intuition (5)
+* a feature may have some independent explanatory power,
+* and some shared explanatory power
 
-![In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). [View animation here.](https://stats.stackexchange.com/a/140579/41284)](../images/pca-animation.gif){ width=50% }
+and the shared explanatory power came from the relationship *between* features, it exists before we even look at the target variable. PCA restructures data so there is no more relationship between features.
+
+::: notes
+
+If we would repeat our linear regression lab on PCA-transformed features, we will see the same R2 score on a multiple regression (no loss of information if we keep all PCs!), but each PC will have the same coefficient on the multiple regression as it did on a simple regression.
+
+:::
 
 \newpage
 
 
-### PCA in summary (1)
+### Approximating data
+
+Given data $\widetilde{x}_i$, $i=1, \ldots, N$, and PCs $v_1, \ldots, v_p$, we can project + exactly reconstruct the data:
+
+$$\widetilde{x}_i = \sum_{j=1}^p (v_j^T \widetilde{x}_i) v_j $$
+
+or we can approximate with *first* $d < p$ coefficients: 
+
+$$\hat{x}_i = \sum_{j=1}^d (v_j^T \widetilde{x}_i) v_j$$
+
+### Average approximation error
+
+For sample $i$, error is:
+
+$$\widetilde{x}_i - \hat{x}_i = \sum_{j=d+1}^p (v_j^T \widetilde{x}_i) v_j$$
+
+which, on average, is sum of smallest $p-d$ eigenvalues:
+
+$$\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \lambda_j$$
+
+
+::: notes
+
+
+The projection onto the first principal components carries the most information; the projection onto the last principal components carries the least. So the error due to missing the last PCs is small!
+
+:::
+
+
+<!-- see page 14 of https://www.dcs.bbk.ac.uk/~ale/dsta/dsta-7/zaki-data_mining_and_analysis-ch7.pdf -->
+
+### Proportion of variance explained
+
+The *proportion of variance* explained by $d$ PCs is:
+
+$$PoV(d) = \frac{\sum_{j=1}^d \lambda_j} {\sum_{j=1}^p \lambda_j }$$
+
+where the denominator is variance of projected data:  $\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 = \sum_{j=1}^p \lambda_j$
+
+::: notes
+
+If we would repeat our linear regression lab on PCA-transformed features, we will see the same R2 score on a multiple regression (no loss of information!), but each PC will have the same coefficient on the multiple regression as it did on a simple regression.
+
+:::
+
+
+<!--
+
+### PCA demo
+
+[Notebook link](https://colab.research.google.com/drive/18mMQF9VK8A7ehR1v8G4k5yiopoHsptNv)
+
+
+### PCA reference
+
+Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf)
+
+--> 
+
+\newpage
+
+
+### PCA intuition (4)
+
+![In the animation, gray and black lines form a rotating coordinate frame. When variance of projection is maximized, the black line points in direction of first eigenvector of covariance matrix (direction of maximum variance of the data), and grey line points toward second eigenvector (direction of second-most variance of the data). [View animation here.](https://stats.stackexchange.com/a/140579/41284)](../images/pca-animation.gif){ width=50% }
+
+### PCA in summary
 
 
 Given high-dimensional data,
@@ -291,61 +372,12 @@ Note: in practice, we compute PCA using singular value decomposition (SVD) which
 ![PCA summary.](../images/10-pca-summary.png){ width=70% }
 
 :::
+
+
+
+
 \newpage
 
-
-### Approximating data
-
-Given data $\widetilde{x}_i$, $i=1, \ldots, N$, and PCs $v_1, \ldots, v_p$, we can project + then reconstruct the data:
-
-$$\widetilde{x}_i = \sum_{j=1}^p (v_j^T \widetilde{x}_i) v_j $$
-
-Consider approximation with *first* $d < p$ coefficients: 
-
-$$\hat{x}_i = \sum_{j=1}^d (v_j^T \widetilde{x}_i) v_j$$
-
-### Average approximation error
-
-For sample $i$, error is:
-
-$$\widetilde{x}_i - \hat{x}_i = \sum_{j=d+1}^p (v_j^T \widetilde{x}_i) v_j$$
-
-
-::: notes
-
-The projection onto the first principal components carries the most information; the projection onto the last principal components carries the least. So the error due to missing the last PCs is small!
-
-:::
-
-<!--
-which, on average, is sum of smallest $p-d$ eigenvalues:
-
-$$\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i - \hat{x}_i||^2 = \sum_{j=d+1}^p \lambda_j$$ -->
-
-<!-- see page 14 of https://www.dcs.bbk.ac.uk/~ale/dsta/dsta-7/zaki-data_mining_and_analysis-ch7.pdf -->
-
-### Proportion of variance explained
-
-The *proportion of variance* explained by $d$ PCs is:
-
-$$PoV(d) = \frac{\sum_{j=1}^d \lambda_j} {\sum_{j=1}^p \lambda_j }$$
-
-where the denominator is variance of projected data:  $\frac{1}{N} \sum_{i=1}^N ||\widetilde{x}_i||^2 = \sum_{j=1}^p \lambda_j$
-
-<!--
-
-### PCA demo
-
-[Notebook link](https://colab.research.google.com/drive/18mMQF9VK8A7ehR1v8G4k5yiopoHsptNv)
-
-
-### PCA reference
-
-Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/uADA/12/lectures/ch18.pdf)
-
---> 
-
-\newpage
 
 
 ## Clustering
@@ -363,11 +395,12 @@ Excellent set of notes on the topic: [Link](https://www.stat.cmu.edu/~cshalizi/u
 
 We want to minimize 
 
-$$J = \sum_{i=1}^K \sum_{n\in C_i} || x_n - \mu_j || ^2 $$
 
+$$J = \sum_{i=1}^K \sum_{n \in C_i} \lVert x_n - \mu_i \rVert^2$$
 
-* $u_i$ is the mean of each cluster
-* $\sigma_n \in \{1, \ldots, K\}$ is the cluster that $x_n$ belongs to 
+* $\mu_i$ is the mean (centroid) of cluster $i$
+* $\sigma_n \in \{1, \ldots, K\}$ is the cluster label assigned to $x_n$
+* $C_i = \{n : \sigma_n = i\}$ is the set of points assigned to cluster $i$
 
 <!-- _
 ![Clustering objective.](../images/10-clustering-objective.png){ width=70% }
@@ -389,7 +422,13 @@ $$\sigma_n = \operatorname*{argmin}_i ||x_n - \mu_i||^2$$
 
 :::notes
 
+
 ![K-means clustering.](../images/10-clustering-algorithm.png){width=90%}
+
+K-means can be viewed as an example of the more general *expectation–maximization* (EM) approach. We assume each sample belongs to some hidden category (in K-means, it's cluster), and we alternate between guessing and updating. But,
+
+* K-means makes hard assignments (each point is in exactly one cluster).
+* More general EM algorithms make soft assignments - estimate probabilities of belonging.
 
 :::
 
@@ -436,8 +475,8 @@ This week: deep unsupervised learning
 
 An *autoencoder* is a learner that includes:
 
-* Encoder: produces low-dimensional representation of input, $x \rightarrow z$
-* Decoder: reconstructs an estimate of input from the low-dimensional representation, $z \rightarrow \hat{x}$
+* Encoder: produces a representation of input, $x \rightarrow z$
+* Decoder: reconstructs an estimate of input from the representation, $z \rightarrow \hat{x}$
 * $z$ known as *latent variables*, *latent representation*, or *code*
 
 :::notes
@@ -460,7 +499,7 @@ An *autoencoder* is a learner that includes:
 
 ### K-means as an autoencoder (3)
 
-* Encoder performs non-linear mapping, expresses result as one-hot vector in $Z$.
+* Encoder performs mapping, expresses result as one-hot vector in $Z$.
 * Decoder is linear: 
 
 $$X\approx \hat{X} = ZD$$
@@ -499,14 +538,30 @@ Note: $Z$ was $n \times k$, $D$ was $k \times d$, so $ZD$ will be $n \times d$.
 
 ::: notes
 
-![Neural autoencoder.](../images/10-neural-autoencoder.png){ width=70% }
+![Neural autoencoder.](../images/10-neural-autoencoder.png){ width=50% }
 
-What should the architecture of the network be?
+What should the architecture of the network be? We want to make sure it doesn't just learn the identify function - we need it to learn a useful 
 
 :::
 
-\newpage
+### Learning a useful representation
 
+* Undercomplete autoencoder: make latent dimension smaller than input
+* Denoising: input $\tilde{x} = x + \text{noise}$, target $x$
+* Variational autoencoder: encoder outputs a distribution, latent vector sampled from it, and loss includes reconstruction + penalty enforcing smooth latent representation
+
+::: notes
+
+The bottleneck approach is less central in modern deep learning autoencoders — instead we rely more on regularization strategies like denoising or VAEs.
+(In the special case of a linear encoder/decoder and MSE loss, an undercomplete autoencoder reduces to PCA.)
+
+Denoising autoencoders are used to clean up inputs - e.g. remove noise from audio in a Zoom call.
+
+VAEs are used for generative modeling - e.g., creating new images by sampling from the latent space.
+
+:::
+
+<!-- 
 ### Overcomplete autoencoder
 
 ![If we train this network to minimize reconstruction loss, it may literally learn the identity function - not useful.](../images/overcomplete-autoencoder.svg){ width=30% }
@@ -517,14 +572,6 @@ What should the architecture of the network be?
 
 
 
-### Sparse autoencoder (1)
-
-* Does a small "bottleneck" force autoencoder to learn useful latent features?
-* Even if "bottleneck" is very small, can still memorize data by encoding index
-* Instead of limiting number of hidden nodes, add a penalty function on *activations*
-
-<!-- https://www.jeremyjordan.me/autoencoders/ -->
-
 ### Sparse autoencoder (2)
 
 Allow many hidden units, but for a given input, most of them must produce a very small activation.
@@ -532,19 +579,14 @@ Allow many hidden units, but for a given input, most of them must produce a very
 * Add penalty term to loss function, like regularization, but not on weights!
 * Penalty is on average activation value (over all the training samples)
 
-\newpage
-
-### Autoencoder comparison
-
 * **Undercomplete autoencoder**: uses entire network for each sample. Limits capacity to memorize, but also limits capacity to extract complex features.
 * **Sparse autoencoder**: different parts of network can "specialize" depending on input. Limits capacity to memorize, but can still extract complex features.
 
-### What are autoencoders good for?
 
-* Not typically useful for compression - too data-specific
-* Can use to initialize supervised learning model - throw away decoder, fine-tune with classifier
-* Can use for dimensionality reduction for data visualization (often in combination with other unsupervised learning methods)
-* Can use for data denoising
+-->
+
+\newpage
+
 
 <!--
 ### Autoencoder demo
@@ -563,6 +605,80 @@ Allow many hidden units, but for a given input, most of them must produce a very
 
 
 
+\newpage
+
+## Word embedding
+
+### Converting text to numeric representation
+
+* **Step 1**: Split into tokens (e.g. word, partial words)
+* **Step 2**: Assign ID to each token 
+
+::: notes
+
+Now we have a sequence of integers. But token 7 isn’t "closer" to token 8 than token 300.
+
+:::
+
+### Bag of words and TF/IDF
+
+We learned how to represent a document as a vector of counts:
+
+* **Bag of Words**: count how many times each word/token appears
+* **TF-IDF**: down-weight common words 
+
+::: notes
+
+This is a sum of one-hot encodings of token IDs in the document. But it's not a great representation:
+
+* very high-dimensional, sparse
+* cannot generalize to new words not in training set (cannot recognize that )
+* no "similarlity" - model would have to learn same pattern for every synonym 
+
+:::
+
+### Word embedding as a latent representation
+
+Representation that is:
+
+* learned from data
+* low dimension (much smaller than vocab size)
+* encodes meaningful relationships
+
+::: notes
+
+An autoencoder is a general tool for learning latent representations in any domain (images, audio, etc.) - a word embedding learns a representation. But, in order to make it learn meaningful relationships, we don't train it to reconstruct the input!
+
+:::
+
+### Training a word embedding model using context
+
+* CBOW: predict *center* word from *context*
+* Skip gram: predict *context* from *center* word
+* Negative sampling: classifier of real vs. noise context pairs
+
+::: notes
+
+Example: **Cats chase playful mice**
+
+* Tokenized: `["cats", "chase", "playful", "mice"]`
+* CBOW with context window 1: given context `["cats", "playful"]`, predict `"chase"`
+* Skip gram: given `"chase"`, predict targets `"cats"`, `"playful"`
+* Negative sampling: predict **positive* for the pair `("chase", "playful")` and *negative* for these random wrong pairs `("chase", "banana")`, `("chase", "calendar")`, `("chase", "socks")`. (This is much easier than computing probabilities over entire vocabulary, like with the original skip gram.)
+
+Words that are similar end up near one another in the latent space. So, even if I have not learned that e.g. "dogs chase", if I have learned that cats and dogs are generally similar (and near one another in the latent space) then I can probably predict "dogs chase"
+
+:::
+
+### Other domains
+
+::: notes
+
+Embeddings are everywhere! the key is to figure out how to train them.
+
+* image embedding: can train by "masking" part of the image, and training to predict that part
+* image + text: predict if image/caption pair is positive or negative
+:::
 
 
 \newpage
