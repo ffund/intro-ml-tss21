@@ -495,7 +495,7 @@ An *autoencoder* is a learner that includes:
 
 ### K-means as an autoencoder (2)
 
-* Let $X\in \mathbb{R}^{n\times d}$ be the data matrix containg $n$ $d$-dimensional data points. 
+* Let $X\in \mathbb{R}^{n\times d}$ be the data matrix containing $n$ $d$-dimensional data points. 
 * Let $Z$ be a $n\times k$ matrix (if $k$ clusters) where each entry is all zeros, except for one 1
 * Let $D$ be a $k\times d$ matrix of cluster centers.
 
