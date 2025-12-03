@@ -119,6 +119,7 @@
       <td>ESL: Sec. 13.3–13.5</td>
       <td>
         <a href="https://www.youtube.com/watch?v=HVXime0nQeI">K-nearest neighbors, Clearly Explained</a>
+      </td>
     </tr>
     <tr>
       <td><b>Decision trees and ensembles</b></td>
@@ -218,7 +219,9 @@
         Expectation of random variables<br>
         Conditional probability
       </td>
-      <td>—</td>
+      <td>
+      RL: Sec. 2.1, 2.2, 2.4, 2.5, 2.8, 6.1, 6.5
+      </td>
       <td>
         <a href="https://www.youtube.com/watch?v=Z-T0iJEXiwM">Reinforcement Learning: Essential Concepts</a><br>
       </td>
@@ -234,4 +237,5 @@
   <li><b>ESL</b> – <i>Elements of Statistical Learning</i> (Hastie, Tibshirani, Friedman)</li>
   <li><b>PRML</b> – <i>Pattern Recognition and Machine Learning</i> (Bishop)</li>
   <li><b>IALA</b> – <i>Introduction to Applied Linear Algebra</i> (Boyd &amp; Vandenberghe)</li>
+  <li><b>RL</b> – <i>Reinforcement Learning: An Introduction</i> (Sutton &amp; Barto)</li>
 </ul>
