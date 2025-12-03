@@ -8,6 +8,7 @@
       <th>Topic</th>
       <th>Math prerequisites</th>
       <th>Textbook references</th>
+      <th>StatQuest videos</th>
     </tr>
   </thead>
   <tbody>
@@ -25,6 +26,11 @@
         PRML: Sec. 3.1.1<br>
         IALA: Sec. 12.2 (OLS derivation)
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=nk2CQITm_eo">Linear regression, clearly explained!!!</a><br>
+        <a href="https://www.youtube.com/watch?v=zITIFTsivN8">Multiple regression, clearly explained!!!</a><br>
+        <a href="https://www.youtube.com/watch?v=wl1myxrtQHQ">The Chain Rule</a>
+      </td>
     </tr>
     <tr>
       <td><b>Gradient descent</b></td>
@@ -33,6 +39,9 @@
         Complexity of algorithms, especially vector/matrix operations (IALA App. B, I.1, II.6)
       </td>
       <td>PRML: Sec. 3.1.3 Sequential learning</td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=sDv4f4s2SB8">Gradient descent, step-by-step</a>
+      </td>
     </tr>
     <tr>
       <td><b>Error decomposition and bias–variance tradeoff</b></td>
@@ -45,6 +54,9 @@
         ESL: Sec. 2.9; Ch. 7<br>
         PRML: Sec. 3.2
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=EuBBz3bI-aA">Machine Learning Fundamentals: Bias and Variance</a>
+        </td>
     </tr>
     <tr>
       <td><b>Model selection</b></td>
@@ -54,6 +66,9 @@
         ESL: Ch. 7<br>
         PRML: Sec. 1.3
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=fSytzGwwBVw">Cross validation</a>
+        </td>
     </tr>
     <tr>
       <td><b>Regularization</b></td>
@@ -65,6 +80,11 @@
         ISL: Sec. 6.2<br>
         PRML: Sec. 3.1.4
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=Q81RR3yKn30">Ridge regression (L2 regularization)</a><br>
+        <a href="https://www.youtube.com/watch?v=NGf0voTMlcs">Lasso regression (L1 regularization)</a><br>
+        <a href="https://www.youtube.com/watch?v=1dKRdX9bfIo">Elasticnet regression (L1 and L2)</a>
+        </td>
     </tr>
     <tr>
       <td><b>Logistic regression</b></td>
@@ -79,6 +99,15 @@
         ISL: Sec. 4.3<br>
         PRML: Sec. 4.3.2, Sec. 4.3.4
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=yIYKR4sgzI8">Logistic Regression</a><br>
+        <a href="https://www.youtube.com/watch?v=vN5cNN2-HWE">Logistic Regression Details Pt1: Coefficients</a><br>
+        <a href="https://www.youtube.com/watch?v=BfKanl1aSG0">Logistic Regression Details Pt 2: Maximum Likelihood</a><br>
+        <a href="https://www.youtube.com/watch?v=ARfXDSkQf1Y">Odds and Log(Odds), Clearly Explained!!!</a><br>
+        <a href="https://www.youtube.com/watch?v=4jRBRDbJemM">ROC and AUC, Clearly Explained!</a><br>
+        <a href="https://www.youtube.com/watch?v=Kdsp6soqA7o">Confusion matrix</a><br>
+        <a href="https://www.youtube.com/watch?v=vP06aMoz4v8">Sensitivity and Specificity</a>
+        </td>
     </tr>
     <tr>
       <td><b>K-nearest neighbor</b></td>
@@ -88,6 +117,8 @@
         Independence of random variables
       </td>
       <td>ESL: Sec. 13.3–13.5</td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=HVXime0nQeI">K-nearest neighbors, Clearly Explained</a>
     </tr>
     <tr>
       <td><b>Decision trees and ensembles</b></td>
@@ -99,6 +130,14 @@
       <td>
         ISL: Ch. 8<br>
         ESL: Sec. 9.2; Ch. 10; Ch. 15
+      </td>
+      <td>
+      <a href="https://www.youtube.com/watch?v=_L39rN6gz7Y">Decision Trees, Clearly Explained!!!</a><br>
+      <a href="https://www.youtube.com/watch?v=wpNl-JwwplA">Decision Trees, Part 2 - Feature Selection and Missing Data</a><br>
+      <a href="https://www.youtube.com/watch?v=g9c66TUylZ4">Regression Trees, Clearly Explained!!!</a><br>
+      <a href="https://www.youtube.com/watch?v=D0efHEJsfHo">How to Prune Regression Trees, Clearly Explained!!!</a><br>
+      <a href="https://www.youtube.com/watch?v=J4Wdy0Wc_xQ">Random Forests Part 1:  Building, Using and Evaluating</a><br>
+      <a href="https://www.youtube.com/watch?v=LsK-xG1cLYA">AdaBoost, Clearly Explained</a>
       </td>
     </tr>
     <tr>
@@ -114,6 +153,11 @@
         ISL: Ch. 9<br>
         ESL: Ch. 12
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=efR1C6CvhmE">Support Vector Machines Part 1 (of 3): Main Ideas!!!</a><br>
+        <a href="https://www.youtube.com/watch?v=Toet3EiSFcM">SVM with Polynomial kernel</a><br>
+        <a href="https://www.youtube.com/watch?v=Qc5IyLW_hns">SVM with RBF kernel</a>
+      </td>
     </tr>
     <tr>
       <td><b>Neural networks</b></td>
@@ -126,12 +170,27 @@
         ESL: Ch. 11<br>
         ISL: Sec. 10.1, Sec. 10.7.1
       </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=CqOfi41LfDw">Neural Networks Pt. 1: Inside the Black Box</a><br>
+        <a href="https://www.youtube.com/watch?v=IN2XmBhILt4">Neural Networks Pt. 2: Backpropagation Main Ideas</a><br>
+        <a href="https://www.youtube.com/watch?v=iyn2zdALii8">Backpropagation Details Part 1</a><br>
+        <a href="https://www.youtube.com/watch?v=GKZoOHXGcLo">Backpropagation Details Part 2</a><br>
+        <a href="https://www.youtube.com/watch?v=68BZ5f7P94E">Neural Networks Pt. 3: ReLU In Action!!!</a><br>
+        <a href="https://www.youtube.com/watch?v=83LYR-1IcjA">Neural Networks Pt. 4: Multiple Inputs and Outputs</a><br>
+        <a href="https://www.youtube.com/watch?v=KpKog-L9veg">Neural Networks Part 5: ArgMax and SoftMax</a><br>
+        <a href="https://www.youtube.com/watch?v=6ArSys5qHAU">Neural Networks Part 6: Cross Entropy</a><br>
+        <a href="https://www.youtube.com/watch?v=xBEh66V9gZo">Neural Networks Part 7: Cross Entropy Derivatives and Backpropagation</a><br>
+        <a href="https://www.youtube.com/watch?v=FHdlXe1bSe4&t=943s">Introduction to PyTorch</a>
+      </td>
     </tr>
     <tr>
-      <td><b>Deep neural networks</b></td>
+      <td><b>Deep neural networks, convolutional neural networks</b></td>
       <td>—</td>
       <td>
         ISL: Sec. 10.2, Sec. 10.3, Sec. 10.8
+      </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=HGwBXDKFk9I&t=1s">Image Classification with Convolutional Neural Networks (CNNs)</a>
       </td>
     </tr>
     <tr>
@@ -145,6 +204,23 @@
       </td>
       <td>
         ESL: Ch. 14
+      </td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=HMOI_lkzW08">PCA main ideas in only 5 minutes!!!</a><br>
+        <a href="https://www.youtube.com/watch?v=FgakZw6K1QQ">Principal Component Analysis (PCA), Step-by-Step</a><br>
+        <a href="https://www.youtube.com/watch?v=4b5d3muPQmA">K-means clustering</a><br>
+        <a href="https://www.youtube.com/watch?v=viZrOnJclY0">Word Embedding and Word2Vec, Clearly Explained!!!</a>
+      </td>
+    </tr>
+    <tr>
+      <td><b>Reinforcement learning</b></td>
+      <td>
+        Expectation of random variables<br>
+        Conditional probability
+      </td>
+      <td>—</td>
+      <td>
+        <a href="https://www.youtube.com/watch?v=Z-T0iJEXiwM">Reinforcement Learning: Essential Concepts</a><br>
       </td>
     </tr>
   </tbody>
