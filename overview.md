@@ -220,7 +220,7 @@
         Conditional probability
       </td>
       <td>
-      RL: Sec. 2.1, 2.2, 2.4, 2.5, 2.8, 6.1, 6.5
+      RL: Sec. 2.1, 2.2, 2.4, 2.5, 2.8, 6.1, 6.5, 13.3
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=Z-T0iJEXiwM">Reinforcement Learning: Essential Concepts</a><br>
