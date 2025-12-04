@@ -56,6 +56,12 @@ environment</li>
 </ul>
 <aside class="notes">
 <p>May need to consider indirect, delayed result of actions.</p>
+<figure>
+<img data-src="../images/13-reinforcement-world.png" style="width:40.0%"
+alt="Reinforcement learning scenario." />
+<figcaption aria-hidden="true">Reinforcement learning
+scenario.</figcaption>
+</figure>
 </aside>
 </section>
 <section id="elements-of-rl---environment" class="slide level3">
@@ -96,6 +102,7 @@ and rewards.</p>
 <section id="elements-of-rl---what-agent-may-learn"
 class="slide level3">
 <h3>Elements of RL - what agent may learn</h3>
+<aside class="notes">
 <ul>
 <li>the <em>policy</em> <span class="math inline">\(\pi\)</span> is the
 agent’s mapping from state to action (or probabilities of action). We
@@ -108,6 +115,7 @@ expected total <strong>future</strong> reward from a state.</li>
 we can use to <strong>plan</strong> before or during interactions with
 the environment</li>
 </ul>
+</aside>
 </section>
 <section id="taxonomy-of-rl-agents" class="slide level3">
 <h3>Taxonomy of RL agents</h3>
@@ -361,7 +369,7 @@ simplest possible problem. It is:</p>
 <p>Suppose the true value of selecting action <span
 class="math inline">\(a\)</span> at time <span
 class="math inline">\(t\)</span> is</p>
-<p><span class="math display">\[q_*(a) \doteq \mathbb{E}[R_t \mid A_t =
+<p><span class="math display">\[q_*(a) = \mathbb{E}[R_t \mid A_t =
 a]\]</span></p>
 <p>i.e. expected reward <span class="math inline">\(R_t\)</span> given
 that action <span class="math inline">\(A_t\)</span> is <span
@@ -465,7 +473,6 @@ table.</figcaption>
 class="slide level3">
 <h3>Iterative approximation for Q learning</h3>
 <ul>
-<li><p>start with zero values</p></li>
 <li><p>observe state <span class="math inline">\(S_t\)</span>, then
 iteratively:</p>
 <ul>
@@ -494,8 +501,8 @@ using greedy policy - not epsilon greedy!)</li>
 </ul>
 </aside>
 </section>
-<section id="q-table---after-two-steps" class="slide level3">
-<h3>Q table - after two steps</h3>
+<section id="q-table---example-with-two-steps" class="slide level3">
+<h3>Q table - example with two steps</h3>
 <aside class="notes">
 <figure>
 <img data-src="../images/rl-q-learning-after.png" style="width:80.0%"
@@ -556,8 +563,8 @@ preferences.</li>
 class="math inline">\(\theta\)</span> into a probability distribution
 over actions:</p>
 <p><span class="math display">\[
-\pi_{\theta}(a) = \frac{e^{\theta(a)}}{\sum_{b \in \mathcal{A}}
-e^{\theta(b)}}.
+\pi_{\theta}(a) = \frac{e^{\theta_{a}}}{\sum_{b \in \mathcal{A}}
+e^{\theta_{b}}}.
 \]</span></p>
 </section>
 <section id="iterative-approximation-for-bandit-with-policy-gradient"
@@ -567,17 +574,17 @@ class="slide level3">
 receiving reward <span class="math inline">\(R_t\)</span>, the action
 preferences are updated by:</p>
 <p><span class="math display">\[
-\theta_{t+1}(a) =
+\theta_{t+1,a} =
 \begin{cases}
-\theta_t(a) + \alpha (R_t - \bar{R}_t)\bigl(1 - \pi_t(a)\bigr), &amp;
+\theta_{t,a} + \alpha (R_t - \bar{R}_t)\bigl(1 - \pi_t(a)\bigr), &amp;
 \text{if } a = A_t, \\[6pt]
-\theta_t(a) - \alpha (R_t - \bar{R}_t)\,\pi_t(a), &amp; \text{if } a
+\theta_{t,a} - \alpha (R_t - \bar{R}_t)\,\pi_t(a), &amp; \text{if } a
 \neq A_t.
 \end{cases}
 \]</span></p>
 <p><span class="math inline">\(\bar{R}_t\)</span> is average reward so
-far: <span class="math inline">\(\bar{R}_{t+1} \;\doteq\; \bar{R}_{t} +
-\frac{1}{t} \bigl(R_t \;-\; \bar{R}_{t}\bigr)\)</span></p>
+far: <span class="math inline">\(\bar{R}_{t+1} = \bar{R}_{t} +
+\frac{1}{t} \bigl(R_t - \bar{R}_{t}\bigr)\)</span></p>
 <aside class="notes">
 <p>Intuition: If <span class="math inline">\(R_t\)</span> is higher than
 average, increase action preference, decrease preference for other
@@ -723,18 +730,18 @@ class="slide level3">
 <p><span class="math display">\[
 \begin{aligned}
 \pi_\theta(a \mid s)
-    &amp;= \frac{ e^{\theta(s,a)}}{    \displaystyle \sum_{b \in
-\mathcal{A}} e^{\theta(s,b)}}
+    &amp;= \frac{ e^{\theta_{s,a}}}{    \displaystyle \sum_{b \in
+\mathcal{A}} e^{\theta_{s,b}}}
         &amp;&amp; \text{Start from softmax policy} \\[6pt]
 \ln \pi_\theta(a \mid s)
-    &amp;= \ln \left( \frac{ e^{\theta(s,a)}  }{  \displaystyle \sum_{b
-\in \mathcal{A}} e^{\theta(s,b)}   }\right)
+    &amp;= \ln \left( \frac{ e^{\theta_{s,a}}  }{  \displaystyle \sum_{b
+\in \mathcal{A}} e^{\theta_{s,b}}   }\right)
         &amp;&amp; \text{Take the log} \\[6pt]
-    &amp;= \ln  e^{\theta(s,a)} - \ln \displaystyle \sum_{b \in
-\mathcal{A}} e^{\theta(s,b)}
+    &amp;= \ln  e^{\theta_{s,a}} - \ln \displaystyle \sum_{b \in
+\mathcal{A}} e^{\theta_{s,b}}
         &amp;&amp; \text{Write as difference} \\[6pt]
-    &amp;= \theta(s,a) - \ln \left( \sum_{b \in \mathcal{A}}
-e^{\theta(s,b)} \right)
+    &amp;= \theta_{s,a} - \ln \left( \sum_{b \in \mathcal{A}}
+e^{\theta_{s,b}} \right)
         &amp;&amp; \text{Simplify} \\[6pt]
 \end{aligned}
 \]</span></p>
@@ -743,15 +750,15 @@ e^{\theta(s,b)} \right)
 class="slide level3">
 <h3>Gradient of the log policy for softmax (derivative)</h3>
 <p>Taking derivative with respect to <span
-class="math inline">\(\theta(s,a&#39;)\)</span>:</p>
+class="math inline">\(\theta_{s,a&#39;}\)</span>:</p>
 <p><span class="math display">\[
-\frac{\partial}{\partial \theta(s,a&#39;)}
+\frac{\partial}{\partial \theta_{s,a&#39;}}
 \ln \pi_\theta(a \mid s)
 =
-\frac{\partial}{\partial \theta(s,a&#39;)}\theta(s,a)
+\frac{\partial}{\partial \theta_{s,a&#39;}}\theta_{s,a}
 -
-\frac{\partial}{\partial \theta(s,a&#39;)}
-\ln \left( \sum_{b \in \mathcal{A}} e^{\theta(s,b)} \right)
+\frac{\partial}{\partial \theta_{s,a&#39;}}
+\ln \left( \sum_{b \in \mathcal{A}} e^{\theta_{s,b}} \right)
 \]</span></p>
 </section>
 <section id="gradient-of-the-log-policy-for-softmax-first-term"
@@ -759,7 +766,7 @@ class="slide level3">
 <h3>Gradient of the log policy for softmax (first term)</h3>
 <p>First term:</p>
 <p><span class="math display">\[
-\frac{\partial}{\partial \theta(s,a&#39;)}\theta(s,a)
+\frac{\partial}{\partial \theta_{s,a&#39;}}\theta_{s,a}
 =
 \begin{cases}
 1, &amp; a&#39; = a, \\
@@ -779,18 +786,18 @@ class="slide level3">
 <h3>Gradient of the log policy for softmax (second term)</h3>
 <p><span class="math display">\[
 \begin{aligned}
-\frac{\partial}{\partial \theta(s,a&#39;)} \ln \left( \sum_{b \in
-\mathcal{A}} e^{\theta(s,b)} \right)
+\frac{\partial}{\partial \theta_{s,a&#39;}} \ln \left( \sum_{b \in
+\mathcal{A}} e^{\theta_{s,b}} \right)
     &amp;= \frac{1}{\sum_{b \in \mathcal{A}}
-e^{\theta(s,b)}}  \frac{\partial}{\partial \theta(s,a&#39;)} \left(
-\sum_{b \in \mathcal{A}} e^{\theta(s,b)} \right)
+e^{\theta_{s,b}}}  \frac{\partial}{\partial \theta_{s,a&#39;}} \left(
+\sum_{b \in \mathcal{A}} e^{\theta_{s,b}} \right)
         &amp;&amp; \text{Chain rule} \\[6pt]
-    &amp;= \frac{ \frac{\partial}{\partial \theta(s,a&#39;)}
-e^{\theta(s,a&#39;)}}{\sum_{b \in \mathcal{A}} e^{\theta(s,b)}}
+    &amp;= \frac{ \frac{\partial}{\partial \theta_{s,a&#39;}}
+e^{\theta_{s,a&#39;}}}{\sum_{b \in \mathcal{A}} e^{\theta_{s,b}}}
         &amp;&amp; \text{Only } b = a&#39; \text{ term depends on }
-\theta(s,a&#39;) \\[6pt]
-    &amp;= \frac{ e^{\theta(s,a&#39;)}}{\sum_{b \in \mathcal{A}}
-e^{\theta(s,b)}}
+\theta_{s,a&#39;} \\[6pt]
+    &amp;= \frac{ e^{\theta_{s,a&#39;}}}{\sum_{b \in \mathcal{A}}
+e^{\theta_{s,b}}}
         &amp;&amp; \text{Derivative of } e^x \\[6pt]
     &amp;= \pi_\theta(a&#39; \mid s)
         &amp;&amp; \text{Definition of softmax policy } \\[6pt]
@@ -801,7 +808,7 @@ e^{\theta(s,b)}}
 class="slide level3">
 <h3>Gradient of the log policy for softmax (final)</h3>
 <p><span class="math display">\[
-\frac{\partial}{\partial \theta(s,a&#39;)} \ln \pi_\theta(a \mid s)
+\frac{\partial}{\partial \theta_{s,a&#39;}} \ln \pi_\theta(a \mid s)
 =
 \begin{cases}
 1 - \pi_\theta(a \mid s), &amp; a&#39; = a, \\
@@ -812,8 +819,9 @@ class="slide level3">
 <section id="iterative-approximation-for-policy-gradient-reinforce"
 class="slide level3">
 <h3>Iterative approximation for policy gradient (REINFORCE)</h3>
-<p>After the <em>entire</em> trajectory/episode (all rewards are known),
-compute for each time <span class="math inline">\(t\)</span>:</p>
+<p>After <em>entire</em> trajectory/episode (all rewards are known,
+Monte Carlo sampling), compute for each time <span
+class="math inline">\(t\)</span>:</p>
 <p><span class="math display">\[
 \begin{aligned}
 G_t
@@ -842,9 +850,10 @@ class="slide level3">
         &amp;&amp; \text{Incorporate a baseline } b_t \\[6pt]
     &amp;=
 \begin{cases}
-\theta_t(a) + \alpha (R_t - b_t)\bigl(1 - \pi_t(a)\bigr), &amp; \text{if
-} a = A_t, \\[6pt]
-\theta_t(a) - \alpha (R_t - b_t)\,\pi_t(a), &amp; \text{if } a \neq A_t,
+\theta_{t,a} + \alpha (R_t - b_t)\bigl(1 - \pi_t(a)\bigr), &amp;
+\text{if } a = A_t, \\[6pt]
+\theta_{t,a} - \alpha (R_t - b_t)\,\pi_t(a), &amp; \text{if } a \neq
+A_t,
 \end{cases}
         &amp;&amp; \text{Substitute softmax gradient}
 \end{aligned}
@@ -853,15 +862,17 @@ class="slide level3">
 </section>
 <section id="example-for-reinforce" class="slide level3">
 <h3>Example for REINFORCE</h3>
+<aside class="notes">
 <figure>
 <img data-src="../images/13-reinforcement-reinforce.png"
 style="width:100.0%" alt="Example with policy gradient." />
 <figcaption aria-hidden="true">Example with policy
 gradient.</figcaption>
 </figure>
-</section></section>
-<section id="summary" class="title-slide slide level2">
-<h2>Summary</h2>
+<p>As before, if we want to learn a very large state space, then instead
+of maintaining a table of action preferences <span
+class="math inline">\(\theta\)</span>, we can train a neural network to
+approximate <span class="math inline">\(\theta(s,a)\)</span>.</p>
 <!-- 
 
 Notation note:
@@ -871,6 +882,11 @@ Notation note:
 * $a$: generic action variable
 * $a'$: dummy action variable used for maximization, to avoid confusion with generic $a$ used in same equation
 -->
+</aside>
+</section></section>
+<section id="summary" class="title-slide slide level2">
+<h2>Summary</h2>
+
 </section>
     </div>
   </div>
