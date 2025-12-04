@@ -71,11 +71,11 @@ class="math inline">\(a \in \mathcal{A}\)</span>)</li>
 <li>The agent earns a reward <span class="math inline">\(R_t\)</span>
 for its actions (possibly stochastic)</li>
 <li>The next state is determined by current state and current action,
-using a (possibly stochastic) state transition function <span
-class="math inline">\(\delta(s,a)\)</span>:</li>
+using a (possibly stochastic) state transition function:</li>
 </ul>
-<p><span class="math display">\[P(s&#39;, r \vert s, a)  = \mathbb{P}
-[S_{t+1} = s&#39;, R_{t+1} = r \vert S_t = s, A_t = a]\]</span></p>
+<p><span class="math display">\[P(s&#39;, r \mid s, a) =
+\mathbb{P}[S_{t+1} = s&#39;,\, R_{t+1} = r \mid S_t = s,\, A_t =
+a]\]</span></p>
 <aside class="notes">
 <p>The set of states <span class="math inline">\(\mathcal{S}\)</span>,
 actions <span class="math inline">\(\mathcal{A}\)</span>, the reward,
@@ -88,9 +88,10 @@ the environment.</p>
 <p>Over interactions in <span class="math inline">\(T\)</span> time
 steps, the agent takes a sequence of actions and observes next states
 and rewards.</p>
-<p>This sequence of interactions is called a <em>trajectory</em>:</p>
-<p><span class="math display">\[S_1, A_1, R_2, S_2, A_2, \dots,
-S_T\]</span></p>
+<p>This sequence of interactions is called a <em>trajectory</em> or an
+<em>episode</em>:</p>
+<p><span class="math display">\[S_0, A_0, R_1, S_1, A_1, R_2, S_2,
+\dots, A_{T-1}, R_T, S_T\]</span></p>
 </section>
 <section id="elements-of-rl---what-agent-may-learn"
 class="slide level3">
@@ -149,12 +150,12 @@ situations by computation on the model.)</li>
 <section id="reward" class="slide level3">
 <h3>Reward</h3>
 <p>Suppose the state transition function is</p>
-<p><span class="math display">\[P(s&#39;, r \vert s, a)  = \mathbb{P}
-[S_{t+1} = s&#39;, R_{t+1} = r \vert S_t = s, A_t = a]\]</span></p>
+<p><span class="math display">\[P(s&#39;, r \mid s, a)  = \mathbb{P}
+[S_{t+1} = s&#39;, R_{t+1} = r \mid S_t = s, A_t = a]\]</span></p>
 <p>the reward for a state-action will be</p>
-<p><span class="math display">\[ R(s, a) = \mathbb{E} [R_{t+1} \vert S_t
-= s, A_t = a] = \sum_{r\in\mathcal{R}} r \sum_{s&#39; \in \mathcal{S}}
-P(s&#39;, r \vert s, a) \]</span></p>
+<p><span class="math display">\[ R(s, a) = \mathbb{E} [R_{t+1} \mid S_t
+= s, A_t = a] = \sum_{s&#39; \in \mathcal{S}} \sum_{r\in\mathcal{R}}
+r  P(s&#39;, r \mid s, a) \]</span></p>
 <aside class="notes">
 <p>The state transition function gives the probability of transitioning
 from state <span class="math inline">\(s\)</span> to <span
@@ -167,15 +168,16 @@ class="math inline">\(r\)</span>.</p>
 <h3>Policy</h3>
 <p>We want a <em>policy</em>, or a probability distribution over actions
 for a given state:</p>
-<p><span class="math display">\[\pi(a \vert s) = \mathbb{P}_\pi [A=a
-\vert S=s]\]</span></p>
+<p><span class="math display">\[\pi(a \mid s) = \mathbb{P}_\pi [A=a \mid
+S=s]\]</span></p>
 </section>
 <section id="value-function" class="slide level3">
 <h3>Value function</h3>
 <p>Let future reward (<strong>return</strong>) from time <span
 class="math inline">\(t\)</span> on be</p>
-<p><span class="math display">\[G_t = R_{t+1} + \gamma R_{t+2} + \dots =
-\sum_{k=0}^{\infty} \gamma^k R_{t+k+1}\]</span></p>
+<p><span class="math display">\[G_t = R_{t+1} + \gamma R_{t+2} +
+\gamma^2 R_{t+3} + \dots = \sum_{k=t+1}^{T} \gamma^{k-t-1}
+R_{k}\]</span></p>
 <p>where the discount factor <span class="math inline">\(0 &lt; \gamma
 &lt; 1\)</span> penalizes future reward.</p>
 </section>
@@ -183,21 +185,21 @@ class="math inline">\(t\)</span> on be</p>
 <h3>State-value</h3>
 <p>The state-value of a state <span class="math inline">\(s\)</span> is
 the expected return if we are in the state at time t:</p>
-<p><span class="math display">\[V_{\pi}(s) = \mathbb{E}_{\pi}[G_t \vert
+<p><span class="math display">\[V_{\pi}(s) = \mathbb{E}_{\pi}[G_t \mid
 S_t = s]\]</span></p>
 </section>
 <section id="action-value" class="slide level3">
 <h3>Action-value</h3>
 <p>The action value of a state-action pair is</p>
 <p><span class="math display">\[Q_{\pi}(s, a) = \mathbb{E}_{\pi}[G_t
-\vert S_t = s, A_t = a]\]</span></p>
+\mid S_t = s, A_t = a]\]</span></p>
 </section>
 <section id="relationship-between-q-and-v" class="slide level3">
 <h3>Relationship between Q and V</h3>
 <p>For a policy <span class="math inline">\(\pi\)</span>, we can sum the
 action values weighted by the probability of that action to get:</p>
 <p><span class="math display">\[V_{\pi}(s) = \sum_{a \in \mathcal{A}}
-Q_{\pi}(s, a) \pi(a \vert s)\]</span></p>
+Q_{\pi}(s, a) \pi(a \mid s)\]</span></p>
 </section>
 <section id="action-advantage-function" class="slide level3">
 <h3>Action advantage function</h3>
@@ -218,23 +220,35 @@ V_{\pi}(s)\]</span> <span class="math display">\[Q_{*}(s, a) =
 </section>
 <section id="optimal-policy" class="slide level3">
 <h3>Optimal policy</h3>
-<p>The optimal policy achieves the optimal value functions:</p>
-<p><span class="math display">\[\pi_{*} = \arg\max_{\pi}
-V_{\pi}(s)\]</span> <span class="math display">\[\pi_{*} =
-\arg\max_{\pi} Q_{\pi}(s, a)\]</span></p>
-<p>i.e. <span class="math inline">\(V_{\pi_{*}}(s)=V_{*}(s)\)</span> and
-<span class="math inline">\(Q_{\pi_{*}}(s, a) = Q_{*}(s,
-a)\)</span>.</p>
+<p>The optimal policy selects, in each state, the action with highest
+optimal action-value:</p>
+<p><span class="math display">\[\pi_{*}(s) = \arg\max_{a \in
+\mathcal{A}} Q_{*}(s, a)\]</span></p>
+<p>i.e. <span class="math inline">\(V_{*}(s) = \max_{a \in \mathcal{A}}
+Q_{*}(s,a)\)</span> and <span class="math inline">\(Q_{*}(s, a)\)</span>
+is the optimal action-value function.</p>
+<aside class="notes">
+<p>(Note: maximizing over policies in the definitions of <span
+class="math inline">\(V_*\)</span> and <span
+class="math inline">\(Q_*\)</span> is equivalent to maximizing over
+actions in each state, because any optimal policy selects, in each
+state, an action that achieves <span class="math inline">\(\max_a
+Q_*(s,a)\)</span>.)</p>
+</aside>
 </section>
 <section id="optimal-policy-breakdown" class="slide level3">
 <h3>Optimal policy breakdown</h3>
-<p>We can also think of it as the policy that maximizes current reward +
-discounted value of next state:</p>
-<p><span class="math display">\[\pi_{*} = \arg\max_{\pi} r(s,a) + \gamma
-V^*_{\pi}(\delta(s,a))\]</span></p>
+<p>We can also express the optimal action in terms of current reward and
+the discounted value of next state:</p>
+<p><span class="math display">\[
+\pi_{*}(s)
+= \arg\max_{a \in \mathcal{A}}
+\left[\, r(s,a) \;+\; \gamma \sum_{s&#39; \in \mathcal{S}} P(s&#39; \mid
+s,a)\, V_{*}(s&#39;) \right]
+\]</span></p>
 <aside class="notes">
-<p>From here on, we are going to assume a value based RL agent, and we
-will discuss strategies for learning the value function.</p>
+<p>Later, we will discuss strategies for learning the value function
+and/or policy.</p>
 <p>But first: what type of policy will the RL agent use?</p>
 </aside>
 </section>
@@ -253,7 +267,7 @@ reward, based on what you know about the environment.</li>
 <h3><span class="math inline">\(\epsilon\)</span>-greedy policy</h3>
 <ul>
 <li>With probability <span class="math inline">\(\epsilon\)</span>,
-choose random action</li>
+choose random action uniformly</li>
 <li>With probability <span class="math inline">\(1-\epsilon\)</span>,
 choose optimal</li>
 </ul>
@@ -273,11 +287,11 @@ course, we want to learn from <em>experience</em>.</p>
 </section>
 <section id="monte-carlo" class="slide level3">
 <h3>Monte Carlo</h3>
-<p>We could update the value function for a state after the end of a
-<em>complete</em> experience, e.g. after observing <span
+<p>We could update value function for a state after the end of a
+<em>complete</em> experience, after observing <span
 class="math inline">\(G_t\)</span>.</p>
-<p><span class="math display">\[V(S_t) \leftarrow V(S_t) + \alpha[G_t -
-V(S_t)]\]</span></p>
+<p><span class="math display">\[V_{\pi}(S_t) \leftarrow V_{\pi}(S_t) +
+\alpha[G_t - V_{\pi}(S_t)]\]</span></p>
 <p>This is the Monte Carlo method.</p>
 <aside class="notes">
 <p>The new value of state <span class="math inline">\(S_t\)</span> is
@@ -299,8 +313,8 @@ and which were not.</p>
 <p>Instead, we could update the value function after a single step,
 e.g. after observing <span class="math inline">\(R_{t+1}\)</span> and
 <span class="math inline">\(S_{t+1}\)</span> but no more.</p>
-<p><span class="math display">\[V(S_t) \leftarrow V(S_t) +
-\alpha[R_{t+1} + \gamma V(S_{t+1}) - V(S_t)]\]</span></p>
+<p><span class="math display">\[V_{\pi}(S_t) \leftarrow V_{\pi}(S_t) +
+\alpha[R_{t+1} + \gamma V_{\pi}(S_{t+1}) - V_{\pi}(S_t)]\]</span></p>
 <p>This is called temporal difference (TD) learning.</p>
 <aside class="notes">
 <p>The new value of state <span class="math inline">\(S_t\)</span> is
@@ -316,19 +330,117 @@ class="math inline">\(S_t\)</span> (estimated)</li>
 <p>Here we have essentially broken down <span
 class="math inline">\(G_t\)</span> into <span
 class="math inline">\(R_{t+1}\)</span> (immediate reward) and <span
-class="math inline">\(\gamma V(S_{t+1})\)</span> (discounted future
-reward).</p>
+class="math inline">\(\gamma V_{\pi}(S_{t+1})\)</span> (discounted
+future reward).</p>
+</aside>
+</section></section>
+<section>
+<section id="multi-armed-bandits-with-value-estimation"
+class="title-slide slide level2">
+<h2>Multi-armed bandits with value estimation</h2>
+<ul>
+<li><span class="math inline">\(k\)</span>-armed bandit can take one of
+<span class="math inline">\(k\)</span> actions, receives reward</li>
+<li>only one state, no state transitions (we call it
+<em>context-free</em> in RL)</li>
+<li>one decision per round</li>
+<li>no discounting or future return</li>
+</ul>
+<aside class="notes">
+<p>As an example, we will look at the multi-armed bandit problem, the
+simplest possible problem. It is:</p>
+<ul>
+<li>value-based</li>
+<li>uses TD learning</li>
+<li>and learns the expected value of each action</li>
+</ul>
+</aside>
+</section>
+<section id="action-values" class="slide level3">
+<h3>Action values</h3>
+<p>Suppose the true value of selecting action <span
+class="math inline">\(a\)</span> at time <span
+class="math inline">\(t\)</span> is</p>
+<p><span class="math display">\[q_*(a) \doteq \mathbb{E}[R_t \mid A_t =
+a]\]</span></p>
+<p>i.e. expected reward <span class="math inline">\(R_t\)</span> given
+that action <span class="math inline">\(A_t\)</span> is <span
+class="math inline">\(a\)</span>.</p>
+<aside class="notes">
+<p><span class="math inline">\(R_t\)</span> can be stochastic - we don’t
+necessarily get the same reward for the same action.</p>
+</aside>
+</section>
+<section id="estimated-action-values" class="slide level3">
+<h3>Estimated action values</h3>
+<ul>
+<li><span class="math inline">\(q_*(a)\)</span> is unknown</li>
+<li>We <em>estimate</em> the value of action <span
+class="math inline">\(a\)</span> at time <span
+class="math inline">\(t\)</span> as <span
+class="math inline">\(Q_t(a)\)</span></li>
+</ul>
+<aside class="notes">
+<p>We want <span class="math inline">\(Q_t(a)\)</span> to be as close as
+possible to <span class="math inline">\(q_*(a)\)</span>. The goal is to
+learn which action gives the highest expected reward, by learning the
+action values.</p>
+</aside>
+</section>
+<section id="iterative-approximation-for-bandit-value-estimation"
+class="slide level3">
+<h3>Iterative approximation for bandit value estimation</h3>
+<p>After selecting action <span class="math inline">\(A_t\)</span> and
+observing reward <span class="math inline">\(R_t\)</span>, we update the
+estimate:</p>
+<p><span class="math display">\[Q_{t+1}(A_t) \leftarrow Q_t(A_t) +
+\alpha \bigl[ R_t - Q_t(A_t) \bigr]\]</span></p>
+<aside class="notes">
+<p>Because there are no states, bandits learn action values <span
+class="math inline">\(Q(a)\)</span> directly.</p>
+<p>Note that this looks a lot like gradient descent:</p>
+<ul>
+<li><span class="math inline">\(R_t - Q_t(A_t)\)</span> is like an
+“error” term, says how “wrong” our estimated value is</li>
+<li>We update our estimate by adding a fraction of it</li>
+<li><span class="math inline">\(\alpha\)</span> is a learning rate</li>
+</ul>
+</aside>
+</section>
+<section id="mab-example-with-value-estimation" class="slide level3">
+<h3>MAB example with value estimation</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/13-reinforcement-bandit.png"
+style="width:100.0%"
+alt="Example MAB sequence with value estimation." />
+<figcaption aria-hidden="true">Example MAB sequence with value
+estimation.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="whats-missing" class="slide level3">
+<h3>What’s missing</h3>
+<aside class="notes">
+<p>The MAB problem does not model:</p>
+<ul>
+<li>states and transitions between them</li>
+<li>sequences of actions</li>
+<li>delayed consequences</li>
+<li>credit assignment over time</li>
+</ul>
 </aside>
 </section></section>
 <section>
 <section id="q-learning" class="title-slide slide level2">
 <h2>Q learning</h2>
 <aside class="notes">
-<p>As an example, we will look more closely at Q learning, which</p>
+<p>Next, we will look more closely at Q learning, which also</p>
 <ul>
 <li>is value-based</li>
 <li>uses TD learning</li>
-<li>and learns the action-value function</li>
+<li>but it learns the action-value function as value of a
+state-<em>action</em> pair</li>
 </ul>
 </aside>
 </section>
@@ -349,8 +461,9 @@ table.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="iterative-approximation" class="slide level3">
-<h3>Iterative approximation</h3>
+<section id="iterative-approximation-for-q-learning"
+class="slide level3">
+<h3>Iterative approximation for Q learning</h3>
 <ul>
 <li><p>start with zero values</p></li>
 <li><p>observe state <span class="math inline">\(S_t\)</span>, then
@@ -361,13 +474,12 @@ execute,</li>
 <li>observe immediate reward <span
 class="math inline">\(R_{t+1}\)</span> and new state <span
 class="math inline">\(S_{t+1}\)</span></li>
-<li>update <span class="math inline">\(\hat{Q}(S_t,A_t)\)</span>
-using</li>
+<li>update <span class="math inline">\({Q}(S_t,A_t)\)</span> using</li>
 </ul></li>
 </ul>
 <p><span class="math display">\[Q(S_t, A_t) \leftarrow Q(S_t, A_t) +
-\alpha[R_{t+1} + \gamma \max_{a} Q(S_{t+1}, a) - Q(S_t,
-A_t)]\]</span></p>
+\alpha[R_{t+1} + \gamma \max_{a&#39; \in \mathcal{A}} Q(S_{t+1}, a&#39;)
+- Q(S_t, A_t)]\]</span></p>
 <ul>
 <li>go to new state <span class="math inline">\(S_{t+1}\)</span>.</li>
 </ul>
@@ -410,6 +522,356 @@ $$L = \frac{1}{2} (r_t + \gamma \max_{a'} \hat{Q}(s,a') - \hat{Q}(s,a))^2$$
 $$Q(s,a) \leftarrow Q(s,a) + \eta \left[ r + \gamma \max_{a'} Q(s',a') - Q(s,a) \right]$$
 -->
 </section></section>
+<section>
+<section id="multi-armed-bandits-with-policy-gradient-optimization"
+class="title-slide slide level2">
+<h2>Multi-armed bandits with policy gradient optimization</h2>
+<aside class="notes">
+<ul>
+<li>our examples so far were value-based</li>
+<li>let’s revisit our bandit, but this time with a policy-based
+approach</li>
+</ul>
+</aside>
+</section>
+<section id="policy-preferences-for-bandit-case" class="slide level3">
+<h3>Policy preferences for bandit case</h3>
+<p>We want to learn a policy</p>
+<p><span class="math display">\[\pi_{\theta}(a ) =
+\mathbb{P}_{\pi_{\theta}} [A=a ]\]</span></p>
+<p>parameterized by <span class="math inline">\(\theta\)</span>, a
+vector of learned action preferences.</p>
+<aside class="notes">
+<ul>
+<li>this is again the one-state case; we’ll extend to multiple cases
+shortly</li>
+<li>instead of learning action values, we’ll be updating the action
+preferences.</li>
+</ul>
+</aside>
+</section>
+<section id="softmax-policy" class="slide level3">
+<h3>Softmax policy</h3>
+<p>The softmax function converts preference vector <span
+class="math inline">\(\theta\)</span> into a probability distribution
+over actions:</p>
+<p><span class="math display">\[
+\pi_{\theta}(a) = \frac{e^{\theta(a)}}{\sum_{b \in \mathcal{A}}
+e^{\theta(b)}}.
+\]</span></p>
+</section>
+<section id="iterative-approximation-for-bandit-with-policy-gradient"
+class="slide level3">
+<h3>Iterative approximation for bandit with policy gradient</h3>
+<p>After selecting action <span class="math inline">\(A_t\)</span> and
+receiving reward <span class="math inline">\(R_t\)</span>, the action
+preferences are updated by:</p>
+<p><span class="math display">\[
+\theta_{t+1}(a) =
+\begin{cases}
+\theta_t(a) + \alpha (R_t - \bar{R}_t)\bigl(1 - \pi_t(a)\bigr), &amp;
+\text{if } a = A_t, \\[6pt]
+\theta_t(a) - \alpha (R_t - \bar{R}_t)\,\pi_t(a), &amp; \text{if } a
+\neq A_t.
+\end{cases}
+\]</span></p>
+<p><span class="math inline">\(\bar{R}_t\)</span> is average reward so
+far: <span class="math inline">\(\bar{R}_{t+1} \;\doteq\; \bar{R}_{t} +
+\frac{1}{t} \bigl(R_t \;-\; \bar{R}_{t}\bigr)\)</span></p>
+<aside class="notes">
+<p>Intuition: If <span class="math inline">\(R_t\)</span> is higher than
+average, increase action preference, decrease preference for other
+actions. We’ll show later how this expression is derived exactly.</p>
+</aside>
+</section>
+<section id="mab-example-with-policy-gradient" class="slide level3">
+<h3>MAB example with policy gradient</h3>
+<aside class="notes">
+<figure>
+<img data-src="../images/13-reinforcement-bandit-policy.png"
+style="width:100.0%" alt="Example MAB sequence with policy gradient." />
+<figcaption aria-hidden="true">Example MAB sequence with policy
+gradient.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="whats-missing-again" class="slide level3">
+<h3>What’s missing (again)</h3>
+<aside class="notes">
+<p>The MAB problem does not model:</p>
+<ul>
+<li>states and transitions between them</li>
+<li>sequences of actions</li>
+<li>delayed consequences</li>
+<li>credit assignment over time</li>
+</ul>
+</aside>
+</section></section>
+<section id="general-policy-gradient" class="title-slide slide level2">
+<h2>General policy gradient</h2>
+<p>Optimize a parameterized policy over actions <em>and</em> states</p>
+<p><span class="math display">\[\pi_\theta(a_t \mid s_t)\]</span></p>
+<p>using gradient ascent on the expected return <em>over many
+steps</em>.</p>
+<p><span class="math display">\[G_t = R_{t+1} + \gamma R_{t+2} +
+\gamma^2 R_{t+3} + \ldots\]</span></p>
+<aside class="notes">
+<p>Instead of just immediate reward, now we care about returns - allows
+credit assignment over the whole trajectory. Our policy should make
+actions that produced higher return more likely, and those that produced
+lower return less likely, even if the effect is delayed.</p>
+</aside>
+</section>
+
+<section>
+<section id="reinforce-algorithm" class="title-slide slide level2">
+<h2>REINFORCE algorithm</h2>
+
+</section>
+<section id="gradient-of-the-log-policy" class="slide level3">
+<h3>Gradient of the log policy</h3>
+<p><span class="math display">\[
+\begin{aligned}
+\nabla_\theta J(\theta)
+    &amp;= \nabla_\theta \, \mathbb{E}_{\tau \sim
+\pi_\theta}[\,G(\tau)\,]
+        &amp;&amp; \text{Initial objective: maximize expected return}
+\\[6pt]
+    &amp;= \nabla_\theta \sum_{\tau} \pi_\theta(\tau)\, G(\tau)
+        &amp;&amp; \text{Write expectation as sum over trajectories}
+\\[6pt]
+    &amp;= \sum_{\tau} \nabla_\theta \pi_\theta(\tau)\, G(\tau)
+        &amp;&amp; \text{Move gradient inside the sum} \\[6pt]
+    &amp;= \sum_{\tau} \pi_\theta(\tau)\, \nabla_\theta \ln
+\pi_\theta(\tau)\, G(\tau)
+        &amp;&amp; \text{Log-derivative trick } (\nabla_\theta \pi = \pi
+\nabla_\theta \ln \pi) \\[6pt]
+    &amp;= \mathbb{E}_{\tau \sim \pi_\theta}
+        \left[ G(\tau)\, \nabla_\theta \ln \pi_\theta(\tau) \right]
+        &amp;&amp; \text{Return to expectation form} \\[6pt]
+    &amp;= \mathbb{E}_{\tau \sim \pi_\theta}
+        \left[
+            \sum_{t=0}^{T-1}
+                G_t \,
+                \nabla_\theta \ln \pi_\theta(a_t \mid s_t)
+        \right]
+        &amp;&amp; \text{Turn into product over timesteps (sum of logs)}
+\\[6pt]
+\end{aligned}
+\]</span></p>
+<!-- This log-derivative trick follows from the chain rule https://andrewcharlesjones.github.io/journal/log-derivative.html -->
+<!-- 
+
+
+::: notes
+
+The objective is derived as follows. We start with the objective to maximize:
+
+$$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[G(\tau)]$$z
+
+where $\tau$ is a trajectory sampled from the policy $\pi_\theta(a_t \mid s_t)$, and $G(\tau)$ is the total return of the trajectory (total discounted reward).
+
+
+Take gradient with respect to $\theta$:
+
+$$\nabla_\theta J(\theta)
+= \nabla_\theta \mathbb{E}_{\tau \sim \pi_\theta}[G(\tau)]$$
+
+Rewrite the expectation as a sum over trajectories, weighted by probability of a trajectory given policy, and move the gradient inside the sum:
+
+
+$$= \sum_{\tau} \nabla_\theta \pi_\theta(\tau)\, G(\tau)$$
+
+We prefer to take the gradient of a log-probability, not a probability (better numerical stability, etc.) so we use the log-derivative trick $\nabla_\theta \pi = \pi \nabla_\theta \ln \pi$:
+
+$$= \sum_{\tau} \pi_\theta(\tau)\, \nabla_\theta \ln \pi_\theta(\tau)\, G(\tau)$$
+
+
+which we can re-write as an expectation:
+
+$$= \mathbb{E}_{\tau \sim \pi_\theta} \left[ G(\tau)\, \nabla_\theta \ln \pi_\theta(\tau) \right]$$
+
+Break this into product over timesteps (which is a sum in log domain):
+
+$$\ln \pi_\theta(\tau)
+= \sum_t \ln \pi_\theta(a_t \mid s_t)$$
+
+Now we have:
+
+$$\nabla_\theta J(\theta)
+= \mathbb{E}_{\tau \sim \pi_\theta}
+\left[ 
+\sum_t G_t \, \nabla_\theta \ln \pi_\theta(a_t \mid s_t)
+\right]$$
+
+:::
+
+-->
+</section>
+<section id="gradient-of-the-log-policy-update-rule"
+class="slide level3">
+<h3>Gradient of the log policy update rule</h3>
+<p>This gives us the REINFORCE update:</p>
+<p><span class="math display">\[\theta_{t+1} \leftarrow \theta_t +
+\alpha G_t\, \nabla_\theta \ln \pi_\theta(a_t \mid s_t)\]</span></p>
+<p>where <span class="math inline">\(G_t\)</span> is known only at the
+end of the episode.</p>
+</section>
+<section id="gradient-of-the-log-policy-for-softmax"
+class="slide level3">
+<h3>Gradient of the log policy for softmax</h3>
+<p><span class="math display">\[
+\begin{aligned}
+\pi_\theta(a \mid s)
+    &amp;= \frac{ e^{\theta(s,a)}}{    \displaystyle \sum_{b \in
+\mathcal{A}} e^{\theta(s,b)}}
+        &amp;&amp; \text{Start from softmax policy} \\[6pt]
+\ln \pi_\theta(a \mid s)
+    &amp;= \ln \left( \frac{ e^{\theta(s,a)}  }{  \displaystyle \sum_{b
+\in \mathcal{A}} e^{\theta(s,b)}   }\right)
+        &amp;&amp; \text{Take the log} \\[6pt]
+    &amp;= \ln  e^{\theta(s,a)} - \ln \displaystyle \sum_{b \in
+\mathcal{A}} e^{\theta(s,b)}
+        &amp;&amp; \text{Write as difference} \\[6pt]
+    &amp;= \theta(s,a) - \ln \left( \sum_{b \in \mathcal{A}}
+e^{\theta(s,b)} \right)
+        &amp;&amp; \text{Simplify} \\[6pt]
+\end{aligned}
+\]</span></p>
+</section>
+<section id="gradient-of-the-log-policy-for-softmax-derivative"
+class="slide level3">
+<h3>Gradient of the log policy for softmax (derivative)</h3>
+<p>Taking derivative with respect to <span
+class="math inline">\(\theta(s,a&#39;)\)</span>:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \theta(s,a&#39;)}
+\ln \pi_\theta(a \mid s)
+=
+\frac{\partial}{\partial \theta(s,a&#39;)}\theta(s,a)
+-
+\frac{\partial}{\partial \theta(s,a&#39;)}
+\ln \left( \sum_{b \in \mathcal{A}} e^{\theta(s,b)} \right)
+\]</span></p>
+</section>
+<section id="gradient-of-the-log-policy-for-softmax-first-term"
+class="slide level3">
+<h3>Gradient of the log policy for softmax (first term)</h3>
+<p>First term:</p>
+<p><span class="math display">\[
+\frac{\partial}{\partial \theta(s,a&#39;)}\theta(s,a)
+=
+\begin{cases}
+1, &amp; a&#39; = a, \\
+0, &amp; a&#39; \neq a,
+\end{cases}
+\]</span></p>
+<aside class="notes">
+<p>It’s either:</p>
+<ul>
+<li>derivative of a thing with respect to itself: 1</li>
+<li>derivative of a thing with respect to an unrelated thing: 0</li>
+</ul>
+</aside>
+</section>
+<section id="gradient-of-the-log-policy-for-softmax-second-term"
+class="slide level3">
+<h3>Gradient of the log policy for softmax (second term)</h3>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial}{\partial \theta(s,a&#39;)} \ln \left( \sum_{b \in
+\mathcal{A}} e^{\theta(s,b)} \right)
+    &amp;= \frac{1}{\sum_{b \in \mathcal{A}}
+e^{\theta(s,b)}}  \frac{\partial}{\partial \theta(s,a&#39;)} \left(
+\sum_{b \in \mathcal{A}} e^{\theta(s,b)} \right)
+        &amp;&amp; \text{Chain rule} \\[6pt]
+    &amp;= \frac{ \frac{\partial}{\partial \theta(s,a&#39;)}
+e^{\theta(s,a&#39;)}}{\sum_{b \in \mathcal{A}} e^{\theta(s,b)}}
+        &amp;&amp; \text{Only } b = a&#39; \text{ term depends on }
+\theta(s,a&#39;) \\[6pt]
+    &amp;= \frac{ e^{\theta(s,a&#39;)}}{\sum_{b \in \mathcal{A}}
+e^{\theta(s,b)}}
+        &amp;&amp; \text{Derivative of } e^x \\[6pt]
+    &amp;= \pi_\theta(a&#39; \mid s)
+        &amp;&amp; \text{Definition of softmax policy } \\[6pt]
+\end{aligned}
+\]</span></p>
+</section>
+<section id="gradient-of-the-log-policy-for-softmax-final"
+class="slide level3">
+<h3>Gradient of the log policy for softmax (final)</h3>
+<p><span class="math display">\[
+\frac{\partial}{\partial \theta(s,a&#39;)} \ln \pi_\theta(a \mid s)
+=
+\begin{cases}
+1 - \pi_\theta(a \mid s), &amp; a&#39; = a, \\
+- \pi_\theta(a&#39; \mid s), &amp; a&#39; \neq a.
+\end{cases}
+\]</span></p>
+</section>
+<section id="iterative-approximation-for-policy-gradient-reinforce"
+class="slide level3">
+<h3>Iterative approximation for policy gradient (REINFORCE)</h3>
+<p>After the <em>entire</em> trajectory/episode (all rewards are known),
+compute for each time <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+G_t
+    &amp;= \sum_{k=t+1}^{T} \gamma^{k-t-1} R_{k}
+        &amp;&amp; \text{Discounted return starting at } t \\[6pt]
+    &amp; \nabla_\theta \ln \pi_\theta(a_t \mid s_t)
+        &amp;&amp; \text{Gradient of the log policy with respect to }
+\theta(s_t, a_t) \\[6pt]
+\end{aligned}
+\]</span></p>
+<p>and apply</p>
+<p><span class="math display">\[\theta_{t+1} \leftarrow \theta_t +
+\alpha G_t\, \nabla_\theta \ln \pi_\theta(a_t \mid s_t)\]</span></p>
+</section>
+<section id="mab-with-policy-gradient-vs-reinforce"
+class="slide level3">
+<h3>MAB with policy gradient vs REINFORCE</h3>
+<p>With one state, one action per episode, REINFORCE becomes:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\theta_{t+1}
+    &amp;= \theta_t + \alpha R_t \,\nabla_\theta \ln \pi_\theta(A_t)
+        &amp;&amp; \text{REINFORCE with one state, one action} \\[6pt]
+    &amp;= \theta_t + \alpha (R_t - b_t)\,\nabla_\theta \ln
+\pi_\theta(A_t)
+        &amp;&amp; \text{Incorporate a baseline } b_t \\[6pt]
+    &amp;=
+\begin{cases}
+\theta_t(a) + \alpha (R_t - b_t)\bigl(1 - \pi_t(a)\bigr), &amp; \text{if
+} a = A_t, \\[6pt]
+\theta_t(a) - \alpha (R_t - b_t)\,\pi_t(a), &amp; \text{if } a \neq A_t,
+\end{cases}
+        &amp;&amp; \text{Substitute softmax gradient}
+\end{aligned}
+\]</span></p>
+<p>which is exactly what we used for MAB.</p>
+</section>
+<section id="example-for-reinforce" class="slide level3">
+<h3>Example for REINFORCE</h3>
+<figure>
+<img data-src="../images/13-reinforcement-reinforce.png"
+style="width:100.0%" alt="Example with policy gradient." />
+<figcaption aria-hidden="true">Example with policy
+gradient.</figcaption>
+</figure>
+</section></section>
+<section id="summary" class="title-slide slide level2">
+<h2>Summary</h2>
+<!-- 
+
+Notation note:
+
+* $A_t$: random variable representing the action taken at time $t$
+* $a_t$: specific realized action taken at time $t$
+* $a$: generic action variable
+* $a'$: dummy action variable used for maximization, to avoid confusion with generic $a$ used in same equation
+-->
+</section>
     </div>
   </div>
 
