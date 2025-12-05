@@ -216,8 +216,8 @@
     <tr>
       <td><b>Reinforcement learning</b></td>
       <td>
-        Derivatives and optimization (IALA App. C)
-        Derivatives of exponential and log functions
+        Derivatives and optimization (IALA App. C)<br>
+        Derivatives of exponential and log functions<br>
         Expectation of random variables<br>
         Conditional probability
       </td>
