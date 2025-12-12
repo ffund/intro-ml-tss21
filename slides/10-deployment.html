@@ -19,8 +19,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -377,9 +380,9 @@ reduce the time:</p>
 <ul>
 <li>Use base model that’s small/specifically designed for efficient
 inference (e.g. MobileNet)</li>
+<li>Use knowledge distillation: train a small model using output of big
+model</li>
 <li>Use big model, but prune activations that are usually zero</li>
-<li>Use knowledge distillation: train a small model to match “soft”
-predictions of big model</li>
 <li>Potentially some impact on “optimizing metrics”</li>
 </ul>
 </section>
@@ -650,7 +653,7 @@ Case study: Uber eats https://www.uber.com/blog/michelangelo-machine-learning-pl
         mobileViewDistance: 2,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

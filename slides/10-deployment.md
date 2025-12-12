@@ -253,10 +253,9 @@ To minimize the overall prediction serving latency, we would want to reduce the 
 ### Idea 1: Model architecture
 
 * Use base model that's small/specifically designed for efficient inference (e.g. MobileNet)
+* Use knowledge distillation: train a small model using output of big model
 * Use big model, but prune activations that are usually zero
-* Use knowledge distillation: train a small model to match "soft" predictions of big model
 * Potentially some impact on "optimizing metrics"
-
 
 ### Idea 2: Model compression
 

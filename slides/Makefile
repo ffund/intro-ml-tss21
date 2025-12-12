@@ -22,6 +22,7 @@ SOURCES += 9-convolutional.md
 SOURCES += 10-unsupervised.md
 SOURCES += 10-rl.md
 SOURCES += 10-deployment.md
+SOURCES += 13-review.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
