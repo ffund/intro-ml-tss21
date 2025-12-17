@@ -537,7 +537,7 @@ Basic dimension arithmetic:
 * Four hyperparameters: number of filters $K$, filter size $F$, stride $S$, amount of zero padding $P$
 * Produces volume of size 
 
-$$W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2 =  \frac{H_1 - F + 2P}{S} + 1 $$
+$$W_2 = \left\lfloor \frac{W_1 - F + 2P}{S}\right\rfloor  + 1 , H_2 = \left\lfloor \frac{H_1 - F + 2P}{S} \right\rfloor + 1 $$
 $$D_2 = K $$
 
 * With parameter sharing: $F \cdot F \cdot D_1$ weights per filter, for $F \cdot F \cdot D_1 \cdot K$ weights and $K$ biases
@@ -593,7 +593,7 @@ Pooling math:
 * Two hyperparameters: filter size $F$, stride $S$
 * Produces volume of size 
 
-$$W_2 = \frac{W_1 - F}{S} + 1 , H_2 =  \frac{H_1 - F}{S} + 1 , D_2 = D_1 $$
+$$W_2 = \left\lfloor \frac{W_1 - F}{S} \right\rfloor + 1 , H_2 = \left\lfloor \frac{H_1 - F}{S} \right\rfloor + 1 , D_2 = D_1 $$
 
 
 :::

@@ -703,9 +703,10 @@ class="math inline">\(S\)</span>, amount of zero padding <span
 class="math inline">\(P\)</span></li>
 <li>Produces volume of size</li>
 </ul>
-<p><span class="math display">\[W_2 = \frac{W_1 - F + 2P}{S} + 1 , H_2
-=  \frac{H_1 - F + 2P}{S} + 1 \]</span> <span class="math display">\[D_2
-= K \]</span></p>
+<p><span class="math display">\[W_2 = \left\lfloor \frac{W_1 - F +
+2P}{S}\right\rfloor  + 1 , H_2 = \left\lfloor \frac{H_1 - F + 2P}{S}
+\right\rfloor + 1 \]</span> <span class="math display">\[D_2 = K
+\]</span></p>
 <ul>
 <li>With parameter sharing: <span class="math inline">\(F \cdot F \cdot
 D_1\)</span> weights per filter, for <span class="math inline">\(F \cdot
@@ -777,8 +778,9 @@ class="math inline">\(F\)</span>, stride <span
 class="math inline">\(S\)</span></li>
 <li>Produces volume of size</li>
 </ul>
-<p><span class="math display">\[W_2 = \frac{W_1 - F}{S} + 1 , H_2
-=  \frac{H_1 - F}{S} + 1 , D_2 = D_1 \]</span></p>
+<p><span class="math display">\[W_2 = \left\lfloor \frac{W_1 - F}{S}
+\right\rfloor + 1 , H_2 = \left\lfloor \frac{H_1 - F}{S} \right\rfloor +
+1 , D_2 = D_1 \]</span></p>
 </aside>
 </section>
 <section id="the-typical-lenet-like-architecture" class="slide level3">
