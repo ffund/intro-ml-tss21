@@ -377,8 +377,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a h
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;col&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;col&quot;</span>].fillna(method<span class="op">=</span><span class="st">&quot;ffill&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb29"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using a statistic, only use stats of training set</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> df[<span class="st">&quot;col&quot;</span>].mean() <span class="co"># use training data only</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;col&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;col&quot;</span>].fillna(s)  </span></code></pre></div>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> df_tr[<span class="st">&quot;col&quot;</span>].mean() <span class="co"># use training data only</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>df_tr[<span class="st">&quot;col&quot;</span>] <span class="op">=</span> df_tr[<span class="st">&quot;col&quot;</span>].fillna(s)  </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>df_ts[<span class="st">&quot;col&quot;</span>] <span class="op">=</span> df_ts[<span class="st">&quot;col&quot;</span>].fillna(s)  </span></code></pre></div>
 <div class="sourceCode" id="cb30"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using a constant</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;col&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;col&quot;</span>].fillna(<span class="dv">0</span>) </span></code></pre></div>
@@ -390,8 +391,9 @@ ICU mortality prediction) </small></p>
 <div class="sourceCode" id="cb31"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># applies to all columns</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># using a statistic, only use stats of training set</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> np.nanmean(X, axis<span class="op">=</span><span class="dv">0</span>) <span class="co"># use training data only</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> np.where(np.isnan(X), s, X)</span></code></pre></div>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> np.nanmean(Xtr, axis<span class="op">=</span><span class="dv">0</span>) <span class="co"># use training data only</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>Xtr2 <span class="op">=</span> np.where(np.isnan(Xtr), s, Xtr)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>Xts2 <span class="op">=</span> np.where(np.isnan(Xts), s, Xts)</span></code></pre></div>
 <div class="sourceCode" id="cb32"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># applies to all columns</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># using a constant</span></span>

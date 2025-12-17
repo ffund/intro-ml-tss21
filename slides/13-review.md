@@ -304,9 +304,9 @@ df["col"] = df["col"].fillna(method="ffill")
 
 ```python
 # using a statistic, only use stats of training set
-s = df["col"].mean() # use training data only
-df["col"] = df["col"].fillna(s)  
-
+s = df_tr["col"].mean() # use training data only
+df_tr["col"] = df_tr["col"].fillna(s)  
+df_ts["col"] = df_ts["col"].fillna(s)  
 ```
 
 ```python
@@ -326,9 +326,9 @@ df["col"] = df["col"].fillna(0)
 ```python
 # applies to all columns
 # using a statistic, only use stats of training set
-s = np.nanmean(X, axis=0) # use training data only
-X2 = np.where(np.isnan(X), s, X)
-
+s = np.nanmean(Xtr, axis=0) # use training data only
+Xtr2 = np.where(np.isnan(Xtr), s, Xtr)
+Xts2 = np.where(np.isnan(Xts), s, Xts)
 ```
 
 ```python
@@ -718,6 +718,8 @@ Comment: use training data only to compute mode!
 (Seen in: H5 ICU Mortality Prediction, and others)
 </small>
 
+
+\newpage
 
 ## Model fitting and prediction
 
