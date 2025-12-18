@@ -666,7 +666,7 @@ Example: **Cats chase playful mice**
 * Tokenized: `["cats", "chase", "playful", "mice"]`
 * CBOW with context window 1: given context `["cats", "playful"]`, predict `"chase"`
 * Skip gram: given `"chase"`, predict targets `"cats"`, `"playful"`
-* Negative sampling: predict **positive* for the pair `("chase", "playful")` and *negative* for these random wrong pairs `("chase", "banana")`, `("chase", "calendar")`, `("chase", "socks")`. (This is much easier than computing probabilities over entire vocabulary, like with the original skip gram.)
+* Negative sampling: predict *positive* for the pair `("chase", "playful")` and *negative* for these random wrong pairs `("chase", "banana")`, `("chase", "calendar")`, `("chase", "socks")`. (This is much easier than computing probabilities over entire vocabulary, like with the original skip gram.)
 
 Words that are similar end up near one another in the latent space. So, even if I have not learned that e.g. "dogs chase", if I have learned that cats and dogs are generally similar (and near one another in the latent space) then I can probably predict "dogs chase"
 
