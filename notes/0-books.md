@@ -11,7 +11,7 @@ author: Fraida Fund
 * Pattern Recognition and Machine Learning, (Bishop), 2006. [PDF](https://www.microsoft.com/en-us/research/uploads/prod/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf)
 * Machine Learning: A Probabilistic Perspective, (Murphy). [PDF](https://probml.github.io/pml-book/book0.html)
 * Understanding Machine Learning: From Theory to Algorithms, (Shalev-Shwartz, Ben-David), 2014. [Website](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/index.html), [Download](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/copy.html)
-* Textbook: Reinforcement Learning (Sutton, Barto). [Website](http://incompleteideas.net/book/the-book-2nd.html), [PDF](http://incompleteideas.net/book/RLbook2020.pdf)
+* Reinforcement Learning (Sutton, Barto). [Website](http://incompleteideas.net/book/the-book-2nd.html), [PDF](http://incompleteideas.net/book/RLbook2020.pdf)
 
 ## Python and Programming for Machine Learning
 
