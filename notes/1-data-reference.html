@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>Data Operations Reference Sheet</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="/usr/share/javascript/mathjax/MathJax.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Data Operations Reference Sheet</h1>
+<p class="author">Fraida Fund</p>
+</header>
+<p>This reference sheet summarizes some (not all!) of the <em>data
+manipulation</em> tasks you’ll do most often throughout the course.</p>
+<h2 id="numpy-arrays-format-shape">Numpy arrays: format +
+<code>shape</code></h2>
+<p>Numeric data is often stored as a <code>numpy</code> array:</p>
+<ul>
+<li><strong>1D array</strong>: <code>x.shape == (n,)</code> (a
+vector)</li>
+<li><strong>2D array</strong>:
+<code>X.shape == (n_samples, n_features)</code> (a matrix)</li>
+<li><strong>Higher-D array</strong> (common for image data):
+<code>I.shape == (height, width, channels)</code> (one image) or
+<code>I.shape == (n_images, height, width)</code> /
+<code>I.shape == (n_images, height, width, channels)</code> (a
+batch)</li>
+</ul>
+<p>Useful attributes:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>X.shape   <span class="co"># tuple, e.g. (100, 5)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>X.ndim    <span class="co"># number of dimensions, e.g. 2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>X.dtype   <span class="co"># element type, e.g. float64</span></span></code></pre></div>
+<p>Axis convention (for 2D <code>X</code>):</p>
+<ul>
+<li><code>axis=0</code>: down the rows (compute one value per
+<strong>column/feature</strong>)</li>
+<li><code>axis=1</code>: across the columns (compute one value per
+<strong>row/sample</strong>)</li>
+</ul>
+<h2 id="pandas-dataframe-series-named-columns-named-index">Pandas:
+<code>DataFrame</code> + <code>Series</code>, named columns + named
+index</h2>
+<p><code>pandas</code> wraps tabular data with labels:</p>
+<ul>
+<li><strong><code>DataFrame</code></strong>: 2D table with <em>named
+columns</em> and a <em>named index</em> (row labels)</li>
+<li><strong><code>Series</code></strong>: 1D labeled array (a single
+column)</li>
+</ul>
+<p>and also allows different columns to have different types.</p>
+<p>Useful attributes:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df.shape     <span class="co"># (n_rows, n_cols)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.columns   <span class="co"># column names</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df.index     <span class="co"># row labels (may be a RangeIndex, dates, IDs, ...)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df.dtypes    <span class="co"># column data types</span></span></code></pre></div>
+<p>Two common row selectors:</p>
+<ul>
+<li><code>df.loc[...]</code> uses <strong>labels</strong> (index
+values)</li>
+<li><code>df.iloc[...]</code> uses <strong>integer
+positions</strong></li>
+</ul>
+<h2 id="common-operations-numpy-vs-pandas">Common operations (numpy vs
+pandas)</h2>
+<p>Assume:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="fl">10.0</span>],</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">2</span>, <span class="fl">20.0</span>],</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>              [<span class="dv">3</span>,  np.nan]])</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">&quot;a&quot;</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>],</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;g&quot;</span>: [<span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>],</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                   <span class="st">&quot;b&quot;</span>: [<span class="fl">10.0</span>, <span class="fl">20.0</span>, np.nan]},</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                  index<span class="op">=</span>[<span class="st">&quot;r1&quot;</span>, <span class="st">&quot;r2&quot;</span>, <span class="st">&quot;r3&quot;</span>])</span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Basic operation (what + why)</th>
+<th>How in numpy (example)</th>
+<th>How in pandas (example)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Inspect size/shape</strong><br>(sanity-check what you
+loaded)</td>
+<td><code>X.shape</code><br><span class="math inline">\(\to\)</span>
+<code>(3, 2)</code></td>
+<td><code>df.shape</code><br><span class="math inline">\(\to\)</span>
+<code>(3, 2)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Inspect “labels”</strong><br>(know what columns/rows
+mean)</td>
+<td>(no built-in labels)</td>
+<td><code>df.columns</code><br><code>df.index</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Select a column</strong><br>(work with one feature)</td>
+<td><code>x = X[:, 0]</code><br><span class="math inline">\(\to\)</span>
+1D array</td>
+<td><code>s = df["a"]</code><br><span class="math inline">\(\to\)</span>
+Series</td>
+</tr>
+<tr class="even">
+<td><strong>Select multiple columns</strong><br>(subset features)</td>
+<td><code>X2 = X[:, [0, 1]]</code><br><span
+class="math inline">\(\to\)</span> 2D array</td>
+<td><code>df2 = df[["a", "b"]]</code><br><span
+class="math inline">\(\to\)</span> DataFrame</td>
+</tr>
+<tr class="odd">
+<td><strong>Select rows by named index</strong><br>(use meaningful row
+labels/IDs)</td>
+<td>(no built-in labels)</td>
+<td><code>row = df.loc["r2"]</code></td>
+</tr>
+<tr class="even">
+<td><strong>Select rows by position</strong><br>(grab a specific
+sample)</td>
+<td><code>row = X[1]</code></td>
+<td><code>row = df.iloc[1]</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Filter rows by condition</strong><br>(keep only rows meeting
+a rule)</td>
+<td><code>mask = X[:, 0] &gt; 1</code><br><code>Xpos = X[mask]</code></td>
+<td><code>dfpos = df[df["a"] &gt; 1]</code></td>
+</tr>
+<tr class="even">
+<td><strong>Sort by a column</strong><br>(e.g. to rank)</td>
+<td><code>idx = np.argsort(X[:, 0])</code><br><code>Xs = X[idx]</code></td>
+<td><code>dfs = df.sort_values(by="a")</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Sort while keeping correspondence</strong><br>(sort
+<code>X</code> and <code>y</code> together)</td>
+<td><code>idx = np.argsort(X[:, 0])</code><br><code>Xs = X[idx]</code><br><code>ys = y[idx]</code></td>
+<td><code>dfs = df.sort_values("a")</code><br><code>ys = y.loc[dfs.index]</code></td>
+</tr>
+<tr class="even">
+<td><strong>Conditionally assign values</strong><br>(create/update a
+column using a rule)</td>
+<td><code>X2 = np.where(X &gt; 0, X, 0)</code></td>
+<td><code>df["b2"] = df["b"].where(df["b"] &gt; 0, 0)</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Conditionally get indices</strong><br>(find which rows match
+a rule)</td>
+<td><code>idx = np.where(X[:, 0] &gt; 1)[0]</code><br><span
+class="math inline">\(\to\)</span> row indices</td>
+<td><code>idx = df.index[df["a"] &gt; 1]</code><br><span
+class="math inline">\(\to\)</span> index labels</td>
+</tr>
+<tr class="even">
+<td><strong>Compute summary statistics</strong><br>(describe
+features)</td>
+<td><code>m = np.mean(X, axis=0)</code></td>
+<td><code>m = df.mean(numeric_only=True)</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Argmax/argmin</strong><br>(index of max/min;
+e.g. “best/worst” row)</td>
+<td><code>i_max = np.argmax(X[:, 0])</code><br><code>i_min = np.argmin(X[:, 0])</code></td>
+<td><code>i_max = df["a"].idxmax()</code><br><code>i_min = df["a"].idxmin()</code></td>
+</tr>
+<tr class="even">
+<td><strong>Group + aggregate</strong><br>(summarize by category)</td>
+<td>(not a core numpy pattern)</td>
+<td><code>means = df.groupby("g")["b"].mean()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Stack/concat columns</strong><br>(combine features)</td>
+<td><code>X3 = np.column_stack([X1, X2])</code></td>
+<td><code>df3 = pd.concat([df1, df2], axis=1)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Reshape 1D$$2D</strong><br>(match API expectations like
+<code>(n_rows, 1)</code>)</td>
+<td><code>x_col = x.reshape(-1, 1)</code> <span
+class="math inline">\(\to\)</span> shape
+<code>(n_rows, 1)</code><br><code>x_row = x.reshape(1, -1)</code> <span
+class="math inline">\(\to\)</span> shape
+<code>(1, n_rows)</code><br><code>x_1d = X.reshape(-1,)</code> <span
+class="math inline">\(\to\)</span> shape
+<code>(n_rows*n_cols,)</code></td>
+<td><code>s = df["a"]</code> <span class="math inline">\(\to\)</span>
+Series (1D)<br><code>df[["a"]]</code> <span
+class="math inline">\(\to\)</span> DataFrame (2D)</td>
+</tr>
+<tr class="odd">
+<td><strong>Create a new feature</strong><br>(feature engineering)</td>
+<td><code>new_feature = X[:,0] * X[:,1]</code><br><code>Xnew = np.column_stack([X, new_feature])</code></td>
+<td><code>df = df.assign(new_feature=df["a"] * df["b"])</code></td>
+</tr>
+<tr class="even">
+<td><strong>Ordinal-encode categories</strong><br>(preserve order
+info)</td>
+<td><code>map_ = {"low":1,"med":2,"high":3}</code><br><code>x = np.array([map_[v] for v in vals])</code></td>
+<td><code>map_ = {"low":1,"med":2,"high":3}</code><br><code>s = df["level"].map(map_)</code></td>
+</tr>
+<tr class="odd">
+<td><strong>One-hot encode categories</strong><br>(no implied
+ordering)</td>
+<td>(not a core numpy pattern)</td>
+<td><code>df_ohe = pd.get_dummies(df, columns=["level"], dtype=int)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Read from a file</strong><br>(load data)</td>
+<td><code>X = np.load("X.npy")</code><br>or <code>np.loadtxt</code> for
+text</td>
+<td><code>df = pd.read_csv("data.csv")</code><br>common:
+<code>sep</code>, <code>header</code>, <code>index_col</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Convert between numpy<span
+class="math inline">\(\leftrightarrow\)</span>pandas</strong><br>(use
+the right tool)</td>
+<td><code>df = pd.DataFrame(X, columns=["a","b"])</code></td>
+<td><code>X = df.to_numpy()</code></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

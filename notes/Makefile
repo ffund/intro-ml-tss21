@@ -1,6 +1,7 @@
 SOURCES := 0-online-faq.md 0-tss-faq.md 0-online-async-faq.md 0-live-faq.md 0-prerequisite-review.md 0-books.md
 SOURCES += 0-project-background.md
 SOURCES += 1-handwritten-digits.md
+SOURCES += 1-data-reference.md
 SOURCES += 2-gd-background-videos.md
 SOURCES += 2-beauty-classroom-case-study.md
 SOURCES += 2-linear-extended-derivation.md
@@ -35,4 +36,3 @@ all: $(PDFS) $(PAGES)
 
 clean: 
 	rm -f *.pdf *.html
-
