@@ -1,7 +1,7 @@
 
 all: in-person.html online.html summer.html
 
-SOURCESIP := title.md schedule-in-person.md materials.md prerequisites.md grading.md integrity.md other-policies.md 
+SOURCESIP := title.md schedule-in-person.md materials.md prerequisites.md grading.md integrity.md other-policies.md ../overview.md 
 in-person.html: $(SOURCESIP)
 	cat $(SOURCESIP) > in-person.tmp
 	pandoc -s -t html5 --mathjax -o $@ in-person.tmp -c ../style/pandoc.css

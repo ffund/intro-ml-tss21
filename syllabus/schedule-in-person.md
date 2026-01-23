@@ -50,6 +50,7 @@ The anticipated schedule of lab assignments will be:
 * Lab 8: released 4/3, due 4/16
 * Lab 10: released 4/17, due 4/30
 
+A more detailed overview of topics, including math prerequisites, textbook references, and supplementary material, is included at the end of this syllabus.
 
 ### Time commitment
 
