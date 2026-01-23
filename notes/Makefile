@@ -22,6 +22,8 @@ PANDOCFLAGS= --pdf-engine=xelatex\
 	 -V urlcolor=cyan \
          --listings -H ../style/listings-setup.tex -H ../style/keystroke-setup.tex -H ../style/includes.tex
 
+MATHJAX_URL=https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
 %.pdf: %.md
 	cat $^ | sed 's/mathbf/symbf/g' > $^.tmp
 	pandoc $^.tmp $(PANDOCFLAGS) -o $@ 
@@ -29,8 +31,10 @@ PANDOCFLAGS= --pdf-engine=xelatex\
 
 %.html: %.md
 	cat $^ | sed '/newpage/d' > $^.tmp
-	pandoc -s -t html5 --mathjax -o $@ $^.tmp -c ../style/pandoc.css
-	rm $^.tmp
+	pandoc -s -t html5 --mathjax=$(MATHJAX_URL) -o $@.tmp $^.tmp -c ../style/pandoc.css
+	# pandoc adds a polyfill.io include that may be blocked/unavailable; drop it.
+	sed '/polyfill.io/d' $@.tmp > $@
+	rm $^.tmp $@.tmp
 
 all: $(PDFS) $(PAGES)
 

@@ -84,9 +84,9 @@ df = pd.DataFrame({"a": [1, 2, 3],
 | **Argmax/argmin**<br>(index of max/min; e.g. “best/worst” row) | `i_max = np.argmax(X[:, 0])`<br>`i_min = np.argmin(X[:, 0])` | `i_max = df["a"].idxmax()`<br>`i_min = df["a"].idxmin()` |
 | **Group + aggregate**<br>(summarize by category) | (not a core numpy pattern) | `means = df.groupby("g")["b"].mean()` |
 | **Stack/concat columns**<br>(combine features) | `X3 = np.column_stack([X1, X2])` | `df3 = pd.concat([df1, df2], axis=1)` |
-| **Reshape 1D$\leftrightarrow$2D**<br>(match API expectations like `(n_rows, 1)`) | `x_col = x.reshape(-1, 1)` $\to$ shape `(n_rows, 1)`<br>`x_row = x.reshape(1, -1)` $\to$ shape `(1, n_rows)`<br>`x_1d = X.reshape(-1,)` $\to$ shape `(n_rows*n_cols,)` | `s = df["a"]` $\to$ Series (1D)<br>`df[["a"]]` $\to$ DataFrame (2D) |
+| **Reshape 1D $\leftrightarrow$ 2D**<br>(match API expectations like `(n_rows, 1)`) | `x_col = x.reshape(-1, 1)` $\to$ shape `(n_rows, 1)`<br>`x_row = x.reshape(1, -1)` $\to$ shape `(1, n_rows)`<br>`x_1d = X.reshape(-1,)` $\to$ shape `(n_rows*n_cols,)` | `s = df["a"]` $\to$ Series (1D)<br>`df[["a"]]` $\to$ DataFrame (2D) |
 | **Create a new feature**<br>(feature engineering) | `new_feature = X[:,0] * X[:,1]`<br>`Xnew = np.column_stack([X, new_feature])` | `df = df.assign(new_feature=df["a"] * df["b"])` |
 | **Ordinal-encode categories**<br>(preserve order info) | `map_ = {"low":1,"med":2,"high":3}`<br>`x = np.array([map_[v] for v in vals])` | `map_ = {"low":1,"med":2,"high":3}`<br>`s = df["level"].map(map_)` |
 | **One-hot encode categories**<br>(no implied ordering) | (not a core numpy pattern) | `df_ohe = pd.get_dummies(df, columns=["level"], dtype=int)` |
 | **Read from a file**<br>(load data) | `X = np.load("X.npy")`<br>or `np.loadtxt` for text | `df = pd.read_csv("data.csv")`<br>common: `sep`, `header`, `index_col` |
-| **Convert between numpy$\leftrightarrow$pandas**<br>(use the right tool) | `df = pd.DataFrame(X, columns=["a","b"])` | `X = df.to_numpy()` |
+| **Convert between numpy $\leftrightarrow$ pandas**<br>(use the right tool) | `df = pd.DataFrame(X, columns=["a","b"])` | `X = df.to_numpy()` |
