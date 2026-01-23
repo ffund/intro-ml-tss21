@@ -49,7 +49,6 @@ Two common row selectors:
 - `df.loc[...]` uses **labels** (index values)
 - `df.iloc[...]` uses **integer positions**
 
-
 ## Common operations (numpy vs pandas)
 
 Assume:
