@@ -732,7 +732,7 @@ We can solve this as we would any set of linear equations (see supplementary not
 
 * Correlation coefficient $r_{xy}$
 * Slope coefficient $w_j$ for feature $j$
-* MSE, R2
+* MSE, MAE, R2
 
 ::: notes
 
@@ -768,7 +768,55 @@ Note: doesn't say whether the effect is *causal* or whether it is *significant* 
 
 Be aware of units - we cannot directly compare the magnitude of coefficients of features measured in different units.
 
+Also, be aware of how coefficient of one feature can relate to coefficient of another:
+
+![Representation of features and predictions as vectors.](../images/2-linear-vector-x.png){ width=70% }
+
+![Meaning of coefficients when features are collinear.](../images/2-linear-vector-colinear.png){ width=70% }
+
+![Meaning of coefficients when there is a hidden confounding variable.](../images/2-linear-hidden-confounding.png){ width=75% }
+
+![Meaning of coefficients with suppressor variable.](../images/2-linear-regression-suppress.png){ width=75% }
+
 :::
+
+\newpage
+
+### Interpreting MSE, MAE
+
+**Mean Squared Error (MSE)**:
+
+$$MSE = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2$$
+
+**Mean Absolute Error (MAE)**:
+
+$$MAE = \frac{1}{n} \sum_{i=1}^n |y_i - \hat{y_i}|$$
+
+::: notes
+
+MSE is useful for training because:
+
+* The squared loss function is differentiable everywhere, making it easy to optimize
+* It has a closed-form solution (the normal equations)
+* It penalizes large errors more heavily
+
+However, MSE is less intuitive for *interpreting* model error:
+
+* MSE is in squared units of the target variable, hard to understand in context
+* MAE is in the same units as the target variable
+* MAE is more robust to outliers 
+
+If $y$ is in dollars, you can directly say "on average, my predictions are off by $X" using MAE.
+
+In some cases, we may prefer Mean Absolute Percent Error: 
+
+$$MAPE = \frac{100\%}{n} \sum_{i=1}^n \left|\frac{y_i - \hat{y_i}}{y_i}\right|$$
+
+For example, suppose you are predicting house price. A $50k prediction error is much more significant for the 200k home (25% off) than for a 5 million dollar one (1% off). MAPE calculates error as a percentage of each actual value, so you get a meaningful comparison across different price ranges.
+
+:::
+
+
 
 ### Interpreting R2 as explained variance
 

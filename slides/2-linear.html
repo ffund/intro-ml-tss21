@@ -830,7 +830,7 @@ class="title-slide slide level2">
 class="math inline">\(r_{xy}\)</span></li>
 <li>Slope coefficient <span class="math inline">\(w_j\)</span> for
 feature <span class="math inline">\(j\)</span></li>
-<li>MSE, R2</li>
+<li>MSE, MAE, R2</li>
 </ul>
 <aside class="notes">
 <p>Which of these depend only on the data, and which depend on the model
@@ -873,6 +873,71 @@ by <span class="math inline">\(w_j\)</span>”</li>
 is <em>significant</em> (out of scope of this course).</p>
 <p>Be aware of units - we cannot directly compare the magnitude of
 coefficients of features measured in different units.</p>
+<p>Also, be aware of how coefficient of one feature can relate to
+coefficient of another:</p>
+<figure>
+<img data-src="../images/2-linear-vector-x.png" style="width:70.0%"
+alt="Representation of features and predictions as vectors." />
+<figcaption aria-hidden="true">Representation of features and
+predictions as vectors.</figcaption>
+</figure>
+<figure>
+<img data-src="../images/2-linear-vector-colinear.png"
+style="width:70.0%"
+alt="Meaning of coefficients when features are collinear." />
+<figcaption aria-hidden="true">Meaning of coefficients when features are
+collinear.</figcaption>
+</figure>
+<figure>
+<img data-src="../images/2-linear-hidden-confounding.png"
+style="width:75.0%"
+alt="Meaning of coefficients when there is a hidden confounding variable." />
+<figcaption aria-hidden="true">Meaning of coefficients when there is a
+hidden confounding variable.</figcaption>
+</figure>
+<figure>
+<img data-src="../images/2-linear-regression-suppress.png"
+style="width:75.0%"
+alt="Meaning of coefficients with suppressor variable." />
+<figcaption aria-hidden="true">Meaning of coefficients with suppressor
+variable.</figcaption>
+</figure>
+</aside>
+</section>
+<section id="interpreting-mse-mae" class="slide level3">
+<h3>Interpreting MSE, MAE</h3>
+<p><strong>Mean Squared Error (MSE)</strong>:</p>
+<p><span class="math display">\[MSE = \frac{1}{n} \sum_{i=1}^n (y_i -
+\hat{y_i})^2\]</span></p>
+<p><strong>Mean Absolute Error (MAE)</strong>:</p>
+<p><span class="math display">\[MAE = \frac{1}{n} \sum_{i=1}^n |y_i -
+\hat{y_i}|\]</span></p>
+<aside class="notes">
+<p>MSE is useful for training because:</p>
+<ul>
+<li>The squared loss function is differentiable everywhere, making it
+easy to optimize</li>
+<li>It has a closed-form solution (the normal equations)</li>
+<li>It penalizes large errors more heavily</li>
+</ul>
+<p>However, MSE is less intuitive for <em>interpreting</em> model
+error:</p>
+<ul>
+<li>MSE is in squared units of the target variable, hard to understand
+in context</li>
+<li>MAE is in the same units as the target variable</li>
+<li>MAE is more robust to outliers</li>
+</ul>
+<p>If <span class="math inline">\(y\)</span> is in dollars, you can
+directly say “on average, my predictions are off by $X” using MAE.</p>
+<p>In some cases, we may prefer Mean Absolute Percent Error:</p>
+<p><span class="math display">\[MAPE = \frac{100\%}{n} \sum_{i=1}^n
+\left|\frac{y_i - \hat{y_i}}{y_i}\right|\]</span></p>
+<p>For example, suppose you are predicting house price. A $50k
+prediction error is much more significant for the 200k home (25% off)
+than for a 5 million dollar one (1% off). MAPE calculates error as a
+percentage of each actual value, so you get a meaningful comparison
+across different price ranges.</p>
 </aside>
 </section>
 <section id="interpreting-r2-as-explained-variance"
