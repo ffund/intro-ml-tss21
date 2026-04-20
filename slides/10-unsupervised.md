@@ -1,5 +1,5 @@
 ---
-title:  'Unsupervised learning'
+title:  'Unsupervised and self-supervised learning'
 author: 'Fraida Fund'
 ---
 
