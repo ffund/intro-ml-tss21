@@ -277,8 +277,12 @@ reward, based on what you know about the environment.</li>
 <li>With probability <span class="math inline">\(\epsilon\)</span>,
 choose random action uniformly</li>
 <li>With probability <span class="math inline">\(1-\epsilon\)</span>,
-choose optimal</li>
+choose greedy action</li>
 </ul>
+<p>The greedy action is chosen with probability <span
+class="math inline">\(1-\epsilon +
+\frac{\epsilon}{|\mathcal{A}|}\)</span>, since it can also be selected
+during random exploration.</p>
 <p>Can decay <span class="math inline">\(\epsilon\)</span> over
 time.</p>
 <aside class="notes">
