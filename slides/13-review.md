@@ -201,6 +201,15 @@ df2 = pd.get_dummies(df["col"], dtype=np.int32)
 </small>
 
 
+### `scikit-learn`: Target encoding 
+
+```python
+te = TargetEncoder(cols=["col"])
+X_train_enc = te.fit_transform(X_train, y_train)
+X_test_enc = te.transform(X_test)
+```
+
+
 ### `pandas`: converting string to datetime
 
 ```python
@@ -391,6 +400,8 @@ Xts = vect.transform(text_ts)         # transform test text
 
 Common arguments: `stop_words`
 
+Common mistakes: passing a 2D argument.
+
 <small>
 (Seen in: H5)
 </small>
@@ -424,12 +435,21 @@ X_ovr, y_ovr = ovr.fit_resample(X, y)
 
 ## Slicing and selecting
 
+### `pandas`: drop columns
+
+```python
+df2 = df.drop(columns=["col1"]) # drop one column
+df2 = df.drop(columns=["col1", "col2"]) # drop list of columns
+```
+
 ### `pandas`: select columns
 
 ```python
 col = df["col"]                # one column (Series)
 cols = df[["col1", "col2"]]    # list of columns (DataFrame)
 ```
+
+Common mistakes: `df["col1", "col2"]`.
 
 
 ### `numpy`: select columns
@@ -533,7 +553,9 @@ for i, (idx_tr, idx_ts) in enumerate(kf.split(X)):
     Xtr, Xts = X.iloc[idx_tr], X.iloc[idx_ts]
 ```
 
-Note the use of `iloc`! (Applies to all the "variants," too.)
+Note the use of `iloc`! 
+
+(Applies to all the "variants," too.)
 
 ### `sklearn`: TimeSeriesSplit
 
