@@ -56,16 +56,12 @@ On each exam, there will be 100 points that are divided roughly as follows:
 * 5-10 points: questions about specific case studies, visualizations, and examples in problem sets or lab assignments. These questions are designed to make sure you "take away" what is intended from these materials, rather than just earning whatever "points" are associated with them.
 * 30-35 points: code, including one "easy" and one more complicated question. The "complicated" question is designed so that you can earn points progressively, e.g. you can get a small portion of its credit for doing some basic things correct, some more credit for doing slightly more difficult things. To earn full credit, you will need to show an excellent understanding of principles of ML coding.
 
-You will take exams on a computer in a computer lab, with a proctor watching.
+You will take exams on a computer, with a proctor watching. For most students, the exam will take place in person on the NYU Tandon campus.
 
-<!--
 * If you are enrolled in an in-person section of Intro ML, you will take the exam in person.
 * If you are enrolled in an online section of Intro ML (in a semester when Intro ML is offered online), you will also take the exam in person, UNLESS:
   * you are not enrolled in any in-person course in NYC this semester - then you may take the exam online, with an online proctor. You will share your screen and a video view of your environment with the proctor.
   * or, if you have another valid reason for requiring online exams, you should discuss this with me in the first week of the semester (before the add/drop deadline).
-
-In addition to the "live" proctoring, you will record your own screen while taking the exam, and you will submit this recording after the end of the exam (this applies to both in person and online exams).
--->
 
 During the exam, you will be permitted to use:
 
