@@ -40,15 +40,13 @@ For the Fall 2026 semester, a tentative schedule (subject to change) is:
 | 12/14        | 13: Recommender systems, review                                        |
 | **12/16-22** | **Final exam** (throughout this week)                                  |
 
-<!--
 The anticipated schedule of lab assignments will be:
 
-* Lab 2: linear regression, (flashcard spaced repetition app)
-* Lab 4: (zillow???, gradient descent/custom loss)
-* Lab 6: KNN voter classification
-* Lab 8: released 4/3, due 4/16 (AERPAW UAV experiment)
-* Lab 10: neural network Energy to Accuracy/Time to Accuracy, but also incorporate different base models
--->
+* Lab 2: released 9/25, due 10/8
+* Lab 4: released 10/9, due 10/29
+* Lab 6: released 10/30, due 11/12
+* Lab 8: released 11/13, due 12/3
+* Lab 10: released 11/27, due 12/10
 
 A more detailed overview of topics, including math prerequisites, textbook references, and supplementary material, is included at the end of this syllabus.
 

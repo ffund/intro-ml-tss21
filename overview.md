@@ -214,6 +214,17 @@
       </td>
     </tr>
     <tr>
+      <td><b>Recommender systems</b></td>
+      <td>
+        Matrix notation and matrix multiplication<br>
+        Dot products and cosine similarity<br>
+        Derivatives and optimization<br>
+        Expectation of random variables
+      </td>
+      <td>MMDS: Ch. 9, Recommendation Systems</td>
+      <td>—</td>
+    </tr>
+    <tr>
       <td><b>Reinforcement learning</b></td>
       <td>
         Derivatives and optimization (IALA App. C)<br>
@@ -239,5 +250,6 @@
   <li><b>ESL</b> – <i>Elements of Statistical Learning</i> (Hastie, Tibshirani, Friedman)</li>
   <li><b>PRML</b> – <i>Pattern Recognition and Machine Learning</i> (Bishop)</li>
   <li><b>IALA</b> – <i>Introduction to Applied Linear Algebra</i> (Boyd &amp; Vandenberghe)</li>
+  <li><b>MMDS</b> – <i>Mining of Massive Datasets</i> (Leskovec, Rajaraman, Ullman)</li>
   <li><b>RL</b> – <i>Reinforcement Learning: An Introduction</i> (Sutton &amp; Barto)</li>
 </ul>
