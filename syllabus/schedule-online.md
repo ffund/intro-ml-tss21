@@ -5,7 +5,7 @@ Fraida Fund ffund@nyu.edu (370 Jay St, Room 936). The best way to reach me is to
 
 ### Course assistants
 
-Anup Raj Niroula, Tse Heng Hsueh. The course assistants are available to answer questions in their respective office hours (see Brightspace calendar for dates and Zoom links). They aren't available by email; for written communication with course staff, please use Ed.
+Songchen Xue, Kiran Ghumare, Rishabh Narayan. The course assistants are available to answer questions in their respective office hours (see Brightspace calendar for dates and Zoom links). They aren't available by email; for written communication with course staff, please use Ed.
 
 ### Instruction mode
 
@@ -14,44 +14,36 @@ Online asynchronous (no scheduled meetings - just prerecorded video) <span style
 
 ### Schedule
 
-* "Chalkboard lecture" video will be released every week on Thursday.
-* "Colab lecture" video will be released every week on Friday.
-* Homework problem sets will be released on Fridays before 5PM, and will be due 9 days later (on a Sunday) at midnight.
+* "Chalkboard lecture" video will be released on Monday night after the in-person lecture (except for the Wednesday lesson on October 14).
+* "Colab lecture" video will be released online on Tuesday.
+* Homework problem sets will be released on Thursdays, and will be due 10 days later (on a Sunday) at midnight.
 * Lab assignments will be released on Fridays for even-numbered topics (2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
 * Office hours: See Brightspace calendar for dates and Zoom links
 
 This is *not* a self-paced course - it is designed for students who will keep up with course material on a regular basis, e.g. will usually work through content within a week of its release.
 
-For the Fall 2025 semester, a tentative schedule (subject to change) is:
+For the Fall 2026 semester, a tentative schedule (subject to change) is:
 
-| Chalkboard Lecture Date   | Topic                                                                  |
-|-----------------|------------------------------------------------------------------------|
-|                 | 0: Prerequisite review, Python+numpy                                   |
-| 9/4             | 1: Intro to ML, exploratory data analysis                              |
-| 9/11            | 2: Linear regression                                                   |
-| 9/18            | 3: Gradient descent, bias-variance tradeoff                            |
-| 9/25            | 4: Model selection, regularization                                     |
-| 10/2            | 5: Logistic regression for classification (prerecorded, no meeting)    |
-| 10/9            | 6: K nearest neighbor, feature selection                               |
-| **10/13-10/17** | **Midterm exam** (several time slots will be offered during the week)  |
-| 10/23           | 7: Decision trees, ensembles                                           |
-| 10/30           | 8: Support vector classifiers, kernels, hyperparameter optimization    |
-| 11/6            | 9: Neural networks                                                     |
-| 11/13           | 10: Deep neural networks, convolutional neural networks                |
-| 11/20           | 11: Unsupervised learning                                              |
-|                 | *Thanksgiving break*                                                   |
-| 12/4            | 12: Reinforcement learning                                             |
-| 12/11           | 13: Deploying machine learning systems                                 |
-| **12/15-12/19** | **Final exam** (several time slots will be offered during the week)    |
+| Chalkboard Lecture Release Date | Topic                                                               |
+|---------------------------------|---------------------------------------------------------------------|
+|                                 | 0: Prerequisite review, Python+numpy                                |
+| 9/14                            | 1: Intro to ML, working with data                                   |
+| 9/21                            | 2: Linear regression                                                |
+| 9/28                            | 3: Gradient descent, bias-variance tradeoff                         |
+| 10/5                            | 4: Model selection, regularization                                  |
+| 10/14                           | 5: Logistic regression for classification **Note: Wednesday release** |
+| 10/19                           | **Midterm exam** (throughout this week)                             |
+| 10/26                           | 6: K nearest neighbor, feature selection                            |
+| 11/2                            | 7: Decision trees, ensembles                                        |
+| 11/9                            | 8: Support vector classifiers, kernels, hyperparameter optimization |
+| 11/16                           | 9: Neural networks                                                  |
+| 11/23                           | 10: Deep neural networks, convolutional neural networks             |
+| 11/30                           | 11: Unsupervised, self-supervised learning                          |
+| 12/7                            | 12: Reinforcement learning                                          |
+| 12/14                           | 13: Recommender systems, review                                     |
+| **12/16-22**                    | **Final exam** (throughout this week)                               |
 
-The anticipated schedule of lab assignments will be:
-
-* Lab 2: released 9/12, due 9/25
-* Lab 4: released 9/26, due 10/9
-* Lab 6: released 10/10, due 10/30
-* Lab 8: released 10/31, due 11/13
-* Lab 10: released 11/14, due 12/4
-
+A more detailed overview of topics, including math prerequisites, textbook references, and supplementary material, is included at the end of this syllabus.
 
 ### Time commitment
 

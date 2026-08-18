@@ -1,6 +1,6 @@
-% ECE-GY 6143 Intro Machine Learning - Spring 2026
+% ECE-GY 6143 Intro Machine Learning - Fall 2026
 % Fraida Fund
-% January 2026
+% September 2026
 
 
 ### Overview
