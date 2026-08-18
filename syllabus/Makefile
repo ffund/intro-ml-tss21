@@ -8,7 +8,7 @@ in-person.html: $(SOURCESIP)
 	rm in-person.tmp
 
 
-SOURCESOL := title.md schedule-online.md materials.md prerequisites.md grading.md integrity.md other-policies.md  
+SOURCESOL := title.md schedule-online.md materials.md prerequisites.md grading.md integrity.md other-policies.md ../overview.md
 
 online.html: $(SOURCESOL)
 	cat $(SOURCESOL) > online.tmp

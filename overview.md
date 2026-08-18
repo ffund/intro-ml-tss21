@@ -214,17 +214,6 @@
       </td>
     </tr>
     <tr>
-      <td><b>Recommender systems</b></td>
-      <td>
-        Matrix notation and matrix multiplication<br>
-        Dot products and cosine similarity<br>
-        Derivatives and optimization<br>
-        Expectation of random variables
-      </td>
-      <td>MMDS: Ch. 9, Recommendation Systems</td>
-      <td>—</td>
-    </tr>
-    <tr>
       <td><b>Reinforcement learning</b></td>
       <td>
         Derivatives and optimization (IALA App. C)<br>
@@ -238,6 +227,17 @@
       <td>
         <a href="https://www.youtube.com/watch?v=Z-T0iJEXiwM">Reinforcement Learning: Essential Concepts</a><br>
       </td>
+    </tr>
+    <tr>
+      <td><b>Recommender systems</b></td>
+      <td>
+        Matrix notation and matrix multiplication<br>
+        Dot products and cosine similarity<br>
+        Derivatives and optimization<br>
+        Expectation of random variables
+      </td>
+      <td>MMDS: Ch. 9, Recommendation Systems</td>
+      <td>—</td>
     </tr>
   </tbody>
 </table>
