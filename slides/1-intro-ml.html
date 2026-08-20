@@ -677,6 +677,39 @@ unknown.</p>
 <strong>prediction</strong> for the value of <span
 class="math inline">\(y\)</span>.</p>
 </section>
+<section
+id="the-basic-supervised-machine-learning-problem---matrix-form"
+class="slide level3 cell markdown">
+<h3>The basic supervised machine learning problem - matrix form</h3>
+<p>Given <span class="math inline">\(N\)</span> samples with <span
+class="math inline">\(d\)</span> features, we can stack the feature
+vectors as rows in a <strong>data matrix</strong> with one sample per
+row and one feature per column:</p>
+<p><span class="math display">\[\mathbf{X} =
+\begin{bmatrix}
+x_{1,1} &amp; \cdots &amp; x_{1,d} \\
+\vdots  &amp; \ddots &amp; \vdots  \\
+x_{N,1} &amp; \cdots &amp; x_{N,d}
+\end{bmatrix}, \quad
+\mathbf{y} =
+\begin{bmatrix}
+y_{1}  \\
+\vdots \\
+y_{N}
+\end{bmatrix}
+\]</span></p>
+<p>and we want to find the vector of predictions</p>
+<p><span class="math display">\[\hat{\mathbf{y}} =
+\begin{bmatrix}
+\hat{y}_{1}  \\
+\vdots \\
+\hat{y}_{N}
+\end{bmatrix}.\]</span></p>
+<aside class="notes">
+<p>By convention, we use a capital letter for a matrix and a bold
+lowercase letter for a vector.</p>
+</aside>
+</section>
 <section id="a-supervised-machine-learning-recipe-1"
 class="slide level3 cell markdown">
 <h3>A supervised machine learning “recipe” (1)</h3>

@@ -692,6 +692,44 @@ We want to find $\hat{y}$, our **prediction** for the value of $y$.
 
 ::: {.cell .markdown}
 
+### The basic supervised machine learning problem - matrix form
+
+Given $N$ samples with $d$ features, we can stack the feature vectors as rows in a **data matrix** with one sample per row and one feature per column:
+
+$$\mathbf{X} =
+\begin{bmatrix}
+x_{1,1} & \cdots & x_{1,d} \\
+\vdots  & \ddots & \vdots  \\
+x_{N,1} & \cdots & x_{N,d}
+\end{bmatrix}, \quad
+\mathbf{y} =
+\begin{bmatrix}
+y_{1}  \\
+\vdots \\
+y_{N}
+\end{bmatrix}
+$$
+
+and we want to find the vector of predictions
+
+$$\hat{\mathbf{y}} =
+\begin{bmatrix}
+\hat{y}_{1}  \\
+\vdots \\
+\hat{y}_{N}
+\end{bmatrix}.$$
+
+::: notes
+
+By convention, we use a capital letter for a matrix and a bold lowercase letter for a vector.
+
+:::
+
+:::
+
+
+::: {.cell .markdown}
+
 ### A supervised machine learning "recipe" (1)
 
 
