@@ -127,3 +127,6 @@ Extra credit points are only awarded in 0.5 point increments - you won't get 0.2
 
 Any extra credit you earn from Week 1, 2, 3, or 4 will be applied to the midterm exam, but capped at 2 points. Any extra credit you earn from Week 5, 6, 7, 8, 9, 10, 11, or 12 will be applied to the final exam, but capped at 6 points. The cap means that even if you miss an opportunity to earn a 0.5 point or two (for example: you are late to class because of subway delays, and miss a poll as a result), you won't be disadvantaged. There are no makeup opportunities for extra credit points, 
 
+There will be an optional opportunity to re-attempt the midterm exam. This opportunity is available only to students who took the first midterm exam. If you re-attempt the exam, your second score will count, whether it is higher or lower than your first score.
+
+The purpose of this opportunity is to help you identify and address deficiencies in your preparation so that you can do better on the second exam. Simply taking the exam again without changing how you prepare is unlikely to be effective. There will be no opportunity to re-take the final exam.
