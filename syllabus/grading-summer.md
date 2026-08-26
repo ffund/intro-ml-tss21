@@ -83,6 +83,10 @@ If you plan to use these permitted online materials during the exam, you should 
 
 You may not use any other online or offline materials or resources during the exam. You may not use the course handouts or notebooks (except for parts you have copied into your 'reference sheet'). You may not open the homework problem sets on PrairieLearn during the exam. You may not use a handheld calculator or any electronic device except the computer on which you are taking the exam.
 
+There will be an optional opportunity to re-attempt the midterm exam. This opportunity is available only to students who took the first midterm exam. If you re-attempt the exam, your second score will count, whether it is higher or lower than your first score.
+
+The purpose of this opportunity is to help you identify and address deficiencies in your preparation so that you can do better on the second exam. Simply taking the exam again without changing how you prepare is unlikely to be effective. There will be no opportunity to re-take the final exam.
+
 #### Extra credit
 
 You will have the opportunity to earn extra credit towards your final exam score. This extra credit will be added to your actual exam score before it is counted in your course grade. For example, if you earn a 92% on your final exam and you have 4 points of extra credit, then a 96% score will be counted.
@@ -95,4 +99,3 @@ You may earn up to 6 points toward your final exam.
 Extra credit points are only awarded in 0.5 point increments if you do everything that is required in a given lesson - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
 
 Extra credit is capped at 6 points. The cap means that even if you miss some opportunities to earn a 0.5 point (for example: you cannot attend some live chalkboard lectures because of other responsibilities), you won't be disadvantaged. There are no makeup opportunities for extra credit points, 
-
