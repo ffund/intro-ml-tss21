@@ -40,12 +40,6 @@ For the Fall 2026 semester, a tentative schedule (subject to change) is:
 | 12/14        | 13: Recommender systems, review                                        |
 | **12/16-22** | **Final exam** (throughout this week)                                  |
 
-* Lab 2: released 9/25, due 10/8
-* Lab 4: released 10/9, due 10/29
-* Lab 6: released 10/30, due 11/12
-* Lab 8: released 11/13, due 12/3
-* Lab 10: released 11/27, due 12/10
-
 A more detailed overview of topics, including math prerequisites, textbook references, and supplementary material, is included at the end of this syllabus.
 
 ### Time commitment
