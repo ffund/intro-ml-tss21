@@ -77,6 +77,10 @@ During the exam, you will be permitted to use:
 
 You may not use any other online or offline materials or resources during the exam. You may not use the course handouts or notebooks (except for parts you have copied into your 'reference sheet'). You may not open the homework problem sets on PrairieLearn during the exam. You may not use a handheld calculator or any electronic device except the computer on which you are taking the exam.
 
+There will be an optional opportunity to re-attempt the midterm exam. This opportunity is available only to students who took the first midterm exam. If you re-attempt the exam, your second score will count, whether it is higher or lower than your first score.
+
+The purpose of this opportunity is to help you identify and address deficiencies in your preparation so that you can do better on the second exam. Simply taking the exam again without changing how you prepare is unlikely to be effective. There will be no opportunity to re-take the final exam.
+
 #### Extra credit
 
 You will have the opportunity to earn extra credit towards your midterm and final exam scores.  This extra credit will be added to your actual exam score before it is counted in your course grade. For example, if you earn a 92% on your midterm exam and you have 2 points of extra credit toward your midterm, then a 94% score will be counted.
@@ -126,7 +130,3 @@ Extra credit points may be earned by the following activities:
 Extra credit points are only awarded in 0.5 point increments - you won't get 0.25 points for participating in half of the polls in a chalkboard lecture, for example.
 
 Any extra credit you earn from Week 1, 2, 3, or 4 will be applied to the midterm exam, but capped at 2 points. Any extra credit you earn from Week 5, 6, 7, 8, 9, 10, 11, or 12 will be applied to the final exam, but capped at 6 points. The cap means that even if you miss an opportunity to earn a 0.5 point or two (for example: you are late to class because of subway delays, and miss a poll as a result), you won't be disadvantaged. There are no makeup opportunities for extra credit points, 
-
-There will be an optional opportunity to re-attempt the midterm exam. This opportunity is available only to students who took the first midterm exam. If you re-attempt the exam, your second score will count, whether it is higher or lower than your first score.
-
-The purpose of this opportunity is to help you identify and address deficiencies in your preparation so that you can do better on the second exam. Simply taking the exam again without changing how you prepare is unlikely to be effective. There will be no opportunity to re-take the final exam.
