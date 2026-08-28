@@ -73,6 +73,7 @@ During the exam, you will be permitted to use:
 * the official numpy API reference pages (via https://numpy.org/doc/stable/reference)
 * the official pandas API reference pages (via https://pandas.pydata.org/docs/reference)
 * the official Pytorch API reference pages  (via https://docs.pytorch.org/docs/stable/index.html)
+* [The Data Operations Reference Sheet](https://ffund.github.io/intro-ml-tss21/notes/1-data-reference.pdf) will be provided on the exam environment
 * Google Translate (i.e. if you do not understand some question text or instructions during the exam, you may translate it.)
 
 You may not use any other online or offline materials or resources during the exam. You may not use the course handouts or notebooks (except for parts you have copied into your 'reference sheet'). You may not open the homework problem sets on PrairieLearn during the exam. You may not use a handheld calculator or any electronic device except the computer on which you are taking the exam.
