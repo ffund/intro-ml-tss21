@@ -26,7 +26,7 @@ Axis convention (for 2D `X`):
 - `axis=0`: down the rows (compute one value per **column/feature**)
 - `axis=1`: across the columns (compute one value per **row/sample**)
 
-## Pandas: `DataFrame` + `Series`, named columns + named index
+## Pandas: `DataFrame` + `Series`, named columns + row index
 
 `pandas` wraps tabular data with labels:
 
