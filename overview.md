@@ -246,10 +246,10 @@
 
 <p><b>Legend:</b></p>
 <ul>
-  <li><b>ISL</b> – <i>Introduction to Statistical Learning</i> (James et al.)</li>
-  <li><b>ESL</b> – <i>Elements of Statistical Learning</i> (Hastie, Tibshirani, Friedman)</li>
-  <li><b>PRML</b> – <i>Pattern Recognition and Machine Learning</i> (Bishop)</li>
-  <li><b>IALA</b> – <i>Introduction to Applied Linear Algebra</i> (Boyd &amp; Vandenberghe)</li>
-  <li><b>MMDS</b> – <i>Mining of Massive Datasets</i> (Leskovec, Rajaraman, Ullman)</li>
-  <li><b>RL</b> – <i>Reinforcement Learning: An Introduction</i> (Sutton &amp; Barto)</li>
+  <li><b><a href="https://drive.google.com/file/d/1ajFkHO6zjrdGNqhqW1jKBZdiNGh_8YQ1/view">ISL</a></b> – <i>Introduction to Statistical Learning</i> (James et al.)</li>
+  <li><b><a href="https://hastie.su.domains/ElemStatLearn/">ESL</a></b> – <i>Elements of Statistical Learning</i> (Hastie, Tibshirani, Friedman)</li>
+  <li><b><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2006/01/Bishop-Pattern-Recognition-and-Machine-Learning-2006.pdf">PRML</a></b> – <i>Pattern Recognition and Machine Learning</i> (Bishop)</li>
+  <li><b><a href="https://web.stanford.edu/~boyd/vmls/vmls.pdf">IALA</a></b> – <i>Introduction to Applied Linear Algebra</i> (Boyd &amp; Vandenberghe)</li>
+  <li><b><a href="http://www.mmds.org/#ver21">MMDS</a></b> – <i>Mining of Massive Datasets</i> (Leskovec, Rajaraman, Ullman)</li>
+  <li><b><a href="http://incompleteideas.net/book/the-book-2nd.html">RL</a></b> – <i>Reinforcement Learning: An Introduction</i> (Sutton &amp; Barto)</li>
 </ul>
