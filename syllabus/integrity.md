@@ -43,7 +43,7 @@ With all that in mind, in this class, you are encouraged to use AI assistance fo
 
 * computer translation between English and another language, e.g. you may write an explanation for a homework problem or lab assignment in another language and then submit a direct translation to English using Google Translate or a similar service. (Note: this does not include "cleaning up" or rephrasing text, which is not allowed - only direct translation is allowed. You shouldn't "clean up" text because (1) I don't care about your spelling, grammar, or vocabulary, and (2) if I am asking for an open-ended response, I want to hear *your* voice, not an LLM's voice.)
 * to generate Python code for plotting and visualization. You are fully responsible for any figures or visualizations you submit, including making sure their appearance is reasonable and the data in them is correct. But, you are permitted to use an AI assistant to help you generate `matplotlib` or `seaborn` code to make your plots look the way you want. If you do use an AI assistant, you must include your LLM prompt in your submission.
-* to generate Python code on questions where an AI coding agent (we'll use `opencode`) is explicitly integrated into the question environment, and the instructions tell you to use this AI coding agent.
+* to generate Python code on questions where an AI coding agent (we'll use `opencode`) is explicitly integrated into the question environment, and the instructions tell you to use this AI coding agent. These particular questions are designed so that the AI agents supports your learning, rather than shortcutting it.
 
 Using AI assistance for all other tasks is not allowed. Will I know if you use AI in ways that are not permitted? Probably not, unless you are really obvious about it! But I assume you are here because you want to learn about machine learning; this course is designed for you to achieve its learning outcomes if and only if you exercise your organic human brain as intended.
 
@@ -57,8 +57,8 @@ Outside of coding problems, I also suggest you be careful about using AI as a "t
 
 * When you answer a question on PrairieLearn, scroll down to the "Correct Answer" panel. In many cases, this will have an explanation that is **written by your instructor**.
 * If you don't understand something in the lecture, lab, or homework, post a question on Ed to get an explanation from your instructor or a course assistant.
-* Or, visit an office hour on Zoom for a "live" Q&A with humans.
-
+* Visit an office hour on Zoom for a "live" Q&A with your instructor or a course assistant.
+* Form a study group with a few classmates for collaborative learning.
 
 #### Violation of academic integrity policies
 

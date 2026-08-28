@@ -83,6 +83,8 @@ The purpose of this opportunity is to help you identify and address deficiencies
 
 #### Extra credit
 
+Extra credit is awarded for activities and practices that promote learning, such as active engagement in lectures by answering poll or quiz questions, spaced repetition, and collaborative learning in a group.
+
 You will have the opportunity to earn extra credit towards your midterm and final exam scores.  This extra credit will be added to your actual exam score before it is counted in your course grade. For example, if you earn a 92% on your midterm exam and you have 2 points of extra credit toward your midterm, then a 94% score will be counted.
 
 You may earn up to 2 points toward your midterm exam and 6 points toward your final exam.
@@ -122,6 +124,11 @@ Extra credit points may be earned by the following activities:
       <td>Review quiz (weeks 3, 5, 7, 9, 11)</td>
       <td>0.5 points per quiz</td>
       <td>Score <strong>100%</strong> on a review quiz on previous weeks' material (available Mon 9AM – Thu midnight on PrairieLearn; 15-minute limit once you start).</td>
+    </tr>
+    <tr>
+      <td>Study group meeting</td>
+      <td>0.5 points per meeting, up to 1 meeting per week starting after September 15</td>
+      <td>Get together in a group of 3-6 ECE-GY 6143 students, in person or on Zoom. Spend at least an hour engaged in PrairieLearn practice (to earn credit, <em>all</em> group members must submit some practice questions on their individual accounts over the course of that hour). Submit <a href="https://docs.google.com/forms/d/e/1FAIpQLSdZx9o8MMnlH_k7GLaXr0khkCIAGBKQx5DKHSXPZt17msGC4A/viewform?usp=publish-editor">this form</a> at the end of the meeting.</td>
     </tr>
   </tbody>
 </table>
