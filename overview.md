@@ -22,8 +22,9 @@
         Derivatives and optimization (IALA App. C)
       </td>
       <td>
-        ISL: Ch. 3 (intuition)<br>
-        PRML: Sec. 3.1.1<br>
+        ISLP: Sec. 3.1–3.3; Sec. 7.3 (basis functions)<br>
+        ESL: Sec. 3.2 (linear regression and least squares); Sec. 5.1 (basis expansions)<br>
+        PRML: Sec. 3.1, especially Sec. 3.1.1–3.1.2<br>
         IALA: Sec. 12.2 (OLS derivation)
       </td>
       <td>
@@ -38,7 +39,11 @@
         Derivatives and optimization (IALA App. C)<br>
         Complexity of algorithms, especially vector/matrix operations (IALA App. B, I.1, II.6)
       </td>
-      <td>PRML: Sec. 3.1.3 Sequential learning</td>
+      <td>
+        ISLP: Sec. 10.7.2 (SGD in a neural-network context)<br>
+        ESL: Sec. 10.10.1 (steepest descent in a gradient-boosting context)<br>
+        PRML: Sec. 3.1.3 (SGD and sequential learning for linear regression); Sec. 5.2.4 (general gradient-descent optimization)
+      </td>
       <td>
         <a href="https://www.youtube.com/watch?v=sDv4f4s2SB8">Gradient descent, step-by-step</a>
       </td>
@@ -51,7 +56,8 @@
         Independence of random variables
       </td>
       <td>
-        ESL: Sec. 2.9; Ch. 7<br>
+        ISLP: Sec. 2.2.2<br>
+        ESL: Sec. 2.9; Sec. 7.2–7.3<br>
         PRML: Sec. 3.2
       </td>
       <td>
@@ -62,8 +68,8 @@
       <td><b>Model selection</b></td>
       <td>—</td>
       <td>
-        ISL: Sec. 5.1 Cross-Validation<br>
-        ESL: Ch. 7<br>
+        ISLP: Sec. 5.1.1–5.1.4 (cross-validation); Sec. 7.1, 7.3–7.4 (polynomial, basis, and spline model complexity)<br>
+        ESL: Sec. 5.2 (piecewise polynomials and splines); Sec. 7.2–7.3, 7.10<br>
         PRML: Sec. 1.3
       </td>
       <td>
@@ -77,8 +83,9 @@
         Norm of a vector (IALA Sec. I.3)
       </td>
       <td>
-        ISL: Sec. 6.2<br>
-        PRML: Sec. 3.1.4
+        ISLP: Sec. 6.2.1–6.2.3 (ridge, lasso, and tuning parameters)<br>
+        ESL: Sec. 3.4.1–3.4.3 (ridge, lasso, and comparison)<br>
+        PRML: Sec. 3.1.4 (L2/weight-decay regularization; not lasso)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=Q81RR3yKn30">Ridge regression (L2 regularization)</a><br>
@@ -96,8 +103,9 @@
         Joint probability
       </td>
       <td>
-        ISL: Sec. 4.3<br>
-        PRML: Sec. 4.3.2, Sec. 4.3.4
+        ISLP: Sec. 4.3.1–4.3.5; Sec. 4.4.4 (Naive Bayes)<br>
+        ESL: Sec. 4.4–4.4.1 (logistic regression); Sec. 6.6.3 (Naive Bayes)<br>
+        PRML: Sec. 4.3.2–4.3.4; Sec. 4.2.3 (discrete generative classification and Naive-Bayes-style modeling)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=yIYKR4sgzI8">Logistic Regression</a><br>
@@ -116,7 +124,11 @@
         Variance of a random variable<br>
         Independence of random variables
       </td>
-      <td>ESL: Sec. 13.3–13.5</td>
+      <td>
+        ISLP: Sec. 2.2.3, 3.5; Sec. 6.1.1–6.1.3 (feature selection)<br>
+        ESL: Sec. 2.3.2; Sec. 3.3 (subset and feature selection); Sec. 13.3–13.5<br>
+        PRML: Sec. 2.5.2 (nearest-neighbor methods; less direct coverage of KNN regression)
+      </td>
       <td>
         <a href="https://www.youtube.com/watch?v=HVXime0nQeI">K-nearest neighbors, Clearly Explained</a>
       </td>
@@ -129,8 +141,9 @@
         Variance of sum of random variables
       </td>
       <td>
-        ISL: Ch. 8<br>
-        ESL: Sec. 9.2; Ch. 10; Ch. 15
+        ISLP: Sec. 8.1.1–8.1.4, 8.2.1–8.2.3<br>
+        ESL: Sec. 8.7 (bagging); Sec. 9.2 (trees); Sec. 10.1–10.12 (boosting); Sec. 15.1–15.4 (random forests)<br>
+        PRML: Sec. 14.2–14.4 (committees, boosting, and tree-based models)
       </td>
       <td>
       <a href="https://www.youtube.com/watch?v=_L39rN6gz7Y">Decision Trees, Clearly Explained!!!</a><br>
@@ -151,8 +164,9 @@
         Gaussian distribution
       </td>
       <td>
-        ISL: Ch. 9<br>
-        ESL: Ch. 12
+        ISLP: Sec. 9.1–9.3<br>
+        ESL: Sec. 12.2–12.3<br>
+        PRML: Sec. 6.2 (kernels); Sec. 7.1–7.1.3 (maximum-margin/SVM classification); Sec. 6.4.2–6.4.3 (Gaussian-process regression and hyperparameter learning; homework)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=efR1C6CvhmE">Support Vector Machines Part 1 (of 3): Main Ideas!!!</a><br>
@@ -167,9 +181,9 @@
         Chain rule for multivariable functions
       </td>
       <td>
-        PRML: Ch. 5<br>
-        ESL: Ch. 11<br>
-        ISL: Sec. 10.1, Sec. 10.7.1
+        ISLP: Sec. 10.1–10.2, 10.7.1<br>
+        ESL: Sec. 11.3–11.5<br>
+        PRML: Sec. 5.1–5.3
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=CqOfi41LfDw">Neural Networks Pt. 1: Inside the Black Box</a><br>
@@ -188,7 +202,9 @@
       <td><b>Deep neural networks, convolutional neural networks</b></td>
       <td>—</td>
       <td>
-        ISL: Sec. 10.2, Sec. 10.3, Sec. 10.8
+        ISLP: Sec. 10.2, 10.3.1–10.3.5, 10.7.2–10.7.4, 10.8<br>
+        ESL: Sec. 11.3–11.5 (classical neural-network architecture and training only; not modern CNNs, augmentation, transfer learning, or double descent)<br>
+        PRML: Sec. 5.5.6 (convolutional networks; older treatment, not modern deep-learning practice)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=HGwBXDKFk9I&t=1s">Image Classification with Convolutional Neural Networks (CNNs)</a>
@@ -204,7 +220,9 @@
         Joint and conditional probability
       </td>
       <td>
-        ESL: Ch. 14
+        ISLP: Sec. 12.2.1–12.2.5 (PCA); Sec. 12.4.1–12.4.3 (K-means and hierarchical clustering; partial coverage of the lecture)<br>
+        ESL: Sec. 14.3.1–14.3.12 (clustering); Sec. 14.5.1–14.5.5 (PCA and related dimensionality reduction); Sec. 14.8–14.9 (further embeddings and dimensionality reduction)<br>
+        PRML: Sec. 2.5.1, 9.2 (density estimation and Gaussian mixtures); Sec. 9.1 (K-means); Sec. 12.1.1–12.1.4 (PCA)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=HMOI_lkzW08">PCA main ideas in only 5 minutes!!!</a><br>
