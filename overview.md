@@ -40,8 +40,8 @@
         Complexity of algorithms, especially vector/matrix operations (IALA App. B, I.1, II.6)
       </td>
       <td>
-        ISL: Sec. 10.7.2 (SGD in a neural-network context)<br>
-        ESL: Sec. 10.10.1 (steepest descent in a gradient-boosting context)<br>
+        ISL: Sec. 10.7.2 (SGD in a neural network context)<br>
+        ESL: Sec. 10.10.1 (steepest descent in a gradient boosting context)<br>
         PRML: Sec. 3.1.3 (SGD and sequential learning for linear regression); Sec. 5.2.4 (general gradient-descent optimization)
       </td>
       <td>
@@ -83,9 +83,9 @@
         Norm of a vector (IALA Sec. I.3)
       </td>
       <td>
-        ISL: Sec. 6.2.1–6.2.3 (ridge, lasso, and tuning parameters)<br>
-        ESL: Sec. 3.4.1–3.4.3 (ridge, lasso, and comparison)<br>
-        PRML: Sec. 3.1.4 (L2/weight-decay regularization; not lasso)
+        ISL: Sec. 6.2.1–6.2.3<br>
+        ESL: Sec. 3.4.1–3.4.3<br>
+        PRML: Sec. 3.1.4
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=Q81RR3yKn30">Ridge regression (L2 regularization)</a><br>
@@ -127,7 +127,7 @@
       <td>
         ISL: Sec. 2.2.3, 3.5<br>
         ESL: Sec. 2.3.2; Sec. 13.3–13.5<br>
-        PRML: Sec. 2.5.2 (nearest-neighbor methods; less direct coverage of KNN regression)
+        PRML: Sec. 2.5.2 (nearest-neighbor methods)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=HVXime0nQeI">K-nearest neighbors, Clearly Explained</a>
@@ -203,8 +203,8 @@
       <td>—</td>
       <td>
         ISL: Sec. 10.2, 10.3.1–10.3.5, 10.7.2–10.7.4, 10.8<br>
-        ESL: Sec. 11.3–11.5 (classical neural-network architecture and training only; not modern CNNs, augmentation, transfer learning, or double descent)<br>
-        PRML: Sec. 5.5.6 (convolutional networks; older treatment, not modern deep-learning practice)
+        ESL: Sec. 11.3–11.5 (classical neural network architecture and training only)<br>
+        PRML: Sec. 5.5.6 (convolutional networks; older treatment)
       </td>
       <td>
         <a href="https://www.youtube.com/watch?v=HGwBXDKFk9I&t=1s">Image Classification with Convolutional Neural Networks (CNNs)</a>
@@ -220,7 +220,7 @@
         Joint and conditional probability
       </td>
       <td>
-        ISL: Sec. 12.2.1–12.2.5 (PCA); Sec. 12.4.1–12.4.3 (K-means and hierarchical clustering; partial coverage of the lecture)<br>
+        ISL: Sec. 12.2.1–12.2.5 (PCA); Sec. 12.4.1–12.4.3 (K-means and hierarchical clustering)<br>
         ESL: Sec. 14.3.1–14.3.12 (clustering); Sec. 14.5.1–14.5.5 (PCA and related dimensionality reduction); Sec. 14.8–14.9 (further embeddings and dimensionality reduction)<br>
         PRML: Sec. 2.5.1, 9.2 (density estimation and Gaussian mixtures); Sec. 9.1 (K-means); Sec. 12.1.1–12.1.4 (PCA)
       </td>
