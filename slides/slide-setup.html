@@ -1,0 +1,9 @@
+<script>
+new MutationObserver(function(mutations, observer) {
+  var target = document.querySelector('#title-slide, .title-slide');
+  if (target && !target.hasAttribute('data-background-color')) {
+    target.setAttribute('data-background-color', '#57068c');
+    observer.disconnect();
+  }
+}).observe(document.documentElement, {childList: true, subtree: true});
+</script>

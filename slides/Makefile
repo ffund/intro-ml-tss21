@@ -22,12 +22,11 @@ SOURCES += 9-convolutional.md
 SOURCES += 10-unsupervised.md
 SOURCES += 10-rl.md
 SOURCES += 10-deployment.md
+SOURCES += 12-recommender-systems.md
 SOURCES += 13-review.md
 
 # Convert the list of source files (Markdown files )
 # into a list of output files
-PDFS := $(patsubst %.md,%.pdf,$(SOURCES))
-SLIDES := $(patsubst %.md,%.html,$(SOURCES))
 
 PANDOCFLAGS=--pdf-engine=xelatex\
          -V mainfont='Fira Sans' \
@@ -36,15 +35,56 @@ PANDOCFLAGS=--pdf-engine=xelatex\
 	 --listings --variable urlcolor=Maroon --toc \
 	 -H ../style/listings-setup.tex -H ../style/keystroke-setup.tex -H ../style/emoji-setup.tex -H ../style/includes.tex
 
-%.pdf: %.md
-	cat $^ | sed 's/mathbf/symbf/g' > $^.tmp
-	pandoc $^.tmp $(PANDOCFLAGS) -o $@ 
-	rm $^.tmp
+AUDIENCE_FILTER := --lua-filter=audience-filter.lua
+AUDIENCE ?= combined
 
-%.html: %.md
-	cat $^ | sed '/newpage/d' > $^.tmp
-	pandoc -t revealjs -V revealjs-url=reveal.js-master -s --mathjax -o $@ $^.tmp -V theme=white --slide-level 3
-	rm $^.tmp
+ifeq ($(AUDIENCE),ugrad)
+OUTPUT_DIR := ../slides-ugrad
+OUTPUT_PREFIX := ../slides-ugrad/
+REVEALJS_URL := ../slides/reveal.js-master
+else
+OUTPUT_DIR := .
+OUTPUT_PREFIX :=
+REVEALJS_URL := reveal.js-master
+endif
+
+PDFS := $(patsubst %.md,$(OUTPUT_PREFIX)%.pdf,$(SOURCES))
+SLIDES := $(patsubst %.md,$(OUTPUT_PREFIX)%.html,$(SOURCES))
+
+.DEFAULT_GOAL := all
+
+SLIDEBASE = -t revealjs -V revealjs-url=$(REVEALJS_URL) -s --mathjax \
+            -V theme=myplanet --slide-level 3 -V 'slideNumber="c/t"' \
+            --lua-filter=slide-colors.lua \
+            --include-in-header=slide-setup.html \
+            --include-in-header=chalkboard-setup.html
+
+define SLIDE_POST
+	sed -i '/dist\/reveal\.js"/a <script src="$(REVEALJS_URL)/plugin/chalkboard/plugin.js"></script>' $(1) && \
+	sed -i '/RevealMath,/{h;s/.*/          RevealChalkboard,/;p;x}' $(1) && \
+	python3 -c "path='$(1)'; html=open(path).read(); html=html.replace('href=\"reveal.js-master/plugin/chalkboard/style.css\"', 'href=\"$(REVEALJS_URL)/plugin/chalkboard/style.css\"'); html=html.replace('  // reveal.js plugins', '        chalkboard: {\\n          grid: false,\\n          theme: \"whiteboard\",\\n        },\\n\\n  // reveal.js plugins'); open(path, 'w').write(html)" && \
+	python3 add-title-poll.py $(1)
+endef
+
+
+$(OUTPUT_PREFIX)%.pdf: %.md audience-filter.lua
+	mkdir -p $(dir $@)
+	cat $< | sed 's/mathbf/symbf/g' > $<.tmp
+	pandoc $<.tmp $(PANDOCFLAGS) $(AUDIENCE_FILTER) -M audience=$(AUDIENCE) -o $@
+	rm $<.tmp
+
+$(OUTPUT_PREFIX)%.html: %.md audience-filter.lua slide-colors.lua slide-setup.html chalkboard-setup.html add-title-poll.py ../images/polleverywhere-ffund.png reveal.js-master/dist/theme/myplanet.css reveal.js-master/plugin/chalkboard/plugin.js reveal.js-master/plugin/chalkboard/style.css
+	mkdir -p $(dir $@)
+	cat $< | sed '/newpage/d' > $<.tmp
+	pandoc $(SLIDEBASE) -o $@ $<.tmp $(AUDIENCE_FILTER) -M audience=$(AUDIENCE) && \
+	$(call SLIDE_POST,$@)
+	rm $<.tmp
+
+ifeq ($(AUDIENCE),ugrad)
+.PHONY: $(SOURCES:.md=.pdf) $(SOURCES:.md=.html)
+$(SOURCES:.md=.pdf): %.pdf: ../slides-ugrad/%.pdf
+$(SOURCES:.md=.html): %.html: ../slides-ugrad/%.html
+endif
 
 all: $(PDFS) $(SLIDES)
 
@@ -53,6 +93,5 @@ pdfs: $(PDFS)
 slides: $(SLIDES)
 
 clean: 
-	rm -f *.pdf
-	rm -f *.html
-
+	rm -f $(OUTPUT_DIR)/*.pdf
+	rm -f $(OUTPUT_DIR)/*.html
