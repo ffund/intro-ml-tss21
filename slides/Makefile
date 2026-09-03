@@ -55,6 +55,7 @@ SLIDES := $(patsubst %.md,$(OUTPUT_PREFIX)%.html,$(SOURCES))
 
 SLIDEBASE = -t revealjs -V revealjs-url=$(REVEALJS_URL) -s --mathjax \
             -V theme=myplanet --slide-level 3 -V 'slideNumber="c/t"' \
+            -V width=1280 -V height=700 -V maxScale=1 \
             --lua-filter=slide-colors.lua \
             --include-in-header=slide-setup.html \
             --include-in-header=chalkboard-setup.html

@@ -6,4 +6,36 @@ new MutationObserver(function(mutations, observer) {
     observer.disconnect();
   }
 }).observe(document.documentElement, {childList: true, subtree: true});
+
+window.addEventListener('load', function() {
+  var maximumFontSize = 40;
+  var minimumFontSize = 20;
+
+  function fitSlide(slide) {
+    if (!slide || slide.classList.contains('stack')) return;
+
+    var canvas = slide.parentElement;
+    slide.style.fontSize = maximumFontSize + 'px';
+
+    for (var size = maximumFontSize; size > minimumFontSize; size--) {
+      if (slide.scrollHeight <= canvas.clientHeight &&
+          slide.scrollWidth <= canvas.clientWidth) break;
+      slide.style.fontSize = (size - 1) + 'px';
+    }
+
+    Reveal.layout();
+  }
+
+  function fitCurrentSlide(event) {
+    var slide = event && event.currentSlide || Reveal.getCurrentSlide();
+    requestAnimationFrame(function() { fitSlide(slide); });
+  }
+
+  Reveal.on('ready', fitCurrentSlide);
+  Reveal.on('slidechanged', fitCurrentSlide);
+
+  if (Reveal.isReady()) fitCurrentSlide();
+  if (document.fonts) document.fonts.ready.then(fitCurrentSlide);
+  if (window.MathJax && MathJax.Hub) MathJax.Hub.Queue(fitCurrentSlide);
+});
 </script>
