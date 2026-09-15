@@ -637,7 +637,7 @@ For more details on this demo, see https://github.com/facebookresearch/AnimatedD
 
 ::: notes
 
-![Unsupervised learning.](../images/1-basics-unsupervised.png){ width=55% }
+![Unsupervised learning.](../images/1-basics-unsupervised.png){ width=50% }
 
 :::
 
@@ -651,7 +651,7 @@ For more details on this demo, see https://github.com/facebookresearch/AnimatedD
 
 ::: notes
 
-![Reinforcement learning.](../images/1-basics-reinforcement.png){ width=55% }
+![Reinforcement learning.](../images/1-basics-reinforcement.png){ width=50% }
 
 :::
 
@@ -760,7 +760,7 @@ For supervised learning, we need **labeled** examples: $(\mathbf{x}_i, y_i), i=1
 Fill in "recipe" details, then ask:
 
 * What type of relationships can $f(x)$ represent?
-* How do we train the model efficiently?
+* What is the cost of training/inference?
 * What insight can we get from the trained model?
 * How do we control the generalization error?
 

@@ -29,35 +29,73 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/myplanet.css" id="theme">
+  <script>
+  new MutationObserver(function(mutations, observer) {
+    var target = document.querySelector('#title-slide, .title-slide');
+    if (target && !target.hasAttribute('data-background-color')) {
+      target.setAttribute('data-background-color', '#57068c');
+      observer.disconnect();
+    }
+  }).observe(document.documentElement, {childList: true, subtree: true});
+
+  window.addEventListener('load', function() {
+    var maximumFontSize = 40;
+    var minimumFontSize = 20;
+
+    function fitSlide(slide) {
+      if (!slide || slide.classList.contains('stack')) return;
+
+      var canvas = slide.parentElement;
+      slide.style.fontSize = maximumFontSize + 'px';
+
+      for (var size = maximumFontSize; size > minimumFontSize; size--) {
+        if (slide.scrollHeight <= canvas.clientHeight &&
+            slide.scrollWidth <= canvas.clientWidth) break;
+        slide.style.fontSize = (size - 1) + 'px';
+      }
+
+      Reveal.layout();
+    }
+
+    function fitCurrentSlide(event) {
+      var slide = event && event.currentSlide || Reveal.getCurrentSlide();
+      requestAnimationFrame(function() { fitSlide(slide); });
+    }
+
+    Reveal.on('ready', fitCurrentSlide);
+    Reveal.on('slidechanged', fitCurrentSlide);
+
+    if (Reveal.isReady()) fitCurrentSlide();
+    if (document.fonts) document.fonts.ready.then(fitCurrentSlide);
+    if (window.MathJax && MathJax.Hub) MathJax.Hub.Queue(fitCurrentSlide);
+  });
+  </script>
+  <link rel="stylesheet" href="reveal.js-master/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide">
+<section id="title-slide" class="poll-title-slide">
   <h1 class="title">Intro to Machine Learning</h1>
   <p class="author">Fraida Fund</p>
-</section>
 
-<section id="in-this-lecture"
-class="title-slide slide level2 cell markdown">
-<h2>In this lecture</h2>
-<ul>
-<li>What is machine learning?</li>
-<li>Problems where machine learning can help</li>
-<li>Machine learning terminology and framework</li>
-<li>Reality check</li>
-</ul>
-<aside class="notes">
-<p><strong>Math prerequisites for this specific lecture</strong>:
-None</p>
-</aside>
+<div class="poll-title-content">
+  <img class="poll-title-qr" src="../images/polleverywhere-ffund.png" alt="QR code for PollEv.com/ffund">
+  <div class="poll-title-copy">
+    <div class="poll-title-prompt">Open on your phone/laptop:</div>
+    <div class="poll-title-url"><a href="https://pollev.com/ffund" target="_blank" rel="noopener">PollEv.com/ffund</a></div>
+    <div class="poll-title-instructions">In the &quot;Name&quot; field put your<br>net ID (e.g. ff524) and<br>&quot;Continue&quot;.</div>
+  </div>
+</div>
 </section>
 
 <section id="what-is-machine-learning"
-class="title-slide slide level2 cell markdown">
-<h2>What is machine learning?</h2>
+class="title-slide slide level2 cell markdown"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">What is machine learning?</h2>
 <aside class="notes">
 <ul>
 <li>To answer this question, I’m going to describe <strong>four</strong>
@@ -70,8 +108,9 @@ problem.”</p>
 </aside>
 </section>
 
-<section id="solving-problems" class="slide level3 cell markdown">
-<h3>Solving problems</h3>
+<section id="solving-problems" class="slide level3 cell markdown"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems</h3>
 <aside class="notes">
 <p>Generally speaking, to solve problems using computer systems, we
 program them to</p>
@@ -80,17 +119,20 @@ program them to</p>
 <li>produce some output which is “actionable information” for the real
 world.</li>
 </ul>
+<div class="slides-only">
 <figure>
 <img data-src="../images/1-intro-drawing-0.png" style="width:55.0%"
 alt="A system that interacts with the world." />
 <figcaption aria-hidden="true">A system that interacts with the
 world.</figcaption>
 </figure>
+</div>
 </aside>
 </section>
 <section id="solving-problems-example-premise"
-class="slide level3 cell markdown">
-<h3>Solving problems: example premise</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems: example
+premise</h3>
 <p>Suppose we want a system to help students decide whether to enroll in
 this course or not.</p>
 <ul>
@@ -99,8 +141,9 @@ this course or not.</p>
 </ul>
 </section>
 <section id="solving-problems-example-formulation"
-class="slide level3 cell markdown">
-<h3>Solving problems: example formulation</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems: example
+formulation</h3>
 <p>Let</p>
 <ul>
 <li><span class="math inline">\(x_1\)</span> = grade on previous
@@ -123,11 +166,13 @@ grade.</figcaption>
 </aside>
 </section>
 <section id="solving-problems-example-1"
-class="slide level3 cell markdown">
-<h3>Solving problems: example (1)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems: example (1)</h3>
 <p>Suppose we predict your grade as</p>
+<blockquote>
 <p><span class="math display">\[\hat{y} = min(x_1, x_2,
 x_3)\]</span></p>
+</blockquote>
 <p>Is this ML?</p>
 <aside class="notes">
 <figure>
@@ -140,13 +185,15 @@ minimum grade from prerequisite coursework. This is a
 </aside>
 </section>
 <section id="solving-problems-example-2"
-class="slide level3 cell markdown">
-<h3>Solving problems: example (2)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems: example (2)</h3>
 <p>Suppose we predict your grade as</p>
+<blockquote>
 <p><span class="math display">\[\hat{y} = w_1 x_1 + w_2 x_2 + w_3
 x_3\]</span></p>
 <p>where <span class="math inline">\(w_1 = \frac{1}{4}, w_2 =
 \frac{1}{4}, w_3 = \frac{1}{2}\)</span>.</p>
+</blockquote>
 <p>Is this ML?</p>
 <aside class="notes">
 <figure>
@@ -159,13 +206,15 @@ are fixed. This is a <em>rule-based</em> system.</figcaption>
 </aside>
 </section>
 <section id="solving-problems-example-3"
-class="slide level3 cell markdown">
-<h3>Solving problems: example (3)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems: example (3)</h3>
 <p>Suppose we predict your grade as the mean of last semester’s
 grades:</p>
+<blockquote>
 <p><span class="math display">\[\hat{y} = w_0\]</span></p>
 <p>where <span class="math inline">\(w_0 = \frac{1}{N} \sum_{i=1}^N
 y_i\)</span>.</p>
+</blockquote>
 <p>Is this ML?</p>
 <aside class="notes">
 <figure>
@@ -178,14 +227,16 @@ system.</figcaption>
 </aside>
 </section>
 <section id="solving-problems-example-4"
-class="slide level3 cell markdown">
-<h3>Solving problems: example (4)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving problems: example (4)</h3>
 <p>Suppose we predict your grade using this algorithm:</p>
+<blockquote>
 <p>If <span class="math inline">\(S_y\)</span> is the grades of a set of
 3 students from previous semesters with the profile most similar to
 yours, predict your grade as the median of their grades:</p>
 <p><span class="math display">\[\hat{y} = \mathrm{median} (S_y)
 \]</span></p>
+</blockquote>
 <p>Is this ML?</p>
 <aside class="notes">
 <figure>
@@ -198,8 +249,8 @@ median of three most similar previous students. This is a
 </aside>
 </section>
 <section id="rule-based-problem-solving"
-class="slide level3 cell markdown">
-<h3>“Rule-based” problem solving</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">“Rule-based” problem solving</h3>
 <ol type="1">
 <li>Develop an algorithm that will produce the desired result for a
 given input.</li>
@@ -213,8 +264,9 @@ knowledge and expertise to establish rules for solving the problem.</p>
 </aside>
 </section>
 <section id="problem-solving-with-machine-learning"
-class="slide level3 cell markdown">
-<h3>Problem solving with machine learning</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Problem solving with machine
+learning</h3>
 <ol type="1">
 <li>Collect and prepare data.</li>
 <li>Build and train a model using the prepared data.</li>
@@ -228,8 +280,9 @@ input) to produce the output.</p>
 </aside>
 </section>
 <section id="ml-vs.-rule-based-system---comic"
-class="slide level3 cell markdown">
-<h3>ML vs. rule-based system - comic</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">ML vs. rule-based system -
+comic</h3>
 <figure>
 <img data-src="../images/1-programing-ml.png" style="width:70.0%"
 alt="ML vs rule-based programming, via Christoph Molnar’s Interpretable Machine Learning" />
@@ -239,8 +292,9 @@ Molnar’s Interpretable Machine Learning</a></figcaption>
 </figure>
 </section>
 <section id="rule-based-vs.-data-driven-problem-solving"
-class="slide level3 cell markdown">
-<h3>Rule-based vs. data driven problem solving</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Rule-based vs. data driven problem
+solving</h3>
 <aside class="notes">
 <p>What are some benefits of predicting course grade using the
 data-driven approach?</p>
@@ -264,8 +318,9 @@ solve the problem. (i.e. no computer program.)</p>
 </aside>
 </section>
 <section id="recognize-handwritten-digits"
-class="slide level3 cell markdown">
-<h3>Recognize handwritten digits</h3>
+class="slide level3 cell markdown grad-only"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Recognize handwritten digits</h3>
 <aside class="notes">
 <p>You have/will read notes on a 1964 solution to this problem. Was that
 using ML, or was it rule-driven?</p>
@@ -274,8 +329,9 @@ rule-based program, or human expertise? Why or why not?</p>
 </aside>
 </section>
 <section id="machine-learning-problems"
-class="title-slide slide level2 cell markdown">
-<h2>Machine learning problems</h2>
+class="title-slide slide level2 cell markdown"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Machine learning problems</h2>
 <aside class="notes">
 <p>Now that we understand the difference between rule-based problem
 solving and ML-based (data driven) problem solving, we can think about
@@ -320,24 +376,27 @@ What makes this problem a good/bad candidate for ML? Are there reasons *not* to 
 
 -->
 <section id="grading-students-gretoefl-essays"
-class="slide level3 cell markdown">
-<h3>Grading students’ GRE/TOEFL essays</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Grading students’ GRE/TOEFL
+essays</h3>
 <aside class="notes">
-<p>When you applied to grad school, many of you took the GRE and/or
-TOEFL and had to write essays as part of these exams. ETS uses an ML
-product called “e-rater” alongside human graders to score these
-essays.</p>
+<p>Many grad schools require applications to take the GRE and/or TOEFL,
+including an essay. ETS uses an ML product called “e-rater” alongside
+human graders to score these essays.</p>
 <p>How do you feel about your GRE/TOEFL essays being graded (partly) by
 ML?</p>
 <p>How would you feel if you disagreed with the score of the ML
 model?</p>
 </aside>
 </section>
-<section id="grading-students-gre-essays-1"
-class="slide level3 cell markdown">
-<h3>Grading students’ GRE essays (1)</h3>
+<section id="gre-essay-1" class="slide level3 unlisted cell markdown"
+data-menu-title="Grading students&#39; GRE essays (1)"
+data-background-color="#f2f2f2">
+<h3 class="unlisted"
+data-menu-title="Grading students&#39; GRE essays (1)"
+data-background-color="#f2f2f2"></h3>
 <figure>
-<img data-src="../images/1-essay-score.png" style="width:70.0%"
+<img data-src="../images/1-essay-score.png" style="width:100.0%"
 alt="Sample GRE essay generated by the Basic Automatic B.S. Essay Language Generator." />
 <figcaption aria-hidden="true">Sample GRE essay generated by <a
 href="https://lesperelman.com/writing-assessment-robo-grading/babel-generator/">the
@@ -347,16 +406,19 @@ Basic Automatic B.S. Essay Language Generator</a>.</figcaption>
 <p>The model may learn characteristics that occur most often in good
 essays. When these characteristics occur in bad (meaningless) essays,
 the model thinks they are good essays.</p>
-<p>(We will talk about this more in the Week 1 lesson - machine learning
-models will learn patterns, but not necessarily when they do or do not
-apply.)</p>
+<p>(We will talk about this more in a later lesson - machine learning
+models will learn patterns, but will not necessarily learn when they do
+or do not apply.)</p>
 </aside>
 </section>
-<section id="grading-students-gre-essays-2"
-class="slide level3 cell markdown">
-<h3>Grading students’ GRE essays (2)</h3>
+<section id="gre-essay-2" class="slide level3 unlisted cell markdown"
+data-menu-title="Grading students&#39; GRE essays (2)"
+data-background-color="#f2f2f2">
+<h3 class="unlisted"
+data-menu-title="Grading students&#39; GRE essays (2)"
+data-background-color="#f2f2f2"></h3>
 <figure>
-<img data-src="../images/1-essay-score2.png" style="width:70.0%"
+<img data-src="../images/1-essay-score2.png" style="width:100.0%"
 alt="The essay was scored by ML as a 6/6." />
 <figcaption aria-hidden="true">The essay was scored by ML as a
 6/6.</figcaption>
@@ -383,59 +445,10 @@ bias in the training data.</li>
 </ul>
 </aside>
 </section>
-<section id="grading-students-annotated-readings-in-perusall"
-class="slide level3 cell markdown">
-<h3>Grading students’ annotated readings in Perusall</h3>
-<p>Perusall uses machine learning to automatically rate comment quality
-(high, medium, low).</p>
-<aside class="notes">
-<p>If you tried it -</p>
-<ul>
-<li><p>were you able to get it to give a high score to a bad or
-irrelevant comment?</p></li>
-<li><p>did you find it frustrating that you didn’t know what you needed
-to do in order to get a good score?</p></li>
-<li><p><strong>Takeaway</strong>: The ML model does not explain its
-score to students, frustrating them when their own idea of a “good
-annotation” does not align with the model’s.</p></li>
-<li><p><strong>Takeaway</strong>: (especially if the model
-<em>would</em> explain its score) the model could be easily “tricked” so
-that students can earn a good score without actually learning.</p></li>
-</ul>
-</aside>
-</section>
-<section id="detecting-use-of-ai-in-students-writing"
-class="slide level3 cell markdown">
-<h3>Detecting use of AI in student’s writing</h3>
-<aside class="notes">
-<p>Try one, e.g. https://quillbot.com/ai-content-detector</p>
-<ul>
-<li><strong>Takeaway</strong>: The model may not be able to explain its
-score.</li>
-<li><strong>Takeaway</strong>: Professors using this tool may not
-realize that the model can make mistakes. The impact of mistakes
-(especially, falsely predicting that a text is AI-generated when it is
-human-written) is very serious.</li>
-</ul>
-</aside>
-</section>
-<section id="writing-a-course-review"
-class="slide level3 cell markdown">
-<h3>Writing a course review</h3>
-<figure>
-<img data-src="../images/1-intro-ml-review.png" style="width:65.0%"
-alt="Would this help you decide what course to take?" />
-<figcaption aria-hidden="true">Would this help you decide what course to
-take?</figcaption>
-</figure>
-<aside class="notes">
-<p><strong>Takeaway</strong>: Sometimes, you really want an authentic
-human voice.</p>
-</aside>
-</section>
 <section id="score-candidates-performance-in-a-job-interview"
-class="slide level3 cell markdown">
-<h3>Score candidate’s performance in a job interview</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Score candidate’s performance in a
+job interview</h3>
 <ul>
 <li>Use video recording as input to ML system</li>
 <li>Train using videos of past interviews + human assessment on key
@@ -446,11 +459,16 @@ personality features</li>
 predictor of how you will perform the job?</p>
 </aside>
 </section>
-<section id="score-candidates-performance-in-a-job-interview-1"
-class="slide level3 cell markdown">
-<h3>Score candidate’s performance in a job interview (1)</h3>
+<section id="job-interview-1"
+class="slide level3 unlisted cell markdown"
+data-menu-title="Score candidate&#39;s performance in a job interview (1)"
+data-background-color="#f2f2f2">
+<h3 class="unlisted"
+data-menu-title="Score candidate&#39;s performance in a job interview (1)"
+data-background-color="#f2f2f2"></h3>
 <figure>
-<img data-src="../images/1-intro-job-interview.jpeg" style="width:60.0%"
+<img data-src="../images/1-intro-job-interview.jpeg"
+style="width:100.0%"
 alt="ML job interview scoring by ML. Source: Bayerischer Rundfunk (German Public Broadcasting)" />
 <figcaption aria-hidden="true">ML job interview scoring by ML. Source:
 <a href="https://web.br.de/interaktiv/ki-bewerbung/en/">Bayerischer
@@ -511,35 +529,60 @@ biased) intuition.</p>
 :::
 
 -->
+<section id="detecting-use-of-ai-in-students-writing"
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Detecting use of AI in student’s
+writing</h3>
+<aside class="notes">
+<p>Try one, e.g. https://quillbot.com/ai-content-detector</p>
+<ul>
+<li><strong>Takeaway</strong>: The model may not be able to explain its
+score.</li>
+<li><strong>Takeaway</strong>: Professors using this tool may not
+realize that the model can make mistakes. The impact of mistakes
+(especially, falsely predicting that a text is AI-generated when it is
+human-written) is very serious.</li>
+</ul>
+</aside>
+</section>
+<section id="writing-a-course-review" class="slide level3 cell markdown"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Writing a course review</h3>
+<aside class="notes">
+<p><strong>Takeaway</strong>: Sometimes, you really want an authentic
+human voice.</p>
+</aside>
+</section>
 <section id="what-problems-are-good-for-ml-overall"
-class="slide level3 cell markdown">
-<h3>What problems are “good” for ML, overall?</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">What problems are “good” for ML,
+overall?</h3>
 </section>
 <section id="problems-that-may-not-be-well-suited-to-ml"
-class="slide level3 cell markdown">
-<h3>Problems that may not be well suited to ML</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Problems that may not be well suited
+to ML</h3>
 <ul>
 <li>There is an accurate and simple algorithm that will produce the
 desired output.</li>
-<li>The model can be “tricked”.</li>
 <li>The model may introduce or exacerbate bias.</li>
-<li>Need to audit or explain the output.</li>
-<li>An incorrect result has very serious consequences.</li>
+<li>Need to audit or explain output.</li>
 <li>Expects human empathy, creativity, insight.</li>
 <li>There is no “good” data available to train the model.</li>
 </ul>
 </section>
 <section id="problems-that-are-often-good-candidates-for-ml"
-class="slide level3 cell markdown">
-<h3>Problems that are often good candidates for ML</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Problems that are often good
+candidates for ML</h3>
 <ul>
 <li>There is “good” data available to train the model.</li>
 <li>The thing we want to predict is measurable and observable.</li>
 <li>Human expertise does not exist, is insufficient, or is
 expensive.</li>
 <li>Humans cannot easily explain their expertise.</li>
-<li>We will get more data during operation + can improve with
-experience.</li>
+<li>We will get more data during operation + can improve with experience
+(nice, but not required!).</li>
 </ul>
 <aside class="notes">
 <p>Now that we have an idea of what is/is not machine learning, and when
@@ -561,14 +604,16 @@ basic framework for an ML model.</p>
 
 -->
 <section id="machine-learning-basics"
-class="title-slide slide level2 cell markdown">
-<h2>Machine learning basics</h2>
+class="title-slide slide level2 cell markdown"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Machine learning basics</h2>
 
 </section>
 
 <section id="goal-of-a-supervised-learning-system"
-class="slide level3 cell markdown">
-<h3>Goal of a supervised learning system</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Goal of a supervised learning
+system</h3>
 <p>Seeks to estimate a “true” value <span
 class="math inline">\(y\)</span> (known as the target variable) for some
 input <span class="math inline">\(x\)</span>.</p>
@@ -589,8 +634,8 @@ relationship between the thing we want to predict, and the proxy!)</p>
 </aside>
 </section>
 <section id="machine-learning-paradigms-1"
-class="slide level3 cell markdown">
-<h3>Machine learning paradigms (1)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Machine learning paradigms (1)</h3>
 <p><strong>Supervised learning</strong>: learn from labeled data, make
 predictions.</p>
 <ul>
@@ -633,8 +678,8 @@ pages. https://doi.org/10.1145/3592788</p>
 </aside>
 </section>
 <section id="machine-learning-paradigms-2"
-class="slide level3 cell markdown">
-<h3>Machine learning paradigms (2)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Machine learning paradigms (2)</h3>
 <p><strong>Unsupervised learning</strong>: learn from unlabeled data,
 find structure</p>
 <ul>
@@ -644,28 +689,29 @@ find structure</p>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/1-basics-unsupervised.png" style="width:55.0%"
+<img data-src="../images/1-basics-unsupervised.png" style="width:50.0%"
 alt="Unsupervised learning." />
 <figcaption aria-hidden="true">Unsupervised learning.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="machine-learning-paradigms-3"
-class="slide level3 cell markdown">
-<h3>Machine learning paradigms (3)</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Machine learning paradigms (3)</h3>
 <p><strong>Reinforcement learning</strong>: learn from how the
 environment responds to your actions, solve interactive problems.</p>
 <aside class="notes">
 <figure>
-<img data-src="../images/1-basics-reinforcement.png" style="width:55.0%"
+<img data-src="../images/1-basics-reinforcement.png" style="width:50.0%"
 alt="Reinforcement learning." />
 <figcaption aria-hidden="true">Reinforcement learning.</figcaption>
 </figure>
 </aside>
 </section>
 <section id="the-basic-supervised-learning-problem"
-class="slide level3 cell markdown">
-<h3>The basic supervised learning problem</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The basic supervised learning
+problem</h3>
 <p>Given a <strong>sample</strong> with a vector of
 <strong>features</strong></p>
 <p><span class="math display">\[\mathbf{x} = (x_1, x_2,...)\]</span></p>
@@ -679,8 +725,9 @@ class="math inline">\(y\)</span>.</p>
 </section>
 <section
 id="the-basic-supervised-machine-learning-problem---matrix-form"
-class="slide level3 cell markdown">
-<h3>The basic supervised machine learning problem - matrix form</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The basic supervised machine
+learning problem - matrix form</h3>
 <p>Given <span class="math inline">\(N\)</span> samples with <span
 class="math inline">\(d\)</span> features, we can stack the feature
 vectors as rows in a <strong>data matrix</strong> with one sample per
@@ -710,46 +757,39 @@ y_{N}
 lowercase letter for a vector.</p>
 </aside>
 </section>
-<section id="a-supervised-machine-learning-recipe-1"
-class="slide level3 cell markdown">
-<h3>A supervised machine learning “recipe” (1)</h3>
+<section id="a-supervised-machine-learning-recipe"
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">A supervised machine learning
+“recipe”</h3>
 <ul>
 <li><em>Step 1</em>: Get (good) <strong>data</strong> in some usable
 <strong>representation</strong>.</li>
 </ul>
 <p>For supervised learning, we need <strong>labeled</strong> examples:
-<span class="math inline">\((\mathbf{x_i}, y_i),
+<span class="math inline">\((\mathbf{x}_i, y_i),
 i=1,2,\cdots,N\)</span>.</p>
-</section>
-<section id="a-supervised-machine-learning-recipe-2"
-class="slide level3 cell markdown">
-<h3>A supervised machine learning “recipe” (2)</h3>
 <ul>
 <li><p><em>Step 2</em>: Choose a candidate <strong>model</strong> class
 <span class="math inline">\(f\)</span>: <span
 class="math inline">\(\hat{y} = f(x)\)</span>.</p></li>
-<li><p><em>Step 3</em>: Select a <strong>loss function</strong> that
-will measure how good the prediction is.</p></li>
-<li><p><em>Step 4</em>: Find the model <strong>parameter</strong>
-values* that minimize the loss function (use a <strong>training
-algorithm</strong>).</p></li>
-</ul>
-<p><small>* If your model has parameters.</small></p>
-</section>
-<section id="a-supervised-machine-learning-recipe-3"
-class="slide level3 cell markdown">
-<h3>A supervised machine learning “recipe” (3)</h3>
-<ul>
+<li><p><em>Step 3</em>: Select a <strong>loss function</strong> <span
+class="math inline">\(L\)</span>, that will measure how much worse the
+prediction <span class="math inline">\(\hat{y}\)</span> is than <span
+class="math inline">\(y\)</span>.</p></li>
+<li><p><em>Step 4</em>: Use a <strong>training algorithm</strong> to
+minimize the loss function <span class="math inline">\(L\)</span> and
+produce a trained model.</p></li>
 <li><p><em>Step 5</em>: Use trained model to <strong>predict</strong>
-<span class="math inline">\(\hat{y}\)</span> for new samples not used in
-training (<strong>inference</strong>).</p></li>
+<span class="math inline">\(\hat{y}\)</span> for new samples
+(<strong>inference</strong>).</p></li>
 <li><p><em>Step 6</em>: Evaluate how well your model
-<strong>generalizes</strong> to this new, unseen data.</p></li>
+<strong>generalizes</strong> to new data not used in training.</p></li>
 </ul>
 </section>
 <section id="simple-example-revisited"
-class="slide level3 cell markdown">
-<h3>Simple example, revisited</h3>
+class="slide level3 cell markdown grad-only"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Simple example, revisited</h3>
 <aside class="notes">
 <figure>
 <img data-src="../images/1-ml-recipe-w0.png" style="width:55.0%"
@@ -766,20 +806,22 @@ system.</figcaption>
 </aside>
 </section>
 <section id="for-each-type-of-model-in-this-course"
-class="slide level3 cell markdown">
-<h3>For each type of model in this course…</h3>
+class="slide level3 cell markdown grad-only"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">For each type of model in this
+course…</h3>
 <p>Fill in “recipe” details, then ask:</p>
 <ul>
 <li>What type of relationships can <span
 class="math inline">\(f(x)\)</span> represent?</li>
-<li>How do we train the model efficiently?</li>
+<li>What is the cost of training/inference?</li>
 <li>What insight can we get from the trained model?</li>
 <li>How do we control the generalization error?</li>
 </ul>
 </section>
-<section id="limitations"
-class="title-slide slide level2 cell markdown">
-<h2>Limitations</h2>
+<section id="limitations" class="title-slide slide level2 cell markdown"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Limitations</h2>
 
 </section>
 
@@ -844,62 +886,9 @@ class="title-slide slide level2 cell markdown">
 :::
 
 -->
-<section id="ml-as-a-leaky-pipeline" class="slide level3 cell markdown">
-<h3>ML as a “leaky pipeline”</h3>
-<figure>
-<img data-src="../images/1-wot-leaky-pipelines.png" style="width:65.0%"
-alt="Source: Boaz Barak" />
-<figcaption aria-hidden="true">Source: <a
-href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
-Barak</a></figcaption>
-</figure>
-<aside class="notes">
-<blockquote>
-<p>We want to create an adaptive system that performs well in the wild,
-but to do so, we:</p>
-<ul>
-<li>Set up a benchmark task, so we have some way to compare different
-systems.</li>
-<li>We typically can’t optimize directly on the benchmark (though there
-are exceptions, such as when optimizing for playing video games.) Hence
-we set up the task of optimizing some proxy loss function <span
-class="math inline">\(\mathcal{L}\)</span> on some finite samples of
-training data.</li>
-<li>We then run an optimization algorithm whose ostensible goal is to
-find the <span class="math inline">\(f \in \mathcal{F}\)</span> that
-minimizes the loss function over the training data. (<span
-class="math inline">\(\mathcal{F}\)</span> is a set of models, sometimes
-known as architecture, and sometimes we also add other restrictions such
-norms of weights, which is known as regularization)</li>
-</ul>
-<p>All these steps are typically “leaky”. Test performance on benchmarks
-is not the same as real-world performance. Minimizing the loss over the
-training set is not the same as test performance. Moreover, we typically
-can’t solve the loss minimization task optimally, and there isn’t a
-unique minimizer, so the choice of <span
-class="math inline">\(f\)</span> depends on the algorithm.</p>
-</blockquote>
-<p>Quotes from: <a
-href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
-Barak</a></p>
-<p>When training ML models, it is much too easy to look at the metrics
-reported in the last box, and think we have been succesful at solving
-the first box… but in fact, they are a long way apart.</p>
-</aside>
-</section>
-<section id="ml-training-vs-reality" class="slide level3 cell markdown">
-<h3>ML training vs reality</h3>
-<figure>
-<img data-src="../images/1-ml-shark.jpg" style="width:55.0%"
-alt="Kiddie pool vs shark ocean. Via Boaz Barak" />
-<figcaption aria-hidden="true">Kiddie pool vs shark ocean. Via <a
-href="https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/">Boaz
-Barak</a></figcaption>
-</figure>
-</section>
 <section id="example-grad-school-admissions"
-class="slide level3 cell markdown">
-<h3>Example: grad school admissions</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: grad school admissions</h3>
 <p>Suppose we want to train an admissions model to improve the quality
 of our graduate students, thereby enhancing the reputation of ECE at NYU
 Tandon among employers and doctoral programs.</p>
@@ -957,6 +946,62 @@ signals that the training data and “real” data are too dissimilar.)</li>
 </ol>
 </aside>
 </section>
+<section id="ml-as-a-leaky-pipeline"
+class="slide level3 cell markdown grad-only"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">ML as a “leaky pipeline”</h3>
+<figure>
+<img data-src="../images/1-wot-leaky-pipelines.png" style="width:65.0%"
+alt="Source: Boaz Barak" />
+<figcaption aria-hidden="true">Source: <a
+href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
+Barak</a></figcaption>
+</figure>
+<aside class="notes">
+<blockquote>
+<p>We want to create an adaptive system that performs well in the wild,
+but to do so, we:</p>
+<ul>
+<li>Set up a benchmark task, so we have some way to compare different
+systems.</li>
+<li>We typically can’t optimize directly on the benchmark (though there
+are exceptions, such as when optimizing for playing video games.) Hence
+we set up the task of optimizing some proxy loss function <span
+class="math inline">\(\mathcal{L}\)</span> on some finite samples of
+training data.</li>
+<li>We then run an optimization algorithm whose ostensible goal is to
+find the <span class="math inline">\(f \in \mathcal{F}\)</span> that
+minimizes the loss function over the training data. (<span
+class="math inline">\(\mathcal{F}\)</span> is a set of models, sometimes
+known as architecture, and sometimes we also add other restrictions such
+norms of weights, which is known as regularization)</li>
+</ul>
+<p>All these steps are typically “leaky”. Test performance on benchmarks
+is not the same as real-world performance. Minimizing the loss over the
+training set is not the same as test performance. Moreover, we typically
+can’t solve the loss minimization task optimally, and there isn’t a
+unique minimizer, so the choice of <span
+class="math inline">\(f\)</span> depends on the algorithm.</p>
+</blockquote>
+<p>Quotes from: <a
+href="https://windowsontheory.org/2021/01/31/a-blitz-through-classical-statistical-learning-theory/">Boaz
+Barak</a></p>
+<p>When training ML models, it is much too easy to look at the metrics
+reported in the last box, and think we have been succesful at solving
+the first box… but in fact, they are a long way apart.</p>
+</aside>
+</section>
+<section id="ml-training-vs-reality" class="slide level3 cell markdown"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">ML training vs reality</h3>
+<figure>
+<img data-src="../images/1-ml-shark.jpg" style="width:60.0%"
+alt="Kiddie pool vs shark ocean. Via Boaz Barak" />
+<figcaption aria-hidden="true">Kiddie pool vs shark ocean. Via <a
+href="https://windowsontheory.org/2021/01/15/ml-theory-with-bad-drawings/">Boaz
+Barak</a></figcaption>
+</figure>
+</section>
 <!-- 
 ::: {.cell .markdown}
 
@@ -980,6 +1025,7 @@ Now we'll look more closely at the *data*, which is key in either case.
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
+<script src="reveal.js-master/plugin/chalkboard/plugin.js"></script>
 
   <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
@@ -1010,7 +1056,7 @@ Now we'll look more closely at the *data*, which is key in either case.
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: "c/t",
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -1132,6 +1178,15 @@ Now we'll look more closely at the *data*, which is key in either case.
         // viewDistance in order to save resources.
         mobileViewDistance: 2,
 
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 700,
+
+        maxScale: 1,
+
         math: {
           mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
@@ -1149,8 +1204,14 @@ Now we'll look more closely at the *data*, which is key in either case.
           },
         },
 
-        // reveal.js plugins
+              chalkboard: {
+          grid: false,
+          theme: "whiteboard",
+        },
+
+  // reveal.js plugins
         plugins: [
+          RevealChalkboard,
           RevealMath,
           RevealNotes,
           RevealSearch,
