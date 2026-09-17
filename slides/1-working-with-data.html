@@ -29,7 +29,50 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/myplanet.css" id="theme">
+  <script>
+  new MutationObserver(function(mutations, observer) {
+    var target = document.querySelector('#title-slide, .title-slide');
+    if (target && !target.hasAttribute('data-background-color')) {
+      target.setAttribute('data-background-color', '#57068c');
+      observer.disconnect();
+    }
+  }).observe(document.documentElement, {childList: true, subtree: true});
+
+  window.addEventListener('load', function() {
+    var maximumFontSize = 40;
+    var minimumFontSize = 20;
+
+    function fitSlide(slide) {
+      if (!slide || slide.classList.contains('stack')) return;
+
+      var canvas = slide.parentElement;
+      slide.style.fontSize = maximumFontSize + 'px';
+
+      for (var size = maximumFontSize; size > minimumFontSize; size--) {
+        if (slide.scrollHeight <= canvas.clientHeight &&
+            slide.scrollWidth <= canvas.clientWidth) break;
+        slide.style.fontSize = (size - 1) + 'px';
+      }
+
+      Reveal.layout();
+    }
+
+    function fitCurrentSlide(event) {
+      var slide = event && event.currentSlide || Reveal.getCurrentSlide();
+      requestAnimationFrame(function() { fitSlide(slide); });
+    }
+
+    Reveal.on('ready', fitCurrentSlide);
+    Reveal.on('slidechanged', fitCurrentSlide);
+
+    if (Reveal.isReady()) fitCurrentSlide();
+    if (document.fonts) document.fonts.ready.then(fitCurrentSlide);
+    if (window.MathJax && MathJax.Hub) MathJax.Hub.Queue(fitCurrentSlide);
+  });
+  </script>
+  <link rel="stylesheet" href="reveal.js-master/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="reveal">
@@ -40,8 +83,61 @@
   <p class="author">Fraida Fund</p>
 </section>
 
-<section id="garbage-in-garbage-out" class="title-slide slide level2">
-<h2>Garbage in, garbage out</h2>
+<section>
+<section id="recap-machine-learning-is-data-driven"
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Recap: Machine learning is data
+driven</h2>
+<aside class="notes">
+<ul>
+<li>Rules based: you can write rules to produce an output using only the
+current input.</li>
+<li>Data driven: to produce an output/write rules to produce an output,
+you need to use <em>other data samples</em> besides for the current
+input.</li>
+</ul>
+<p>For example, we introduced <em>prediction by mean</em> as the
+simplest data-driven “model”.</p>
+<p>If we select a model class where we make the same prediction, <span
+class="math inline">\(w\)</span>, for every sample:</p>
+<p><span class="math display">\[\hat{y} = w\]</span></p>
+<p>and we use a mean squared error loss function, where we want to
+minimize:</p>
+<p><span class="math display">\[\frac{1}{N} \sum
+(y-\hat{y})^2\]</span></p>
+<p>we can show that the optimal value of the parameter <span
+class="math inline">\(w\)</span>, is the mean of <span
+class="math inline">\(y\)</span> across all samples.</p>
+<p>Step 1: plug <span class="math inline">\(\hat{y} = w\)</span> into
+the loss function:</p>
+<p><span class="math display">\[ \operatorname*{minimize}\quad
+\frac{1}{N} \sum (y-\hat{y})^2 \to \operatorname*{minimize}\quad
+\frac{1}{N} \sum (y-w)^2 \]</span></p>
+<p>Step 2: take the derivative with respect to the parameter <span
+class="math inline">\(w\)</span></p>
+<p><span class="math display">\[ \frac{\partial}{\partial w} \frac{1}{N}
+\sum (y-w)^2 = -\frac{2}{N} \sum (y-w) \]</span></p>
+<p>Step 3: set the derivative equal to 0, and solve for the parameter
+<span class="math inline">\(w\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+-\frac{2}{N} \sum (y-w) &amp;= 0
+    &amp;&amp; \text{Set the derivative equal to zero} \\[6pt]
+\sum(y) - \sum(w) &amp;= 0
+    &amp;&amp; \text{Multiply by } -\frac{N}{2} \text{ and expand}
+\\[6pt]
+\sum(y) = \sum(w) &amp;= N w
+    &amp;&amp; \text{Sum the constant } w \text{ over } N \text{
+samples} \\[6pt]
+\to w &amp;= \frac{1}{N} \sum(y)
+    &amp;&amp; \text{Solve for } w
+\end{aligned}
+\]</span></p>
+</aside>
+</section>
+<section id="garbage-in-garbage-out" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Garbage in, garbage out</h3>
 <aside class="notes">
 <p>Any machine learning project has to start with “good”” data.</p>
 <p>There is a “garbage in, garbage out” rule: If you use “garbage” to
@@ -52,10 +148,10 @@ already deployed in production! This is the absolute worst case
 scenario, as illustrated below…</p>
 </aside>
 </section>
-
-<section id="model-training-vs-evaluation-vs-deployment-1"
-class="title-slide slide level2">
-<h2>Model training vs evaluation vs deployment (1)</h2>
+<section id="model-training-vs-evaluation-vs-deployment"
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Model training vs evaluation vs
+deployment</h3>
 <figure>
 <img data-src="../images/1-lifecycle-data.png" style="width:60.0%"
 alt="The lifecycle of an ML model" />
@@ -67,10 +163,12 @@ alt="The lifecycle of an ML model" />
 time, effort, money in a model that won’t do well).</p>
 </aside>
 </section>
-
-<section id="model-training-vs-evaluation-vs-deployment-2"
-class="title-slide slide level2">
-<h2>Model training vs evaluation vs deployment (2)</h2>
+<section id="train-vs-eval-2" class="slide level3 unlisted"
+data-menu-title="Model training vs evaluation vs deployment (2)"
+data-background-color="#f2f2f2">
+<h3 class="unlisted"
+data-menu-title="Model training vs evaluation vs deployment (2)"
+data-background-color="#f2f2f2"></h3>
 <table>
 <colgroup>
 <col style="width: 27%" />
@@ -79,7 +177,7 @@ class="title-slide slide level2">
 <col style="width: 12%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th>Training Accuracy</th>
 <th>Evaluation Accuracy</th>
 <th>Deployment Accuracy</th>
@@ -87,19 +185,19 @@ class="title-slide slide level2">
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>0.95</td>
 <td>0.93</td>
 <td>0.91</td>
 <td>🤩</td>
 </tr>
-<tr class="even">
+<tr>
 <td>0.55</td>
 <td>0.52</td>
 <td>N/A</td>
 <td>😐</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>0.95</td>
 <td>0.93</td>
 <td>0.51</td>
@@ -115,210 +213,296 @@ deployed</li>
 <li>Worst case: Model does well in evaluation, poorly in deployment
 (“overly optimistic evaluation”)</li>
 </ul>
+<p>When preparing to work with data, then, we have to think about both
+of the ways in which our data will be used:</p>
+<ul>
+<li>to <em>model</em> a relationship between <span
+class="math inline">\(\hat{y} = f(x)\)</span>. This stage is designed to
+optimize the training objective, <em>on the training data</em>.</li>
+<li>and then to <em>evaluate</em> the model <span
+class="math inline">\(f(x)\)</span>, to see how well <span
+class="math inline">\(\hat{y}\)</span> agrees with <span
+class="math inline">\(y\)</span>. We evaluate on a separate held-out
+test set not used in training. (It’s typical for the performance to be
+slightly worse on the test set, since the model is optimized on the
+training set!)</li>
+</ul>
+<p>The goal of the evaluation is to estimate how the model will perform
+in deployment, which is what we <em>really</em> care about and want to
+optimize.</p>
+<p>We need to make sure that we have suitable data for <em>both</em>
+purposes.</p>
 </aside>
-</section>
-
+</section></section>
 <section id="working-with-data-two-stages"
-class="title-slide slide level2">
-<h2>Working with data: two stages</h2>
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Working with data: two stages</h2>
 <ol type="1">
-<li>Can I use this data?</li>
-<li>How should I process this data?</li>
+<li>Is this data appropriate for the task?</li>
+<li>How should I prepare it for modeling?</li>
 </ol>
 </section>
 
 <section>
-<section id="stage-1-can-i-use-this-data"
-class="title-slide slide level2">
-<h2>Stage 1: Can I use this data?</h2>
+<section id="stage-1-is-this-data-appropriate-for-the-task"
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Stage 1: Is this data appropriate
+for the task?</h2>
 
 </section>
-<section id="ethical-and-legal-concerns" class="slide level3">
-<h3>Ethical and legal concerns</h3>
+<section id="legal-and-ethical-concerns" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Legal and ethical concerns</h3>
 <ul>
-<li>Bias/fairness</li>
-<li>Privacy</li>
-<li>Consent</li>
-<li>Copyright</li>
+<li><strong>Consent:</strong> Did people agree to this data being
+collected and used for this purpose?</li>
+<li><strong>Privacy:</strong> Could the data identify people or reveal
+sensitive information?</li>
+<li><strong>Copyright:</strong> Do we have the right to use, modify, and
+redistribute the data?</li>
+<li><strong>Bias/fairness:</strong> Could it produce unequal
+outcomes?</li>
 </ul>
 <aside class="notes">
-<p>Some examples of data ethics failures:</p>
+<p>Before we ask whether a dataset is useful, we need to ask whether we
+legally may or ethically should use it at all. Otherwise we risk
+expensive lawsuits, or being shut down by regulators.</p>
+<p>Here is one example of a failure related to each concern:</p>
 <ul>
-<li>You are going to train a machine learning model to classify
-photographs of skin lesions as “cancer” or “not cancer”. You have a
-dataset of photographs with diagnoses from a hospital in a primarily
-white neighborhood. Your model is likely to underperform on photographs
-of darker skin tones because of the selection bias in the data.</li>
-<li>You train a model to allocate health care resources based on a
-historical dataset of health care use. But because some groups
-historically used less health care due to lack of access or
-socioeconomic factors, despite being equally or more ill, the model
-underestimates their needs. This data has a social/historical bias,
-which you are perpetuating in the model.</li>
-<li>You train a model to identify “offensive” posts on social media. You
-are using a dataset of real posts that were labeled as “offensive” or
-“not offensive” by a team of human annotators. But the human annotators
-were more likely to label language from African American English as
-offensive, so your model disproportionately removes posts by Black
-users.</li>
-<li>To generate a large dataset for model training, you extract
-text-image pairs from a public web archive. However, this web archive
-includes materials that should never have been online, such as private
-medical records, which end up in the dataset and raise serious privacy
-risks.</li>
-<li>You create an account on an online dating platform, which allows you
-to view and scrape other users’ profiles. However, this data includes
-deeply personal details - like sexual preferences - which users did not
-consent to have extracted, aggregated, or redistributed.</li>
-<li>To train a generative image model, you scrape millions of images
-from the public web. In response to some prompts, your model outputs
-original training images - which may be copyrighted artworks or contain
-trademarks - almost exactly.</li>
+<li><strong>Consent:</strong> Everalbum used customers’ photos to
+develop facial recognition technology without obtaining permission. In
+<a
+href="https://www.ftc.gov/news-events/news/press-releases/2021/01/california-company-settles-ftc-allegations-it-deceived-consumers-about-use-facial-recognition-photo">2021</a>,
+the FTC required the company to delete the photos and facial recognition
+models.</li>
+<li><strong>Privacy:</strong> OkCupid operated a dating platform whose
+users shared sensitive information, including sexual orientation,
+location, and personal responses. An individual scraped about 70,000
+profiles and published the data without users’ consent, making people
+vulnerable to identification even if their names were removed. In <a
+href="https://www.vice.com/en/article/70000-okcupid-users-just-had-their-data-published/">2016</a>,
+the disclosure triggered public backlash and forced the dataset
+offline.</li>
+<li><strong>Copyright:</strong> Stability AI used millions of Getty
+images to train Stable Diffusion without permission, according to Getty
+Images. In <a
+href="https://arstechnica.com/tech-policy/2023/04/stable-diffusion-copyright-lawsuits-could-be-a-legal-earthquake-for-ai/">2023</a>,
+Getty sued Stability AI, which faced costly copyright litigation in the
+United States and United Kingdom.</li>
+<li><strong>Bias/fairness:</strong> Facebook used a machine learning ad
+delivery system to optimize who received housing ads, and the system let
+advertisers exclude people based on protected characteristics. In <a
+href="https://www.propublica.org/article/facebook-advertising-discrimination-housing-race-sex-national-origin">2019</a>,
+HUD charged Facebook with violating the Fair Housing Act; Meta later
+agreed to restrict housing ad targeting and change its delivery
+system.</li>
 </ul>
-<p>Citations/further reading:</p>
-<ul>
-<li>Marin Benčević, Marija Habijan, Irena Galić, Danilo Babin,
-Aleksandra Pižurica, Understanding skin color bias in deep
-learning-based skin lesion segmentation, Computer Methods and Programs
-in Biomedicine, Volume 245, 2024, <a
-href="https://doi.org/10.1016/j.cmpb.2024.108044">https://doi.org/10.1016/j.cmpb.2024.108044</a></li>
-<li>Ziad Obermeyer, Brian Powers, Christine Vogeli, Sendhil
-Mullainathan, Dissecting racial bias in an algorithm used to manage the
-health of populations, Science, Volume 366, Issue 6464, 2019,
-pp. 447–453, <a
-href="https://doi.org/10.1126/science.aax2342">https://doi.org/10.1126/science.aax2342</a></li>
-<li>Shirin Ghaffary, The algorithms that detect hate speech online are
-biased against black people, Vox, August 15, 2019, <a
-href="https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter">https://www.vox.com/recode/2019/8/15/20806384/social-media-hate-speech-bias-black-african-american-facebook-twitter</a></li>
-<li>Maarten Sap, Dallas Card, Saadia Gabriel, Yejin Choi, Noah A. Smith,
-The Risk of Racial Bias in Hate Speech Detection, Proceedings of the
-57th Annual Meeting of the Association for Computational Linguistics,
-2019, pages 1668–1678, <a
-href="https://doi.org/10.18653/v1/P19-1163">https://doi.org/10.18653/v1/P19-1163</a></li>
-<li>Benj Edwards, Artist finds private medical record photos in popular
-AI training data set, Ars Technica, September 21, 2022, <a
-href="https://arstechnica.com/information-technology/2022/09/artist-finds-private-medical-record-photos-in-popular-ai-training-data-set/">https://arstechnica.com/information-technology/2022/09/artist-finds-private-medical-record-photos-in-popular-ai-training-data-set/</a></li>
-<li>Joseph Cox, “70,000 OkCupid Users Just Had Their Data Published,”
-Vice, May 12, 2016. <a
-href="https://www.vice.com/en/article/70000-okcupid-users-just-had-their-data-published/">https://www.vice.com/en/article/70000-okcupid-users-just-had-their-data-published/</a>
-<!-- * Timothy B. Lee, Stable Diffusion copyright lawsuits could be a legal earthquake for AI, Ars Technica, April 3, 2023, [https://arstechnica.com/tech-policy/2023/04/stable-diffusion-copyright-lawsuits-could-be-a-legal-earthquake-for-ai/](https://arstechnica.com/tech-policy/2023/04/stable-diffusion-copyright-lawsuits-could-be-a-legal-earthquake-for-ai/) --></li>
-</ul>
-<p><strong>Takeaway</strong>: Consider possible sources of bias in the
-data you are using. Be aware of how the data was collected and its
-provenance/lineage. Ensure that appropriate consent was obtained, and
-verify that the data was not collected in violation of service terms,
-privacy expectations, or copyright protections.</p>
 </aside>
 </section>
-<section id="representativeness-concerns" class="slide level3">
-<h3>Representativeness concerns</h3>
-<p>Compared to where your model will be used, is the data similar
-in:</p>
+<section id="representativeness-concerns" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Representativeness concerns</h3>
+<p>Is the data similar to deployment setting in:</p>
 <ul>
-<li>Population</li>
-<li>Context/setting</li>
-<li>Time period</li>
-<li>Label balance</li>
+<li><strong>Population:</strong> Do the people, places, or objects in
+the data match the population where the model will be used?</li>
+<li><strong>Context/setting:</strong> Does the location and data
+collection environment match where the model will be used?</li>
+<li><strong>Time period:</strong> Does the data reflect the period when
+the model will make predictions?</li>
+<li><strong>Label balance:</strong> Is the distribution of the target
+similar to what the model will encounter?</li>
 </ul>
 <aside class="notes">
-<p>Some examples of representativeness failures:</p>
+<p>Representativeness affects both <strong>modeling</strong> and
+<strong>evaluation</strong>:</p>
 <ul>
-<li>You train a cardiovascular risk prediction model on data from
-middle-aged adults in high-income countries. When the same model is
-applied to younger populations in low- and middle-income countries, it
-systematically underestimated risk, because disease patterns, diet, and
-access to care differed significantly.</li>
-<li>You train a model to identify crop disease based on a dataset of
-labeled plant photographs. When applied to real photographs “in the
-wild”, your model fails:</li>
+<li>During modeling, the model learns patterns from the population,
+setting, time period, and class proportions in the training data.</li>
+<li>During evaluation, those same factors determine whether the test
+score predicts performance after deployment. A model can receive a high
+score on a test set that does not resemble the real deployment
+population.</li>
 </ul>
-<figure>
-<img data-src="../images/PlantDoc_Examples.png" style="width:70.0%"
-alt="When the context is not representative." />
-<figcaption aria-hidden="true">When the context is not
-representative.</figcaption>
-</figure>
+<p>Here are some examples from practice:</p>
 <ul>
-<li>You train a malware detection model using samples of malware and
-non-malicious software collected over a six year period. Initially, it
-performs very well. However, as you deploy it years later, the model’s
-accuracy declines significantly because new malware variants - evolving
-beyond the original training distribution - are not accurately
-detected.</li>
-<li>You want to train a model to detect AI-generated text, for potential
-integration into learning platforms like Brightspace. To create a
-labeled data set, you grab a sample of Wikipedia articles (for
-human-written samples), and then you prompt a LLM to generate a similar
-number Wikipedia-style articles on a wide range of topics. Your model
-“learns” that text samples are AI-generated approximately half the time,
-even though the true prevalence of AI-generated text might be much lower
-- or much higher - in real student work.</li>
+<li><strong>Population:</strong> The <a
+href="https://jamanetwork.com/journals/jama/fullarticle/193997">Framingham
+cardiovascular risk score</a> was designed to estimate a patient’s
+ten-year risk of coronary heart disease from factors such as age, sex,
+blood pressure, cholesterol, and smoking. Researchers trained it using
+data from the mostly white residents of Framingham, Massachusetts. When
+clinicians applied the score to other ethnic groups, its accuracy varied
+because those populations had different risk patterns. A model can
+therefore learn relationships that work for the training population but
+misestimate risk for people outside it.</li>
+<li><strong>Context/setting:</strong> <a
+href="https://research.google/pubs/a-human-centered-evaluation-of-a-deep-learning-system-deployed-in-clinics-for-the-detection-of-diabetic-retinopathy/">Google
+Health’s deep learning system</a> for detecting diabetic retinopathy
+from retinal photographs was deployed in clinics in Thailand. The system
+performed well under controlled evaluation conditions, but clinics used
+different lighting, camera conditions, and patient preparation
+practices, such as whether patients’ pupils were dilated. In the first
+six months, 21% of 1,838 images were judged ungradable because they
+failed the model’s quality requirements. The result showed how changes
+between development and deployment environments can reduce the practical
+reliability of an image classification system.</li>
+<li><strong>Time period:</strong> <a
+href="https://www.wired.com/2015/10/can-learn-epic-failure-google-flu-trends/">Google
+Flu Trends</a> was designed to estimate flu prevalence faster than
+official health reports by using patterns in Google searches. Google
+trained and calibrated the system against historical CDC flu data and
+search queries. After deployment, it overestimated flu cases, especially
+during the 2012-2013 flu season, because media coverage changed search
+behavior and Google changed its search system. The search patterns
+changed over time, so the model’s original relationship between searches
+and flu cases no longer held.</li>
+<li><strong>Label balance:</strong> An AI writing detector is designed
+to classify text as human written or AI generated. <a
+href="https://www.theverge.com/2023/4/5/23669796/turnitin-ai-writing-detection-false-positives">Turnitin’s
+detector</a> was trained on examples of both types of writing, but the
+true proportion of AI generated text in student submissions was not
+known and would not necessarily match the training proportion. When a
+rare class appears much more often in training or evaluation than it
+does in deployment, the reported error rates can mislead users. After
+deployment, the detector produced false positives on human writing.</li>
 </ul>
-<p>Citations/further reading:</p>
-<ul>
-<li>Ralph B. D’Agostino, Scott Grundy, Lisa M. Sullivan, Peter Wilson,
-Validation of the Framingham Coronary Heart Disease prediction scores:
-results of a multiple ethnic groups investigation, JAMA, Volume 286,
-Issue 2, 2001, pp. 180–187, <a
-href="https://jamanetwork.com/journals/jama/fullarticle/193997">https://jamanetwork.com/journals/jama/fullarticle/193997</a></li>
-<li>Davinder Singh, Naman Jain, Pranjali Jain, Pratik Kayal, Sudhakar
-Kumawat, Nipun Batra, PlantDoc: A Dataset for Visual Plant Disease
-Detection, Proceedings of the 7th ACM IKDD CoDS and 25th COMAD (CoDS
-COMAD 2020), pp. 249–253, 2020, <a
-href="https://doi.org/10.1145/3371158.3371196">https://doi.org/10.1145/3371158.3371196</a></li>
-<li>C. Galen, R. Steele, Evaluating Performance Maintenance and
-Deterioration Over Time of Machine Learning-based Malware Detection
-Models on the EMBER PE Dataset, 2020 Seventh International Conference on
-Social Networks Analysis, Management and Security (SNAMS), Paris,
-France, 2020, pp. 1–7, <a
-href="https://doi.org/10.1109/SNAMS52053.2020.9336538">https://doi.org/10.1109/SNAMS52053.2020.9336538</a></li>
-</ul>
-<p><strong>Takeaway</strong>: Ensure that your dataset reflects the
-real-world conditions where your model will be deployed. Check whether
-the population, context, time period, and class balance in the data
-match the deployment setting, and be careful when combining data from
-multiple sources into what’s known as a “Frankenstein” dataset.</p>
-<!-- 
-* **Data is not representative of your target situation**. For example, you are training a model to predict the spread of infectious disease for a NYC-based health startup, but you are using data from another country.
-* **Data or situation changes over time**. For example, imagine you train a machine learning model to classify loan applications. However, if the economy changes, applicants that were previously considered credit-worthy might not be anymore despite having the same income, as the lender becomes more risk-averse. Similarly, if wages increase across the board, the income standard for a loan would increase.
--->
 </aside>
 </section>
-<section id="predictive-feature-concerns" class="slide level3">
-<h3>Predictive feature concerns</h3>
+<section id="predictive-feature-concerns" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Predictive feature concerns</h3>
+<p>Before modeling, ask:</p>
+<ul>
+<li><strong>Plausible signal:</strong> Is there a defensible reason this
+should predict the target?</li>
+<li><strong>Artifacts and proxies:</strong> Could the model use an
+accidental artifact?</li>
+</ul>
 <aside class="notes">
-<p>Some examples of predictive feature failures:</p>
+<p>Here are some examples from practice:</p>
 <ul>
-<li>You train a model to predict criminality based on facial features.
-There is nothing inherently predictive in facial structure. Later, it
-turns out that the apparent signal comes from differences in image
-sources (mugshots vs. ID photos).</li>
-<li>You attempt to build an “AI lie detector” that classifies deception
-based on micro-expressions in facial video. Human lie detection is
-barely above chance, and there are no reliable facial markers of
-deception, so the dataset has no true predictive features to learn
-from.</li>
-<li>You train a model to classify people as entrepreneurs from facial
-images scraped from Crunchbase. While the model achieves high reported
-accuracy, there is no causal or biologically plausible relationship
-between facial morphology and occupational choices. The model exploits
-dataset artifacts.</li>
+<li><strong>Plausible signal:</strong> Researchers trained
+machine-learning models to infer personality traits from handwriting in
+a <a href="https://doi.org/10.1155/2023/1249004">2023 study</a> and
+reported accuracies above 99%, despite controlled studies finding that
+graphology does not reliably measure personality (<a
+href="https://doi.org/10.2466/PR0.105.F.1255-1268">Dazzi &amp;
+Pedrabissi, 2009</a>; <a
+href="https://doi.org/10.1016/0191-8869(89)90120-7">Neter &amp;
+Ben-Shakhar, 1989</a>). (The problem was that the researchers did not
+obtain independent personality measurements: they generated the
+personality labels from graphology rules based on the same handwriting
+features given to the model. The model therefore learned to reproduce
+those rules, not to predict actual personality.)</li>
+<li><strong>Artifacts and proxies:</strong> During the COVID-19
+pandemic, researchers trained chest X-ray models to distinguish COVID-19
+pneumonia from other conditions. In some datasets, COVID-19 images came
+from different hospitals, scanners, or image acquisition protocols than
+the control images, allowing the model to learn hospital and equipment
+artifacts instead of disease related features. The models could score
+well on internal test sets that shared those artifacts but perform
+poorly on images from new hospitals. This failure is documented in <a
+href="https://doi.org/10.1038/s42256-021-00307-0">Common pitfalls and
+recommendations for using machine learning to detect and prognosticate
+for COVID-19</a>.</li>
 </ul>
-<p>Citations/further reading - many more examples in:</p>
-<ul>
-<li>Mel Andrews, Andrew Smart, Abeba Birhane, The reanimation of
-pseudoscience in machine learning and its ethical repercussions, Nature
-Machine Intelligence, Volume 5, Issue 9, 2024, Article 101027, <a
-href="https://doi.org/10.1016/j.patter.2024.101027">https://doi.org/10.1016/j.patter.2024.101027</a></li>
-</ul>
-<p><strong>Takeaway</strong>: A model cannot succeed if the dataset
-lacks true predictive features. (Be careful - the model may seem to be
-predictive only because of a data leakage problem, like some of the
-examples noted above!)</p>
 </aside>
 </section>
-<section id="other-data-quality-concerns" class="slide level3">
-<h3>Other data quality concerns</h3>
+<section
+id="example-distinguish-real-headshots-from-ai-generated-headshots."
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: distinguish real headshots
+from AI generated headshots.</h3>
+<aside class="notes">
+<p>Suppose a career networking platform wants to enforce a “real photos
+only” policy. Engineers create a dataset from a <a
+href="https://people.cs.umass.edu/~elm/papers/Huang_eccv2008-lfw.pdf">real
+face recognition dataset</a>, and fake headshots generated by an AI
+model.</p>
+<p>The model achieves excellent test accuracy but fails in production.
+Looking at the data, we can see why:</p>
+</aside>
+</section>
+<section id="headshot-authenticity" class="slide level3 unlisted"
+data-menu-title="Headshot authenticity" data-background-color="#f2f2f2">
+<h3 class="unlisted" data-menu-title="Headshot authenticity"
+data-background-color="#f2f2f2"></h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">“Real” training image</th>
+<th style="text-align: center;">Real deployment image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img
+data-src="../images/candid-face-photo.jpg" style="width:60.0%"
+alt="Candid face photograph." /></td>
+<td style="text-align: center;"><img
+data-src="../images/professional-headshot.png" style="width:60.0%"
+alt="Professional headshot." /></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>The “real” images in its training and test sets were cropped from
+candid photographs, while the generated images looked like posed studio
+headshots. The model could learn candid versus studio cues, including
+lighting, framing, and background, instead of real versus synthetic
+cues. This is an example of an “accidental artifact”.</p>
+<p>This is a “Frankenstein dataset”: the label is correlated with the
+source dataset. Holding out samples from the same sources does not
+reveal the problem. In production, real profile photographs are also
+professional headshots, so the shortcut disappears.</p>
+</aside>
+</section>
+<section id="headshots-change-over-time" class="slide level3 unlisted"
+data-menu-title="Headshots change over time"
+data-background-color="#f2f2f2">
+<h3 class="unlisted" data-menu-title="Headshots change over time"
+data-background-color="#f2f2f2"></h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Earlier generator</th>
+<th style="text-align: center;">Newer generator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img
+data-src="../images/ai-headshot-old.png" height="200"
+alt="AI headshot from an earlier model." /></td>
+<td style="text-align: center;"><img
+data-src="../images/ai-headshot-new.png" height="200"
+alt="AI headshot from a newer model." /></td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>Even after collecting real studio style headshots, the fake image
+distribution changes over time. A detector trained on images from an
+earlier generator may fail as newer generators produce more
+photorealistic portraits. This is an example of a “representativeness”
+concern.</p>
+<p>The training data must reflect the model’s current deployment period.
+This dataset would need frequent updates and evaluation on images from
+generators not used for training.</p>
+</aside>
+</section>
+<section id="other-data-quality-concerns" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Other data quality concerns</h3>
 <ul>
 <li>Label error</li>
 <li>Other data entry error</li>
@@ -328,76 +512,260 @@ examples noted above!)</p>
 <aside class="notes">
 <p>Some examples of data quality failures:</p>
 <ul>
-<li>You train a COVID-19 diagnostic model using a chest X-ray dataset
-that was compiled from case studies published in the early weeks of the
-pandemic. Later reviews find that some samples are mislabeled, and are
-actually other types of pneumonia, especially samples that were reported
-before a reliable diagnostic test for COVID-19 was widely
-available.</li>
-<li>You train a ride-hailing demand prediction model on GPS data from
-mobile phones. Some trips contain corrupted coordinates (e.g., location
-recorded in the middle of the ocean, or a misplaced decimal point
-showing a car moving 3,000 km in a minute). The model treats these
-entries as real trips, introducing noise and spurious patterns.</li>
+<li>You train a content classification model on a human-labeled dataset
+of 58K Reddit comments categorized according to 27 emotions. But up to
+30% of the data is mislabeled, possibly because the annotators were
+shown text without context, did not understand slang or sarcasm, were
+unfamiliar with political or pop culture references, or just rushed
+through the job. For example, the sentence: “Really? Wow. You’re either
+hopelessly ignorant or you’re trolling. For your sake, I hope you’re
+trolling” is mislabeled as OPTIMISM.</li>
+<li>You train a ride hailing demand prediction model on GPS data from
+mobile phones. Some trips contain corrupted coordinates, such as a
+location recorded in the middle of the ocean (see: <a
+href="https://www.youtube.com/watch?v=bjvIpI-1w84">Null Island</a>) or a
+misplaced decimal point showing a car moving 3,000 km in a minute. The
+model treats these entries as real trips, introducing noise and spurious
+patterns.</li>
 <li>You combine clinical datasets from multiple hospitals, but one site
 records lab results in mg/dL while another uses mmol/L. Your model makes
-nonsensical predictions.<br />
-</li>
-<li>You train a predictive model using historical returns of currently
-active mutual funds. Since funds that failed or were closed are missing
-from the data, the model learns on only successful funds, so it
-overestimates expected returns. (This is known as survivorship
-bias.)</li>
+nonsensical predictions.</li>
 </ul>
-<p>Citations/further reading:</p>
-<ul>
-<li>Curtis G. Northcutt. Pervasive Label Errors in ML Datasets
-Destabilize Benchmarks. Blog post, March 29, 2021. <a
-href="https://l7.curtisnorthcutt.com/label-errors">https://l7.curtisnorthcutt.com/label-errors</a></li>
-<li>Curtis G. Northcutt, Anish Athalye, Jonas Mueller. Pervasive Label
-Errors in Test Sets Destabilize Machine Learning Benchmarks. In Advances
-in Neural Information Processing Systems (NeurIPS 2021). <a
-href="https://neurips.cc/virtual/2021/47102">https://neurips.cc/virtual/2021/47102</a></li>
-<li>Brown, S. J., Goetzmann, W. N., Ibbotson, R. G., &amp; Ross, S. A.
-Survivorship bias in performance studies. The Review of Financial
-Studies, 5(4), 553–580 (1992). <a
-href="https://doi.org/10.1093/rfs/5.4.553">https://doi.org/10.1093/rfs/5.4.553</a></li>
-</ul>
-<p><strong>Takeaway</strong>: Problems in the data can undermine the
-predictive ability of the models trained on it.</p>
-</aside>
-</section>
-<section id="should-i-use-the-data-illustration" class="slide level3">
-<h3>Should I use the data? illustration</h3>
-<aside class="notes">
-<figure>
-<img data-src="../images/1-working-with-data-flowchart.png"
-style="width:60.0%" alt="Flowchart for determining suitability." />
-<figcaption aria-hidden="true">Flowchart for determining
-suitability.</figcaption>
-</figure>
 </aside>
 </section></section>
 <section>
 <section id="stage-2-how-do-i-process-the-data"
-class="title-slide slide level2">
-<h2>Stage 2: How do I process the data?</h2>
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Stage 2: How do I process the
+data?</h2>
 <ul>
-<li>Select features, target</li>
+<li>Explore data, make and check assumptions</li>
 <li>Split data (avoid data leakage)</li>
+<li>Select features, target</li>
+<li>Construct samples</li>
+<li>Handle missing data</li>
 <li>Convert to numeric types</li>
 <li>Create “transformed” features</li>
-<li>Explore data, make and check assumptions</li>
-<li>Handle missing data</li>
 </ul>
 </section>
-<section id="select-features" class="slide level3">
-<h3>Select features</h3>
+<section id="make-and-check-assumptions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Make and check assumptions</h3>
+<aside class="notes">
+<p>It’s always a good idea to “sanity check” your data. Before you look
+at it, think about what you expect to see. Review the data dictionary,
+and any documentation related to how the dataset was compiled.</p>
+<p>Then, check to make sure your expectations are realized.</p>
+<ul>
+<li>Look at individual samples - aggregate trends can hide important
+details!</li>
+<li>Generate and look at plots of data distributions</li>
+<li>Compute summary statistics</li>
+<li>and consider general trends</li>
+</ul>
+</aside>
+<!-- 
+::: {.grad-only}
+
+### Example: author citation data (1)
+
+Data analysis: use PubMed, and identify the year of first publication for the 100,000 most cited authors.
+
+::: notes
+
+What are our expectations about what this should look like?
+
+:::
+
+### Example: author citation data (2)
+
+![Does this look reasonable?](../images/1-pubmed-authors.png){ width=50% }
+
+::: notes
+
+We can think of many potential explanations for this pattern, even though it is actually a data artifact.
+
+The true explanation: in 2002, PubMed started using full first names in authors instead of just initials. The same author is represented in the dataset as a "new" author with a first date of publication in 2002.
+
+:::
+
+
+### Example: author citation data (3)
+
+![The real distribution, after name unification. Example via [Steven Skiena @ Stony Brook U](https://www3.cs.stonybrook.edu/~skiena/519/).](../images/1-pubmed-authors2.png){ width=50% }
+
+:::notes
+
+How *should* you handle unreasonable values, data that does not match expectations, or "outliers"? It depends!
+
+* e.g. suppose in a dataset of voter information, some have an impossible year of birth that would make the voter over 120 years old. (The reason: Voters with no known DOB, who registered before DOB was required, are often encoded with a January 1900 DOB.)
+* **not** a good idea to just remove outliers unless you are sure they are a data entry error or otherwise not a "true" value.
+* Even if an outlier is due to some sort of error, if you remove them, you may skew the dataset (as in the 1/1/1900 voters example).
+
+Consider the possibility of: 
+
+* Different units, time zones, etc. in different rows
+* Same value represented several different ways (e.g. names, dates)
+* Missing data encoded as zero
+
+:::
+
+:::
+
+-->
+</section>
+<section id="split-data" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Split data</h3>
+<aside class="notes">
+<p>If we split data incorrectly, we can introduce <em>data leakage</em>,
+which causes an <em>overly optimistic evaluation</em>. Data leakage
+happens when information that would not be available in the real
+deployment setting “leaks” into the training or evaluation process, and
+makes the evaluation much “easier” than the real deployment task. We
+said earlier how important it is to avoid that!</p>
+<p>The basic idea behind data splitting is the relationship between the
+training set and the evaluation set, should be the same as the
+relationship between the training set and the data we will see in
+deployment.</p>
+<ul>
+<li>if there is no structure in the data - shuffle split (avoid
+accidental patterns)</li>
+<li>if there is group structure - use a split that keeps members of each
+group in either training set, or validation set, but not both</li>
+<li>for time series data - use a split that keeps validation data in the
+future, relative to training data</li>
+</ul>
+<p>In the following example, if we put the first samples in the training
+set and the last samples in the test set, we would accidentally create a
+distribution shift between training and test data, since there seems to
+be some order effect. For this data, we should randomly select samples
+to put in the test data - this is called a shuffle split.</p>
+<figure>
+<img data-src="../images/1-order-shuffle.png" style="width:100.0%"
+alt="This data requires a shuffle split." />
+<figcaption aria-hidden="true">This data requires a shuffle
+split.</figcaption>
+</figure>
+<p>In the next example, suppose we have multiple samples from the same
+individual.</p>
+<figure>
+<img data-src="../images/1-group-split.png" style="width:100.0%"
+alt="This data has group structure." />
+<figcaption aria-hidden="true">This data has group
+structure.</figcaption>
+</figure>
+<p>In this case, the correct approach depends on how the model will be
+deployed:</p>
+<ul>
+<li>if the model will be asked to make predictions on new samples from
+the same people as in the training set, then the shuffle split is still
+OK! Here the evaluation task is to predict new samples from the people
+in the training set, which is the same as the deployment task.</li>
+<li>if, however, the model will be asked to make predictions for <em>new
+people</em> not in the training set, then the shuffle split will cause
+an overly optimistic evaluation. Predicting new samples from the people
+in the training set is an <em>easier</em> task than the deployment task!
+In this case, we must split the data so that each individual person is
+either in the training set, or in the test set.</li>
+</ul>
+<p>In the next example, suppose we have a time sequence, and we want to
+predict a value that changes gradually over time, given the previous
+sequence:</p>
+<figure>
+<img data-src="../images/1-time-task.png" style="width:50.0%"
+alt="Time series data." />
+<figcaption aria-hidden="true">Time series data.</figcaption>
+</figure>
+<p>In this case, a shuffle split (like the example on the left) will
+cause data leakage/an overly optimistic evaluation, because this makes
+the evaluation task much easier than the deployment task! Instead, we
+need to split the data chronologically (like the example on the right)
+to mimic the deployment task.</p>
+<figure>
+<img data-src="../images/1-time-split.png" style="width:100.0%"
+alt="This data needs a chronological split." />
+<figcaption aria-hidden="true">This data needs a chronological
+split.</figcaption>
+</figure>
+</aside>
+<!-- 
+
+
+### COVID-19 chest radiography 
+
+* **Problem**: diagnose COVID-19 from chest radiography images
+* **Input**: image of chest X-ray (or other radiography)
+* **Target variable**: COVID or no COVID
+
+### COVID-19 chest radiography (2)
+
+![Neural networks can classify the source dataset of these chest X-ray images, even *without lungs*! [Source](https://arxiv.org/abs/2004.12823)](../images/1-covid-xrays.png){ width=60% }
+
+
+::: notes
+
+Between January and October 2020, more than 2000 papers were published that claimed to use machine learning to diagnose COVID-19 patients based on chest X-rays or other radiography. But a later [review](https://www.nature.com/articles/s42256-021-00307-0) found that "none of the models identified are of potential clinical use due to methodological flaws and/or underlying biases".
+
+To train these models, people used an emerging COVID-19 chest X-ray dataset, along with one or more existing chest X-ray datasets, for example a dataset used to classify viral versus bacterial pneumonia.
+
+The problem is that the chest X-rays for each dataset were so "distinctive" to that dataset, that a neural network could be trained with high accuracy to classify an image into its source dataset, even without the lungs showing!
+
+:::
+
+### COVID-19 chest radiography (2)
+
+Findings:
+
+* some control datasets contained pediatric images, while COVID images were from adults
+* there were dataset-level differences in patient positioning
+* many COVID images came from screenshots of published papers, which often had text, arrows, or other annotations over the images. (Some non-COVID images did, too.)
+
+
+### COVID-19 chest radiography (3)
+
+![Saliency map showing the "important" pixels for classification. [Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7523163/)](../images/1-covid-xrays-saliency.png){ width=90% }
+
+::: notes
+
+These findings are based on techniques like 
+
+* saliency maps, where the model is made to highlight the part of the image (the pixels) that it considered most relevant to its decision.
+* using generative models and asking it to take a COVID-negative X-ray and make it positive (or v.v.)
+
+Many of the findings are not easy to understand without domain knowledge (e.g. knowing what part of the X-ray *should* be important and what part should not be.) For example: should the diaphragm area be helpful?
+
+:::
+
+
+
+<!-- 
+
+
+https://www.nature.com/articles/s41559-023-02162-1  Data leakage jeopardizes ecological applications of machine learning
+
+https://www.nature.com/articles/s41467-024-46150-w Data leakage inflates prediction performance in connectome-based machine learning models
+
+https://www.nature.com/articles/s41592-024-02362-y Guiding questions to avoid data leakage in biological machine learning applications
+
+
+-->
+<!-- 
+• Convert to numeric types
+• Create “transformed” features
+• Explore data, make and check assumptions
+• Handle missing data
+
+-->
+</section>
+<section id="select-features" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Select features</h3>
 <p>Include features if they are:</p>
 <ul>
 <li>Plausibly predictive</li>
 <li>Available at inference time</li>
-<li>Don’t have other data leakage issues</li>
+<li>Don’t have other major issues</li>
 </ul>
 <aside class="notes">
 <p>We must <em>exclude</em> fields in the data that have no plausible
@@ -411,7 +779,7 @@ there was no ML model at all.</li>
 use, e.g. you won’t use someone’s phone number or home address to
 predict their Intro ML course grade.</li>
 <li>Always exclude fields that are purely identifiers (e.g. a numeric
-identifier for a sample, for a respondent).</li>
+identifier for a sample).</li>
 </ul>
 <p>We also must <em>exclude</em> fields in the data that are not going
 to be available to our model when it is deployed for “real”:</p>
@@ -421,14 +789,18 @@ approved for loans. In the training dataset, you accidentally include
 fields such as “number of late payments,” which are only known after the
 loan has already been issued. By training on them, the model looks
 impressively accurate during evaluation, but in deployment those
-features are unavailable, so the model cannot make real-world
+features are unavailable, so the model cannot make real world
 predictions.</li>
 </ul>
-<p>Data leakage: TBD</p>
+<p>Including fields that won’t be available in deployment is also a type
+of data leakage/causes an overly optimistic evaluation. The evaluation
+task, where the extra feature is available, is “easier” than the
+deployment task where the feature is not available.</p>
 </aside>
 </section>
-<section id="select-target" class="slide level3">
-<h3>Select target</h3>
+<section id="select-target" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Select target</h3>
 <p>Target should be:</p>
 <ul>
 <li>measureable</li>
@@ -456,30 +828,614 @@ health of populations, Science, Volume 366, Issue 6464, 2019,
 pp. 447–453, <a
 href="https://doi.org/10.1126/science.aax2342">https://doi.org/10.1126/science.aax2342</a></p>
 <p>We mentioned label error when we talked about data quality. Since it
-is expensive to get labeled data, it’s not uncommon for labels to be
-either machine-generated, or added by humans who spend very little time
-on each sample.</p>
+is often expensive to get labeled data, it’s not uncommon for the target
+variable to be machine generated, or added by humans who spend very
+little time on each sample, and subject to high error rates.</p>
 </aside>
 </section>
-<section id="splitting-data" class="slide level3">
-<h3>Splitting data</h3>
+<section id="construct-samples" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Construct samples</h3>
+<p>For each sample, you need:</p>
+<ul>
+<li>all features you plan to use</li>
+<li>the corresponding target value</li>
+<li>a reliable way to match them</li>
+</ul>
 <aside class="notes">
-<p>If we split data incorrectly, we can introduce <em>data leakage</em>,
-which causes an <em>overly optimistic evaluation</em> - we said earlier
-how important it is to avoid that!</p>
-<p>Data leakage happens when information that would not be available in
-the real deployment setting “leaks” into the training or evaluation
-process, and makes the evaluation much “easier” than the real deployment
-task.</p>
+<p>Before training a supervised model, define what one sample
+represents: one person, image, transaction, event, or other unit of
+prediction.</p>
+<p>Every feature and the target variable must be available at that
+individual sample level.</p>
+<p>You may combine multiple data sources to “enrich” each sample. To do
+so, you need some key that establishes a one-to-one correspondence
+between the records. The feature values and target must describe the
+same person, object, or event.</p>
+<p>If you cannot match the features to the target for each sample, you
+cannot construct the labeled dataset needed for supervised learning.</p>
 </aside>
 </section>
-<section id="types-of-data-leakage-1" class="slide level3">
-<h3>Types of data leakage (1)</h3>
+<section id="handle-missing-data" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Handle missing data</h3>
+<aside class="notes">
+<p>Missing data can appear jn several different ways:</p>
+<ul>
+<li>Rows that have <code>NaN</code> values</li>
+<li>Rows that have other values encoding “missing” (-1, 0, 100…)</li>
+<li>Rows that are <em>not there</em> but should be</li>
+</ul>
+<p>The first type is the easiest to detect!</p>
+<p>The second type can be tricky if the value that is supposed to mean
+“missing” is also a feasible “real” value. For example, in the classic
+<a
+href="https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page">NYC
+Taxi Dataset</a>, the “tip” field is recorded as a 0 for all trips that
+were paid in cash, because that data is not available for cash trips.
+However, it’s also plausible for the “tip” field to really be 0 - so if
+you didn’t look at the data dictionary and find out that cash tips
+aren’t recorded, you might think those were “real” 0s and not “missing”
+0s.</p>
+<p>The third type of missing data is easy to overlook because the
+missing values do not appear as blank cells—they appear as rows that are
+completely absent. For example, in a <a
+href="https://data.ny.gov/Transportation/NYS-Thruway-Origin-and-Destination-Points-for-All-/4dbf-24u2">traffic
+dataset</a>, a row might only be recorded when at least one vehicle
+travels from a particular entrance to a particular exit during a
+15-minute period. If no vehicles make that trip, no row is created.
+However, that missing row actually contains useful information: the
+traffic count was zero. To accurately describe or model traffic, these
+missing rows should be added and recorded with a value of 0.</p>
+<p>Missing data can occur for different reasons, and the cause of the
+missingness matters because it can affect how we analyze the data. It is
+often characterized as:</p>
+<ul>
+<li><strong>Missing Completely at Random (MCAR)</strong>: the chance
+that a value is missing does not depend on any observed or unobserved
+information. In other words, all samples are roughly equally likely to
+have missing values.</li>
+<li><strong>Missing at Random (MAR)</strong>: the chance that a value is
+missing depends on other information that we have observed. For example,
+whether income is missing might depend on a person’s age or occupation,
+both of which are recorded in the dataset.</li>
+<li><strong>Missing Not at Random (MNAR)</strong>: the chance that a
+value is missing depends on the missing value itself. For example,
+people with very high incomes might be more likely to leave the income
+question blank.</li>
+</ul>
+<p>How should you handle small amounts of missing data?</p>
+<ul>
+<li>You may leave the value as missing (e.g. <code>NaN</code>) if your
+modeling or analysis method can handle missing values directly.</li>
+<li>You may omit the row if the amount of missing data is small and the
+data is Missing Completely at Random (MCAR), so removing those rows is
+unlikely to introduce bias. You may also consider dropping a column if
+it contains too much missing data or is not important to the
+analysis.</li>
+<li>Otherwise, you may impute (fill in) the missing values, with the
+goal of estimating the unknown value as reasonably as possible.</li>
+</ul>
+<p>Some simple imputation methods include:</p>
+<ul>
+<li>filling with the mean, median, or mode</li>
+<li>using forward fill or interpolation for ordered or time-series data,
+when nearby observations are likely to be informative</li>
+</ul>
+</aside>
+</section>
+<section id="convert-to-numeric-types" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Convert to numeric types</h3>
+<ul>
+<li>ordinal and one-hot encoding of categorical data</li>
+<li>text to “bag of words” or other representation</li>
+<li>image data to raw pixels</li>
+<li>audio to frequency domain (or image of frequency domain)
+features</li>
+</ul>
+<aside class="notes">
+<p>For most machine learning models, we will need all data to be
+represented using some kind of numeric data type!</p>
+<p>Suppose we have a fragrance dataset, and we want to prepare to train
+a model to predict rating for new perfumes:</p>
+<table>
+<thead>
+<tr>
+<th>Perfume</th>
+<th>Perfumer</th>
+<th>Longevity</th>
+<th>Family</th>
+<th>Description</th>
+<th style="text-align: right;">Rating</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rose Veil</td>
+<td>A. Rivera</td>
+<td>short</td>
+<td>floral</td>
+<td>soft rose with pepper</td>
+<td style="text-align: right;">4.2</td>
+</tr>
+<tr>
+<td>Blooming Iris</td>
+<td>A. Rivera</td>
+<td>medium</td>
+<td>floral</td>
+<td>soft dry iris</td>
+<td style="text-align: right;">4.8</td>
+</tr>
+<tr>
+<td>Pepper Ember</td>
+<td>J. Kim</td>
+<td>medium</td>
+<td>spicy</td>
+<td>warm pepper</td>
+<td style="text-align: right;">4.6</td>
+</tr>
+<tr>
+<td>Saffron Smoke</td>
+<td>J. Kim</td>
+<td>long</td>
+<td>spicy</td>
+<td>warm saffron and cedar</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr>
+<td>Cedar Night</td>
+<td>L. Patel</td>
+<td>long</td>
+<td>woody</td>
+<td>dry cedar</td>
+<td style="text-align: right;">4.4</td>
+</tr>
+<tr>
+<td>Forest Moss</td>
+<td>L. Patel</td>
+<td>short</td>
+<td>woody</td>
+<td>dry moss</td>
+<td style="text-align: right;">4.7</td>
+</tr>
+</tbody>
+</table>
+<p>Here, the longevity, fragrance family, name of the perfumer, and the
+description may all relate to the rating, but they are not numeric. We
+need to transform them into some type of numeric format.</p>
+<p>The <code>Longevity</code> field and the <code>Family</code> field
+are both categorical: they can take on a discrete set of possible
+values. However, the <code>Longevity</code> field has a natural order
+(<code>short &lt; medium &lt; long</code>), while there is no logical
+order to <code>floral, spice, woody</code>.</p>
+<p>For an ordinal categorical variable, where the categories have a
+meaningful order, we can use ordinal encoding, replacing each category
+with a number that preserves the ordering. For example, we could encode
+<code>Longevity</code> as:</p>
+<table>
+<thead>
+<tr>
+<th>Longevity</th>
+<th style="text-align: right;">Encoded value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>short</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>medium</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>long</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+<p>The transformed <code>Longevity</code> column would therefore look
+like:</p>
+<table>
+<thead>
+<tr>
+<th>Perfume</th>
+<th>Longevity</th>
+<th style="text-align: right;">Longevity_encoded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rose Veil</td>
+<td>short</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Blooming Iris</td>
+<td>medium</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>Pepper Ember</td>
+<td>medium</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>Saffron Smoke</td>
+<td>long</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Cedar Night</td>
+<td>long</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Forest Moss</td>
+<td>short</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<p>This encoding makes sense because the numbers preserve the natural
+ordering: <code>short &lt; medium &lt; long</code>.</p>
+<p>For a nominal categorical variable, where the categories do not have
+a meaningful order, we generally do not want to assign arbitrary
+numbers. For example, encoding <code>floral = 0</code>,
+<code>spicy = 1</code>, and <code>woody = 2</code> could incorrectly
+suggest that woody is somehow “larger than” spicy, or that spicy lies
+between floral and woody.</p>
+<p>Instead, we can use one-hot encoding. One-hot encoding creates a
+separate binary column for each category. A value of <code>1</code>
+indicates that the sample belongs to that category, while <code>0</code>
+indicates that it does not.</p>
+<p>For <code>Family</code>, the transformation would be:</p>
+<table>
+<thead>
+<tr>
+<th>Perfume</th>
+<th>Family</th>
+<th style="text-align: right;">Family_floral</th>
+<th style="text-align: right;">Family_spicy</th>
+<th style="text-align: right;">Family_woody</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rose Veil</td>
+<td>floral</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Blooming Iris</td>
+<td>floral</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Pepper Ember</td>
+<td>spicy</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Saffron Smoke</td>
+<td>spicy</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Cedar Night</td>
+<td>woody</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>Forest Moss</td>
+<td>woody</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>Perfumer</code> field could be one-hot encoded, but what if
+the set of possible perfumers is very large? Then, one-hot encoding
+would create a large number of additional, mostly sparse columns.</p>
+<p>Instead, we could use target encoding. With target encoding, each
+category is replaced by a numeric value based on the target
+variable.</p>
+<p>For example, if our target is <code>Rating</code>, we could replace
+each perfumer with the average rating of perfumes made by that
+perfumer:</p>
+<table>
+<thead>
+<tr>
+<th>Perfumer</th>
+<th>Ratings</th>
+<th style="text-align: right;">Target-encoded value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A. Rivera</td>
+<td>4.2, 4.8</td>
+<td style="text-align: right;">4.50</td>
+</tr>
+<tr>
+<td>J. Kim</td>
+<td>4.6, 4.0</td>
+<td style="text-align: right;">4.30</td>
+</tr>
+<tr>
+<td>L. Patel</td>
+<td>4.4, 4.7</td>
+<td style="text-align: right;">4.55</td>
+</tr>
+</tbody>
+</table>
+<p>The transformed column would then look like:</p>
+<table>
+<thead>
+<tr>
+<th>Perfume</th>
+<th>Perfumer</th>
+<th style="text-align: right;">Perfumer_encoded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rose Veil</td>
+<td>A. Rivera</td>
+<td style="text-align: right;">4.50</td>
+</tr>
+<tr>
+<td>Blooming Iris</td>
+<td>A. Rivera</td>
+<td style="text-align: right;">4.50</td>
+</tr>
+<tr>
+<td>Pepper Ember</td>
+<td>J. Kim</td>
+<td style="text-align: right;">4.30</td>
+</tr>
+<tr>
+<td>Saffron Smoke</td>
+<td>J. Kim</td>
+<td style="text-align: right;">4.30</td>
+</tr>
+<tr>
+<td>Cedar Night</td>
+<td>L. Patel</td>
+<td style="text-align: right;">4.55</td>
+</tr>
+<tr>
+<td>Forest Moss</td>
+<td>L. Patel</td>
+<td style="text-align: right;">4.55</td>
+</tr>
+</tbody>
+</table>
+<p>This reduces a potentially large categorical variable to a single
+numeric column. However, target encoding must be used carefully because
+it uses information from the target variable itself. If the encoding is
+calculated using the full dataset, information from the test data can
+leak into the training data. The encoding should be learned only from
+the training data.</p>
+<p>What happens if a perfumer appears in the test set that never
+appeared in the training set? Since we do not have a target-encoded
+value for that perfumer, a common approach is to use the overall average
+target value from the training set. In this example, the average
+training-set rating is approximately 4.45, so a new perfumer could be
+encoded as:</p>
+<table>
+<thead>
+<tr>
+<th>Perfume</th>
+<th>Perfumer</th>
+<th style="text-align: right;">Perfumer_encoded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amber Tide</td>
+<td>M. Chen</td>
+<td style="text-align: right;">4.45</td>
+</tr>
+</tbody>
+</table>
+<p>This gives the model a reasonable default value.</p>
+<p>The <code>Description</code> field contains free-form text, not
+categories, so we need a different way to turn it into numbers. One
+simple approach is <em>bag of words</em>. Bag of words creates a
+vocabulary containing the words that appear in the training
+descriptions, then creates one column for each word in the vocabulary.
+Each description is represented by the number of times each vocabulary
+word appears.</p>
+<p>For example, suppose we use the vocabulary:</p>
+<p><code>soft</code>, <code>rose</code>, <code>iris</code>,
+<code>warm</code>, <code>pepper</code>, <code>saffron</code>,
+<code>dry</code>, <code>cedar</code>, <code>moss</code></p>
+<p>(omitting words like <code>and</code> and <code>with</code>, which
+are not relevant to the task).</p>
+<p>Then the descriptions could be transformed like this:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 12%" />
+<col style="width: 14%" />
+<col style="width: 5%" />
+<col style="width: 8%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr>
+<th>Perfume</th>
+<th style="text-align: right;">soft</th>
+<th style="text-align: right;">rose</th>
+<th style="text-align: right;">iris</th>
+<th style="text-align: right;">warm</th>
+<th style="text-align: right;">pepper</th>
+<th style="text-align: right;">saffron</th>
+<th style="text-align: right;">dry</th>
+<th style="text-align: right;">cedar</th>
+<th style="text-align: right;">moss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rose Veil</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Blooming Iris</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Pepper Ember</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Saffron Smoke</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Cedar Night</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Forest Moss</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+<p>Each text description is now represented by a set of numeric features
+that can be used by a model. In a real dataset, the vocabulary would
+usually contain many more words, so this transformation can create a
+large and sparse set of columns.</p>
+<p>Bag of words ignores word order and context. It is therefore a simple
+representation of which words appear in a description, rather than a
+representation of the full meaning of the text.</p>
+<p>As with other preprocessing steps, the vocabulary should be learned
+from the training set only. If a new description in the test set
+contains a word that was never seen during training, that word is simply
+not represented by one of the existing bag-of-words columns.</p>
+<p>Other types of data also need to be converted into numeric features
+before they can be used by most models.</p>
+<ul>
+<li>For image data, one simple representation is the raw pixel values:
+each pixel is represented by numeric intensity or color values, such as
+RGB (red, green, blue) values.</li>
+<li>For audio data, the raw waveform can be transformed into the
+frequency domain, which describes how much energy is present at
+different frequencies. These frequency-based features are often
+represented using a spectrogram, which is essentially an image showing
+how the frequency content of the audio changes over time. The resulting
+numeric values, or the spectrogram itself, can then be used as features
+for a model.</li>
+</ul>
+</aside>
+</section>
+<section id="create-transformed-features" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Create “transformed” features</h3>
+<aside class="notes">
+<p>Sometimes the raw features are not in the most useful form for a
+model, so we create new features from them. For example,</p>
+<ul>
+<li>instead of using a timestamp directly, we might create an
+<code>is_rush_hour</code> feature that indicates whether the observation
+occurred during a typical commuting period.</li>
+<li>we might extract <code>hour_of_day</code>, <code>day_of_week</code>,
+<code>month</code>, or <code>is_weekend</code> from a date</li>
+<li>we might compute <code>age</code> from a date of birth,
+<code>price_per_square_foot</code> from price and area,
+<code>distance_from_city_center</code> from latitude and longitude</li>
+<li>we might create a <code>days_since_last_purchase</code> feature from
+transaction dates</li>
+<li>we might take the log of a highly skewed variable such as
+income</li>
+<li>we might combine measurements into a ratio such as
+<code>debt_to_income</code>.</li>
+</ul>
+<p>The goal is to represent the raw data in a form that makes patterns
+easier for the model to learn. This will be highly data- and
+context-specific!</p>
+</aside>
+</section></section>
+<section>
+<section id="data-leakage" class="title-slide slide level2 grad-only"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Data leakage</h2>
+
+</section>
+<section id="types-of-data-leakage-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Types of data leakage (1)</h3>
 <p>No independent test set:</p>
 <ul>
 <li>no test set at all!</li>
-<li>random split of non-independent samples</li>
-<li>pre-processing uses entire data</li>
+<li>random split of samples that are not independent</li>
+<li>preprocessing uses entire data</li>
 <li>model selection uses test set</li>
 </ul>
 <aside class="notes">
@@ -500,9 +1456,9 @@ the samples are independent. It doesn’t work if:</p>
 </ul>
 <p>so in these cases, we need to split the data in a way that preserves
 the independence of the test set. (We’ll revisit in Week 4.)</p>
-<p>And, if we use the test data - for pre-processing, for model
-selection, or for model training - we “contaminate” it and then we no
-longer have an independent test set for model evaluation</p>
+<p>If we use the test data for preprocessing, model selection, or model
+training, we “contaminate” it and then we no longer have an independent
+test set for model evaluation.</p>
 <p>See <a
 href="https://www.cell.com/patterns/pdfExtended/S2666-3899(23)00159-9">Leakage
 and the reproducibility crisis in machine learning-based
@@ -517,7 +1473,7 @@ into training and test sets at the row level. That means the training
 set might include traffic counts for 7:00-7:15 AM and 7:30-7:45 AM on
 June 10th, while the test set includes 7:15-7:30 on the same data.
 Because the test rows are sandwiched between training rows, the model
-evaluation appears very accurate — it’s essentially interpolating
+evaluation appears very accurate. It is essentially interpolating
 between adjacent points.</li>
 <li>When deployed to predict traffic on unseen future days, this
 advantage disappears, and performance is much worse than the evaluation
@@ -525,9 +1481,10 @@ would suggest.</li>
 </ul>
 </aside>
 </section>
-<section id="types-of-data-leakage-2" class="slide level3">
-<h3>Types of data leakage (2)</h3>
-<p>Inappropriate features</p>
+<section id="types-of-data-leakage-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Types of data leakage (2)</h3>
+<p>Inappropriate features:</p>
 <ul>
 <li>feature not available at inference time</li>
 <li>feature is a proxy for target variable in data, but not in
@@ -546,379 +1503,67 @@ hypertension, this may include drugs to lower blood pressure!</li>
 medical history <em>before a hypertension diagnosis is made</em>.</li>
 </ul>
 <p>Example: Suppose you are training a model to predict whether a
-profile photo on LinkedIn is AI-generated. You prepare a dataset with a
-bunch of AI-generated photos of headshots, and “real” faces cropped from
+profile photo on LinkedIn is AI generated. You prepare a dataset with a
+bunch of AI generated photos of headshots and “real” faces cropped from
 candid photographs found online.</p>
 <ul>
 <li>In model development and evaluation, the model may “learn” that a
-headshot-style photo is AI-generated, and a cropped candid photo is not.
+headshot style photo is AI generated and a cropped candid photo is not.
 It will appear to have high accuracy on the evaluation data.</li>
 <li>When the model is deployed, this relationship between “photo style”
 and target variable will not exist, since virtually all of the photos
-will be headshot-style. The model will have very poor performance.</li>
+will be headshot style. The model will have very poor performance.</li>
 </ul>
 <p>(Knowing which features are valid often requires domain
 knowledge…)</p>
-<p>For example….</p>
 </aside>
-</section>
-<section id="covid-19-chest-radiography" class="slide level3">
-<h3>COVID-19 chest radiography</h3>
-<ul>
-<li><strong>Problem</strong>: diagnose COVID-19 from chest radiography
-images</li>
-<li><strong>Input</strong>: image of chest X-ray (or other
-radiography)</li>
-<li><strong>Target variable</strong>: COVID or no COVID</li>
-</ul>
-</section>
-<section id="covid-19-chest-radiography-2" class="slide level3">
-<h3>COVID-19 chest radiography (2)</h3>
-<figure>
-<img data-src="../images/1-covid-xrays.png" style="width:60.0%"
-alt="Neural networks can classify the source dataset of these chest X-ray images, even without lungs! Source" />
-<figcaption aria-hidden="true">Neural networks can classify the source
-dataset of these chest X-ray images, even <em>without lungs</em>! <a
-href="https://arxiv.org/abs/2004.12823">Source</a></figcaption>
-</figure>
-<aside class="notes">
-<p>Between January and October 2020, more than 2000 papers were
-published that claimed to use machine learning to diagnose COVID-19
-patients based on chest X-rays or other radiography. But a later <a
-href="https://www.nature.com/articles/s42256-021-00307-0">review</a>
-found that “none of the models identified are of potential clinical use
-due to methodological flaws and/or underlying biases”.</p>
-<p>To train these models, people used an emerging COVID-19 chest X-ray
-dataset, along with one or more existing chest X-ray dataset, for
-example a pre-existing dataset used to try and classify viral
-vs. bacterial pneumonia.</p>
-<p>The problem is that the chest X-rays for each dataset were so
-“distinctive” to that dataset, that a neural network could be trained
-with high accuracy to classify an image into its source dataset, even
-without the lungs showing!</p>
-</aside>
-</section>
-<section id="covid-19-chest-radiography-2-1" class="slide level3">
-<h3>COVID-19 chest radiography (2)</h3>
-<p>Findings:</p>
-<ul>
-<li>some non-COVID datasets were pediatric images, COVID images were
-adult</li>
-<li>there were dataset-level differences in patient positioning</li>
-<li>many COVID images came from screenshots of published papers, which
-often had text, arrows, or other annotations over the images. (Some
-non-COVID images did, too.)</li>
-</ul>
-</section>
-<section id="covid-19-chest-radiography-3" class="slide level3">
-<h3>COVID-19 chest radiography (3)</h3>
-<figure>
-<img data-src="../images/1-covid-xrays-saliency.png" style="width:90.0%"
-alt="Saliency map showing the “important” pixels for classification. Source" />
-<figcaption aria-hidden="true">Saliency map showing the “important”
-pixels for classification. <a
-href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7523163/">Source</a></figcaption>
-</figure>
-<aside class="notes">
-<p>These findings are based on techniques like</p>
-<ul>
-<li>saliency maps, where the model is made to highlight the part of the
-image (the pixels) that it considered most relevant to its
-decision.</li>
-<li>using generative models and asking it to take a COVID-negative X-ray
-and make it positive (or v.v.)</li>
-</ul>
-<p>Many of the findings are not easy to understand without domain
-knowledge (e.g. knowing what part of the X-ray <em>should</em> be
-important and what part should not be.) For example: should the
-diaphragm area be helpful?</p>
-</aside>
-<!-- 
-
-
-https://www.nature.com/articles/s41559-023-02162-1  Data leakage jeopardizes ecological applications of machine learning
-
-https://www.nature.com/articles/s41467-024-46150-w Data leakage inflates prediction performance in connectome-based machine learning models
-
-https://www.nature.com/articles/s41592-024-02362-y Guiding questions to avoid data leakage in biological machine learning applications
-
-
--->
 </section>
 <section id="signs-of-potential-data-leakage-after-training"
-class="slide level3">
-<h3>Signs of potential data leakage (after training)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Signs of potential data leakage
+(after training)</h3>
 <ul>
 <li>Performance is “too good to be true”</li>
 <li>Unexpected behavior of model (e.g. learns from a feature that
 shouldn’t help)</li>
 </ul>
 </section>
-<section id="detecting-data-leakage" class="slide level3">
-<h3>Detecting data leakage</h3>
+<section id="detecting-data-leakage" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Detecting data leakage</h3>
 <ul>
 <li>Exploratory data analysis</li>
 <li>Study the data before, during, and after you use it!</li>
 <li>Explainable ML methods</li>
 <li>Early testing in production</li>
 </ul>
-<!-- 
-• Convert to numeric types
-• Create “transformed” features
-• Explore data, make and check assumptions
-• Handle missing data
-
--->
-</section>
-<section id="convert-to-numeric-types" class="slide level3">
-<h3>Convert to numeric types</h3>
-<ul>
-<li>fix “reading in the data” issues</li>
-<li>ordinal and one-hot encoding of categorical data</li>
-<li>image data to raw pixels</li>
-<li>text to “bag of words” or other representation</li>
-<li>audio to frequency domain (or image of frequency domain)
-features</li>
-</ul>
-</section>
-<section id="create-transformed-features" class="slide level3">
-<h3>Create “transformed” features</h3>
-</section>
-<section id="make-and-check-assumptions" class="slide level3">
-<h3>Make and check assumptions</h3>
-<aside class="notes">
-<p>It’s always a good idea to “sanity check” your data - before you look
-at it, think about what you expect to see. Then check to make sure your
-expectations are realized.</p>
-<p>Look at plots of data, summary statistics, etc. and consider general
-trends.</p>
-</aside>
-</section>
-<section id="example-author-citation-data-1" class="slide level3">
-<h3>Example: author citation data (1)</h3>
-<p>Data analysis: use PubMed, and identify the year of first publication
-for the 100,000 most cited authors.</p>
-<aside class="notes">
-<p>What are our expectations about what this should look like?</p>
-</aside>
-</section>
-<section id="example-author-citation-data-2" class="slide level3">
-<h3>Example: author citation data (2)</h3>
-<figure>
-<img data-src="../images/1-pubmed-authors.png" style="width:50.0%"
-alt="Does this look reasonable?" />
-<figcaption aria-hidden="true">Does this look reasonable?</figcaption>
-</figure>
-<aside class="notes">
-<p>We can think of many potential explanations for this pattern, even
-though it is actually a data artifact.</p>
-<p>The true explanation: in 2002, PubMed started using full first names
-in authors instead of just initials. The same author is represented in
-the dataset as a “new” author with a first date of publication in
-2002.</p>
-</aside>
-</section>
-<section id="example-author-citation-data-3" class="slide level3">
-<h3>Example: author citation data (3)</h3>
-<figure>
-<img data-src="../images/1-pubmed-authors2.png" style="width:50.0%"
-alt="The real distribution, after name unification. Example via Steven Skiena @ Stony Brook U." />
-<figcaption aria-hidden="true">The real distribution, after name
-unification. Example via <a
-href="https://www3.cs.stonybrook.edu/~skiena/519/">Steven Skiena @ Stony
-Brook U</a>.</figcaption>
-</figure>
-<aside class="notes">
-<p>How <em>should</em> you handle unreasonable values, data that does
-not match expectations, or “outliers”? It depends!</p>
-<ul>
-<li>e.g. suppose in a dataset of voter information, some have impossible
-year of birth - would make the voter over 120 years old. (The reason:
-Voters with no known DOB, who registered before DOB was required, are
-often encoded with a January 1900 DOB.)</li>
-<li><strong>not</strong> a good idea to just remove outliers unless you
-are sure they are a data entry error or otherwise not a “true”
-value.</li>
-<li>Even if an outlier is due to some sort of error, if you remove them,
-you may skew the dataset (as in the 1/1/1900 voters example).</li>
-</ul>
-<p>Consider the possibility of:</p>
-<ul>
-<li>Different units, time zones, etc. in different rows</li>
-<li>Same value represented several different ways (e.g. names,
-dates)</li>
-<li>Missing data encoded as zero</li>
-</ul>
-</aside>
-</section>
-<section id="handle-missing-data" class="slide level3">
-<h3>Handle missing data</h3>
-<p>Missing data can appear as:</p>
-<ul>
-<li>Rows that have <code>NaN</code> values</li>
-<li>Rows that have other values encoding “missing” (-1, 0, 100…)</li>
-<li>Rows that are <em>not there</em> but should be</li>
-</ul>
-<aside class="notes">
-<!-- 
-* Example: NYC taxi tip data, NYS thruway data
--->
-<p>Some practical examples of “rows that should be there, but are not”
--</p>
-<!-- 
-* Twitter API terms of use don't allow researchers to share tweets directly, only message IDs (except for limited distribution, e.g. by email). To reproduce the dataset, you use the Twitter API to download messages using their IDs. But, tweets that have been removed are not available - the distribution of removed tweets is not flat! (For example: you might end up with a dataset that has offensive posts but few "obvious" offensive posts.) -->
-<ul>
-<li>A dataset of Tweets following Hurricane Sandy makes it looks like
-Manhattan was the hub of the disaster, because of power blackouts and
-limited cell service in the most affected areas. <a
-href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
-<li>The City of Boston released a smartphone app that uses accelerometer
-and GPS data to detect potholes and report them automatically. But, low
-income and older residents are less likely to have smartphones, so this
-dataset presents a skewed view of where potholes are. <a
-href="https://hbr.org/2013/04/the-hidden-biases-in-big-data">Source</a></li>
-</ul>
-</aside>
-</section>
-<section id="types-of-missingness" class="slide level3 cell markdown">
-<h3>Types of “missingness”</h3>
-<ul>
-<li>not related to anything of interest</li>
-<li>correlated with observed features</li>
-<li>correlated with measure of interest</li>
-</ul>
-<aside class="notes">
-<p>These are often referred to using this standard terminology (which
-can be confusing):</p>
-<ul>
-<li>Missing <em>completely</em> at random: equal probability of being
-missing for every sample.</li>
-<li>Missing at random: samples with <span class="math inline">\(x =
-X\)</span> (for some feature, value <span
-class="math inline">\(X\)</span>) more likely to be missing.</li>
-<li>Missing not at random: some values of target variable <span
-class="math inline">\(y\)</span>, more likely to be missing.</li>
-</ul>
-<p>For example, suppose we want to survey students about their course
-load and their stress levels. in order to predict stress levels in
-future students and better advise them about course registration -</p>
-<ul>
-<li>MCAR: a pile of survey forms is accidentally thrown out. Losing this
-data doesn’t have any systematic impact, beyond the less of the
-data.</li>
-<li>MAR: last-semester students are less likely to fill out the survey
-than first-semester students, because they don’t feel like they’ll be
-around long enough to benefit from the results. Losing this data means
-that our end result may be biased, or less accurate, for students in
-their last semester.</li>
-<li>MNAR: students who are stressed out are less likely to fill out the
-survey. Losing this data is likely to have a (bad) systematic
-effect.</li>
-</ul>
-</aside>
-</section>
-<section id="handling-missing-data" class="slide level3">
-<h3>Handling missing data</h3>
-<p>How should you handle little bits of missing data? It always depends
-on the data and the circumstances. Some possibilities include:</p>
-<ul>
-<li>omit the row (or column)</li>
-<li>fill back/forward (ordered rows)</li>
-<li>fill with mean, median, max, mode…</li>
-</ul>
-<aside class="notes">
-<p>You generally have to know why the data is missing, to understand the
-best way to handle it. If imputing a value, we want it to be <em>as
-close as possible to the true (unknown) value</em>.</p>
-<p>During the data preparation stage, it’s important not to
-“contaminate” the test set - any cleaning that uses statistics of the
-data (mean, max, etc.) must use the statistics of the training set
-only.</p>
-<p>For example: if imputing missing values with the mean of a feature,
-we would use the mean of the feature in the training set only.</p>
-</aside>
-<!-- 
-
-Biological reasoning
-
-Physical reasoning
-
-Social reasoning
-
-Practical reasoning (see HellaSwag)
-
-Object and individual tracking
-
-Non sequiturs
-
-failed gemini prompts:
-
-* generate a photorealistic image of a pencil in a glass of water
-* Two days ago, I found two cute little bunnies in my backyard. Yesterday, I found two dead little bunnies in my backyard and I buried them. What will I find in my backyard tomorrow? Answer in 5 words or less.
-
-
-https://www.technologyreview.com/2020/08/22/1007539/gpt3-openai-language-generator-artificial-intelligence-ai-opinion/
-
-
-
-
-
-
-Mis-labeled examples:
-
-https://www.surgehq.ai/blog/30-percent-of-googles-reddit-emotions-dataset-is-mislabeled
-
-> Yay, cold McDonald's. My favorite. – mislabeled as LOVE
-
-
-
-
--->
-<!-- 
-### Example: anomalous voting data (1)
-
-![Data like this was widely (wrongly) used as evidence of anomaly in the 2020 U.S. Presidential election.](../images/1-election2020.png){ width=30% }
-
-::: notes
-
-What are our assumptions about election night data, and how are they violated here? 
-
-We expect that per-candidate vote totals (computed by multiplying total votes and vote share) should increase as more votes are counted, but never decrease.
-
-What are possible explanations?
-
-:::
-
-### Example: anomalous voting data (2)
-
-![Process by which data is collected by Edison and AP.](../images/1-election2020-process.png){ width=75% }
-
-::: notes
-
-This anomaly makes a lot of sense as a correction of a data entry or duplicate entry error. 
-
-How Edison/AP collects the data for their Election Night feed:
-
-* There are "stringers" (temporary reporters) at various elections offices who call results into their phone center
-* They have people who look at official government websites for new results that they manually enter into the system
-* They have people who monitor results sent by fax from counties and cities
-
-all working as fast as they can! Data entry and duplicate entry errors are not only likely, they are almost guaranteed. When they are corrected, vote totals may decrease.
-
-Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us/topics/politics/elections/counting-the-vote), [Edison](http://www.edisonresearch.com/wp-content/uploads/2020/10/Web-Entry-Team-Handout-2020.pdf)
-
-:::
-
--->
 </section></section>
-<section id="recap-working-with-data" class="title-slide slide level2">
-<h2>Recap: Working with data</h2>
-
+<section id="recap-working-with-data" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Recap: Working with data</h2>
+<aside class="notes">
+<p>This lesson focused on the work that must happen before and around
+model training and evaluation.</p>
+<p>First, ask whether the data is appropriate: was it collected legally
+and ethically, does it represent the deployment setting, does it contain
+plausible predictive signals rather than accidental artifacts, and is it
+accurate and complete?</p>
+<p>Then prepare the data for modeling. Define what each sample
+represents, select features and a target, split the data without
+leakage, handle missing values, convert non-numeric data into numeric
+features, and create useful transformed features.</p>
+<p>Data is also central to evaluation: if the evaluation data is not
+representative, or if information from it leaks into training, the
+measured performance can be overly optimistic and fail to predict how
+the model will perform in deployment. This is a much worse outcome than
+simply having a poor-performing model (but knowing it is poor)!</p>
+</aside>
 </section>
     </div>
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
+<script src="reveal.js-master/plugin/chalkboard/plugin.js"></script>
 
   <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
@@ -949,7 +1594,7 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: "c/t",
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -1071,6 +1716,15 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
         // viewDistance in order to save resources.
         mobileViewDistance: 2,
 
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 700,
+
+        maxScale: 1,
+
         math: {
           mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
@@ -1088,8 +1742,14 @@ Source: [AP](https://web.archive.org/web/20210410214207/https://www.ap.org/en-us
           },
         },
 
-        // reveal.js plugins
+              chalkboard: {
+          grid: false,
+          theme: "whiteboard",
+        },
+
+  // reveal.js plugins
         plugins: [
+          RevealChalkboard,
           RevealMath,
           RevealNotes,
           RevealSearch,
