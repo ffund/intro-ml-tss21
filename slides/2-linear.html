@@ -29,119 +29,153 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/myplanet.css" id="theme">
+  <script>
+  new MutationObserver(function(mutations, observer) {
+    var target = document.querySelector('#title-slide, .title-slide');
+    if (target && !target.hasAttribute('data-background-color')) {
+      target.setAttribute('data-background-color', '#57068c');
+      observer.disconnect();
+    }
+  }).observe(document.documentElement, {childList: true, subtree: true});
+
+  window.addEventListener('load', function() {
+    var maximumFontSize = 40;
+    var minimumFontSize = 20;
+
+    function fitSlide(slide) {
+      if (!slide || slide.classList.contains('stack')) return;
+
+      var canvas = slide.parentElement;
+      slide.style.fontSize = maximumFontSize + 'px';
+
+      for (var size = maximumFontSize; size > minimumFontSize; size--) {
+        if (slide.scrollHeight <= canvas.clientHeight &&
+            slide.scrollWidth <= canvas.clientWidth) break;
+        slide.style.fontSize = (size - 1) + 'px';
+      }
+
+      Reveal.layout();
+    }
+
+    function fitCurrentSlide(event) {
+      var slide = event && event.currentSlide || Reveal.getCurrentSlide();
+      requestAnimationFrame(function() { fitSlide(slide); });
+    }
+
+    Reveal.on('ready', fitCurrentSlide);
+    Reveal.on('slidechanged', fitCurrentSlide);
+
+    if (Reveal.isReady()) fitCurrentSlide();
+    if (document.fonts) document.fonts.ready.then(fitCurrentSlide);
+    if (window.MathJax && MathJax.Hub) MathJax.Hub.Queue(fitCurrentSlide);
+  });
+  </script>
+  <link rel="stylesheet" href="reveal.js-master/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide">
+<section id="title-slide" class="poll-title-slide">
   <h1 class="title">Linear Regression</h1>
   <p class="author">Fraida Fund</p>
+
+<div class="poll-title-content">
+  <img class="poll-title-qr" src="../images/polleverywhere-ffund.png" alt="QR code for PollEv.com/ffund">
+  <div class="poll-title-copy">
+    <div class="poll-title-prompt">Open on your phone/laptop:</div>
+    <div class="poll-title-url"><a href="https://pollev.com/ffund" target="_blank" rel="noopener">PollEv.com/ffund</a></div>
+    <div class="poll-title-instructions">In the &quot;Name&quot; field put your<br>net ID (e.g. ff524) and<br>&quot;Continue&quot;.</div>
+  </div>
+</div>
 </section>
 
 <section class="slide level3">
 
-<div class="cell markdown">
-<aside class="notes">
-<p><strong>Math prerequisites for this lecture</strong>: You should
-know</p>
-<ul>
-<li>matrix notation, matrix-vector multiplication (Section II, Chapter 5
-in Boyd and Vandenberghe)</li>
-<li>inner product/dot product (Section I, Chapter 1 in Boyd and
-Vandenberghe)</li>
-<li>derivatives and optimization (Appendix C in Boyd and
-Vandenberghe)</li>
-<li>norm of a vector (Section I, Chapter 3 in Boyd and
-Vandenberghe)</li>
-<li>matrix inverse (Section II, Chapter 11 in Boyd and
-Vandenberghe)</li>
-</ul>
-</aside>
-<section id="in-this-lecture" class="title-slide slide level2">
-<h2>In this lecture</h2>
-<ul>
-<li>Simple (univariate) linear regression</li>
-<li>Multiple linear regression</li>
-<li>Linear basis function regression</li>
-<li>OLS solution for simple regression</li>
-<li>OLS solution for multiple/LBF regression</li>
-<li>Interpretation</li>
-</ul>
-<aside class="notes">
+<aside class="notes grad-only">
 <p>With linear regression, as with all of the supervised learning models
 in this course, we will consider:</p>
 <ul>
 <li>The parts of the basic “recipe” (loss function, training algorithm,
 etc.)</li>
 </ul>
-<p>and these four questions:</p>
+<p>as well as:</p>
 <ul>
 <li>What type of relationships <span class="math inline">\(f(x)\)</span>
 can it represent?</li>
 <li>What insight can we get from the trained model?</li>
-<li>How do we train the model efficiently?</li>
+<li>What is the cost of training/inference?</li>
 <li>How do we control the generalization error?</li>
 </ul>
 <p>For linear regression, we will consider the first two questions in
 this lesson, and the second two questions in the next lesson.</p>
 </aside>
 </section>
-
-</div>
-</section>
 <section>
-<section id="regression" class="title-slide slide level2">
-<h2>Regression</h2>
+<section id="regression" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Regression</h2>
 
 </section>
-<section id="regression---quick-review" class="slide level3">
-<h3>Regression - quick review</h3>
+<section id="regression---quick-review" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Regression - quick review</h3>
 <p>The output variable <span class="math inline">\(y\)</span> is
 continuously valued.</p>
 <p>We need a function <span class="math inline">\(f\)</span> to map each
-input vector <span class="math inline">\(\mathbf{x_i}\)</span> to a
+input vector <span class="math inline">\(\mathbf{x}_i\)</span> to a
 prediction,</p>
-<p><span class="math display">\[\hat{y_i} = f(\mathbf{x_i})\]</span></p>
+<p><span class="math display">\[\hat{y_i} = f(\mathbf{x}_i)\]</span></p>
 <p>where (we hope!) <span class="math inline">\(\hat{y_i} \approx
 y_i\)</span>.</p>
 </section>
-<section id="prediction-by-mean" class="slide level3">
-<h3>Prediction by mean</h3>
-<p>Last week, we imagined a simple model that predicts the mean of
-target variable in training data:</p>
-<p><span class="math display">\[\hat{y_i} = w_0\]</span></p>
+<section id="prediction-by-mean" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Prediction by mean</h3>
+<p>We previously a simple model that predicts the mean of target
+variable in training data:</p>
+<p><span class="math display">\[\hat{y_i} = w\]</span></p>
 <p><span class="math inline">\(\forall i\)</span>, where <span
-class="math inline">\(w_0 = \frac{1}{n} \sum_{i=1}^n y_i =
+class="math inline">\(w = \frac{1}{N} \sum_{i=1}^N y_i =
 \bar{y}\)</span>.</p>
 <aside class="notes">
 <p>We can show that the mean is the one-parameter model that optimizes
 the <em>mean squared error</em> (MSE) loss function:</p>
-<p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{n}
-\sum_{i=1}^n (y_i - \hat{y_i})^2 =  \frac{1}{n} \sum_{i=1}^n (y_i -
-w_0)^2  \]</span></p>
-<p>Take the derivative of <span
-class="math inline">\(L(\mathbf{w})\)</span> with respect to <span
-class="math inline">\(w_0\)</span></p>
-<p><span class="math display">\[ \frac{\partial L(\mathbf{w}) }{\partial
-w_0} = \frac{-2}{n} \sum_{i=1}^n (y_i - w_0) \]</span></p>
-<p>and set it equal to zero:</p>
-<p><span class="math display">\[\frac{-2}{n} \sum_{i=1}^n (y_i - w_0) =
-0\]</span></p>
-<p>Since we set it equal to zero, we can ignore that <span
-class="math inline">\(-2\)</span> factor -</p>
-<p><span class="math display">\[\frac{1}{n} \sum_{i=1}^n (y_i - w_0) =
-0\]</span></p>
-<p>Now solve for <span class="math inline">\(w_0\)</span>:</p>
-<p><span class="math display">\[w_0 = \frac{1}{n} \sum_{i=1}^n y_i
+<p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{N}
+\sum_{i=1}^N (y_i - \hat{y_i})^2  \]</span></p>
+<p>Step 1: plug <span class="math inline">\(\hat{y} = w\)</span> into
+the loss function:</p>
+<p><span class="math display">\[ \operatorname*{minimize}\quad
+\frac{1}{N} \sum (y-\hat{y})^2 \to \operatorname*{minimize}\quad
+\frac{1}{N} \sum (y-w)^2 \]</span></p>
+<p>Step 2: take the derivative of the loss function with respect to the
+parameter <span class="math inline">\(w\)</span></p>
+<p><span class="math display">\[ \frac{\partial}{\partial w} \frac{1}{N}
+\sum (y-w)^2 = -\frac{2}{N} \sum (y-w) \]</span></p>
+<p>Step 3: set the derivative equal to 0, and solve for the parameter
+<span class="math inline">\(w\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+-\frac{2}{N} \sum (y-w) &amp;= 0
+    &amp;&amp; \text{Set the derivative equal to zero} \\[6pt]
+\sum(y) - \sum(w) &amp;= 0
+    &amp;&amp; \text{Multiply by } -\frac{N}{2} \text{ and expand}
+\\[6pt]
+\sum(y) = \sum(w) &amp;= N w
+    &amp;&amp; \text{Sum the constant } w \text{ over } N \text{
+samples} \\[6pt]
+\to w &amp;= \frac{1}{N} \sum(y)
+    &amp;&amp; \text{Solve for } w
+\end{aligned}
 \]</span></p>
-<p>This is the single parameter value that minimizes the mean squared
-error loss function.</p>
 </aside>
 </section>
-<section id="prediction-by-mean-illustration" class="slide level3">
-<h3>Prediction by mean, illustration</h3>
+<section id="prediction-by-mean-illustration" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Prediction by mean,
+illustration</h3>
 <aside class="notes">
 <figure>
 <img data-src="../images/2-prediction-mean-zero-variance.png"
@@ -149,58 +183,71 @@ style="width:80.0%" alt="A “recipe” for our simple ML system." />
 <figcaption aria-hidden="true">A “recipe” for our simple ML
 system.</figcaption>
 </figure>
-<p>Note that the loss function we defined for this problem - sum of
-squared differences between the true value and predicted value - is the
-variance of <span class="math inline">\(y\)</span>.</p>
+<p>Note that for “prediction by mean”, the loss function we defined for
+this problem - sum of squared differences between the true value and
+predicted value:</p>
+<p><span class="math display">\[\frac{1}{N} \sum_{i=1}^N (y_i - \bar{y})
+^2\]</span></p>
+<p><em>is</em> the variance of <span
+class="math inline">\(y\)</span>.</p>
 <p>Under what conditions will that loss function be very small (or even
 zero)?</p>
 <figure>
 <img data-src="../images/2-variance-y.png" style="width:50.0%"
-alt="Prediction by mean is a good model if there is no variance in y. But, if there is variance in y, a good model should explain some/all of that variance." />
-<figcaption aria-hidden="true">Prediction by mean is a good model if
-there is no <em>variance</em> in <span class="math inline">\(y\)</span>.
-But, if there <em>is</em> variance in <span
-class="math inline">\(y\)</span>, a good model should <em>explain</em>
-some/all of that variance.</figcaption>
+alt="When is prediction by mean good enough?" />
+<figcaption aria-hidden="true">When is prediction by mean good
+enough?</figcaption>
 </figure>
+<p>Prediction by mean is a good model if there is no <em>variance</em>
+in <span class="math inline">\(y\)</span>. But, if there <em>is</em>
+variance in <span class="math inline">\(y\)</span>, a good model should
+<em>explain</em> some/all of that variance.</p>
 </aside>
 </section>
-<section id="mean-variance---definitions" class="slide level3">
-<h3>Mean, variance - definitions</h3>
+<section id="mean-variance---definitions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Mean, variance - definitions</h3>
 <p>Mean and variance:</p>
-<p><span class="math display">\[\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i,
-\quad \sigma_y^2 = \frac{1}{n} \sum_{i=1}^n (y_i - \bar{y})
+<p><span class="math display">\[\bar{y} = \frac{1}{N} \sum_{i=1}^N y_i,
+\quad \sigma_y^2 = \frac{1}{N} \sum_{i=1}^N (y_i - \bar{y})
 ^2\]</span></p>
+<p>Covariance:</p>
+<p><span class="math display">\[\sigma_{xy} = \frac{1}{N} \sum_{i=1}^N
+(x_i - \bar{x})(y_i - \bar{y})\]</span></p>
 <aside class="notes">
-<p>We are using the “biased” estimate of mean and variace, without
+<p>We are using the “biased” estimate of mean and variance, without
 Bessel’s correction.</p>
 </aside>
 </section></section>
 <section>
-<section id="simple-linear-regression" class="title-slide slide level2">
-<h2>Simple linear regression</h2>
+<section id="simple-linear-regression" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Simple linear regression</h2>
 <aside class="notes">
 <p>A “simple” linear regression is a linear regression with only one
 feature.</p>
 </aside>
 </section>
-<section id="regression-with-one-feature" class="slide level3">
-<h3>Regression with one feature</h3>
+<section id="regression-with-one-feature" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Regression with one feature</h3>
 <p>For simple linear regression, we have feature-label pairs:</p>
-<p><span class="math display">\[(x_i, y_i), i=1,2,\cdots,n\]</span></p>
+<p><span class="math display">\[(x_i, y_i), i=1,2,\cdots,N\]</span></p>
 <p>(we’ll often drop the index <span class="math inline">\(i\)</span>
 when it’s convenient.)</p>
 </section>
-<section id="simple-linear-regression-model" class="slide level3">
-<h3>Simple linear regression model</h3>
+<section id="simple-linear-regression-model" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Simple linear regression model</h3>
 <p>Assume a linear relationship:</p>
 <p><span class="math display">\[ \hat{y_i} = w_0 + w_1 x_i\]</span></p>
 <p>where <span class="math inline">\(\mathbf{w} = [w_0, w_1]\)</span>,
 the intercept and slope, are model <strong>parameters</strong> that we
 <em>fit</em> in training.</p>
 </section>
-<section id="residual-term-1" class="slide level3">
-<h3>Residual term (1)</h3>
+<section id="residual-term-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Residual term (1)</h3>
 <p>There is variance in <span class="math inline">\(y\)</span> among the
 data:</p>
 <ul>
@@ -224,8 +271,9 @@ features not in <span class="math inline">\(x\)</span>, maybe it is
 truly “random”…</p>
 </aside>
 </section>
-<section id="residual-term-2" class="slide level3">
-<h3>Residual term (2)</h3>
+<section id="residual-term-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Residual term (2)</h3>
 <p>The <em>residual</em> term captures everything that isn’t in the
 model:</p>
 <p><span class="math display">\[y_i = w_0 + w_1 x_i + e_i\]</span></p>
@@ -245,8 +293,9 @@ Suppose students in Intro ML have the following distribution of course grades. W
 :::
 -->
 </section>
-<section id="example-intro-ml-grades" class="slide level3">
-<h3>Example: Intro ML grades</h3>
+<section id="example-intro-ml-grades" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: Intro ML grades</h3>
 <figure>
 <img data-src="../images/2-example-regression.svg" style="width:40.0%"
 alt="Predicting students’ grades in Intro ML using regression on previous coursework." />
@@ -336,32 +385,193 @@ This method doesn't tell us *why* this association is observed, only that it is.
 :::
 
 -->
-</section></section>
-<section>
-<section id="multiple-linear-regression"
-class="title-slide slide level2">
-<h2>Multiple linear regression</h2>
+</section>
+<section id="solving-simple-linear-regression-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving simple linear regression
+(1)</h3>
+<p>Step 1: plug the model into the MSE loss function:</p>
+<p><span class="math display">\[L(w_0,w_1)=\frac{1}{N}\sum_{i=1}^N
+[y_i-(w_0+w_1x_i)]^2\]</span></p>
+</section>
+<section id="solving-simple-linear-regression-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving simple linear regression
+(2)</h3>
+<p>Step 2: take the partial derivatives with respect to the
+parameters:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial L}{\partial w_0}
+  &amp;= -\frac{2}{N}\sum_{i=1}^N [y_i-(w_0+w_1x_i)] \\
+\frac{\partial L}{\partial w_1}
+  &amp;= -\frac{2}{N}\sum_{i=1}^N x_i(y_i-w_0-w_1x_i).
+\end{aligned}
+\]</span></p>
+</section>
+<section id="solving-simple-linear-regression-3" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving simple linear regression
+(3)</h3>
+<p>Step 3: set the derivatives equal to zero and solve:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{\partial L}{\partial w_0}=0
+  &amp;\Longrightarrow w_0^*=\bar{y}-w_1^*\bar{x} \\
+\frac{\partial L}{\partial w_1}=0
+  &amp;\Longrightarrow
+w_1^*=\frac{\sum_{i=1}^N(x_i-\bar{x})(y_i-\bar{y})}
+                         {\sum_{i=1}^N(x_i-\bar{x})^2}  =\frac{\sigma_{xy}}{\sigma_x^2}
+.
+\end{aligned}
+\]</span></p>
+<aside class="notes">
+<p>Note that</p>
+<p><span class="math display">\[
+w_1^*
+\]</span></p>
+<p>where <span class="math inline">\(\sigma_{xy}\)</span> is the
+covariance, and <span class="math inline">\(\sigma_x^2\)</span> is the
+variance of <span class="math inline">\(x\)</span>.</p>
+<section id="understanding-the-coefficient" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Understanding the coefficient</h3>
+<ul>
+<li>What does <span class="math inline">\(w_0\)</span> do to the
+line?</li>
+<li>What does <span class="math inline">\(w_1\)</span> do to the
+line?</li>
+</ul>
+<aside class="notes">
+<p>“an increase of one unit in this feature is associated with an
+increase of the target variable by <span
+class="math inline">\(w_1\)</span>”</p>
+<p>Doesn’t tell us about causality, significance, etc.!</p>
+</aside>
+</section>
+<section id="interpreting-regression-metrics"
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Interpreting regression metrics</h2>
 
 </section>
-<section id="matrix-representation-of-data" class="slide level3">
-<h3>Matrix representation of data</h3>
+<section id="interpreting-mse-mae" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting MSE, MAE</h3>
+<p><strong>Mean Squared Error (MSE)</strong>:</p>
+<p><span class="math display">\[MSE = \frac{1}{N} \sum_{i=1}^N (y_i -
+\hat{y_i})^2\]</span></p>
+<p><strong>Mean Absolute Error (MAE)</strong>:</p>
+<p><span class="math display">\[MAE = \frac{1}{N} \sum_{i=1}^N |y_i -
+\hat{y_i}|\]</span></p>
+<aside class="notes">
+<p>MSE is useful for training because:</p>
+<ul>
+<li>The squared loss function is differentiable everywhere, making it
+easy to optimize</li>
+<li>It has a closed-form solution (the normal equations)</li>
+<li>It penalizes large errors more heavily</li>
+</ul>
+<p>However, MSE is less intuitive for <em>interpreting</em> model
+error:</p>
+<ul>
+<li>MSE is in squared units of the target variable, hard to understand
+in context</li>
+<li>MAE is in the same units as the target variable</li>
+<li>MAE is more robust to outliers</li>
+</ul>
+<p>If <span class="math inline">\(y\)</span> is in dollars, you can
+directly say “on average, my predictions are off by $X” using MAE. (We
+could also use RMSE - take the square root of the MSE, but RMSE is also
+sensitive to outliers.)</p>
+<p>In some cases, we may prefer Mean Absolute Percent Error:</p>
+<p><span class="math display">\[MAPE = \frac{100\%}{N} \sum_{i=1}^N
+\left|\frac{y_i - \hat{y_i}}{y_i}\right|\]</span></p>
+<p>For example, suppose you are predicting house price. A $50k
+prediction error is much more significant for the 200k home (25% off)
+than for a 5 million dollar one (1% off). MAPE calculates error as a
+percentage of each actual value, so you get a meaningful comparison
+across different price ranges.</p>
+</aside>
+</section>
+<section id="interpreting-r2-as-explained-variance" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting R2 as explained
+variance</h3>
+<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i -
+\overline{y_i})^2}\]</span></p>
+<p>For linear regression: What proportion of the variance in <span
+class="math inline">\(y\)</span> is “explained” by our model?</p>
+<ul>
+<li><span class="math inline">\(R^2 \approx 1\)</span> - model
+“explains” all the variance in <span
+class="math inline">\(y\)</span></li>
+<li><span class="math inline">\(R^2 \approx 0\)</span> - model doesn’t
+“explain” any of the variance in <span
+class="math inline">\(y\)</span></li>
+</ul>
+</section>
+<section id="interpreting-r2-as-error-relative-to-mean-model"
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting R2 as error relative to
+“mean model”</h3>
+<p>Alternatively: what is the ratio of error of our model, to error of
+prediction by mean?</p>
+<p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i -
+\overline{y_i})^2}\]</span></p>
+<aside class="notes">
+<p>What would be R2 of a model that is <em>worse</em> than prediction by
+mean?</p>
+</aside>
+</section>
+<section id="example-intro-ml-grades-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: Intro ML grades (2)</h3>
+<figure>
+<img data-src="../images/2-example-regression-metrics.svg"
+style="width:75.0%"
+alt="Predicting students’ grades in Intro ML, for two different sections." />
+<figcaption aria-hidden="true">Predicting students’ grades in Intro ML,
+for two different sections.</figcaption>
+</figure>
+<aside class="notes">
+<p>In Instructor A’s section, a change in average overall course grades
+is associated with a bigger change in Intro ML course grade than in
+Instructor B’s section; but in Instructor B’s section, more of the
+variance among students is explained by the linear regression on
+previous overall grades.</p>
+</aside>
+</section>
+
+<section id="multiple-linear-regression"
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Multiple linear regression</h2>
+
+</section>
+<section id="matrix-representation-of-data" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Matrix representation of data</h3>
 <p>Represent data as a <strong>matrix</strong>, with <span
-class="math inline">\(n\)</span> samples and <span
+class="math inline">\(N\)</span> samples and <span
 class="math inline">\(d\)</span> features; one sample per row and one
 feature per column:</p>
 <p><span class="math display">\[ \mathbf{X} =
 \begin{bmatrix}
 x_{1,1} &amp; \cdots &amp; x_{1,d} \\
 \vdots  &amp; \ddots &amp; \vdots  \\
-x_{n,1} &amp; \cdots &amp; x_{n,d}
+x_{N,1} &amp; \cdots &amp; x_{N,d}
 \end{bmatrix},
 \mathbf{y} =
 \begin{bmatrix}
 y_{1}  \\
 \vdots \\
-y_{n}
+y_{N}
 \end{bmatrix}
 \]</span></p>
+<p>Thus, <span class="math inline">\(\mathbf{X}\in\mathbb{R}^{N\times
+d}\)</span> and <span
+class="math inline">\(\mathbf{y}\in\mathbb{R}^{N}\)</span>.</p>
 <p><span class="math inline">\(x_{i,j}\)</span> is <span
 class="math inline">\(j\)</span>th feature of <span
 class="math inline">\(i\)</span>th sample.</p>
@@ -370,10 +580,11 @@ class="math inline">\(i\)</span>th sample.</p>
 letter for vector.</p>
 </aside>
 </section>
-<section id="linear-model" class="slide level3">
-<h3>Linear model</h3>
+<section id="linear-model" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Linear model</h3>
 <p>For a given sample (row), assume a linear relationship between
-feature vector <span class="math inline">\(\mathbf{x_i} = [x_{i,1},
+feature vector <span class="math inline">\(\mathbf{x}_i = [x_{i,1},
 \cdots, x_{i,d}]\)</span> and scalar target variable <span
 class="math inline">\(y_i\)</span>:</p>
 <p><span class="math display">\[ \hat{y_i} = w_0 + w_1 x_{i,1} + \cdots
@@ -383,9 +594,9 @@ class="math inline">\(y_i\)</span>:</p>
 <aside class="notes">
 <ul>
 <li>Samples are vector-label pairs: <span
-class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+class="math inline">\((\mathbf{x}_i, y_i), i=1,2,\cdots,N\)</span></li>
 <li>Each sample has a feature vector <span
-class="math inline">\(\mathbf{x_i} = [x_{i,1}, \cdots, x_{i,d}]\)</span>
+class="math inline">\(\mathbf{x}_i = [x_{i,1}, \cdots, x_{i,d}]\)</span>
 and scalar target <span class="math inline">\(y_i\)</span></li>
 <li>Predicted value for <span class="math inline">\(i\)</span>th sample
 will be <span class="math inline">\(\hat{y_i} = w_0 + w_1 x_{i,1} +
@@ -397,15 +608,16 @@ rest of the weights we can use a matrix representation…</p>
 </aside>
 </section>
 <section id="matrix-representation-of-linear-regression-1"
-class="slide level3">
-<h3>Matrix representation of linear regression (1)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Matrix representation of linear
+regression (1)</h3>
 <p>Define a new <strong>design matrix</strong> and <strong>weight
 vector</strong>:</p>
 <p><span class="math display">\[ \mathbf{A} =
 \begin{bmatrix}
 1 &amp; x_{1,1} &amp; \cdots &amp; x_{1,d} \\
 \vdots &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-1 &amp; x_{n,1} &amp; \cdots &amp; x_{n,d}
+1 &amp; x_{N,1} &amp; \cdots &amp; x_{N,d}
 \end{bmatrix},
 \mathbf{w} =
 \begin{bmatrix}
@@ -415,16 +627,21 @@ w_{1}  \\
 w_{d}
 \end{bmatrix}
 \]</span></p>
+<p>Thus, <span
+class="math inline">\(\mathbf{A}\in\mathbb{R}^{N\times(d+1)}\)</span>
+and <span
+class="math inline">\(\mathbf{w}\in\mathbb{R}^{d+1}\)</span>.</p>
 </section>
 <section id="matrix-representation-of-linear-regression-2"
-class="slide level3">
-<h3>Matrix representation of linear regression (2)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Matrix representation of linear
+regression (2)</h3>
 <p>Then, <span class="math inline">\(\hat{\mathbf{y}} =
 \mathbf{A}\mathbf{w}\)</span>.</p>
-<p>And given a new sample with feature vector <span
-class="math inline">\(\mathbf{x_i}\)</span>, predicted value is <span
-class="math inline">\(\hat{y_i} = \langle [1, \mathbf{x_i}] , \mathbf{w}
-\rangle = [1, \mathbf{x_i}^T] \mathbf{w}\)</span>.</p>
+<p>For a new sample, define <span
+class="math inline">\(\tilde{\mathbf{x}}_i=[1,\mathbf{x}_i^T]^T\in\mathbb{R}^{d+1}\)</span>.
+Its predicted value is <span
+class="math inline">\(\hat{y}_i=\tilde{\mathbf{x}}_i^T\mathbf{w}\)</span>.</p>
 <aside class="notes">
 <p>(The angle brackets denote a dot product.)</p>
 </aside>
@@ -440,8 +657,9 @@ regression.</figcaption>
 </aside>
 </section>
 <section id="illustration---residual-with-two-features"
-class="slide level3">
-<h3>Illustration - residual with two features</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Illustration - residual with two
+features</h3>
 <figure>
 <img data-src="../images/3.4.svg" style="width:50.0%"
 alt="In 2D, the least squares regression is now a plane. In higher d, it’s a hyperplane. (ISLR)" />
@@ -449,33 +667,36 @@ alt="In 2D, the least squares regression is now a plane. In higher d, it’s a h
 now a plane. In higher <span class="math inline">\(d\)</span>, it’s a
 hyperplane. (ISLR)</figcaption>
 </figure>
-</section></section>
-<section>
+</section>
+
 <section id="linear-basis-function-regression"
-class="title-slide slide level2">
-<h2>Linear basis function regression</h2>
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Linear basis function
+regression</h2>
 <aside class="notes">
 <p>The assumption that the output is a linear function of the input
 features is very restrictive. Instead, what if we consider <em>linear
 combinations</em> of <em>fixed non-linear</em> functions?</p>
 </aside>
 </section>
-<section id="basis-functions" class="slide level3">
-<h3>Basis functions</h3>
+<section id="basis-functions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Basis functions</h3>
 <p>A function</p>
 <p><span class="math display">\[ \phi_j (\mathbf{x}) = \phi_j (x_1,
 \cdots, x_d) \]</span></p>
 <p>is called a <strong>basis function</strong>.</p>
 </section>
 <section id="linear-basis-function-model-for-regression"
-class="slide level3">
-<h3>Linear basis function model for regression</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Linear basis function model for
+regression</h3>
 <p>Standard linear model:</p>
 <p><span class="math display">\[ \hat{y_i} = w_0 + w_1 x_{i,1} + \cdots
 + w_d x_{i,d} \]</span></p>
 <p>Linear basis function model:</p>
-<p><span class="math display">\[ \hat{y_i} =  w_0 \phi_0(\mathbf{x_i}) +
-\cdots + w_p \phi_p(\mathbf{x_i}) \]</span></p>
+<p><span class="math display">\[ \hat{y_i} =  w_0 \phi_0(\mathbf{x}_i) +
+\cdots + w_p \phi_p(\mathbf{x}_i) \]</span></p>
 <aside class="notes">
 <p>Some notes:</p>
 <ul>
@@ -488,22 +709,24 @@ functions (<span class="math inline">\(p \neq d\)</span> is OK!). You
 can have more/fewer basis functions than columns of <span
 class="math inline">\(X\)</span>.</li>
 <li>Each basis function can accept as input the entire vector <span
-class="math inline">\(\mathbf{x_i}\)</span>.</li>
+class="math inline">\(\mathbf{x}_i\)</span>.</li>
 <li>The model has <span class="math inline">\(p + 1\)</span>
 parameters.</li>
 </ul>
 </aside>
 </section>
 <section id="vector-form-of-linear-basis-function-model"
-class="slide level3">
-<h3>Vector form of linear basis function model</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Vector form of linear basis function
+model</h3>
 <p>The prediction of this model expressed in vector form is:</p>
-<p><span class="math display">\[\hat{y_i} = \langle \mathbf{\phi (x_i)},
-\mathbf{w} \rangle = \mathbf{w}^T \mathbf{\phi (x_i)} \]</span></p>
+<p><span class="math display">\[\hat{y_i} = \langle
+\mathbf{\phi}(\mathbf{x}_i), \mathbf{w} \rangle = \mathbf{w}^T
+\mathbf{\phi}(\mathbf{x}_i) \]</span></p>
 <p>where</p>
 <p><span class="math display">\[
-\mathbf{\phi (x_i)} = [\phi_0 (\mathbf{x_i}), \cdots, \phi_p
-(\mathbf{x_i})], \mathbf{w} = [w_0, \cdots, w_p]
+\mathbf{\phi}(\mathbf{x}_i) = [\phi_0 (\mathbf{x}_i), \cdots, \phi_p
+(\mathbf{x}_i)], \mathbf{w} = [w_0, \cdots, w_p]
 \]</span></p>
 <aside class="notes">
 <p>(The angle brackets denote a dot product.)</p>
@@ -516,8 +739,8 @@ class="math inline">\(\mathbf{\phi}(\cdot)\)</span>!) That’s what makes
 it a <em>linear model</em>.</p>
 <p>Some basis functions have their own parameters that appear inside the
 basis function, i.e. we might have a model <span
-class="math display">\[\hat{y_i} = \mathbf{ w}^T \mathbf{ \phi}(\mathbf{
-x_i},
+class="math display">\[\hat{y_i} = \mathbf{w}^T
+\mathbf{\phi}(\mathbf{x}_i,
 \mathbf{\theta})\]</span> where <span
 class="math inline">\(\mathbf{\theta}\)</span> are the parameters of the
 basis function. The model is <em>non-linear</em> in those parameters,
@@ -525,30 +748,38 @@ and they need to be fixed before training.</p>
 </aside>
 </section>
 <section id="matrix-form-of-linear-basis-function-model"
-class="slide level3">
-<h3>Matrix form of linear basis function model</h3>
-<p>Given data <span class="math inline">\((\mathbf{x_i},y_i),
-i=1,\cdots,n\)</span>:</p>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Matrix form of linear basis function
+model</h3>
+<p>Given data <span class="math inline">\((\mathbf{x}_i,y_i),
+i=1,\cdots,N\)</span>:</p>
 <p><span class="math display">\[
 \Phi =
 \begin{bmatrix}
-\phi_0 (\mathbf{x_1}) &amp; \phi_1 (\mathbf{x_1}) &amp; \cdots &amp;
-\phi_p (\mathbf{x_1}) \\
+\phi_0 (\mathbf{x}_1) &amp; \phi_1 (\mathbf{x}_1) &amp; \cdots &amp;
+\phi_p (\mathbf{x}_1) \\
 \vdots  &amp; \vdots &amp; \ddots &amp; \vdots  \\
-\phi_0 (\mathbf{x_n}) &amp; \phi_1 (\mathbf{x_n}) &amp;\cdots &amp;
-\phi_p (\mathbf{x_n})
+\phi_0 (\mathbf{x}_N) &amp; \phi_1 (\mathbf{x}_N) &amp;\cdots &amp;
+\phi_p (\mathbf{x}_N)
 \end{bmatrix}
 \]</span></p>
 <p>and <span class="math inline">\(\mathbf{\hat{y}} = \Phi
 \mathbf{w}\)</span>.</p>
+<p>Here, <span
+class="math inline">\(\Phi\in\mathbb{R}^{N\times(p+1)}\)</span> and
+<span class="math inline">\(\mathbf{w}\in\mathbb{R}^{p+1}\)</span>
+because the columns run from <span class="math inline">\(\phi_0\)</span>
+through <span class="math inline">\(\phi_p\)</span>.</p>
 </section>
-<section id="recipe-for-linear-regression" class="slide level3">
-<h3>“Recipe” for linear regression (???)</h3>
+<section id="recipe-for-linear-regression" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">“Recipe” for linear regression
+(???)</h3>
 <ol type="1">
 <li>Get <strong>data</strong>: <span
-class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+class="math inline">\((\mathbf{x}_i, y_i), i=1,2,\cdots,N\)</span></li>
 <li>Choose a <strong>model</strong>: <span
-class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)},
+class="math inline">\(\hat{y}_i = \langle \mathbf{\phi}(\mathbf{x}_i),
 \mathbf{w} \rangle\)</span></li>
 <li>Choose a <strong>loss function</strong>: <strong>???</strong></li>
 <li>Find model <strong>parameters</strong> that minimize loss:
@@ -564,37 +795,41 @@ parameters, starting with the simple linear regression. (The simple
 linear regression solution will highlight some interesting statistical
 relationships.)</p>
 </aside>
-</section></section>
-<section>
+</section>
+
 <section
 id="ordinary-least-squares-solution-for-simple-linear-regression"
-class="title-slide slide level2">
-<h2>Ordinary least squares solution for simple linear regression</h2>
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Ordinary least squares solution for
+simple linear regression</h2>
 
 </section>
-<section id="mean-squared-error-loss-function" class="slide level3">
-<h3>Mean squared error loss function</h3>
+<section id="mean-squared-error-loss-function" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Mean squared error loss
+function</h3>
 <p>We will use the <em>mean squared error</em> (MSE) loss function:</p>
-<p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{n}
-\sum_{i=1}^n (y_i - \hat{y_i})^2 \]</span></p>
+<p><span class="math display">\[ L(\mathbf{w}) = \frac{1}{N}
+\sum_{i=1}^N (y_i - \hat{y_i})^2 \]</span></p>
 <p>which is related to the <em>residual sum of squares</em> (RSS):</p>
-<p><span class="math display">\[\sum_{i=1}^n (y_i - \hat{y_i})^2 =
-\sum_{i=1}^n ( e_i )^2 \]</span></p>
+<p><span class="math display">\[\sum_{i=1}^N (y_i - \hat{y_i})^2 =
+\sum_{i=1}^N ( e_i )^2 \]</span></p>
 <aside class="notes">
 <p>“Least squares” solution: find values of <span
 class="math inline">\(\mathbf{w}\)</span> to minimize MSE.</p>
 </aside>
 </section>
-<section id="recipe-for-linear-regression-1" class="slide level3">
-<h3>“Recipe” for linear regression</h3>
+<section id="recipe-for-linear-regression-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">“Recipe” for linear regression</h3>
 <ol type="1">
 <li>Get <strong>data</strong>: <span
-class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+class="math inline">\((\mathbf{x}_i, y_i), i=1,2,\cdots,N\)</span></li>
 <li>Choose a <strong>model</strong>: <span
-class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)},
+class="math inline">\(\hat{y}_i = \langle \mathbf{\phi}(\mathbf{x}_i),
 \mathbf{w} \rangle\)</span></li>
 <li>Choose a <strong>loss function</strong>: <span
-class="math inline">\(L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i -
+class="math inline">\(L(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i -
 \hat{y_i})^2\)</span></li>
 <li>Find model <strong>parameters</strong> that minimize loss: <span
 class="math inline">\(\mathbf{w^*}\)</span></li>
@@ -616,25 +851,27 @@ of <span class="math inline">\(\mathbf{w}\)</span></li>
 </aside>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-1"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (1)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - simple linear regression
+(1)</h3>
 <p>Given</p>
-<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n
+<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{N} \sum_{i=1}^N
 [y_i - (w_0 + w_1 x_i) ]^2 \]</span></p>
 <p>we take</p>
 <p><span class="math display">\[ \frac{\partial L}{\partial w_0} = 0,
 \frac{\partial L}{\partial w_1} = 0\]</span></p>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-2"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (2)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - simple linear regression
+(2)</h3>
 <p>First, the intercept:</p>
-<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n
+<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{N} \sum_{i=1}^N
 [y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
 <p><span class="math display">\[ \frac{\partial L}{\partial w_0}
-=  -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] \]</span></p>
+=  -\frac{2}{N} \sum_{i=1}^N [y_i - (w_0 + w_1 x_i)] \]</span></p>
 <p>using chain rule, power rule.</p>
 <aside class="notes">
 <p>(We can then drop the <span class="math inline">\(-2\)</span>
@@ -643,12 +880,13 @@ class="math inline">\(0\)</span>.)</p>
 </aside>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-3"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (3)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - simple linear regression
+(3)</h3>
 <p>Set this equal to <span class="math inline">\(0\)</span>,
 “distribute” the sum, and we can see</p>
-<p><span class="math display">\[\frac{1}{n} \sum_{i=1}^n [y_i - (w_0 +
+<p><span class="math display">\[\frac{1}{N} \sum_{i=1}^N [y_i - (w_0 +
 w_1 x_i)] = 0\]</span></p>
 <p><span class="math display">\[ \implies w_0^* = \bar{y} - w_1^*
 \bar{x}\]</span></p>
@@ -656,48 +894,52 @@ w_1 x_i)] = 0\]</span></p>
 means of <span class="math inline">\(x, y\)</span>.</p>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-4"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (4)</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - simple linear regression
+(4)</h3>
 <p>Now, the slope coefficient:</p>
-<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n
+<p><span class="math display">\[ L(w_0, w_1) = \frac{1}{N} \sum_{i=1}^N
 [y_i - (w_0 + w_1 x_i) ] ^2 \]</span></p>
 <p><span class="math display">\[ \frac{\partial L}{\partial w_1} =
-\frac{1}{n}\sum_{i=1}^n  2(y_i - w_0 -w_1 x_i)(-x_i)\]</span></p>
+\frac{1}{N}\sum_{i=1}^N  2(y_i - w_0 -w_1 x_i)(-x_i)\]</span></p>
 </section>
 <section id="optimizing-mathbfw---simple-linear-regression-5"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> - simple
-linear regression (5)</h3>
-<p><span class="math display">\[  \implies -\frac{2}{n} \sum_{i=1}^n x_i
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - simple linear regression
+(5)</h3>
+<p><span class="math display">\[  \implies -\frac{2}{N} \sum_{i=1}^N x_i
 (y_i - w_0 -w_1 x_i)  = 0\]</span></p>
 <p>Solve for <span class="math inline">\(w_1^*\)</span>:</p>
-<p><span class="math display">\[ w_1^*  = \frac{\sum_{i=1}^n (x_i -
-\bar{x})(y_i - \bar{y}) }{\sum_{i=1}^n (x_i - \bar{x})^2}\]</span></p>
+<p><span class="math display">\[ w_1^*  = \frac{\sum_{i=1}^N (x_i -
+\bar{x})(y_i - \bar{y}) }{\sum_{i=1}^N (x_i - \bar{x})^2}\]</span></p>
 <aside class="notes">
 <p>Note: some algebra is omitted here, but refer to the secondary notes
 for details.</p>
 </aside>
 </section>
 <section id="optimizing-mathbfw---relationship-to-variancecovariance"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> -
-relationship to variance/covariance</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - relationship to
+variance/covariance</h3>
 <p>The slope coefficient is the ratio of <em>covariance</em> <span
 class="math inline">\(\sigma_{xy}\)</span> to <em>variance</em> <span
 class="math inline">\(\sigma_x^2\)</span>:</p>
 <p><span class="math display">\[ \frac{\sigma_{xy}}{\sigma_x^2}
 \]</span></p>
-<p>where <span class="math inline">\(\sigma_{xy} = \frac{1}{n}
-\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})\)</span> and <span
-class="math inline">\(\sigma_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i -
+<p>where <span class="math inline">\(\sigma_{xy} = \frac{1}{N}
+\sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})\)</span> and <span
+class="math inline">\(\sigma_x^2 = \frac{1}{N} \sum_{i=1}^N (x_i -
 \bar{x}) ^2\)</span></p>
 </section>
 <section
 id="optimizing-mathbfw---relationship-to-correlation-coefficient"
-class="slide level3">
-<h3>Optimizing <span class="math inline">\(\mathbf{w}\)</span> -
-relationship to correlation coefficient</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Optimizing <span
+class="math inline">\(\mathbf{w}\)</span> - relationship to correlation
+coefficient</h3>
 <p>We can also express it as</p>
 <p><span class="math display">\[ \frac{r_{xy} \sigma_y}{\sigma_x}
 \]</span></p>
@@ -710,8 +952,9 @@ know <span class="math inline">\(r_{xy} \in [-1, 1]\)</span>)</p>
 </aside>
 </section>
 <section id="mse-for-optimal-simple-linear-regression"
-class="slide level3 cell markdown">
-<h3>MSE for optimal simple linear regression</h3>
+class="slide level3 cell markdown" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">MSE for optimal simple linear
+regression</h3>
 <p><span class="math display">\[L(w_0^*, w_1^*) = {\sigma_e^2 } =
 \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2} \]</span></p>
 <p><span class="math display">\[R2 = 1 -  \frac{\sigma_e^2 }{\sigma_y^2}
@@ -730,25 +973,27 @@ explains some of it (numerator, variance of residual)? (best case:
 of explained variance</em>. (best case: 1)</li>
 </ul>
 </aside>
-</section></section>
-<section>
+</section>
+
 <section
 id="ordinary-least-squares-solution-for-multiplelinear-basis-function-regression"
-class="title-slide slide level2">
-<h2>Ordinary least squares solution for multiple/linear basis function
-regression</h2>
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Ordinary least squares solution for
+multiple/linear basis function regression</h2>
 
 </section>
-<section id="setup-l2-norm" class="slide level3">
-<h3>Setup: L2 norm</h3>
+<section id="setup-l2-norm" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Setup: L2 norm</h3>
 <p>Definition: L2 norm of a vector <span
 class="math inline">\(\mathbf{x} = (x_1, \cdots, x_n)\)</span>:</p>
 <p><span class="math display">\[ || \mathbf{x} || = \sqrt{x_1^2 + \cdots
 + x_n^2}\]</span></p>
 <p>We will want to minimize the L2 norm of the residual.</p>
 </section>
-<section id="setup-gradient-vector" class="slide level3">
-<h3>Setup: Gradient vector</h3>
+<section id="setup-gradient-vector" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Setup: Gradient vector</h3>
 <p>To minimize a multivariate function <span
 class="math inline">\(f(\mathbf{x}) = f(x_1, \cdots, x_n)\)</span>, we
 find places where the <strong>gradient</strong> is zero, i.e. each entry
@@ -764,12 +1009,12 @@ must be zero:</p>
 <p>The gradient is the vector of partial derivatives.</p>
 </aside>
 </section>
-<section id="mse-for-multiplelbf-regresion" class="slide level3">
-<h3>MSE for multiple/LBF regresion</h3>
-<p>Given a vector <span class="math inline">\(\mathbf{y}\)</span> and
-matrix <span class="math inline">\(\Phi\)</span> (with <span
-class="math inline">\(d\)</span> columns, <span
-class="math inline">\(n\)</span> rows),</p>
+<section id="mse-for-multiplelbf-regresion" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">MSE for multiple/LBF regresion</h3>
+<p>Given <span class="math inline">\(\mathbf{y}\in\mathbb{R}^N\)</span>
+and <span
+class="math inline">\(\Phi\in\mathbb{R}^{N\times(p+1)}\)</span>,</p>
 <p><span class="math display">\[L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y}
 - \Phi \mathbf{w}\|^2\]</span></p>
 <p>where the norm above is the L2 norm.</p>
@@ -779,16 +1024,19 @@ class="math inline">\(\frac{1}{2}\)</span> constant factor for
 convenience.)</p>
 </aside>
 </section>
-<section id="gradient-of-mse" class="slide level3">
-<h3>Gradient of MSE</h3>
+<section id="gradient-of-mse" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Gradient of MSE</h3>
 <p><span class="math display">\[L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y}
 - \Phi \mathbf{w}\|^2\]</span></p>
 <p>gives us the gradient</p>
 <p><span class="math display">\[\nabla L(\mathbf{w}) = - \Phi^T
 (\mathbf{y} -  \Phi \mathbf{w})\]</span></p>
 </section>
-<section id="solving-for-mathbfw" class="slide level3">
-<h3>Solving for <span class="math inline">\(\mathbf{w}\)</span></h3>
+<section id="solving-for-mathbfw" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving for <span
+class="math inline">\(\mathbf{w}\)</span></h3>
 <p><span class="math display">\[
 \begin{aligned}
 \nabla L(\mathbf{w}) &amp;= 0, \\
@@ -798,33 +1046,37 @@ convenience.)</p>
 \end{aligned}
 \]</span></p>
 </section>
-<section id="solving-a-set-of-linear-equations" class="slide level3">
-<h3>Solving a set of linear equations</h3>
-<p>If <span class="math inline">\(\Phi^T \Phi\)</span> is full rank
-(usually: if <span class="math inline">\(n \geq d\)</span>), then a
-unique solution is given by</p>
+<section id="solving-a-set-of-linear-equations" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Solving a set of linear
+equations</h3>
+<p>If <span class="math inline">\(\Phi\)</span> has full column rank
+<span class="math inline">\(p+1\)</span> (which requires <span
+class="math inline">\(N\geq p+1\)</span>), then a unique solution is
+given by</p>
 <p><span class="math display">\[\mathbf{w^*} = \left(\Phi^T \Phi
 \right)^{-1} \Phi^T \mathbf{y}\]</span></p>
 <p>This expression:</p>
 <p><span class="math display">\[\Phi^T \Phi \mathbf{w} =  \Phi^T
 \mathbf{y}\]</span></p>
-<p>represents a set of <span class="math inline">\(d\)</span> equations
-in <span class="math inline">\(d\)</span> unknowns, called the
-<em>normal equations</em>.</p>
+<p>represents a set of <span class="math inline">\(p+1\)</span>
+equations in <span class="math inline">\(p+1\)</span> unknowns, called
+the <em>normal equations</em>.</p>
 <aside class="notes">
 <p>We can solve this as we would any set of linear equations (see
 supplementary notebook on computing regression coefficients by
 hand.)</p>
 </aside>
-</section></section>
-<section>
-<section id="interpreting-regression-metrics"
-class="title-slide slide level2">
-<h2>Interpreting regression metrics</h2>
+</section>
+
+<section id="interpreting-regression-metrics-1"
+class="title-slide slide level2" data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Interpreting regression metrics</h2>
 
 </section>
-<section id="understanding-the-numbers" class="slide level3">
-<h3>Understanding the numbers</h3>
+<section id="understanding-the-numbers" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Understanding the numbers</h3>
 <ul>
 <li>Correlation coefficient <span
 class="math inline">\(r_{xy}\)</span></li>
@@ -839,8 +1091,10 @@ too?</p>
 model?</p>
 </aside>
 </section>
-<section id="interpreting-correlation-coefficient" class="slide level3">
-<h3>Interpreting correlation coefficient</h3>
+<section id="interpreting-correlation-coefficient" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting correlation
+coefficient</h3>
 <figure>
 <img data-src="../images/Correlation_examples2.svg"
 alt="Several sets of (x, y) points, with r_{xy} for each. Image via Wikipedia." />
@@ -854,8 +1108,9 @@ class="math inline">\(\frac{\sigma_{xy}}{\sigma_x \sigma_y}\)</span> is
 fundamental to the data - it is not about a fitted model.</p>
 </aside>
 </section>
-<section id="interpreting-coefficient-w_j" class="slide level3">
-<h3>Interpreting coefficient <span
+<section id="interpreting-coefficient-w_j" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting coefficient <span
 class="math inline">\(w_j\)</span></h3>
 <p>The coefficient <span class="math inline">\(w_j\)</span> for feature
 <span class="math inline">\(j\)</span> says:</p>
@@ -904,13 +1159,14 @@ variable.</figcaption>
 </figure>
 </aside>
 </section>
-<section id="interpreting-mse-mae" class="slide level3">
-<h3>Interpreting MSE, MAE</h3>
+<section id="interpreting-mse-mae-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting MSE, MAE</h3>
 <p><strong>Mean Squared Error (MSE)</strong>:</p>
-<p><span class="math display">\[MSE = \frac{1}{n} \sum_{i=1}^n (y_i -
+<p><span class="math display">\[MSE = \frac{1}{N} \sum_{i=1}^N (y_i -
 \hat{y_i})^2\]</span></p>
 <p><strong>Mean Absolute Error (MAE)</strong>:</p>
-<p><span class="math display">\[MAE = \frac{1}{n} \sum_{i=1}^n |y_i -
+<p><span class="math display">\[MAE = \frac{1}{N} \sum_{i=1}^N |y_i -
 \hat{y_i}|\]</span></p>
 <aside class="notes">
 <p>MSE is useful for training because:</p>
@@ -931,7 +1187,7 @@ in context</li>
 <p>If <span class="math inline">\(y\)</span> is in dollars, you can
 directly say “on average, my predictions are off by $X” using MAE.</p>
 <p>In some cases, we may prefer Mean Absolute Percent Error:</p>
-<p><span class="math display">\[MAPE = \frac{100\%}{n} \sum_{i=1}^n
+<p><span class="math display">\[MAPE = \frac{100\%}{N} \sum_{i=1}^N
 \left|\frac{y_i - \hat{y_i}}{y_i}\right|\]</span></p>
 <p>For example, suppose you are predicting house price. A $50k
 prediction error is much more significant for the 200k home (25% off)
@@ -940,11 +1196,12 @@ percentage of each actual value, so you get a meaningful comparison
 across different price ranges.</p>
 </aside>
 </section>
-<section id="interpreting-r2-as-explained-variance"
-class="slide level3">
-<h3>Interpreting R2 as explained variance</h3>
+<section id="interpreting-r2-as-explained-variance-1"
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting R2 as explained
+variance</h3>
 <p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i -
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i -
 \overline{y_i})^2}\]</span></p>
 <p>For linear regression: What proportion of the variance in <span
 class="math inline">\(y\)</span> is “explained” by our model?</p>
@@ -957,21 +1214,23 @@ class="math inline">\(y\)</span></li>
 class="math inline">\(y\)</span></li>
 </ul>
 </section>
-<section id="interpreting-r2-as-error-relative-to-mean-model"
-class="slide level3">
-<h3>Interpreting R2 as error relative to “mean model”</h3>
+<section id="interpreting-r2-as-error-relative-to-mean-model-1"
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Interpreting R2 as error relative to
+“mean model”</h3>
 <p>Alternatively: what is the ratio of error of our model, to error of
 prediction by mean?</p>
 <p><span class="math display">\[R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i -
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i -
 \overline{y_i})^2}\]</span></p>
 <aside class="notes">
 <p>What would be R2 of a model that is <em>worse</em> than prediction by
 mean?</p>
 </aside>
 </section>
-<section id="example-intro-ml-grades-2" class="slide level3">
-<h3>Example: Intro ML grades (2)</h3>
+<section id="example-intro-ml-grades-2-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: Intro ML grades (2)</h3>
 <figure>
 <img data-src="../images/2-example-regression-metrics.svg"
 style="width:75.0%"
@@ -1007,22 +1266,24 @@ In Florida, a change in vote share is associated with a bigger change in vaccina
 
 
 -->
-</section></section>
-<section>
-<section id="recap" class="title-slide slide level2">
-<h2>Recap</h2>
+</section>
+
+<section id="recap" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Recap</h2>
 
 </section>
-<section id="completed-recipe" class="slide level3">
-<h3>Completed “recipe”</h3>
+<section id="completed-recipe" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Completed “recipe”</h3>
 <ol type="1">
 <li>Get <strong>data</strong>: <span
-class="math inline">\((\mathbf{x_i}, y_i), i=1,2,\cdots,n\)</span></li>
+class="math inline">\((\mathbf{x}_i, y_i), i=1,2,\cdots,N\)</span></li>
 <li>Choose a <strong>model</strong>: <span
 class="math inline">\(\hat{y_i} = \langle \mathbf{\phi (x_i)},
 \mathbf{w} \rangle\)</span></li>
 <li>Choose a <strong>loss function</strong>: <span
-class="math inline">\(L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i -
+class="math inline">\(L(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i -
 \hat{y}_i) ^2\)</span></li>
 <li>Find model <strong>parameters</strong> that minimize loss: OLS
 solution for <span class="math inline">\(\mathbf{w}^{*}\)</span></li>
@@ -1031,23 +1292,28 @@ class="math inline">\(\hat{y}\)</span> for new, unlabeled samples</li>
 <li>Evaluate model performance on new, unseen data</li>
 </ol>
 </section>
-<section id="key-questions" class="slide level3">
-<h3>Key questions</h3>
+<section id="key-questions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Key questions</h3>
 <ul>
 <li>What type of relationships <span class="math inline">\(f(x)\)</span>
 can it represent?</li>
 <li>What insight can we get from the trained model?</li>
-<li>(How do we train the model efficiently?)</li>
+<li>(What is the cost of training/inference?)</li>
 <li>(How do we control the generalization error?)</li>
 </ul>
 <aside class="notes">
 <p>We will address the last two questions next week.</p>
+</aside>
+</section>
+
 </aside>
 </section></section>
     </div>
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
+<script src="reveal.js-master/plugin/chalkboard/plugin.js"></script>
 
   <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
@@ -1078,7 +1344,7 @@ can it represent?</li>
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: "c/t",
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -1200,6 +1466,15 @@ can it represent?</li>
         // viewDistance in order to save resources.
         mobileViewDistance: 2,
 
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 700,
+
+        maxScale: 1,
+
         math: {
           mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
@@ -1217,8 +1492,14 @@ can it represent?</li>
           },
         },
 
-        // reveal.js plugins
+              chalkboard: {
+          grid: false,
+          theme: "whiteboard",
+        },
+
+  // reveal.js plugins
         plugins: [
+          RevealChalkboard,
           RevealMath,
           RevealNotes,
           RevealSearch,

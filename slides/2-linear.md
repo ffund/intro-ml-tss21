@@ -2,10 +2,9 @@
 title:  'Linear Regression'
 author: 'Fraida Fund'
 ---
-::: {.cell .markdown}
 
 
-:::notes
+::: {.handout-only .grad-only}
 
 **Math prerequisites for this lecture**: You should know
 
@@ -17,6 +16,9 @@ author: 'Fraida Fund'
 
 :::
 
+::: {.handout-only}
+
+
 ## In this lecture
 
 * Simple (univariate) linear regression
@@ -26,23 +28,23 @@ author: 'Fraida Fund'
 * OLS solution for multiple/LBF regression
 * Interpretation 
 
-:::notes
+:::
+
+::: {.notes .grad-only}
 
 
 With linear regression, as with all of the supervised learning models in this course, we will consider:
 
 * The parts of the basic "recipe" (loss function, training algorithm, etc.)
 
-and these four questions:
+as well as:
 
 * What type of relationships $f(x)$ can it represent?
 * What insight can we get from the trained model?
-* How do we train the model efficiently?
+* What is the cost of training/inference?
 * How do we control the generalization error?
 
 For linear regression, we will consider the first two questions in this lesson, and the second two questions in the next lesson.
-
-:::
 
 :::
 
@@ -55,46 +57,52 @@ For linear regression, we will consider the first two questions in this lesson, 
 
 The output variable $y$ is continuously valued.
 
-We need a function $f$ to map each input vector $\mathbf{x_i}$ to a prediction, 
+We need a function $f$ to map each input vector $\mathbf{x}_i$ to a prediction, 
 
-$$\hat{y_i} = f(\mathbf{x_i})$$
+$$\hat{y_i} = f(\mathbf{x}_i)$$
 
 where (we hope!) $\hat{y_i} \approx y_i$.
 
 
 ### Prediction by mean
 
-Last week, we imagined a simple model that predicts the mean of target variable in training data:
+We previously a simple model that predicts the mean of target variable in training data:
 
-$$\hat{y_i} = w_0$$
+$$\hat{y_i} = w$$
 
-$\forall i$, where $w_0 = \frac{1}{n} \sum_{i=1}^n y_i = \bar{y}$.
+$\forall i$, where $w = \frac{1}{N} \sum_{i=1}^N y_i = \bar{y}$.
 
 
 ::: notes
 
 We can show that the mean is the one-parameter model that optimizes the *mean squared error* (MSE) loss function:
 
-$$ L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 =  \frac{1}{n} \sum_{i=1}^n (y_i - w_0)^2  $$ 
+$$ L(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i - \hat{y_i})^2  $$ 
 
-Take the derivative of $L(\mathbf{w})$ with respect to $w_0$
+Step 1: plug $\hat{y} = w$ into the loss function: 
 
-$$ \frac{\partial L(\mathbf{w}) }{\partial w_0} = \frac{-2}{n} \sum_{i=1}^n (y_i - w_0) $$
+$$ \operatorname*{minimize}\quad \frac{1}{N} \sum (y-\hat{y})^2 \to \operatorname*{minimize}\quad \frac{1}{N} \sum (y-w)^2 $$
 
+Step 2: take the derivative of the loss function with respect to the parameter $w$
 
-and set it equal to zero:
+$$ \frac{\partial}{\partial w} \frac{1}{N} \sum (y-w)^2 = -\frac{2}{N} \sum (y-w) $$
 
-$$\frac{-2}{n} \sum_{i=1}^n (y_i - w_0) = 0$$
+Step 3: set the derivative equal to 0, and solve for the parameter $w$ ($L$ is convex, so this solution is a minimum):
 
-Since we set it equal to zero, we can ignore that $-2$ factor -
-
-$$\frac{1}{n} \sum_{i=1}^n (y_i - w_0) = 0$$
-
-Now solve for $w_0$:
-
-$$w_0 = \frac{1}{n} \sum_{i=1}^n y_i $$
-
-This is the single parameter value that minimizes the mean squared error loss function.
+$$
+\begin{aligned}
+-\frac{2}{N} \sum (y-w) &= 0
+    && \text{Set the derivative equal to zero} \\[6pt]
+\sum(y) - \sum(w) &= 0
+    && \text{Multiply both sides by } -\frac{N}{2} \text{ and expand} \\[6pt]
+\sum(y) &= \sum(w)
+    && \text{Rearrange to get a sum on each side} \\[6pt]
+\sum(y) &= N w
+    && \text{Sum the constant } w \text{ over } N \text{ samples} \\[6pt]
+\to w &= \frac{1}{N} \sum(y)
+    && \text{Solve for } w
+\end{aligned}
+$$
 
 
 :::
@@ -108,29 +116,37 @@ This is the single parameter value that minimizes the mean squared error loss fu
 ![A "recipe" for our simple ML system.](../images/2-prediction-mean-zero-variance.png){ width=80% }
 
 
-Note that the loss function we defined for this problem - sum of squared differences between the true value and predicted value - is the variance of $y$.
+Note that for "prediction by mean", the loss function we defined for this problem - sum of squared differences between the true value and predicted value:
+
+$$\frac{1}{N} \sum_{i=1}^N (y_i - \bar{y}) ^2$$
+
+
+*is* the variance of $y$.
 
 Under what conditions will that loss function be very small (or even zero)?
 
-![Prediction by mean is a good model if there is no *variance* in $y$. But, if there *is* variance in $y$, a good model should *explain* some/all of that variance.](../images/2-variance-y.png){ width=50% }
+![When is prediction by mean good enough?](../images/2-variance-y.png){ width=50% }
 
+
+Prediction by mean is a good model if there is no *variance* in $y$. But, if there *is* variance in $y$, a good model should *explain* some/all of that variance.
 
 :::
 
 
-### Mean, variance - definitions
+### Mean, variance, covariance - definitions
 
-Mean and variance:
+Mean, variance, covariance:
 
-$$\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i, \quad \sigma_y^2 = \frac{1}{n} \sum_{i=1}^n (y_i - \bar{y}) ^2$$
+$$\bar{y} = \frac{1}{N} \sum_{i=1}^N y_i, \quad \sigma_y^2 = \frac{1}{N} \sum_{i=1}^N (y_i - \bar{y}) ^2$$
+
+$$\sigma_{xy} = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})$$
+
 
 ::: notes
 
-We are using the "biased" estimate of mean and variace, without Bessel's correction.
+(We are using the "biased" estimates, without Bessel's correction.)
 
 :::
-
-\newpage
 
 ## Simple linear regression
 
@@ -144,7 +160,7 @@ A "simple" linear regression is a linear regression with only one feature.
 
 For simple linear regression, we have feature-label pairs:
 
-$$(x_i, y_i), i=1,2,\cdots,n$$
+$$(x_i, y_i), i=1,2,\cdots,N$$
 
 (we'll often drop the index $i$ when it's convenient.)
 
@@ -180,8 +196,6 @@ The *residual* term captures everything that isn't in the model:
 $$y_i = w_0 + w_1 x_i + e_i$$
 
 where $e_i = y_i - \hat{y_i}$.
-
-\newpage
 
 <!-- 
 
@@ -272,6 +286,245 @@ This method doesn't tell us *why* this association is observed, only that it is.
 -->
 
 
+### Ordinary least squares solution for simple linear regression
+
+
+### Solving simple linear regression (1)
+
+
+Step 1: plug the model into the MSE loss function:
+
+$$L(w_0,w_1)=\frac{1}{N}\sum_{i=1}^N [y_i-(w_0+w_1x_i)]^2$$
+
+
+### Solving simple linear regression (2)
+
+
+Step 2: take the partial derivatives with respect to the parameters:
+
+$$
+\begin{aligned}
+\frac{\partial L}{\partial w_0}
+  &= -\frac{2}{N}\sum_{i=1}^N [y_i-(w_0+w_1x_i)] \\
+\frac{\partial L}{\partial w_1}
+  &= -\frac{2}{N}\sum_{i=1}^N x_i(y_i-w_0-w_1x_i).
+\end{aligned}
+$$
+
+### Solving simple linear regression (3)
+
+Step 3: set the derivatives equal to zero and solve ($L$ is convex, so this is a minimum):
+
+$$
+\begin{aligned}
+\frac{\partial L}{\partial w_0}=0
+  &\Longrightarrow w_0^*=\bar{y}-w_1^*\bar{x} \\
+\frac{\partial L}{\partial w_1}=0
+  &\Longrightarrow w_1^*=\frac{\sum_{i=1}^N(x_i-\bar{x})(y_i-\bar{y})}
+                         {\sum_{i=1}^N(x_i-\bar{x})^2}.
+\end{aligned}
+$$
+
+::: notes
+
+Assume the $x_i$ values are not all equal, so $\sum_{i=1}^N(x_i-\bar{x})^2>0$.
+
+First, use the derivative with respect to $w_0$ to solve for the intercept:
+
+$$
+\begin{aligned}
+-\frac{2}{N}\sum_{i=1}^N[y_i-(w_0+w_1x_i)] &= 0
+    && \text{Set the derivative equal to zero} \\[6pt]
+\sum_{i=1}^N[y_i-(w_0+w_1x_i)] &= 0
+    && \text{Multiply both sides by }-\frac{N}{2} \\[6pt]
+\sum_{i=1}^N y_i-Nw_0-w_1\sum_{i=1}^N x_i &= 0
+    && \text{Distribute the sum} \\[6pt]
+N\bar{y}-Nw_0-Nw_1\bar{x} &= 0
+    && \text{Use }\sum y_i=N\bar{y}\text{ and }\sum x_i=N\bar{x} \\[6pt]
+w_0 &= \bar{y}-w_1\bar{x}
+    && \text{Divide by }N\text{ and solve for }w_0 \\[6pt]
+\therefore\quad w_0^* &= \bar{y}-w_1^*\bar{x}
+    && \text{Identify the minimizing coefficients}
+\end{aligned}
+$$
+
+Next, use the derivative with respect to $w_1$ to solve for the slope:
+
+$$
+\begin{aligned}
+-\frac{2}{N}\sum_{i=1}^N x_i(y_i-w_0-w_1x_i) &= 0
+    && \text{Set the derivative equal to zero} \\[6pt]
+\sum_{i=1}^N x_i(y_i-w_0-w_1x_i) &= 0
+    && \text{Multiply both sides by }-\frac{N}{2} \\[6pt]
+\sum_{i=1}^N x_iy_i-w_0\sum_{i=1}^N x_i-w_1\sum_{i=1}^N x_i^2 &= 0
+    && \text{Distribute }x_i\text{ and the sum} \\[6pt]
+\sum_{i=1}^N x_iy_i-(\bar{y}-w_1\bar{x})N\bar{x}
+    -w_1\sum_{i=1}^N x_i^2 &= 0
+    && \text{Substitute }w_0=\bar{y}-w_1\bar{x} \\[6pt]
+w_1\left(\sum_{i=1}^N x_i^2-N\bar{x}^2\right)
+    &= \sum_{i=1}^N x_iy_i-N\bar{x}\bar{y}
+    && \text{Collect the terms containing }w_1 \\[6pt]
+w_1 &= \frac{\sum_{i=1}^N x_iy_i-N\bar{x}\bar{y}}
+                 {\sum_{i=1}^N x_i^2-N\bar{x}^2}
+    && \text{Divide by the coefficient of }w_1
+\end{aligned}
+$$
+
+The numerator and denominator can be written as:
+
+$$
+\begin{aligned}
+\sum_{i=1}^N(x_i-\bar{x})(y_i-\bar{y})
+    &= \sum_{i=1}^N x_iy_i-N\bar{x}\bar{y}, \\
+\sum_{i=1}^N(x_i-\bar{x})^2
+    &= \sum_{i=1}^N x_i^2-N\bar{x}^2.
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+w_1^*=\frac{\sum_{i=1}^N(x_i-\bar{x})(y_i-\bar{y})}
+             {\sum_{i=1}^N(x_i-\bar{x})^2}.
+$$
+
+and note that this is a ratio of covariance of $x$ and $y$, to variance of $x$:
+
+$$
+w_1^*=\frac{\sigma_{xy}}{\sigma_x^2}
+$$
+
+
+::: {.grad-only}
+
+\newpage
+
+
+We can also express it in terms of correlation coefficient $r_{xy} = \frac{\sigma_{xy}}{\sigma_x \sigma_y}$:
+
+$$
+w_1^*=\frac{r_{xy} \sigma_y}{\sigma_x} 
+$$
+
+
+(Note: from Cauchy-Schwartz law, $|\sigma_{xy}| < \sigma_x \sigma_y$, we know $r_{xy} \in [-1, 1]$)
+
+
+### Understanding correlation coefficient
+
+![Several sets of (x, y) points, with $r_{xy}$ for each. Image via Wikipedia.](../images/Correlation_examples2.svg)
+
+::: notes
+
+The correlation coefficient $\frac{\sigma_{xy}}{\sigma_x \sigma_y}$ is fundamental to the data - it is not about a fitted model. When we say
+
+$$
+w_1^*=\frac{r_{xy} \sigma_y}{\sigma_x} 
+$$
+
+we mean, the *optimal* parameter has this relationship to the fundamental structure in the data.
+
+:::
+
+\newpage
+
+:::
+
+:::
+
+\newpage
+
+
+
+### Understanding the coefficient
+
+* What does $w_0$ do to the line?
+* What does $w_1$ do to the line?
+
+::: notes
+
+"an increase of one unit in this feature is associated with an increase of the target variable by $w_1$"
+
+Doesn't tell us about causality, significance, etc.!
+
+:::
+
+
+## Interpreting regression metrics
+
+
+### Interpreting MSE, MAE
+
+**Mean Squared Error (MSE)**:
+
+$$MSE = \frac{1}{N} \sum_{i=1}^N (y_i - \hat{y_i})^2$$
+
+**Mean Absolute Error (MAE)**:
+
+$$MAE = \frac{1}{N} \sum_{i=1}^N |y_i - \hat{y_i}|$$
+
+::: notes
+
+MSE is useful for training because:
+
+* The squared loss function is differentiable everywhere, making it easy to optimize
+* It has a closed-form solution (the normal equations)
+* It penalizes large errors more heavily
+
+However, MSE is less intuitive for *interpreting* model error:
+
+* MSE is in squared units of the target variable, hard to understand in context
+* MAE is in the same units as the target variable
+* MAE is more robust to outliers 
+
+If $y$ is in dollars, you can directly say "on average, my predictions are off by $X" using MAE. (We could also use RMSE - take the square root of the MSE, but RMSE is also sensitive to outliers.)
+
+In some cases, we may prefer Mean Absolute Percent Error: 
+
+$$MAPE = \frac{100\%}{N} \sum_{i=1}^N \left|\frac{y_i - \hat{y_i}}{y_i}\right|$$
+
+For example, suppose you are predicting house price. A $50k prediction error is much more significant for the 200k home (25% off) than for a 5 million dollar one (1% off). MAPE calculates error as a percentage of each actual value, so you get a meaningful comparison across different price ranges.
+
+:::
+
+\newpage
+
+### Interpreting R2 as explained variance
+
+$$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i - \overline{y_i})^2}$$
+
+For linear regression: What proportion of the variance in $y$ is "explained" by our model?
+
+* $R^2 \approx 1$ - model "explains" all the variance in $y$
+* $R^2 \approx 0$ - model doesn't "explain" any of the variance in $y$
+
+### Interpreting R2 as error relative to "mean model"
+
+Alternatively: what is the ratio of error of our model, to error of prediction by mean?
+
+
+$$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i - \overline{y_i})^2}$$
+
+:::notes
+
+What would be R2 of a model that is *worse* than prediction by mean?
+
+:::
+
+### Example: Intro ML grades (2)
+
+![Predicting students' grades in Intro ML, for two different sections.](../images/2-example-regression-metrics.svg){ width=75% }
+
+::: notes
+
+In Instructor A's section, a change in average overall course grades is associated with a bigger change in Intro ML course grade than in Instructor B's section; but in Instructor B's section, more of the variance among students is explained by the linear regression on previous overall grades.
+
+
+:::
+
+
 \newpage
 
 
@@ -280,22 +533,24 @@ This method doesn't tell us *why* this association is observed, only that it is.
 
 ### Matrix representation of data
 
-Represent data as a **matrix**, with $n$ samples and $d$ features;
+Represent data as a **matrix**, with $N$ samples and $d$ features;
 one sample per row and one feature per column:
 
 $$ \mathbf{X} = 
 \begin{bmatrix}
 x_{1,1} & \cdots & x_{1,d} \\
 \vdots  & \ddots & \vdots  \\
-x_{n,1} & \cdots & x_{n,d} 
+x_{N,1} & \cdots & x_{N,d} 
 \end{bmatrix},
 \mathbf{y} = 
 \begin{bmatrix}
 y_{1}  \\
 \vdots \\
-y_{n} 
+y_{N} 
 \end{bmatrix}
 $$
+
+Thus, $\mathbf{X}\in\mathbb{R}^{N\times d}$ and $\mathbf{y}\in\mathbb{R}^{N}$.
 
 $x_{i,j}$ is $j$th feature of $i$th sample.
 
@@ -310,7 +565,7 @@ Note: by convention, we use capital letter for matrix, bold lowercase letter for
 ### Linear model
 
 
-For a given sample (row), assume a linear relationship between feature vector $\mathbf{x_i} = [x_{i,1}, \cdots, x_{i,d}]$ and scalar target variable $y_i$:
+For a given sample (row), assume a linear relationship between feature vector $\mathbf{x}_i = [x_{i,1}, \cdots, x_{i,d}]$ and scalar target variable $y_i$:
 
 $$ \hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d} $$
 
@@ -320,8 +575,8 @@ Model has $d+1$ **parameters**.
 ::: notes
 
 
-* Samples are vector-label pairs: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$
-* Each sample has a feature vector $\mathbf{x_i} = [x_{i,1}, \cdots, x_{i,d}]$ and scalar target $y_i$
+* Samples are vector-label pairs: $(\mathbf{x}_i, y_i), i=1,2,\cdots,N$
+* Each sample has a feature vector $\mathbf{x}_i = [x_{i,1}, \cdots, x_{i,d}]$ and scalar target $y_i$
 * Predicted value for $i$th sample will be $\hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d}$
 
 It's a little awkward to carry around that $w_0$ separately, if we roll it in to the rest of the weights we can use a matrix representation...
@@ -333,13 +588,13 @@ It's a little awkward to carry around that $w_0$ separately, if we roll it in to
 ### Matrix representation of linear regression (1)
 
 
-Define a new **design matrix** and **weight vector**:
+Define a new **feature matrix** and **weight vector**:
 
 $$ \mathbf{A} = 
 \begin{bmatrix}
 1 & x_{1,1} & \cdots & x_{1,d} \\
 \vdots & \vdots  & \ddots & \vdots  \\
-1 & x_{n,1} & \cdots & x_{n,d} 
+1 & x_{N,1} & \cdots & x_{N,d} 
 \end{bmatrix},
 \mathbf{w} = 
 \begin{bmatrix}
@@ -350,11 +605,13 @@ w_{d}
 \end{bmatrix}
 $$
 
+Thus, $\mathbf{A}\in\mathbb{R}^{N\times(d+1)}$ and $\mathbf{w}\in\mathbb{R}^{d+1}$.
+
 ### Matrix representation of linear regression (2)
 
 Then, $\hat{\mathbf{y}} = \mathbf{A}\mathbf{w}$.
 
-And given a new sample with feature vector $\mathbf{x_i}$, predicted value is $\hat{y_i} = \langle [1, \mathbf{x_i}] , \mathbf{w} \rangle = [1, \mathbf{x_i}^T] \mathbf{w}$.
+For a new sample, define $\tilde{\mathbf{x}}_i=[1,\mathbf{x}_i^T]^T\in\mathbb{R}^{d+1}$. Its predicted value is $\hat{y}_i=\tilde{\mathbf{x}}_i^T\mathbf{w}$.
 
 ::: notes
 
@@ -376,11 +633,51 @@ What does the residual look like in the multivariate case?
 
 :::
 
+### Illustration - multiple linear regression
+
+![In 2D, the least squares regression is now a plane. In higher $d$, it's a hyperplane.](../images/1-multiple-regression.png)
+
+<!-- 
+
 ### Illustration - residual with two features
 
 
 ![In 2D, the least squares regression is now a plane. In higher $d$, it's a hyperplane. (ISLR)](../images/3.4.svg){ width=50% }
+-->
 
+### Understanding the coefficients - multiple regression
+
+The coefficient $w_j$ for feature $j$ says: 
+
+* simple regression: "an increase of one unit in this feature is associated with an increase of the target variable by $w_j$"
+* multiple regression: "an increase of one unit in this feature, **while holding the other features that are in the model constant**, is associated with an increase of the target variable by $w_j$"
+
+::: notes
+
+Note: doesn't say whether the effect is *causal* or whether it is *significant* (out of scope of this course).
+
+Be aware of units - we cannot directly compare the magnitude of coefficients of features measured in different units.
+
+::: {.grad-only}
+
+Also, be aware of how coefficient of one feature can relate to coefficient of another:
+
+\newpage
+
+![Representation of features and predictions as vectors.](../images/2-linear-vector-x.png){ width=70% }
+
+![Meaning of coefficients when features are collinear.](../images/2-linear-vector-colinear.png){ width=70% }
+
+![Meaning of coefficients when there is a hidden confounding variable.](../images/2-linear-hidden-confounding.png){ width=75% }
+
+![Meaning of coefficients with suppressor variable.](../images/2-linear-regression-suppress.png){ width=75% }
+
+:::
+
+
+:::
+
+\newpage
 
 ## Linear basis function regression
 
@@ -392,12 +689,11 @@ The assumption that the output is a linear function of the input features is ver
 
 ### Basis functions
 
-A function 
+Define a **basis function**:
 
 $$ \phi_j (\mathbf{x}) = \phi_j (x_1, \cdots, x_d) $$ 
 
-is called a **basis function**. 
-
+that "transforms" the original features.
 
 ### Linear basis function model for regression
 
@@ -407,7 +703,7 @@ $$ \hat{y_i} = w_0 + w_1 x_{i,1} + \cdots + w_d x_{i,d} $$
 
 Linear basis function model:
 
-$$ \hat{y_i} =  w_0 \phi_0(\mathbf{x_i}) + \cdots + w_p \phi_p(\mathbf{x_i}) $$
+$$ \hat{y_i} =  w_0 \phi_0(\mathbf{x}_i) + \cdots + w_p \phi_p(\mathbf{x}_i) $$
 
 
 
@@ -417,7 +713,7 @@ Some notes:
 
 * The 1s column we added to the design matrix is easily represented as a basis function ($\phi_0(\mathbf{x}) = 1$).
 * There is not necessarily a one-to-one correspondence between the columns of $X$ and the basis functions ($p \neq d$ is OK!). You can have more/fewer basis functions than columns of $X$.
-* Each basis function can accept as input the entire vector $\mathbf{x_i}$.
+* Each basis function can accept as input the entire vector $\mathbf{x}_i$.
 * The model has $p + 1$ parameters.
 
 :::
@@ -425,14 +721,14 @@ Some notes:
 ### Vector form of linear basis function model
 
 
-The prediction of this model expressed in vector form is:
+The prediction of this model for one sample $i$, expressed in vector form, is:
 
-$$\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle = \mathbf{w}^T \mathbf{\phi (x_i)} $$
+$$\hat{y_i} = \langle \mathbf{\phi}(\mathbf{x}_i), \mathbf{w} \rangle = \mathbf{w}^T \mathbf{\phi}(\mathbf{x}_i) $$
 
 where
 
 $$
-\mathbf{\phi (x_i)} = [\phi_0 (\mathbf{x_i}), \cdots, \phi_p (\mathbf{x_i})], \mathbf{w} = [w_0, \cdots, w_p]
+\mathbf{\phi}(\mathbf{x}_i) = [\phi_0 (\mathbf{x}_i), \cdots, \phi_p (\mathbf{x}_i)], \mathbf{w} = [w_0, \cdots, w_p]
 $$
 
 ::: notes
@@ -444,7 +740,7 @@ linear in the parameters $\mathbf{w}$ (note that $\mathbf{w}$ appears *outside* 
 That's what makes it a *linear model*.
 
 Some basis functions have their own parameters that appear inside the basis function, 
-i.e. we might have a model $$\hat{y_i} = \mathbf{ w}^T \mathbf{ \phi}(\mathbf{ x_i}, 
+i.e. we might have a model $$\hat{y_i} = \mathbf{w}^T \mathbf{\phi}(\mathbf{x}_i, 
 \mathbf{\theta})$$ where $\mathbf{\theta}$ are the parameters of the basis function.
 The model is *non-linear* in those parameters, and they need to be fixed before training.
 
@@ -452,26 +748,222 @@ The model is *non-linear* in those parameters, and they need to be fixed before 
 
 ### Matrix form of linear basis function model
 
-Given data $(\mathbf{x_i},y_i), i=1,\cdots,n$:
+Given data $(\mathbf{x}_i,y_i), i=1,\cdots,N$:
 
 $$ 
 \Phi = 
 \begin{bmatrix}
-\phi_0 (\mathbf{x_1}) & \phi_1 (\mathbf{x_1}) & \cdots & \phi_p (\mathbf{x_1}) \\
+\phi_0 (\mathbf{x}_1) & \phi_1 (\mathbf{x}_1) & \cdots & \phi_p (\mathbf{x}_1) \\
 \vdots  & \vdots & \ddots & \vdots  \\
-\phi_0 (\mathbf{x_n}) & \phi_1 (\mathbf{x_n}) &\cdots & \phi_p (\mathbf{x_n}) 
+\phi_0 (\mathbf{x}_N) & \phi_1 (\mathbf{x}_N) &\cdots & \phi_p (\mathbf{x}_N) 
 \end{bmatrix} 
 $$
 
 and $\mathbf{\hat{y}} = \Phi \mathbf{w}$.
 
+Here, $\Phi\in\mathbb{R}^{N\times(p+1)}$ and $\mathbf{w}\in\mathbb{R}^{p+1}$ because the columns run from $\phi_0$ through $\phi_p$.
+
+
+
+## Ordinary least squares solution for multiple/basis function regression
+
+### Least squares loss for multiple/LBF regression
+
+Given $\mathbf{y}\in\mathbb{R}^N$ and $\Phi\in\mathbb{R}^{N\times(p+1)}$, we'll use loss function
+
+$$L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y} - \mathbf{\hat{y}} \|^2$$
+
+where the norm above is the L2 norm. 
+
+
+::: notes
+
+(we defined it with a $\frac{1}{2}$ constant factor for convenience.)
+
+
+:::
+
+
+
+### Setup: L2 norm
+
+Definition: L2 norm of a vector $\mathbf{x} = (x_1, \cdots, x_n)$:
+
+$$ || \mathbf{x} || = \sqrt{x_1^2 + \cdots + x_n^2}$$
+
+We will want to minimize the L2 norm of the residual. (Equivalent to minimizing squared error!)
+
+
+### Setup: Gradient vector
+
+To minimize a multivariate function $f(\mathbf{x}) = f(x_1, \cdots, x_n)$, we find places where the **gradient** is zero, i.e. each entry must be zero:
+
+$$ \nabla f(\mathbf{x}) = 
+\begin{bmatrix}
+\frac{\partial f(\mathbf{x})}{\partial x_1}  \\
+\vdots \\
+\frac{\partial f(\mathbf{x})}{\partial x_n}  \\
+\end{bmatrix}
+$$
+
+::: notes
+
+The gradient is the vector of partial derivatives.
+
+:::
 
 \newpage
 
+### Solving multiple/LBF regression (1)
+
+Step 1: plug $\hat{\mathbf{y}}=\Phi\mathbf{w}$ into the loss function:
+
+$$
+\operatorname*{minimize}\quad \frac{1}{2}\|\mathbf{y}-\hat{\mathbf{y}}\|^2
+\;\to\;
+\operatorname*{minimize}\quad \frac{1}{2}\|\mathbf{y}-\Phi\mathbf{w}\|^2
+$$
+
+### Solving multiple/LBF regression (2)
+
+Step 2: take the gradient of the loss function with respect to the parameter vector $\mathbf{w}$:
+
+$$\nabla L(\mathbf{w}) = -\Phi^T(\mathbf{y}-\Phi\mathbf{w})$$
+
+
+::: notes
+
+For those interested in the detailed derivation:
+
+
+First, expand the squared norm. Transposing a product reverses the order of its factors, so
+$(\Phi\mathbf{w})^T=\mathbf{w}^T\Phi^T$.
+
+$$
+\begin{aligned}
+L(\mathbf{w})
+    &= \frac{1}{2}(\mathbf{y}-\Phi\mathbf{w})^T
+       (\mathbf{y}-\Phi\mathbf{w})
+    && \text{Use }\|\mathbf{a}\|^2=\mathbf{a}^T\mathbf{a} \\[6pt]
+    &= \frac{1}{2}(\mathbf{y}^T-\mathbf{w}^T\Phi^T)
+       (\mathbf{y}-\Phi\mathbf{w})
+    && \text{Transpose the first factor} \\[6pt]
+    &= \frac{1}{2}\left(
+       \mathbf{y}^T\mathbf{y}
+       -\mathbf{y}^T\Phi\mathbf{w}
+       -\mathbf{w}^T\Phi^T\mathbf{y}
+       +\mathbf{w}^T\Phi^T\Phi\mathbf{w}
+       \right)
+    && \text{Distribute without changing factor order} \\[6pt]
+    &= \frac{1}{2}\mathbf{y}^T\mathbf{y}
+       -\mathbf{w}^T\Phi^T\mathbf{y}
+       +\frac{1}{2}\mathbf{w}^T\Phi^T\Phi\mathbf{w}
+    && \text{Combine the equal scalar cross terms}
+\end{aligned}
+$$
+
+The cross terms are equal because a scalar equals its transpose:
+
+$$
+\mathbf{y}^T\Phi\mathbf{w}
+= (\mathbf{y}^T\Phi\mathbf{w})^T
+= \mathbf{w}^T\Phi^T\mathbf{y}.
+$$
+
+Now take the gradient of each term. We use
+$\nabla_{\mathbf{w}}c=0$,
+$\nabla_{\mathbf{w}}(\mathbf{w}^T\mathbf{a})=\mathbf{a}$, and
+$\nabla_{\mathbf{w}}\left(\frac{1}{2}\mathbf{w}^TA\mathbf{w}\right)
+=\frac{1}{2}(A+A^T)\mathbf{w}$.
+
+$$
+\begin{aligned}
+\nabla_{\mathbf{w}}\left(\frac{1}{2}\mathbf{y}^T\mathbf{y}\right)
+    &= 0
+    && \mathbf{y}\text{ does not depend on }\mathbf{w} \\[6pt]
+\nabla_{\mathbf{w}}\left(-\mathbf{w}^T\Phi^T\mathbf{y}\right)
+    &= -\Phi^T\mathbf{y}
+    && \text{Use the linear-term rule} \\[6pt]
+\nabla_{\mathbf{w}}\left(\frac{1}{2}\mathbf{w}^T\Phi^T\Phi\mathbf{w}\right)
+    &= \Phi^T\Phi\mathbf{w}
+    && \Phi^T\Phi\text{ is symmetric} \\[6pt]
+\nabla L(\mathbf{w})
+    &= -\Phi^T\mathbf{y}+\Phi^T\Phi\mathbf{w}
+    && \text{Add the three gradients} \\[6pt]
+    &= -\Phi^T(\mathbf{y}-\Phi\mathbf{w})
+    && \text{Factor out }-\Phi^T
+\end{aligned}
+$$
+
+<!-- 
+The dimensions also agree. If $q=p+1$, then $\Phi$ is $N\times q$, $\mathbf{w}$ is $q\times1$, and $\mathbf{y}$ is $N\times1$. Therefore both $\Phi^T\mathbf{y}$ and $\Phi^T\Phi\mathbf{w}$ are $q\times1$, matching the gradient with respect to $\mathbf{w}$.
+-->
+
+:::
+
+### Solving multiple/LBF regression (3)
+
+Step 3: set the gradient equal to 0, and solve for the parameter vector $\mathbf{w}$. We find:
+
+$$\mathbf{w}^* = (\Phi^T\Phi)^{-1}\Phi^T\mathbf{y}$$
+
+
+
+::: notes
+
+Assume $\Phi$ has full column rank, so $\Phi^T\Phi$ is invertible. Because matrix multiplication is not commutative, we must multiply both sides from the left.
+
+$$
+\begin{aligned}
+-\Phi^T(\mathbf{y}-\Phi\mathbf{w}) &= 0
+    && \text{Set the gradient equal to zero} \\[6pt]
+\Phi^T(\mathbf{y}-\Phi\mathbf{w}) &= 0
+    && \text{Multiply both sides by }-1 \\[6pt]
+\Phi^T\mathbf{y}-\Phi^T\Phi\mathbf{w} &= 0
+    && \text{Distribute }\Phi^T\text{ over the subtraction} \\[6pt]
+\Phi^T\Phi\mathbf{w} &= \Phi^T\mathbf{y}
+    && \text{Add }\Phi^T\Phi\mathbf{w}\text{ to both sides} \\[6pt]
+(\Phi^T\Phi)^{-1}\Phi^T\Phi\mathbf{w}
+    &= (\Phi^T\Phi)^{-1}\Phi^T\mathbf{y}
+    && \text{Left-multiply by }(\Phi^T\Phi)^{-1} \\[6pt]
+I\mathbf{w} &= (\Phi^T\Phi)^{-1}\Phi^T\mathbf{y}
+    && \text{Use }(\Phi^T\Phi)^{-1}(\Phi^T\Phi)=I \\[6pt]
+\mathbf{w} &= (\Phi^T\Phi)^{-1}\Phi^T\mathbf{y}
+    && \text{Use }I\mathbf{w}=\mathbf{w} \\[6pt]
+\therefore\quad \mathbf{w}^* &= (\Phi^T\Phi)^{-1}\Phi^T\mathbf{y}
+    && \text{Identify the minimizing parameter vector}
+\end{aligned}
+$$
+
+:::
+
+### Solving a set of linear equations
+
+
+If $\Phi$ has full column rank $p+1$ (which requires $N\geq p+1$), then the solution is unique:
+
+$$\mathbf{w}^* = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}$$
+
+
+This expression:
+
+$$\Phi^T \Phi \mathbf{w} =  \Phi^T \mathbf{y}$$
+
+represents a set of $p+1$ equations in $p+1$ unknowns, called the *normal equations*.
+
+::: notes
+
+We can solve this as we would any set of linear equations (see supplementary notebook on computing regression coefficients by hand.)
+
+:::
+
+<!--
+
+
 ### "Recipe" for linear regression (???)
 
-1. Get **data**: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$ 
-2. Choose a **model**: $\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle$
+1. Get **data**: $(\mathbf{x}_i, y_i), i=1,2,\cdots,N$ 
+2. Choose a **model**: $\hat{y}_i = \langle \mathbf{\phi}(\mathbf{x}_i), \mathbf{w} \rangle$
 3. Choose a **loss function**: **???**
 4. Find model **parameters** that minimize loss: **???**
 5. Use model to **predict** $\hat{y}$ for new, unlabeled samples
@@ -493,11 +985,11 @@ Now that we have described some more flexible versions of the linear regression 
 
 We will use the *mean squared error* (MSE) loss function:
 
-$$ L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2 $$ 
+$$ L(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i - \hat{y_i})^2 $$ 
 
 which is related to the *residual sum of squares* (RSS):
 
-$$\sum_{i=1}^n (y_i - \hat{y_i})^2 = \sum_{i=1}^n ( e_i )^2 $$ 
+$$\sum_{i=1}^N (y_i - \hat{y_i})^2 = \sum_{i=1}^N ( e_i )^2 $$ 
 
 ::: notes
 
@@ -509,9 +1001,9 @@ $$\sum_{i=1}^n (y_i - \hat{y_i})^2 = \sum_{i=1}^n ( e_i )^2 $$
 
 ### "Recipe" for linear regression
 
-1. Get **data**: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$ 
-2. Choose a **model**: $\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle$
-3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2$
+1. Get **data**: $(\mathbf{x}_i, y_i), i=1,2,\cdots,N$ 
+2. Choose a **model**: $\hat{y}_i = \langle \mathbf{\phi}(\mathbf{x}_i), \mathbf{w} \rangle$
+3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i - \hat{y_i})^2$
 4. Find model **parameters** that minimize loss: $\mathbf{w^*}$
 5. Use model to **predict** $\hat{y}$ for new, unlabeled samples
 6. Evaluate model performance on new, unseen data
@@ -535,7 +1027,7 @@ The loss function is convex, so to find $\mathbf{w^*}$ where $L(\mathbf{w})$ is 
 
 Given 
 
-$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ]^2 $$
+$$ L(w_0, w_1) = \frac{1}{N} \sum_{i=1}^N [y_i - (w_0 + w_1 x_i) ]^2 $$
 
 we take
 
@@ -546,9 +1038,9 @@ $$ \frac{\partial L}{\partial w_0} = 0, \frac{\partial L}{\partial w_1} = 0$$
 
 First, the intercept:
 
-$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 $$
+$$ L(w_0, w_1) = \frac{1}{N} \sum_{i=1}^N [y_i - (w_0 + w_1 x_i) ] ^2 $$
 
-$$ \frac{\partial L}{\partial w_0} =  -\frac{2}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] $$
+$$ \frac{\partial L}{\partial w_0} =  -\frac{2}{N} \sum_{i=1}^N [y_i - (w_0 + w_1 x_i)] $$
 
 using chain rule, power rule. 
 
@@ -563,7 +1055,7 @@ using chain rule, power rule.
 
 Set this equal to $0$, "distribute" the sum, and we can see
 
-$$\frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] = 0$$
+$$\frac{1}{N} \sum_{i=1}^N [y_i - (w_0 + w_1 x_i)] = 0$$
 
 $$ \implies w_0^* = \bar{y} - w_1^* \bar{x}$$
 
@@ -573,20 +1065,20 @@ where $\bar{x}, \bar{y}$ are the means of $x, y$.
 
 Now, the slope coefficient:
 
-$$ L(w_0, w_1) = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i) ] ^2 $$
+$$ L(w_0, w_1) = \frac{1}{N} \sum_{i=1}^N [y_i - (w_0 + w_1 x_i) ] ^2 $$
 
 
-$$ \frac{\partial L}{\partial w_1} = \frac{1}{n}\sum_{i=1}^n  2(y_i - w_0 -w_1 x_i)(-x_i)$$
+$$ \frac{\partial L}{\partial w_1} = \frac{1}{N}\sum_{i=1}^N  2(y_i - w_0 -w_1 x_i)(-x_i)$$
 
 
 
 ### Optimizing $\mathbf{w}$ - simple linear regression (5)
 
-$$  \implies -\frac{2}{n} \sum_{i=1}^n x_i (y_i - w_0 -w_1 x_i)  = 0$$
+$$  \implies -\frac{2}{N} \sum_{i=1}^N x_i (y_i - w_0 -w_1 x_i)  = 0$$
 
 Solve for $w_1^*$:
 
-$$ w_1^*  = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y}) }{\sum_{i=1}^n (x_i - \bar{x})^2}$$
+$$ w_1^*  = \frac{\sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y}) }{\sum_{i=1}^N (x_i - \bar{x})^2}$$
 
 ::: notes
 
@@ -600,7 +1092,7 @@ The slope coefficient is the ratio of *covariance* $\sigma_{xy}$ to *variance* $
 
 $$ \frac{\sigma_{xy}}{\sigma_x^2} $$
 
-where $\sigma_{xy} = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})$ and $\sigma_x^2 = \frac{1}{n} \sum_{i=1}^n (x_i - \bar{x}) ^2$
+where $\sigma_{xy} = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})(y_i - \bar{y})$ and $\sigma_x^2 = \frac{1}{N} \sum_{i=1}^N (x_i - \bar{x}) ^2$
 
 ### Optimizing $\mathbf{w}$ - relationship to correlation coefficient
 
@@ -639,90 +1131,6 @@ $$R2 = 1 -  \frac{\sigma_e^2 }{\sigma_y^2} $$
 
 
 
-## Ordinary least squares solution for multiple/linear basis function regression
-
-
-### Setup: L2 norm
-
-Definition: L2 norm of a vector $\mathbf{x} = (x_1, \cdots, x_n)$:
-
-$$ || \mathbf{x} || = \sqrt{x_1^2 + \cdots + x_n^2}$$
-
-We will want to minimize the L2 norm of the residual.
-
-
-### Setup: Gradient vector
-
-To minimize a multivariate function $f(\mathbf{x}) = f(x_1, \cdots, x_n)$, we find places where the **gradient** is zero, i.e. each entry must be zero:
-
-$$ \nabla f(\mathbf{x}) = 
-\begin{bmatrix}
-\frac{\partial f(\mathbf{x})}{\partial x_1}  \\
-\vdots \\
-\frac{\partial f(\mathbf{x})}{\partial x_n}  \\
-\end{bmatrix}
-$$
-
-::: notes
-
-The gradient is the vector of partial derivatives.
-
-:::
-
-### MSE for multiple/LBF regresion
-
-Given a vector $\mathbf{y}$ and matrix $\Phi$ (with $d$ columns, $n$ rows), 
-
-$$L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y} - \Phi \mathbf{w}\|^2$$
-
-where the norm above is the L2 norm. 
-
-
-::: notes
-
-(we defined it with a $\frac{1}{2}$ constant factor for convenience.)
-
-
-:::
-
-### Gradient of MSE 
-
-$$L(\mathbf{w}) = \frac{1}{2} \|\mathbf{y} - \Phi \mathbf{w}\|^2$$
-
-gives us the gradient
-
-$$\nabla L(\mathbf{w}) = - \Phi^T (\mathbf{y} -  \Phi \mathbf{w})$$
-
-### Solving for $\mathbf{w}$
-
-$$
-\begin{aligned}
-\nabla L(\mathbf{w}) &= 0, \\
-- \Phi^T (\mathbf{y}  - \Phi \mathbf{w}) &= 0, \\
-\Phi^T \Phi \mathbf{w} &= \Phi^T \mathbf{y} ,~~\text{or}\\
-\mathbf{w} &= (\Phi^T \Phi)^{-1} \Phi^T \mathbf{y}  .
-\end{aligned}
-$$
-
-### Solving a set of linear equations
-
-
-If $\Phi^T \Phi$ is full rank (usually: if $n \geq d$), then a unique solution is given by
-
-$$\mathbf{w^*} = \left(\Phi^T \Phi \right)^{-1} \Phi^T \mathbf{y}$$
-
-
-This expression:
-
-$$\Phi^T \Phi \mathbf{w} =  \Phi^T \mathbf{y}$$
-
-represents a set of $d$ equations in $d$ unknowns, called the *normal equations*. 
-
-::: notes
-
-We can solve this as we would any set of linear equations (see supplementary notebook on computing regression coefficients by hand.)
-
-:::
 
 
 ## Interpreting regression metrics
@@ -753,32 +1161,9 @@ The correlation coefficient $\frac{\sigma_{xy}}{\sigma_x \sigma_y}$ is fundament
 
 :::
 
-\newpage
+U-->
 
-### Interpreting coefficient $w_j$
-
-The coefficient $w_j$ for feature $j$ says: 
-
-* simple regression: "an increase of one unit in this feature is associated with an increase of the target variable by $w_j$"
-* multiple regression: "an increase of one unit in this feature, **while holding the other features that are in the model constant**, is associated with an increase of the target variable by $w_j$"
-
-::: notes
-
-Note: doesn't say whether the effect is *causal* or whether it is *significant* (out of scope of this course).
-
-Be aware of units - we cannot directly compare the magnitude of coefficients of features measured in different units.
-
-Also, be aware of how coefficient of one feature can relate to coefficient of another:
-
-![Representation of features and predictions as vectors.](../images/2-linear-vector-x.png){ width=70% }
-
-![Meaning of coefficients when features are collinear.](../images/2-linear-vector-colinear.png){ width=70% }
-
-![Meaning of coefficients when there is a hidden confounding variable.](../images/2-linear-hidden-confounding.png){ width=75% }
-
-![Meaning of coefficients with suppressor variable.](../images/2-linear-regression-suppress.png){ width=75% }
-
-:::
+<!--
 
 \newpage
 
@@ -786,11 +1171,11 @@ Also, be aware of how coefficient of one feature can relate to coefficient of an
 
 **Mean Squared Error (MSE)**:
 
-$$MSE = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y_i})^2$$
+$$MSE = \frac{1}{N} \sum_{i=1}^N (y_i - \hat{y_i})^2$$
 
 **Mean Absolute Error (MAE)**:
 
-$$MAE = \frac{1}{n} \sum_{i=1}^n |y_i - \hat{y_i}|$$
+$$MAE = \frac{1}{N} \sum_{i=1}^N |y_i - \hat{y_i}|$$
 
 ::: notes
 
@@ -810,7 +1195,7 @@ If $y$ is in dollars, you can directly say "on average, my predictions are off b
 
 In some cases, we may prefer Mean Absolute Percent Error: 
 
-$$MAPE = \frac{100\%}{n} \sum_{i=1}^n \left|\frac{y_i - \hat{y_i}}{y_i}\right|$$
+$$MAPE = \frac{100\%}{N} \sum_{i=1}^N \left|\frac{y_i - \hat{y_i}}{y_i}\right|$$
 
 For example, suppose you are predicting house price. A $50k prediction error is much more significant for the 200k home (25% off) than for a 5 million dollar one (1% off). MAPE calculates error as a percentage of each actual value, so you get a meaningful comparison across different price ranges.
 
@@ -821,7 +1206,7 @@ For example, suppose you are predicting house price. A $50k prediction error is 
 ### Interpreting R2 as explained variance
 
 $$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}$$
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i - \overline{y_i})^2}$$
 
 For linear regression: What proportion of the variance in $y$ is "explained" by our model?
 
@@ -834,7 +1219,7 @@ Alternatively: what is the ratio of error of our model, to error of prediction b
 
 
 $$R2 = 1 - \frac{MSE}{\sigma_y^2} = 1 -
-\frac{\sum_{i=1}^n (y_i - \hat{y_i})^2}{\sum_{i=1}^n (y_i - \overline{y_i})^2}$$
+\frac{\sum_{i=1}^N (y_i - \hat{y_i})^2}{\sum_{i=1}^N (y_i - \overline{y_i})^2}$$
 
 :::notes
 
@@ -852,6 +1237,8 @@ In Instructor A's section, a change in average overall course grades is associat
 
 
 :::
+
+-->
 
 <!--
 
@@ -881,18 +1268,20 @@ In Florida, a change in vote share is associated with a bigger change in vaccina
 ### Completed "recipe"
 
 
-1. Get **data**: $(\mathbf{x_i}, y_i), i=1,2,\cdots,n$ 
+1. Get **data**: $(\mathbf{x}_i, y_i), i=1,2,\cdots,N$ 
 2. Choose a **model**: $\hat{y_i} = \langle \mathbf{\phi (x_i)}, \mathbf{w} \rangle$
-3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i) ^2$
+3. Choose a **loss function**: $L(\mathbf{w}) = \frac{1}{N} \sum_{i=1}^N (y_i - \hat{y}_i) ^2$
 4. Find model **parameters** that minimize loss: OLS solution for $\mathbf{w}^{*}$
 5. Use model to **predict** $\hat{y}$ for new, unlabeled samples
 6. Evaluate model performance on new, unseen data
+
+::: {.grad-only}
 
 ### Key questions
 
 * What type of relationships $f(x)$ can it represent?
 * What insight can we get from the trained model?
-* (How do we train the model efficiently?)
+* (What is the cost of training/inference?)
 * (How do we control the generalization error?)
 
 ::: notes
@@ -901,3 +1290,4 @@ We will address the last two questions next week.
 
 :::
 
+:::
