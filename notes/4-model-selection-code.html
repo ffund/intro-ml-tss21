@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>Writing code for model selection</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Writing code for model selection</h1>
+<p class="author">Fraida Fund</p>
+</header>
+<p>In lecture, we discussed <em>why</em> we need a validation set for
+model selection, and we saw the K-fold CV algorithm written out in
+pseudocode. In these notes, we will focus on the <em>code</em> - how to
+write a K-fold CV loop for model selection, what each part of the loop
+does, and how to choose the right way to split the data into training
+and validation sets.</p>
+<p>First, we’ll go through each part of a model selection loop in
+detail. Then, we’ll see how the same loop is used with four different
+“splitters” from <code>scikit-learn</code>:</p>
+<ul>
+<li><code>KFold</code></li>
+<li><code>GroupKFold</code></li>
+<li><code>StratifiedKFold</code></li>
+<li><code>TimeSeriesSplit</code></li>
+</ul>
+<p>All four have the same interface, so the structure of the model
+selection code is the same for all of them. The difference is
+<em>which</em> samples end up together in the validation set.</p>
+<p>Throughout these notes, we’ll use randomly generated “dummy” data and
+a basic <code>LinearRegression</code> model, since we want to focus on
+the structure of the code and not on any particular data or model. The
+same structure applies to any data and any model.</p>
+<figure>
+<img src="../images/3-kfold-variations.png" style="width:65.0%"
+alt="K-fold CV variations." />
+<figcaption aria-hidden="true">K-fold CV variations.</figcaption>
+</figure>
+<h2 id="the-k-fold-cv-algorithm">The K-fold CV algorithm</h2>
+<p>Recall the K-fold CV algorithm:</p>
+<p><strong>Outer loop</strong> over folds: for <span
+class="math inline">\(i=1\)</span> to <span
+class="math inline">\(K\)</span></p>
+<ul>
+<li>Get training and validation sets for fold <span
+class="math inline">\(i\)</span></li>
+<li><strong>Inner loop</strong> over candidate models: For <span
+class="math inline">\(p=1\)</span> to <span
+class="math inline">\(p_{max}\)</span>,
+<ul>
+<li><strong>Fit</strong>: <span class="math inline">\(\hat{w}_{p,i} =
+\text{fit}_p(X_{tr_i}, y_{tr_i})\)</span></li>
+<li><strong>Predict</strong>: <span
+class="math inline">\(\hat{y}_{v_i,p} = \text{pred}(X_{v_i},
+\hat{w}_{p,i})\)</span></li>
+<li><strong>Score</strong>: <span class="math inline">\(S_{p,i} =
+\text{score}(y_{v_i}, \hat{y}_{v_i,p})\)</span></li>
+</ul></li>
+</ul>
+<p>Then, find the average score across <span
+class="math inline">\(K\)</span> folds for each model, select the model
+with the best average score, re-fit it on the entire training set, and
+evaluate it on the test set.</p>
+<p>Notice that there are <em>two</em> indices here: <span
+class="math inline">\(i\)</span>, the fold, and <span
+class="math inline">\(p\)</span>, the model. Every score <span
+class="math inline">\(S_{p,i}\)</span> belongs to one model <em>and</em>
+one fold. Keeping track of both of these is most of the “work” in
+writing the code.</p>
+<h2 id="dummy-data">Dummy data</h2>
+<p>We’ll generate some random data, with 100 samples and 5 features:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>n_features <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.normal(size<span class="op">=</span>(n_samples, n_features))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(size<span class="op">=</span>n_samples)</span></code></pre></div>
+<p>The first thing we do is split off a test set:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div>
+<p>From here until the very end, we will only use <code>X_train</code>
+and <code>y_train</code>. The test set is not passed to the K-fold CV at
+all - using the test set for model selection is a form of data
+leakage.</p>
+<h2 id="the-parts-of-a-model-selection-loop">The parts of a model
+selection loop</h2>
+<h3 id="the-candidate-models">The candidate models</h3>
+<p>For our dummy example, the candidate models will all be linear
+regressions, but each one uses a different subset of the features
+(columns of <code>X</code>). We’ll describe each candidate model by a
+list of column indices:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>feature_sets <span class="op">=</span> [[<span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>n_models <span class="op">=</span> <span class="bu">len</span>(feature_sets)</span></code></pre></div>
+<p>so the first candidate model uses only column <code>0</code>, the
+second uses columns <code>0</code> and <code>1</code>, and so on. The
+same idea applies to many model selection problems - for example, a
+polynomial model of order <span class="math inline">\(d\)</span> uses
+the first <span class="math inline">\(d\)</span> columns of a matrix of
+polynomial features.</p>
+<p>(If instead we were tuning a hyperparameter, like a regularization
+strength, the list of candidate models would be a list of hyperparameter
+values. The rest of the loop would be the same, except that we would
+change the model in each iteration instead of the columns.)</p>
+<h3 id="the-splitter-object">The splitter object</h3>
+<p>Next, we create a splitter object, which knows how to divide data
+into folds:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span>nfold, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div>
+<p>Creating this object doesn’t split anything yet - it just stores the
+settings (number of folds, whether to shuffle, and the random seed for
+the shuffle, so that we get the same folds every time we run the
+code).</p>
+<h3 id="what-split-returns">What <code>split</code> returns</h3>
+<p>The splitter object has a <code>split</code> method. We pass it the
+training data, and it gives us one item per fold. Each item is a
+<em>tuple of two arrays of indices</em>: the indices of the samples in
+the training part of this fold, and the indices of the samples in the
+validation part of this fold.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> idx <span class="kw">in</span> kf.split(X_train):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="bu">type</span>(idx), <span class="bu">len</span>(idx), idx[<span class="dv">0</span>].shape, idx[<span class="dv">1</span>].shape)</span></code></pre></div>
+<pre><code>&lt;class &#39;tuple&#39;&gt; 2 (56,) (14,)
+&lt;class &#39;tuple&#39;&gt; 2 (56,) (14,)
+&lt;class &#39;tuple&#39;&gt; 2 (56,) (14,)
+&lt;class &#39;tuple&#39;&gt; 2 (56,) (14,)
+&lt;class &#39;tuple&#39;&gt; 2 (56,) (14,)</code></pre>
+<p>There are 70 samples in <code>X_train</code>, so in each of the 5
+folds, 56 are used for training and 14 for validation. Every sample is
+in the validation part of exactly one fold.</p>
+<p>A few important things to note:</p>
+<ul>
+<li><code>split</code> returns <em>indices</em> (positions), not the
+data itself. We use the indices to select rows of the data -
+<code>X_train[idx_tr]</code>. (If the data is in a <code>pandas</code>
+data frame, we must use <code>X_train.iloc[idx_tr]</code>, because the
+indices are positions, not index labels. These are not necessarily the
+same - for example, after a call to <code>train_test_split</code>
+shuffles the rows.)</li>
+<li>The indices are positions <em>in the array we passed to
+<code>split</code></em> - here, positions in <code>X_train</code>, not
+in the original <code>X</code>. So we use them to select rows from
+<code>X_train</code> and <code>y_train</code>.</li>
+<li><code>split</code> doesn’t return a list - it returns a
+<em>generator</em>, which produces the folds one at a time as we iterate
+over it. So we can’t do <code>kf.split(X_train)[0]</code>. (If we want
+only the first fold, for example to inspect it, we can use
+<code>next(kf.split(X_train))</code>.)</li>
+</ul>
+<h3 id="what-enumerate-gives-us">What <code>enumerate</code> gives
+us</h3>
+<p>To fill in the score <span class="math inline">\(S_{p,i}\)</span> we
+need to know which fold we are on. The <code>split</code> method gives
+us the indices for each fold, but not the fold <em>number</em>. That’s
+what <code>enumerate</code> is for: <code>enumerate</code> wraps any
+iterable, and in each iteration gives us a tuple of (counter, item),
+where the counter starts from 0.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, idx <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  idx_tr, idx_val <span class="op">=</span> idx</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(isplit, idx_tr[:<span class="dv">5</span>], idx_val[:<span class="dv">5</span>])</span></code></pre></div>
+<pre><code>0 [0 1 2 3 4] [ 7 22 26 27 28]
+1 [0 1 5 6 7] [ 2  3  4 11 33]
+2 [1 2 3 4 5] [ 0 10 14 18 19]
+3 [0 1 2 3 4] [ 5  8 13 15 16]
+4 [0 2 3 4 5] [ 1  6  9 12 21]</code></pre>
+<p>(we’re printing only the first 5 indices of each.)</p>
+<p>So in each iteration:</p>
+<ul>
+<li><code>isplit</code> is the fold number: 0, 1, …,
+<code>nfold-1</code>. We’ll use it to decide where to save the score for
+this fold.</li>
+<li><code>idx</code> is the tuple returned by <code>split</code> for
+this fold, which we “unpack” into <code>idx_tr</code> and
+<code>idx_val</code>.</li>
+</ul>
+<p>We can also unpack the tuple directly in the <code>for</code>
+statement, which is equivalent:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
+<p>We use <code>enumerate</code> the same way in the inner loop over
+candidate models:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  ...</span></code></pre></div>
+<p>Here, <code>pidx</code> is the <em>model index</em> (0, 1, …,
+<code>n_models-1</code>), and <code>cols</code> is the <em>model
+itself</em> - the list of columns for this candidate model,
+e.g. <code>[1, 3]</code>.</p>
+<p>It’s important to keep these two separate! We use <code>cols</code>
+to <em>build</em> the model (select its columns), and we use
+<code>pidx</code> to decide where to <em>save</em> its score. We can’t
+use <code>cols</code> as a position in an array, and in general, the
+“value” describing a model is not the same as its position in the list.
+(Even if the candidate models are numbers - for example, a list of
+polynomial orders <code>[1, 2, 3, 5, 10]</code> - the model with order
+<code>5</code> is in position <code>3</code>, not position
+<code>5</code>.)</p>
+<h3 id="the-array-of-results">The array of results</h3>
+<p>Before <em>either</em> loop, we create an array of zeros to hold the
+validation score of every model in every fold:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mse_val <span class="op">=</span> np.zeros((n_models, nfold))</span></code></pre></div>
+<p>The array has one row per candidate model and one column per fold, so
+<code>mse_val[pidx, isplit]</code> is the validation score of model
+<code>pidx</code> in fold <code>isplit</code> - that is, <span
+class="math inline">\(S_{p,i}\)</span>. Inside the loops, we fill in one
+entry at a time:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>    mse_val[pidx, isplit] <span class="op">=</span> metrics.mean_squared_error(y_val_fold, y_hat)</span></code></pre></div>
+<p>This is why we need both indices: <code>pidx</code> tells us the row,
+and <code>isplit</code> tells us the column.</p>
+<p>Some things to note about this array:</p>
+<ul>
+<li>It must be created <em>before</em> the loops. If we create it inside
+the outer loop, it will be “reset” to zeros in every fold, and at the
+end only the last fold’s scores will be saved.</li>
+<li>Its shape tells us exactly what the loops compute. After the loops,
+there should be no zeros left in it - every model was scored in every
+fold. (If you see zeros, something went wrong with the indices.)</li>
+<li>After the loops, it is easy to work with:
+<code>mse_val.mean(axis=1)</code> is the mean validation score of each
+model (averaging across folds - across columns),
+<code>mse_val.std(axis=1)</code> is the standard deviation of each
+model’s score across folds (which we need for the one-SE rule), and
+<code>mse_val[:, isplit]</code> is the scores of all models in one
+fold.</li>
+</ul>
+<p>If we want to save more than one metric (e.g. MSE and R2), we create
+one array of zeros per metric.</p>
+<h3 id="pre-processing-inside-the-loop-over-folds">Pre-processing inside
+the loop over folds</h3>
+<p>Any pre-processing step that uses statistics of the data - for
+example, standardizing with <code>StandardScaler</code> (which uses the
+mean and standard deviation of each column), or filling in missing
+values with the mean or median - should be considered part of model
+training. So, it must be fitted using <em>only</em> the training part of
+the fold, and then applied to both the training part and the validation
+part:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit the scaler on the training part of this fold only</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  scaler <span class="op">=</span> StandardScaler().fit(X_train[idx_tr])</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span></code></pre></div>
+<p>Why does it go here, inside the loop over folds?</p>
+<ul>
+<li>It can’t go <em>before</em> the loop (e.g. fitting the scaler on all
+of <code>X_train</code>), because then the validation samples in each
+fold would have contributed to the mean and standard deviation used to
+transform the training samples. The model would have “seen” some
+information about the validation data - this is a form of data
+leakage.</li>
+<li>It doesn’t need to go <em>inside</em> the loop over models, because
+the result doesn’t depend on which model we are fitting.
+<code>StandardScaler</code> standardizes each column separately, so we
+can scale <em>all</em> the columns once per fold, and then select the
+columns we need for each model. (If we placed it in the inner loop, we’d
+get the same result, but we’d repeat the same computation
+<code>n_models</code> times in every fold.)</li>
+</ul>
+<p>On the other hand, a pre-processing step that does <em>not</em> use
+statistics of the data - for example, computing <span
+class="math inline">\(x^2\)</span> or <span class="math inline">\(x_1
+\times x_2\)</span> from the features, or a log transform - gives the
+same result for a sample no matter which other samples are in the
+training set. A step like that can be done once, before the loops.</p>
+<h3 id="selecting-rows-and-columns">Selecting rows and columns</h3>
+<p>In the loops, we are always selecting a subset of the data:</p>
+<ul>
+<li>In the <strong>outer</strong> loop (over folds), we select
+<em>rows</em>: the training and validation samples for this fold. This
+happens once per fold - <code>nfold</code> times in total.</li>
+<li>In the <strong>inner</strong> loop (over models), we select
+<em>columns</em>: the features used by this model. This happens once per
+model, per fold - <code>n_models</code> <span
+class="math inline">\(\times\)</span> <code>nfold</code> times in
+total.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># select the rows for this fold (outer loop)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  y_tr_fold  <span class="op">=</span> y_train[idx_tr]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  y_val_fold <span class="op">=</span> y_train[idx_val]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># select the columns for this model (inner loop)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    X_tr_model  <span class="op">=</span> X_tr_fold[:, cols]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    X_val_model <span class="op">=</span> X_val_fold[:, cols]</span></code></pre></div>
+<p>Because the column selection happens so many times, we want it to be
+just that - a selection. Anything that can be computed once (outside the
+loops, or once per fold) should be computed there, so that the inner
+loop only has to select columns from a matrix that already exists, fit,
+predict, and score. For example, if the candidate models used different
+sets of transformed features, we would compute <em>all</em> of the
+transformed features once before the loops, in one big matrix, and then
+in each iteration of the inner loop just select the rows and columns we
+need.</p>
+<figure>
+<img src="../images/4-kfold-slicing.png" style="width:40.0%"
+alt="Slicing rows and columns from an “overall” matrix." />
+<figcaption aria-hidden="true">Slicing rows and columns from an
+“overall” matrix.</figcaption>
+</figure>
+<p>If the candidate models are “nested” (each one uses the first <span
+class="math inline">\(p\)</span> columns), the column selection is
+<code>X_tr_fold[:, :p]</code>. With a <code>pandas</code> data frame,
+select columns by name (<code>X_tr_fold[col_names]</code>) or by
+position (<code>X_tr_fold.iloc[:, cols]</code>).</p>
+<h3 id="putting-it-all-together">Putting it all together</h3>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a k-fold object</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span>nfold, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># candidate models: each one is a list of columns</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>feature_sets <span class="op">=</span> [[<span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>n_models <span class="op">=</span> <span class="bu">len</span>(feature_sets)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># array to hold the validation MSE for each model, in each fold</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>mse_val <span class="op">=</span> np.zeros((n_models, nfold))</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># outer loop: over folds</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># fit the scaler on the training part of this fold only</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>  scaler <span class="op">=</span> StandardScaler().fit(X_train[idx_tr])</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># select the rows for this fold</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  y_tr_fold  <span class="op">=</span> y_train[idx_tr]</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  y_val_fold <span class="op">=</span> y_train[idx_val]</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inner loop: over models</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># select the columns for this model</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    X_tr_model  <span class="op">=</span> X_tr_fold[:, cols]</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    X_val_model <span class="op">=</span> X_val_fold[:, cols]</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fit model on training data</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    reg <span class="op">=</span> LinearRegression().fit(X_tr_model, y_tr_fold)</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># measure MSE on validation data</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> reg.predict(X_val_model)</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    mse_val[pidx, isplit] <span class="op">=</span> metrics.mean_squared_error(y_val_fold, y_hat)</span></code></pre></div>
+<h3 id="after-the-loop">After the loop</h3>
+<p>First, we average across folds and find the <em>index</em> of the
+best model:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>idx_best <span class="op">=</span> np.argmin(mse_val.mean(axis<span class="op">=</span><span class="dv">1</span>))</span></code></pre></div>
+<p><code>np.argmin</code> returns a position in the array - a model
+index, like <code>pidx</code> - so we use it to look up the model itself
+in the list of candidate models:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cols_best <span class="op">=</span> feature_sets[idx_best]</span></code></pre></div>
+<p>(For a “higher is better” metric like R2, use <code>np.argmax</code>
+instead. To use the one-SE rule instead, we would also use
+<code>mse_val.std(axis=1)</code>.)</p>
+<p>Then, we re-fit the selected model on the <em>entire</em> training
+set. The pre-processing is part of the model, so we re-fit the scaler on
+the entire training set, too:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler().fit(X_train)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>X_train_best <span class="op">=</span> scaler.transform(X_train)[:, cols_best]</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>reg_best <span class="op">=</span> LinearRegression().fit(X_train_best, y_train)</span></code></pre></div>
+<p>Finally, we evaluate it on the test set, using the scaler that was
+fitted on the training set:</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>X_test_best <span class="op">=</span> scaler.transform(X_test)[:, cols_best]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mse_test <span class="op">=</span> metrics.mean_squared_error(y_test, reg_best.predict(X_test_best))</span></code></pre></div>
+<h2 id="choosing-a-splitter">Choosing a splitter</h2>
+<p>Now that we’ve seen all the parts of the loop, we’ll see how the
+<em>same</em> loop is used with four different splitters. For each one,
+we’ll look at what it does on a tiny “dataset” with 12 samples, where
+the value of each sample is equal to its index:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X_tiny <span class="op">=</span> np.arange(<span class="dv">12</span>).reshape(<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>strata_tiny <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>])</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>groups_tiny <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>])</span></code></pre></div>
+<p>Here, <code>strata_tiny</code> is a categorical variable with a
+minority category (only three samples have the value <code>1</code>),
+and <code>groups_tiny</code> says which “group” each sample belongs to.
+We’ll use <code>strata_tiny</code> and <code>groups_tiny</code> with
+some of the splitters below.</p>
+<p>Then, we’ll see the dummy model selection loop for each splitter. In
+every case, the only things that change are the splitter object and the
+arguments passed to <code>split</code> (and, in some cases, how we split
+off the test set).</p>
+<p>To choose a splitter, think about the task that the model will be
+asked to do in “production,” and choose a split that makes the
+validation task mimic it. Otherwise, the validation task may be much
+easier than the “real” task, and the validation score will be overly
+optimistic.</p>
+<h2 id="kfold"><code>KFold</code></h2>
+<h3 id="when-to-use-it">When to use it</h3>
+<p><code>KFold</code> is the “default” choice, when there is no special
+structure in the data: the samples are independent of one another, and
+the model will be asked to make predictions for new samples that are
+like the samples in the training set.</p>
+<h3 id="how-it-works">How it works</h3>
+<p><code>KFold</code> divides the samples into <span
+class="math inline">\(K\)</span> consecutive chunks of (approximately)
+equal size, and uses each chunk once as the validation set. Without
+shuffling, the chunks are taken in order:</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_tiny)):</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: train </span><span class="sc">{</span>idx_tr<span class="sc">}</span><span class="ss">, val </span><span class="sc">{</span>idx_val<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: train [ 4  5  6  7  8  9 10 11], val [0 1 2 3]
+Fold 1: train [ 0  1  2  3  8  9 10 11], val [4 5 6 7]
+Fold 2: train [0 1 2 3 4 5 6 7], val [ 8  9 10 11]</code></pre>
+<p>This is a problem if the data happens to be sorted in some way (for
+example, by the target variable), because then the training and
+validation sets would not be similar to one another. So, we will almost
+always use <code>shuffle=True</code> with <code>KFold</code>:</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">3</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_tiny)):</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: train </span><span class="sc">{</span>idx_tr<span class="sc">}</span><span class="ss">, val </span><span class="sc">{</span>idx_val<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: train [0 1 2 3 5 7 8 9], val [ 4  6 10 11]
+Fold 1: train [ 0  3  4  5  6  9 10 11], val [1 2 7 8]
+Fold 2: train [ 1  2  4  6  7  8 10 11], val [0 3 5 9]</code></pre>
+<h3 id="dummy-example">Dummy example</h3>
+<p>This is the loop we already wrote above:</p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.normal(size<span class="op">=</span>(n_samples, n_features))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(size<span class="op">=</span>n_samples)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span>nfold, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>feature_sets <span class="op">=</span> [[<span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]]</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>n_models <span class="op">=</span> <span class="bu">len</span>(feature_sets)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>mse_val <span class="op">=</span> np.zeros((n_models, nfold))</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_train)):</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  scaler <span class="op">=</span> StandardScaler().fit(X_train[idx_tr])</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  y_tr_fold  <span class="op">=</span> y_train[idx_tr]</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  y_val_fold <span class="op">=</span> y_train[idx_val]</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    reg <span class="op">=</span> LinearRegression().fit(X_tr_fold[:, cols], y_tr_fold)</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> reg.predict(X_val_fold[:, cols])</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    mse_val[pidx, isplit] <span class="op">=</span> metrics.mean_squared_error(y_val_fold, y_hat)</span></code></pre></div>
+<p><code>KFold.split</code> only needs <code>X</code>. (It will also
+accept <code>y</code> and <code>groups</code>, but it ignores them.)</p>
+<h2 id="groupkfold"><code>GroupKFold</code></h2>
+<h3 id="when-to-use-it-1">When to use it</h3>
+<p>Use <code>GroupKFold</code> when the samples are <em>not</em>
+independent, because several samples come from the same “group” (for
+example, several samples from the same individual), <em>and</em> the
+model will be asked to make predictions for new groups that it has not
+seen in training.</p>
+<p>Samples from the same group are usually more similar to one another
+than to samples from other groups. If samples from the same group are in
+both the training set and the validation set, the model can do well on
+validation just by “recognizing” the group - this is data leakage. The
+validation task (predict a new sample from a group you have already
+seen) is easier than the “real” task (predict for a group you have never
+seen), so the validation score will be overly optimistic, and it may
+lead us to select a model that “memorizes” groups.</p>
+<figure>
+<img src="../images/4-fold-group.png" style="width:74.0%"
+alt="We should make sure that each group is only in one type of “set” at a time." />
+<figcaption aria-hidden="true">We should make sure that each group is
+<em>only</em> in one type of “set” at a time.</figcaption>
+</figure>
+<p>(If, on the other hand, the model <em>will</em> be asked to make
+predictions about new samples from the same groups that it was trained
+on, then a regular shuffled <code>KFold</code> is OK, since it mimics
+the “real” task.)</p>
+<h3 id="how-it-works-1">How it works</h3>
+<p><code>GroupKFold</code> needs one more piece of information: a
+<code>groups</code> array with the same length as the data, which says
+which group each sample belongs to. Every sample from a given group will
+be placed in the same fold, so a group is always <em>either</em> in the
+training set <em>or</em> the validation set, never both.</p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>gkf <span class="op">=</span> GroupKFold(n_splits<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(gkf.split(X_tiny, groups<span class="op">=</span>groups_tiny)):</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: train </span><span class="sc">{</span>idx_tr<span class="sc">}</span><span class="ss">, val </span><span class="sc">{</span>idx_val<span class="sc">}</span><span class="ss">, val groups </span><span class="sc">{</span>np<span class="sc">.</span>unique(groups_tiny[idx_val])<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: train [0 1 2 3 4 5 6 7 8], val [ 9 10 11], val groups [3]
+Fold 1: train [ 0  1  2  3  4  5  9 10 11], val [6 7 8], val groups [2]
+Fold 2: train [ 0  1  2  6  7  8  9 10 11], val [3 4 5], val groups [1]
+Fold 3: train [ 3  4  5  6  7  8  9 10 11], val [0 1 2], val groups [0]</code></pre>
+<p>A few things to note:</p>
+<ul>
+<li>The number of folds can’t be more than the number of groups.</li>
+<li>Because entire groups are assigned to folds, the folds may not be
+exactly equal in size (if the groups are not equal in size).
+<code>GroupKFold</code> tries to make the folds as balanced as it
+can.</li>
+<li>By default, <code>GroupKFold</code> does not shuffle - it assigns
+groups to folds deterministically. (Recent versions of
+<code>scikit-learn</code> also accept <code>shuffle=True</code> and
+<code>random_state</code>.)</li>
+<li>The <em>test</em> split must also respect the groups! Use
+<code>GroupShuffleSplit</code> instead of <code>train_test_split</code>
+to split off the test set, otherwise the same group may be in both the
+training and test set, and the final evaluation will be overly
+optimistic, too.</li>
+</ul>
+<h3 id="dummy-example-1">Dummy example</h3>
+<p>Now, the dummy data also has a <code>groups</code> array. Here, there
+are 20 groups with 5 samples each:</p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.normal(size<span class="op">=</span>(n_samples, n_features))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(size<span class="op">=</span>n_samples)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> np.repeat(np.arange(<span class="dv">20</span>), <span class="dv">5</span>)</span></code></pre></div>
+<p>To split off the test set, we use <code>GroupShuffleSplit</code>.
+This is also a splitter, so it returns indices - with
+<code>n_splits=1</code>, there is only one split, and we use
+<code>next</code> to get it:</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>gss <span class="op">=</span> GroupShuffleSplit(n_splits<span class="op">=</span><span class="dv">1</span>, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>idx_train, idx_test <span class="op">=</span> <span class="bu">next</span>(gss.split(X, y, groups))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>X_train, y_train, groups_train <span class="op">=</span> X[idx_train], y[idx_train], groups[idx_train]</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>X_test,  y_test                <span class="op">=</span> X[idx_test],  y[idx_test]</span></code></pre></div>
+<p>Note that we also keep the <code>groups</code> array for the training
+data, since we will pass it to the K-fold CV. Then, the loop is the same
+as before, except for the splitter object and the arguments to
+<code>split</code>:</p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>gkf <span class="op">=</span> GroupKFold(n_splits<span class="op">=</span>nfold)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>feature_sets <span class="op">=</span> [[<span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]]</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>n_models <span class="op">=</span> <span class="bu">len</span>(feature_sets)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>mse_val <span class="op">=</span> np.zeros((n_models, nfold))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(gkf.split(X_train, y_train, groups_train)):</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  scaler <span class="op">=</span> StandardScaler().fit(X_train[idx_tr])</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  y_tr_fold  <span class="op">=</span> y_train[idx_tr]</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  y_val_fold <span class="op">=</span> y_train[idx_val]</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    reg <span class="op">=</span> LinearRegression().fit(X_tr_fold[:, cols], y_tr_fold)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> reg.predict(X_val_fold[:, cols])</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    mse_val[pidx, isplit] <span class="op">=</span> metrics.mean_squared_error(y_val_fold, y_hat)</span></code></pre></div>
+<p><code>GroupKFold.split</code> takes <code>X</code>, <code>y</code>,
+and <code>groups</code> (in that order). Since the indices it returns
+are positions in <code>X_train</code>, we must pass
+<code>groups_train</code> (not <code>groups</code>) so that the
+positions line up.</p>
+<h2 id="stratifiedkfold"><code>StratifiedKFold</code></h2>
+<h3 id="when-to-use-it-2">When to use it</h3>
+<p>Use <code>StratifiedKFold</code> when there is some category in the
+data that has a <em>minority</em> - a value that only a small fraction
+of the samples have - and you want to make sure that the minority is
+distributed evenly across the folds, so that every fold has
+(approximately) the same proportion of each category as the overall
+data.</p>
+<p>For example, suppose one feature is a categorical variable, and only
+10% of the samples are in one of its categories. With a random split,
+especially when the dataset is small, some validation folds may get very
+few (or zero!) samples from this minority category, and others may get
+many more than their “share.” Then:</p>
+<ul>
+<li>in a fold where the minority is missing from the validation set, we
+learn nothing about how well each model does for that part of the
+data,</li>
+<li>in a fold where the minority is missing from the training set, the
+model never gets to learn from that part of the data,</li>
+<li>and the validation scores will vary a lot from fold to fold, just
+because of which samples happened to land in which fold - so the average
+score is a noisier basis for choosing a model.</li>
+</ul>
+<p>Note how this is different from <code>GroupKFold</code>: with
+<code>GroupKFold</code>, we keep all of the samples from a group
+<em>together</em>, in the same fold. With <code>StratifiedKFold</code>,
+we <em>spread</em> the samples from each category <em>evenly</em> across
+all the folds.</p>
+<p>Also note that stratification doesn’t change <em>which</em> task the
+model is evaluated on (unlike <code>GroupKFold</code> and
+<code>TimeSeriesSplit</code>) - it just makes the folds more similar to
+one another and to the overall data.</p>
+<h3 id="how-it-works-2">How it works</h3>
+<p><code>StratifiedKFold.split</code> takes a second argument (in the
+position where the other splitters accept <code>y</code>): an array with
+the same length as the data, which says which category each sample
+belongs to. We’ll call this array <code>strata</code>.
+<code>StratifiedKFold</code> then assigns the samples of each category
+to the folds separately, so that each category is spread out evenly
+across the folds.</p>
+<p>The <code>strata</code> array does not have to be the target variable
+- it can be any categorical variable in the data, e.g. one of the
+features. Whatever we pass in that position is the variable that the
+split will be stratified by. (It must be categorical - each value is
+treated as a separate category.)</p>
+<p>In our tiny dataset, <code>strata_tiny</code> has a minority category
+(<code>1</code>) with only three samples. Here’s how those samples are
+distributed across the validation folds with a shuffled
+<code>KFold</code>:</p>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span><span class="dv">3</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_tiny)):</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: strata_val </span><span class="sc">{</span>strata_tiny[idx_val]<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: strata_val [0 0 1 1]
+Fold 1: strata_val [0 0 0 0]
+Fold 2: strata_val [0 0 0 1]</code></pre>
+<p>The second validation fold has no samples from the minority category
+at all, and the first has two. With <code>StratifiedKFold</code>:</p>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">3</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(skf.split(X_tiny, strata_tiny)):</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: train </span><span class="sc">{</span>idx_tr<span class="sc">}</span><span class="ss">, val </span><span class="sc">{</span>idx_val<span class="sc">}</span><span class="ss">, strata_val </span><span class="sc">{</span>strata_tiny[idx_val]<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: train [ 0  3  4  5  6  8  9 11], val [ 1  2  7 10], strata_val [0 0 0 1]
+Fold 1: train [ 0  1  2  4  5  7  9 10], val [ 3  6  8 11], strata_val [0 0 0 1]
+Fold 2: train [ 1  2  3  6  7  8 10 11], val [0 4 5 9], strata_val [0 0 0 1]</code></pre>
+<p>every validation fold has exactly one sample from the minority
+category (and every training set has two).</p>
+<p>Like <code>KFold</code>, <code>StratifiedKFold</code> does not
+shuffle by default, so we usually pass <code>shuffle=True</code>. When
+we split off the test set, we can similarly stratify with
+<code>train_test_split(..., stratify=strata)</code>, so that the test
+set also has its “share” of the minority.</p>
+<h3 id="dummy-example-2">Dummy example</h3>
+<p>Now, the dummy data also has a <code>strata</code> array, where about
+10% of the samples are in the minority category:</p>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.normal(size<span class="op">=</span>(n_samples, n_features))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(size<span class="op">=</span>n_samples)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>strata <span class="op">=</span> np.random.binomial(<span class="dv">1</span>, <span class="fl">0.1</span>, size<span class="op">=</span>n_samples)</span></code></pre></div>
+<p>To split off the test set, we pass <code>strata</code> to
+<code>train_test_split</code> <em>twice</em>: once as one of the arrays
+to split (so that we get <code>strata_train</code>, which we’ll need for
+the K-fold CV), and once as the <code>stratify</code> argument:</p>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test, strata_train, strata_test <span class="op">=</span> train_test_split(X, y, strata,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                                    test_size<span class="op">=</span><span class="fl">0.3</span>, stratify<span class="op">=</span>strata, random_state<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div>
+<p>Then, the loop is the same as before, except for the splitter object
+and the arguments to <code>split</code>:</p>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>skf <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span>nfold, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>feature_sets <span class="op">=</span> [[<span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]]</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>n_models <span class="op">=</span> <span class="bu">len</span>(feature_sets)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>mse_val <span class="op">=</span> np.zeros((n_models, nfold))</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(skf.split(X_train, strata_train)):</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  scaler <span class="op">=</span> StandardScaler().fit(X_train[idx_tr])</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  y_tr_fold  <span class="op">=</span> y_train[idx_tr]</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  y_val_fold <span class="op">=</span> y_train[idx_val]</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>    reg <span class="op">=</span> LinearRegression().fit(X_tr_fold[:, cols], y_tr_fold)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> reg.predict(X_val_fold[:, cols])</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>    mse_val[pidx, isplit] <span class="op">=</span> metrics.mean_squared_error(y_val_fold, y_hat)</span></code></pre></div>
+<p><code>StratifiedKFold.split</code> takes <code>X</code> and the
+variable to stratify by - here, <code>strata_train</code> (not
+<code>y_train</code>!). Since the indices it returns are positions in
+<code>X_train</code>, we must pass <code>strata_train</code> (not
+<code>strata</code>) so that the positions line up. Everything inside
+the loop is unchanged: we still fit the model to predict
+<code>y</code>.</p>
+<h2 id="timeseriessplit"><code>TimeSeriesSplit</code></h2>
+<h3 id="when-to-use-it-3">When to use it</h3>
+<p>Use <code>TimeSeriesSplit</code> when the data is ordered in time,
+and the model will be asked to make predictions about the
+<em>future</em>, using a model trained on the past.</p>
+<p>If we shuffle time series data, then each validation sample will have
+training samples immediately before <em>and after</em> it. The model is
+asked to “fill in the gaps” (interpolate) between training samples - a
+much easier task than the “real” task of predicting further into the
+future (extrapolate). The model is also learning from the future, which
+is information it will not have in production. This is data leakage, and
+it gives an overly optimistic validation score.</p>
+<figure>
+<img src="../images/4-best-split-timeseries.png" style="width:77.0%"
+alt="For time series data, we should train and validate like this (example shown is 3-fold CV)." />
+<figcaption aria-hidden="true">For time series data, we should train and
+validate like this (example shown is 3-fold CV).</figcaption>
+</figure>
+<h3 id="how-it-works-3">How it works</h3>
+<p><code>TimeSeriesSplit</code> does <em>not</em> shuffle. It assumes
+that the data is already sorted in time order (so sort it first!). In
+each fold, the validation set is a chunk of consecutive samples, and the
+training set is all of the samples <em>before</em> that chunk. With each
+fold, the training set grows:</p>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>tscv <span class="op">=</span> TimeSeriesSplit(n_splits<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(tscv.split(X_tiny)):</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: train </span><span class="sc">{</span>idx_tr<span class="sc">}</span><span class="ss">, val </span><span class="sc">{</span>idx_val<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: train [0 1 2], val [3 4 5]
+Fold 1: train [0 1 2 3 4 5], val [6 7 8]
+Fold 2: train [0 1 2 3 4 5 6 7 8], val [ 9 10 11]</code></pre>
+<p>Unlike the other splitters, not every sample is used for validation
+(the first chunk is only ever used for training), and the folds have
+different numbers of training samples.</p>
+<p>There are some useful arguments to control the split:</p>
+<ul>
+<li><code>test_size</code>: the number of samples in each validation
+set. Set this to match the “real” task - for example, if the model will
+be used to predict the next 10 time steps, use
+<code>test_size=10</code>.</li>
+<li><code>gap</code>: the number of samples to leave out between the end
+of the training set and the start of the validation set. Use this if, in
+the “real” task, there is a delay between the most recent data available
+for training and the predictions.</li>
+<li><code>max_train_size</code>: the maximum number of samples in the
+training set. Use this if the model will be trained on a “sliding
+window” of recent data, rather than all past data.</li>
+</ul>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>tscv <span class="op">=</span> TimeSeriesSplit(n_splits<span class="op">=</span><span class="dv">3</span>, test_size<span class="op">=</span><span class="dv">2</span>, gap<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(tscv.split(X_tiny)):</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&quot;Fold </span><span class="sc">{</span>isplit<span class="sc">}</span><span class="ss">: train </span><span class="sc">{</span>idx_tr<span class="sc">}</span><span class="ss">, val </span><span class="sc">{</span>idx_val<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre><code>Fold 0: train [0 1 2 3 4], val [6 7]
+Fold 1: train [0 1 2 3 4 5 6], val [8 9]
+Fold 2: train [0 1 2 3 4 5 6 7 8], val [10 11]</code></pre>
+<p>The <em>test</em> split must also be chronological: the test set
+should be the <em>last</em> part of the data, after all of the training
+data. Don’t use <code>train_test_split</code> with its default
+<code>shuffle=True</code>. Instead, just slice the data (or use
+<code>train_test_split(..., shuffle=False)</code>).</p>
+<h3 id="dummy-example-3">Dummy example</h3>
+<p>We’ll assume that the rows of the dummy data are already in time
+order. The test set is the last 30 samples:</p>
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.normal(size<span class="op">=</span>(n_samples, n_features))</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.random.normal(size<span class="op">=</span>n_samples)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># chronological split - test set is the last part of the data</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>n_train <span class="op">=</span> <span class="dv">70</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>X_train, y_train <span class="op">=</span> X[:n_train], y[:n_train]</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>X_test,  y_test  <span class="op">=</span> X[n_train:], y[n_train:]</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>tscv <span class="op">=</span> TimeSeriesSplit(n_splits<span class="op">=</span>nfold, test_size<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>feature_sets <span class="op">=</span> [[<span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]]</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>n_models <span class="op">=</span> <span class="bu">len</span>(feature_sets)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>mse_val <span class="op">=</span> np.zeros((n_models, nfold))</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> isplit, (idx_tr, idx_val) <span class="kw">in</span> <span class="bu">enumerate</span>(tscv.split(X_train)):</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  scaler <span class="op">=</span> StandardScaler().fit(X_train[idx_tr])</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  X_tr_fold  <span class="op">=</span> scaler.transform(X_train[idx_tr])</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  X_val_fold <span class="op">=</span> scaler.transform(X_train[idx_val])</span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  y_tr_fold  <span class="op">=</span> y_train[idx_tr]</span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  y_val_fold <span class="op">=</span> y_train[idx_val]</span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> pidx, cols <span class="kw">in</span> <span class="bu">enumerate</span>(feature_sets):</span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>    reg <span class="op">=</span> LinearRegression().fit(X_tr_fold[:, cols], y_tr_fold)</span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> reg.predict(X_val_fold[:, cols])</span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>    mse_val[pidx, isplit] <span class="op">=</span> metrics.mean_squared_error(y_val_fold, y_hat)</span></code></pre></div>
+<p><code>TimeSeriesSplit.split</code> only needs <code>X</code>. Note
+that the scaler is especially important to fit inside the loop here: if
+it were fitted on all of <code>X_train</code>, the training data in each
+fold would be scaled using statistics computed partly from
+<em>future</em> samples.</p>
+<h2 id="summary">Summary</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Splitter</th>
+<th style="text-align: center;">Arguments to <code>split</code></th>
+<th style="text-align: center;">Shuffles?</th>
+<th style="text-align: center;">Use when…</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>KFold</code></td>
+<td style="text-align: center;"><code>X</code></td>
+<td style="text-align: center;">only with <code>shuffle=True</code></td>
+<td style="text-align: center;">samples are independent, no special
+structure</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>GroupKFold</code></td>
+<td style="text-align: center;"><code>X, y, groups</code></td>
+<td style="text-align: center;">no (by default)</td>
+<td style="text-align: center;">multiple samples per group, predict for
+<em>new</em> groups</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>StratifiedKFold</code></td>
+<td style="text-align: center;"><code>X, strata</code></td>
+<td style="text-align: center;">only with <code>shuffle=True</code></td>
+<td style="text-align: center;">a minority category should be spread
+evenly across folds</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TimeSeriesSplit</code></td>
+<td style="text-align: center;"><code>X</code></td>
+<td style="text-align: center;">never</td>
+<td style="text-align: center;">ordered in time, predict the
+<em>future</em></td>
+</tr>
+</tbody>
+</table>
+<p>Some general rules:</p>
+<ul>
+<li>Choose the splitter by thinking about the task that the model will
+be asked to do in “production,” and making the validation task mimic it.
+The model selection code is the same for every splitter - only the
+splitter object (and the arguments to <code>split</code>) change.</li>
+<li>Use the same reasoning for the training/test split:
+<code>GroupShuffleSplit</code> for group structure,
+<code>train_test_split(..., stratify=strata)</code> for stratification,
+and a chronological slice for time series.</li>
+<li>Only pass the <em>training</em> data to the K-fold CV. Never use the
+test set for model selection.</li>
+<li>Create the array of results
+(<code>np.zeros((n_models, nfold))</code>) before the loops, fill it in
+at <code>[pidx, isplit]</code> inside the loops, and average over
+<code>axis=1</code> afterward.</li>
+<li>Use <code>enumerate</code> in both loops, and keep the model index
+(<code>pidx</code>) separate from the model itself (<code>cols</code>),
+and the fold index (<code>isplit</code>) separate from the indices of
+the fold (<code>idx_tr, idx_val</code>).</li>
+<li>Select rows in the outer loop and columns in the inner loop. The
+inner loop runs <code>n_models</code> <span
+class="math inline">\(\times\)</span> <code>nfold</code> times, so
+compute anything that can be computed once outside it.</li>
+<li>Anything that “learns” from the data (scaling, filling in missing
+values with a statistic, feature selection) goes inside the loop over
+folds, fitted using only the training part of each fold.</li>
+<li>After selecting the model, re-fit it (including the pre-processing)
+on the entire training set before evaluating on the test set.</li>
+<li>Splitters can be combined: for example,
+<code>StratifiedGroupKFold</code> keeps groups together <em>and</em>
+tries to keep the proportion of each category similar across folds.</li>
+</ul>
+<p>Finally, all of these splitter objects can be passed as the
+<code>cv</code> argument to <code>scikit-learn</code> functions that do
+cross validation for you, like <code>cross_val_score</code>,
+<code>validation_curve</code>, or <code>GridSearchCV</code>. For
+<code>GroupKFold</code>, also pass the <code>groups</code> array:</p>
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> GridSearchCV(model, param_grid, cv<span class="op">=</span>GroupKFold(n_splits<span class="op">=</span><span class="dv">5</span>))</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>grid.fit(X_train, y_train, groups<span class="op">=</span>groups_train)</span></code></pre></div>
+<p>Refer to <a
+href="https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators">the
+<code>scikit-learn</code> documentation on cross validation</a> for more
+splitters and examples.</p>
+</body>
+</html>
