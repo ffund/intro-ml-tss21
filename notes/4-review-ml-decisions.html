@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Fraida Fund" />
+  <title>Review: ML as a sequence of decisions</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Review: ML as a sequence of decisions</h1>
+<p class="author">Fraida Fund</p>
+</header>
+<h2 id="making-decisions">Making decisions</h2>
+<p>Building a machine learning system means making a sequence of
+decisions about the data, the model, and the evaluation. Each decision
+should be driven by facts: what you know about the data, about the
+problem, and about how the model will be used. When we make a decision
+badly, it shows up as a specific type of failure:</p>
+<ul>
+<li><strong>Failure to fit</strong>: the model has high error even on
+the <em>training</em> data. It cannot represent the relationship between
+features and target (high bias), or it was not trained well.</li>
+<li><strong>Failure to generalize</strong>: the model has low error on
+the training data, but high error on held-out validation/test data. It
+has learned patterns that are specific to the training sample, including
+noise (high variance, overfitting).</li>
+<li><strong>Failure to deploy</strong>: the model does well on the test
+set, but poorly once it is used for real. The evaluation was overly
+optimistic, because the test data did not resemble the deployment
+setting.</li>
+<li><strong>Failure to generate value</strong>: the model does well on
+our metric, but does not achieve the goal we actually care about.</li>
+</ul>
+<p>and some decisions (e.g. whether we may use some data at all) can
+cause harm, legal or ethical problems, even if the model “works”.</p>
+<p>For each decision, the third column lists where it was discussed in
+the lecture handouts (handout name, section title), the relevant
+homework problems (HW number, problem number), and the relevant lab
+problems (Lab number, problem number).</p>
+<h3 id="data">Data</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Decision to make</th>
+<th>Consequence of a bad decision</th>
+<th>Where we saw it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Should we use ML for this problem at all?</strong> Or would
+a rule-based program, or a human expert, be a better fit? ML is a good
+candidate when there is good data, the thing we want to predict is
+measurable and observable, and human expertise is insufficient,
+expensive, or hard to explain.</td>
+<td><strong>Failure to generate value / harm.</strong> If there is an
+accurate and simple algorithm, an ML model adds cost and error for no
+benefit. If there is no good data, the model has nothing to learn from.
+If the problem requires empathy, creativity, insight, or output that we
+must audit and explain, or if the model may introduce or exacerbate
+bias, then an ML system may do harm even when its error is low.</td>
+<td><strong>Notes:</strong> <em>Intro to ML</em>: “Rule-based vs. data
+driven problem solving”, “Problems that may not be well suited to ML”,
+“Problems that are often good candidates for ML”. <strong>HW:</strong>
+HW1 Q1 (rule-based vs. ML vs. human expert).</td>
+</tr>
+<tr>
+<td><strong>Is it legal and ethical to use this data?</strong> Consider
+consent, privacy, copyright, and bias/fairness.</td>
+<td><strong>Harm, legal or ethical failure.</strong> Data collected for
+one purpose cannot automatically be reused for another; using it anyway
+can harm the people in the data, lead to lawsuits or regulatory action,
+and get the system shut down. Data that reflects biased outcomes can
+produce a model with unequal outcomes, even if it is accurate.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Legal and
+ethical concerns”. <strong>HW:</strong> HW1 Q3 (data use concerns).</td>
+</tr>
+<tr>
+<td><strong>Does the data have a signal?</strong> Is there a defensible
+reason the features should predict the target? Could the model use an
+accidental artifact or proxy instead?</td>
+<td><strong>Failure to fit</strong>, if there is no real signal: no
+model will beat prediction by the mean. <strong>Failure to
+generalize</strong>, if a flexible model fits “patterns” in the noise:
+it can look good on training data, and (if we overfit badly) even on a
+small validation set, but these patterns do not hold for new data.
+<strong>Failure to deploy</strong>, if the model learns an artifact of
+how the data was collected (e.g. candid vs. studio photos) that does not
+exist in deployment.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Predictive
+feature concerns”, “Example: distinguish real headshots from AI
+generated headshots”; <em>Error decomposition, bias-variance tradeoff,
+model selection</em>: “Sources of prediction error”.
+<strong>HW:</strong> HW1 Q3 (data use concerns), HW1 Q4 (valid
+features), HW4 Q13-14 (Parkinson’s speech tests). <strong>Lab:</strong>
+L1 Q1-2 (set expectations, explore relationships), L1 Q5
+(baseline).</td>
+</tr>
+<tr>
+<td><strong>Is the data representative of the deployment
+setting?</strong> Compare population, context/setting, time period, and
+target distribution.</td>
+<td><strong>Failure to deploy.</strong> The model learns from, and is
+evaluated on, a population/setting/time period that differs from where
+it will be used, so a good test score does not predict deployment
+performance. Filtering or selecting samples (e.g. only homes with
+complete records, only offers that sellers accept) also changes what the
+data represents.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>:
+“Representativeness concerns”, “Example: distinguish real headshots from
+AI generated headshots”. <strong>HW:</strong> HW1 Q3 (data use
+concerns), HW1 Q8 (train/test/deploy). <strong>Lab:</strong> L3 Q1
+(prepare data: filters remove homes with missing measurements), L3 Q3
+and Q6 (MSE/pinball reflection: accepted homes differ from all homes),
+L3 Q8 (Zillow Offers), L4 Q8 (forecast horizon).</td>
+</tr>
+<tr>
+<td><strong>Do the data match our expectations, and is the data quality
+good enough?</strong> Before looking at the data, read the data
+dictionary and write down what you expect to see; then check it with
+plots, summary statistics, and individual samples. Look for outliers,
+label errors, data entry errors, duplicate records, and inconsistent
+units or formats, and decide (for each one) whether it is a true value
+or an error.</td>
+<td><strong>Failure to fit</strong>, if errors stay in the data: wrong
+labels and corrupted feature values add noise, and a few extreme values
+can dominate a squared error loss. <strong>Failure to deploy</strong>,
+if we “clean” the data without a good reason: removing outliers that are
+real values (or removing a whole kind of sample, e.g. all low-priced
+sales) skews the data, so the model and its evaluation no longer reflect
+the deployment setting.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Make and check
+assumptions”, “Other data quality concerns”. <strong>HW:</strong> HW3
+Q6-7 (outliers in the data, Huber loss). <strong>Lab:</strong> L1 Q1-2
+(set expectations, explore relationships), L1 Q3 (check that data loaded
+correctly, check for duplicate hours), L2 Q1 (inspect trip-level data),
+L3 Q1 (convert measurements to numbers, screen out nominal sale prices
+and inconsistent records).</td>
+</tr>
+<tr>
+<td><strong>How should we split the data?</strong> Shuffle split, group
+split, or time-based split, so that the relationship between training
+and test data matches the relationship between training data and
+deployment data.</td>
+<td><strong>Failure to deploy.</strong> If the split makes the
+evaluation task easier than the deployment task (e.g. random split of a
+time series, or the same person in both training and test sets when the
+model will be used on new people), the test score is overly
+optimistic.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Split data”;
+<em>Error decomposition, bias-variance tradeoff, model selection</em>:
+“K-fold CV - how to split?”. <strong>HW:</strong> HW1 Q5 (data split
+strategy), HW4 Q13-14 (Parkinson’s speech tests: <code>KFold</code>
+vs. <code>GroupKFold</code>). <strong>Lab:</strong> L1 Q3-4 (load,
+split, clean, encode; reflection), L2 Q2 (chronological split), L3 Q1
+(hold out later sales), L4 Q3 (fixed chronological split), L4 Q5 (time
+series cross validation).</td>
+</tr>
+<tr>
+<td><strong>Which data do we use to compute preprocessing
+statistics?</strong> (e.g. imputation values, encoders, vocabularies,
+standardization)</td>
+<td><strong>Failure to deploy.</strong> Anything “learned” from the data
+(a mean, a set of categories, a target encoding, a scaler) must be
+learned from the training set only, <em>after</em> splitting. Otherwise,
+information from the test set leaks into training, and the evaluation is
+overly optimistic.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Convert to
+numeric types” (target encoding, bag of words vocabulary); <em>One
+standard error rule, regularization</em>: “Standardization”.
+<strong>HW:</strong> HW2 Q11 (target encoding), HW4 Q11 (standardize
+after split). <strong>Lab:</strong> L1 Q3 (process data after
+splitting), L3 Q1 (fit category encoder on training sales), L4 Q6 (fit
+<code>StandardScaler</code> inside each fold).</td>
+</tr>
+<tr>
+<td><strong>How do we handle missing values?</strong> First find them
+(<code>NaN</code>, special values like 0 or -1, and rows that are absent
+entirely), then understand <em>why</em> they are missing (MCAR, MAR,
+MNAR), then leave as missing, drop, or impute, so that the data
+represents the true (unknown) values as well as possible.</td>
+<td><strong>Failure to deploy / failure to fit.</strong> Dropping rows
+that are not missing completely at random skews the dataset
+(e.g. dropping all freezing days because temperature is missing below
+32°F), so the model sees too few of some kinds of samples. Imputing a
+poor value (e.g. the mean, when we know the missing values are extreme)
+adds error to the feature. A missing value encoded as a “real” value
+(e.g. 0) silently corrupts the feature.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Handle missing
+data”, “Other data quality concerns”. <strong>HW:</strong> HW1 Q6
+(missing data). <strong>Lab:</strong> L1 Q3-4 (missing weather values
+and missing dates; reflection), L3 Q1 (missing measurements), L4 Q2
+(missing mobility values).</td>
+</tr>
+<tr>
+<td><strong>How do we represent each feature numerically?</strong>
+Ordinal encoding (ordered categories), one-hot encoding (unordered
+categories), target encoding (categories with many values), bag of
+words/count vectorizer (text).</td>
+<td><strong>Failure to fit</strong>, if the encoding imposes a structure
+that is not there (e.g. ordinal encoding of an unordered category forces
+the model to treat <code>spicy</code> as “between” <code>floral</code>
+and <code>woody</code>). <strong>Failure to generalize</strong>, if
+one-hot encoding a feature with many categories creates many sparse
+features. <strong>Failure to deploy</strong>, if test/deployment data
+has categories or words not seen in training and we have not handled
+them, or if target encoding uses test data.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Convert to
+numeric types”. <strong>HW:</strong> HW1 Q7 (one-hot vs. ordinal), HW2
+Q11 (target encoding). <strong>Lab:</strong> L1 Q3-4 (one-hot encode
+weather summary, align training and test columns; reflection), L3 Q1
+(one-hot encode borough, property type, neighborhood, building
+class).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="model">Model</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Decision to make</th>
+<th>Consequence of a bad decision</th>
+<th>Where we saw it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Define what one sample is</strong> (the unit of prediction):
+one person, one trip, one hour, one sale, one borough on one day… It
+should match what the model will be asked to predict in deployment.</td>
+<td><strong>Failure to generate value</strong>, if the sample doesn’t
+match the prediction we need (e.g. the data has one row per bike trip,
+but we need to predict the number of trips per hour, so we must
+aggregate first). <strong>Failure to deploy</strong>, if the same entity
+appears in many samples and we don’t account for it (e.g. many
+recordings from the same patient) when splitting the data.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Construct
+samples”; <em>Intro to ML</em>: “The basic supervised learning problem”.
+<strong>HW:</strong> HW1 Q9 (feature matrix and target vector), HW4
+Q13-14 (Parkinson’s speech tests: many recordings per patient).
+<strong>Lab:</strong> L2 Q1 (aggregate trips per hour), L3 Q1 (one
+sample is a sale, but an assessment describes a parcel), L4 Q2 (one
+sample per borough per day).</td>
+</tr>
+<tr>
+<td><strong>Match features and target for each sample.</strong> When
+combining data sources, join them on a key that gives a correct
+one-to-one (or many-to-one) correspondence, and check that the join did
+what you expected.</td>
+<td><strong>No supervised learning possible</strong>, if the features
+and the target are never observed together for the same samples.
+<strong>Failure to fit</strong>, if the join is wrong (e.g. duplicate
+keys, mismatched dates or locations): the features no longer describe
+the sample they are attached to, so they become noise. <strong>Failure
+to deploy</strong>, if a joined feature describes a time <em>after</em>
+the prediction would be made.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Construct
+samples”. <strong>HW:</strong> HW1 Q3 (data use concerns: features and
+target not observed together). <strong>Lab:</strong> L3 Q1 (join
+assessments to sales; duplicate parcel IDs), L4 Q2 (join case rates and
+weather to mobility data; validate the keys).</td>
+</tr>
+<tr>
+<td><strong>Choose the target variable.</strong> It should be
+measurable, available, and correct, and it should match the goal of the
+system.</td>
+<td><strong>Failure to generate value</strong>, if the target is a poor
+proxy for what we actually care about (e.g. predicting healthcare
+<em>cost</em> when we care about healthcare <em>need</em>): the model
+can be accurate and still not achieve the goal. <strong>Failure to
+fit</strong>, if the target is noisy or mislabeled.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Select target”,
+“Other data quality concerns”; <em>Intro to ML</em>: “Goal of a
+supervised learning system”. <strong>HW:</strong> HW1 Q2 (target
+variable for mental health system), HW1 Q9 (feature matrix and target
+vector). <strong>Lab:</strong> L2 Q1 (aggregate trips per hour), L4 Q2
+(transit target).</td>
+</tr>
+<tr>
+<td><strong>Choose the features.</strong> Include features that are
+plausibly predictive and available at inference time; exclude
+identifiers, irrelevant fields, and fields that won’t be available when
+the model is used.</td>
+<td><strong>Failure to fit</strong>, if there are no good features (the
+model is missing information it needs, so it is biased). <strong>Failure
+to generalize</strong>, if there are too many features for the amount of
+data, so the model fits noise (high variance). <strong>Failure to
+deploy</strong>, if we use a <em>leaky</em> feature that is not
+available at inference time, or is a proxy for the target in the data
+but not in deployment.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Select
+features”; <em>Error decomposition, bias-variance tradeoff, model
+selection</em>: “Bias of linear model”, “Variance of linear model”.
+<strong>HW:</strong> HW1 Q3 (data use concerns), HW1 Q4 (valid
+features), HW4 Q1 (what to try next), HW4 Q6-7 (one-SE rule for number
+of features). <strong>Lab:</strong> L1 Q1 (variables that should not be
+used), L1 Q4 (feature selection reflection), L2 Q4-5 (weekend and rush
+hour features), L4 Q3-4 (same-day features, lag features), L4 Q8
+(forecast horizon: same-day information is not known at forecast
+time).</td>
+</tr>
+<tr>
+<td><strong>Choose the model class.</strong> So far: a linear model
+<span class="math inline">\(\hat{y} = \langle w, \phi(x)
+\rangle\)</span>, compared against prediction by the mean.</td>
+<td><strong>Failure to fit</strong>, if the true relationship is not in
+the model class (e.g. a linear model in <span
+class="math inline">\(x\)</span> for a non-linear relationship): the
+model is biased no matter how much data we have.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Simple linear
+regression model”, “Multiple linear regression”, “Understanding the
+coefficients - multiple regression”; <em>Error decomposition,
+bias-variance tradeoff, model selection</em>: “Bias of linear model”.
+<strong>HW:</strong> HW2 Q1 (graphical intuition), HW2 Q6 (compute
+fitted value), HW2 Q10 (walkability), HW4 Q2 (model class), HW4 Q3 (bias
+and variance of two models). <strong>Lab:</strong> L1 Q5 (baseline), L2
+Q2 (linear regression on hour).</td>
+</tr>
+<tr>
+<td><strong>Choose the loss function to match the problem.</strong> Mean
+squared error (fits the conditional mean), Huber loss (less sensitive to
+outliers), pinball loss (fits a quantile, for asymmetric costs of over-
+vs. under-predicting).</td>
+<td><strong>Failure to generate value</strong>, if the loss doesn’t
+reflect what errors actually cost (e.g. an MSE house price model has a
+good <span class="math inline">\(R^2\)</span> but loses money, because
+over-estimating a price is much more costly than under-estimating it).
+<strong>Failure to fit</strong> the bulk of the data, if a few outliers
+dominate a squared error loss.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Mean squared
+error loss function”, “Least squares loss for multiple/LBF regression”;
+<em>Gradient descent</em>: “Solution using gradient descent” (Huber and
+pinball losses are covered in the HW and lab, not the handouts).
+<strong>HW:</strong> HW3 Q5 (Huber update rule), HW3 Q6 (gradient
+descent step with Huber loss), HW3 Q7 (Huber loss in Python).
+<strong>Lab:</strong> L3 Q2-3 (MSE model; reflection), L3 Q4 (pinball
+update rule), L3 Q5-6 (pinball model; reflection), L3 Q7 (market
+simulation), L3 Q8 (Zillow Offers).</td>
+</tr>
+<tr>
+<td><strong>Regularize?</strong> Add a penalty on the size of the
+weights (Ridge/L2, LASSO/L1) and choose its strength <span
+class="math inline">\(\alpha\)</span>.</td>
+<td><strong>Failure to generalize</strong>, with too little
+regularization when there are many (or correlated) features: large,
+unstable weights. <strong>Failure to fit</strong>, with too much
+regularization: weights are shrunk too far toward zero, and training
+error increases.</td>
+<td><strong>Notes:</strong> <em>One standard error rule,
+regularization</em>: “Penalty for model complexity”, “Regularization
+vs. standard LS”, “Common regularizers”, “Effect of regularization
+level”, “Selecting regularization level”. <strong>HW:</strong> HW4 Q4
+(model comparison), HW4 Q5 (training and test MSE vs. <span
+class="math inline">\(\alpha\)</span>), HW4 Q9 (one-SE rule for <span
+class="math inline">\(\alpha\)</span>), HW4 Q12 (Ridge for diamond
+prices). <strong>Lab:</strong> L4 Q6 (choose regularization strength
+with time series CV), L4 Q7 (reflection: Ridge vs. least squares with
+180 lags).</td>
+</tr>
+<tr>
+<td><strong>Fit the model.</strong> Choose a solver (closed-form OLS or
+gradient descent), an optimizer (batch, mini-batch, stochastic;
+momentum, Adam, etc.), and training hyperparameters (learning rate,
+batch size, number of iterations); standardize features if needed.</td>
+<td><strong>Failure to fit.</strong> If the learning rate is too small
+or we stop too early, the weights have not converged; if it is too
+large, the loss oscillates or diverges. Features on very different
+scales make the loss surface a “ravine”, so gradient descent converges
+slowly (and penalties treat the features unequally). Check the loss
+curve!</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Ordinary least
+squares solution for multiple/basis function regression”; <em>Gradient
+descent</em>: “Standard (”batch”) gradient descent”, “Stochastic
+gradient descent”, “Mini-batch (also”stochastic”) gradient descent”,
+“Selecting the learning rate”, “Annealing the learning rate”, “Gradient
+descent in a ravine”, “Momentum”, “Adam”; <em>One standard error rule,
+regularization</em>: “Standardization”. <strong>HW:</strong> HW2 Q9
+(design matrix), HW3 Q1 (SGD, graphically), HW3 Q2 (visualize learning
+rate), HW3 Q3 (batch size), HW3 Q4 (gradient descent step).
+<strong>Lab:</strong> L3 Q2 (implement gradient descent, inspect loss
+curve), L3 Q5 (scale features and prices before fitting).</td>
+</tr>
+<tr>
+<td><strong>Use basis function transformations.</strong> Inspect the
+residuals (vs. each feature, and over time) to see what the model is
+missing, then transform features to match.</td>
+<td><strong>Failure to fit</strong>, if a systematic pattern remains in
+the residuals: the model cannot represent the relationship using the
+features as given. (But adding many basis functions makes the model more
+flexible, and can cause <strong>failure to generalize</strong>,
+especially when extrapolating.)</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Linear basis
+function regression”, “Residual term”; <em>Working with Data</em>:
+“Create”transformed” features”. <strong>HW:</strong> HW2 Q4 (feature
+transformations), HW2 Q5 (residual plots → feature engineering).
+<strong>Lab:</strong> L2 Q2 (residuals of raw hour model), L4 Q1 (the
+“cubic model”).</td>
+</tr>
+<tr>
+<td>– <em>Shapes</em> like <span class="math inline">\(\log x\)</span>,
+<span class="math inline">\(e^x\)</span>, <span
+class="math inline">\(\sqrt{x}\)</span>, polynomials</td>
+<td>Use when the residuals show a curved trend in one feature.</td>
+<td><strong>HW:</strong> HW2 Q4 (feature transformations), HW2 Q5
+(residual plots), HW2 Q7 (log-transformed prediction), HW2 Q12 (baby
+size), HW2 Q13-14 (basis functions). <strong>Lab:</strong> L3 Q1 (log of
+area), L4 Q1 (polynomial).</td>
+</tr>
+<tr>
+<td>– <em>Splines</em> (piecewise polynomials joined at knots)</td>
+<td>Use for a non-linear shape that changes across the range of <span
+class="math inline">\(x\)</span>; number of knots and degree is a model
+selection problem.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Model selection problems”.</td>
+</tr>
+<tr>
+<td>– <em>Fourier</em> features (<span
+class="math inline">\(\sin\)</span>, <span
+class="math inline">\(\cos\)</span> of a cycle)</td>
+<td>Use for cyclic features (hour of day, month of year), where the
+“end” of the cycle is next to the “start”.</td>
+<td><strong>HW:</strong> HW2 Q5 (residual plots). <strong>Lab:</strong>
+L2 Q3 (24-hour and 12-hour cycles), L3 Q1 (sale month).</td>
+</tr>
+<tr>
+<td>– <em>Indicators and interactions</em></td>
+<td>Use when the effect of a feature is different for different groups
+(e.g. weekday vs. weekend), or concentrated in a range (e.g. rush
+hour).</td>
+<td><strong>HW:</strong> HW2 Q5 (residual plots), HW2 Q8 (interaction
+terms), HW2 Q9 (design matrix with interaction and indicator).
+<strong>Lab:</strong> L2 Q4 (weekend interaction), L2 Q5 (rush hour
+indicator).</td>
+</tr>
+<tr>
+<td>– <em>Autoregressive lag</em> features</td>
+<td>Use for time series where recent values of the target predict the
+next value (then, residuals over time show what is still missing).</td>
+<td><strong>HW:</strong> HW4 Q8 (one-SE rule for number of lags).
+<strong>Lab:</strong> L4 Q4 (lags 1-7), L4 Q5 (choose lag order), L4 Q7
+(reflection).</td>
+</tr>
+<tr>
+<td><strong>Use cross validation to compare models and choose
+one</strong> (e.g. number of features, polynomial order, number of lags,
+<span class="math inline">\(\alpha\)</span>), with the one-SE rule to
+prefer a simpler model when the difference is within the noise.</td>
+<td><strong>Failure to fit</strong>, if we choose a model that is too
+simple. <strong>Failure to generalize</strong>, if we choose by training
+error, or choose the model with the very best validation score when a
+simpler model is just as good. <strong>Failure to deploy</strong>, if we
+choose using the test set (it is no longer an independent estimate), or
+use CV folds that don’t match deployment (e.g. shuffled folds for a time
+series or grouped data).</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Bias-variance tradeoff”, “Model
+selection problems”, “Hold-out validation”, “Problems with hold-out
+validation”, “K-fold cross validation”, “K-fold CV - how to split?”;
+<em>One standard error rule, regularization</em>: “One-SE rule”,
+“Selecting regularization level”. <strong>HW:</strong> HW4 Q1 (what to
+try next), HW4 Q6-9 (one-SE rule), HW4 Q10 (one-SE rule in code), HW4
+Q13-14 (Parkinson’s speech tests). <strong>Lab:</strong> L4 Q5 (choose
+lag order with time series CV), L4 Q6 (choose <span
+class="math inline">\(\alpha\)</span> with time series CV), L4 Q7
+(reflection).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="evaluation">Evaluation</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Decision to make</th>
+<th>Consequence of a bad decision</th>
+<th>Where we saw it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>What do we compare against?</strong> A simple baseline,
+e.g. prediction by the mean (<span class="math inline">\(R^2 =
+0\)</span>), or “same value as last week”.</td>
+<td><strong>Undetected failure to fit.</strong> Without a baseline, we
+can’t tell whether the model learned anything from the features. A
+negative <span class="math inline">\(R^2\)</span> means the model is
+worse than predicting the mean.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Prediction by
+mean”, “Interpreting R2 as error relative to”mean model”“.
+<strong>HW:</strong> HW1 Q10 (prediction by mean), HW2 Q1 (graphical
+intuition, positive and negative <span
+class="math inline">\(R^2\)</span>), HW4 Q13-14 (Parkinson’s speech
+tests). <strong>Lab:</strong> L1 Q5 (<code>DummyRegressor</code>
+baseline), L4 Q3 (same-day model with negative test <span
+class="math inline">\(R^2\)</span>), L4 Q8 (same-weekday baseline).</td>
+</tr>
+<tr>
+<td><strong>Which metric?</strong> MSE/RMSE, MAE, MAPE, <span
+class="math inline">\(R^2\)</span>; choose the one that reflects what
+errors actually cost in the application.</td>
+<td><strong>Failure to generate value</strong>, if we optimize and
+report a metric that doesn’t reflect the goal: e.g. a model with better
+<span class="math inline">\(R^2\)</span> can lose more money. Different
+metrics weigh errors differently (squared error emphasizes large errors;
+MAPE emphasizes errors on small values; a few very expensive homes
+affect MAE and MAPE very differently).</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Interpreting
+MSE, MAE”, “Interpreting R2 as explained variance”, “Interpreting R2 as
+error relative to”mean model”“. <strong>HW:</strong> HW2 Q2 (residuals,
+variance, and MSE graphically), HW2 Q3 (<span
+class="math inline">\(R^2\)</span> vs. coefficient), HW2 Q10
+(walkability), HW2 Q11 (MAE vs. MAPE). <strong>Lab:</strong> L2 Q2 (MSE,
+RMSE, <span class="math inline">\(R^2\)</span>), L3 Q3 and Q6 (valuation
+metrics vs. P&amp;L), L3 Q8 (Zillow Offers).</td>
+</tr>
+<tr>
+<td><strong>Compare training and validation error</strong> to diagnose
+the problem before deciding what to change.</td>
+<td>Choosing the wrong fix. Both errors high: <strong>failure to
+fit</strong> (high bias), so add features, a more flexible model, or
+less regularization. Training error low but validation error high:
+<strong>failure to generalize</strong> (high variance), so get more
+data, use fewer features, a less flexible model, or more regularization.
+Note that getting more data reduces variance, but does not reduce bias:
+if the training error is already high, more of the same data won’t
+help.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “When learning fails”, “Error
+decomposition”, “Bias-variance tradeoff”. <strong>HW:</strong> HW4 Q1
+(what to try next), HW4 Q3 (bias and variance of two models), HW4 Q5
+(training and test MSE vs. <span class="math inline">\(\alpha\)</span>).
+<strong>Lab:</strong> L4 Q3-5 (training and test RMSE; validation
+curve), L4 Q7 (reflection).</td>
+</tr>
+<tr>
+<td><strong>Inspect the residuals,</strong> not only a summary metric:
+residuals vs. each feature, vs. prediction, and over time.</td>
+<td><strong>Undetected failure to fit.</strong> A single number can hide
+a systematic pattern (a missing cycle, a missing group effect, a trend
+over time) that tells us how to improve the model.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Residual term”.
+<strong>HW:</strong> HW2 Q2 (residuals graphically), HW2 Q5 (residual
+plots → feature engineering). <strong>Lab:</strong> L2 Q2-5 (residual
+plots for each Citi Bike model), L4 Q3-4 (residuals over time), L4 Q7
+(reflection).</td>
+</tr>
+<tr>
+<td><strong>Keep the test set independent:</strong> use it once, for the
+final evaluation, after model selection and preprocessing were done with
+training data only.</td>
+<td><strong>Failure to deploy.</strong> If the test set influences
+preprocessing, training, or model selection, the test score is overly
+optimistic.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Model training
+vs evaluation vs deployment”, “Split data”; <em>Error decomposition,
+bias-variance tradeoff, model selection</em>: “Model selection
+problems”, “Hold-out validation”. <strong>HW:</strong> HW1 Q8
+(train/test/deploy), HW4 Q11 (standardize after split).
+<strong>Lab:</strong> L4 Q5-6 (CV on training data, then evaluate the
+selected model on the test set).</td>
+</tr>
+<tr>
+<td><strong>Does the evaluation reflect deployment?</strong> Same kind
+of samples, same information available at prediction time, same
+prediction horizon, and the outcome we actually care about.</td>
+<td><strong>Failure to deploy / failure to generate value.</strong> A
+model that is “best” on training data may not be best on test data, and
+a model that is best on test data may not be best in deployment. A
+forecast evaluated using information that won’t be known yet
+(e.g. tomorrow’s weather) looks better than it will be.</td>
+<td><strong>Notes:</strong> <em>Working with Data</em>: “Model training
+vs evaluation vs deployment”, “Representativeness concerns”; <em>Intro
+to ML</em>: “ML training vs reality”. <strong>HW:</strong> HW1 Q8
+(train/test/deploy), HW4 Q13-14 (Parkinson’s speech tests).
+<strong>Lab:</strong> L3 Q7 (market simulation), L3 Q8 (Zillow Offers),
+L4 Q8 (forecast horizon).</td>
+</tr>
+<tr>
+<td><strong>How do we turn predictions into actions?</strong> A
+prediction is usually an input to a decision (e.g. offer price =
+estimated price minus an offset), and the outcome depends on that
+decision and on how other people respond to it. Evaluate the decision by
+the outcome we care about (e.g. profit), not only by the prediction
+error.</td>
+<td><strong>Failure to generate value.</strong> The same model can make
+or lose money depending on how its predictions are used. When others
+choose whether to accept our decision, they accept it most often when it
+is in their favor (e.g. sellers accept offers on homes that the model
+<em>over</em>-estimated), so the outcomes we actually experience can be
+much worse than the average prediction error suggests.</td>
+<td>(Covered in the lab, not the handouts.) <strong>Lab:</strong> L3 Q3
+(MSE model: offer offset vs. P&amp;L), L3 Q6 (pinball model: offer
+offset vs. P&amp;L), L3 Q7 (market simulation), L3 Q8 (Zillow
+Offers).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="computations">Computations</h2>
+<p>You should be able to do each of these computations by hand (with a
+calculator), for small examples.</p>
+<p>The problems we practiced use specific examples, such as a log or
+square root transformation, interaction terms, lagged values, MSE, MAE,
+Huber, or pinball loss. But you should be able to apply the same
+procedure to <em>any</em> basis function transformation, loss function,
+regularization penalty, or update rule that you are given, including
+ones we have not seen before.</p>
+<p>In the third column, “Practice” refers to the “Extra pre-midterm
+practice” problem set.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Computation</th>
+<th>How to do it</th>
+<th>Where we practiced it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Write the feature matrix <span
+class="math inline">\(X\)</span> and target vector <span
+class="math inline">\(y\)</span></strong> from a table of data.</td>
+<td>One row per sample, one column per feature. Leave out sample
+identifiers; the target goes in <span class="math inline">\(y\)</span>,
+not <span class="math inline">\(X\)</span>.</td>
+<td><strong>Notes:</strong> <em>Intro to ML</em>: “The basic supervised
+machine learning problem - matrix form”. <strong>HW:</strong> HW1 Q9.
+<strong>Practice:</strong> Q47.</td>
+</tr>
+<tr>
+<td><strong>Compute the output of prediction by mean.</strong></td>
+<td><span class="math inline">\(\hat{y}_i = \bar{y} =
+\frac{1}{n}\sum_{i=1}^n y_i\)</span> for every sample, using the target
+values of the <em>training</em> data.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Prediction by
+mean”. <strong>HW:</strong> HW1 Q10. <strong>Practice:</strong>
+Q48.</td>
+</tr>
+<tr>
+<td><strong>Compute the prediction of a fitted linear model</strong>,
+with any basis function transformation of the input.</td>
+<td>First apply each basis function to the input to get <span
+class="math inline">\(\phi_0(\mathbf{x}), \ldots,
+\phi_p(\mathbf{x})\)</span> (with <span
+class="math inline">\(\phi_0(\mathbf{x}) = 1\)</span> for the
+intercept), then compute the weighted sum <span
+class="math inline">\(\hat{y} = \sum_j w_j \phi_j(\mathbf{x})\)</span>.
+The transformation can be anything: e.g. <span class="math inline">\(\ln
+x_j\)</span>, <span class="math inline">\(\sqrt{x_j}\)</span>, <span
+class="math inline">\(x_j^2\)</span>, <span class="math inline">\(x_1
+x_2\)</span>, an indicator such as <span
+class="math inline">\(\mathbb{1}(x_1 &gt; c)\)</span>, <span
+class="math inline">\(\sin\)</span>/<span
+class="math inline">\(\cos\)</span> of a cycle, or lagged values <span
+class="math inline">\(y_{k-1}, \ldots, y_{k-D}\)</span> of a time
+series. Be careful to match each weight to the right feature.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Linear model”,
+“Basis functions”, “Linear basis function model for regression”, “Vector
+form of linear basis function model”. <strong>HW:</strong> HW2 Q6
+(linear), HW2 Q7 (log), HW2 Q8 (interactions).
+<strong>Practice:</strong> Q49-50 (linear), Q51 (log), Q52
+(interactions), Q53 (lagged values), Q54 (polynomial), Q55 (square
+root).</td>
+</tr>
+<tr>
+<td><strong>Write the design matrix</strong> <span
+class="math inline">\(\Phi\)</span> (or <span
+class="math inline">\(A\)</span>) for a linear model with any basis
+functions, and set up the least squares problem.</td>
+<td>One row per sample, one column per basis function: entry <span
+class="math inline">\((i, j)\)</span> is <span
+class="math inline">\(\phi_j(\mathbf{x}_i)\)</span>. The first column is
+all ones if the model has an intercept. Then <span
+class="math inline">\(\hat{\mathbf{y}} = \Phi \mathbf{w}\)</span>, and
+the least squares weights solve the normal equations <span
+class="math inline">\(\Phi^T \Phi \mathbf{w} = \Phi^T
+\mathbf{y}\)</span>.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Matrix form of
+linear basis function model”, “Setup”, “Solving multiple/LBF
+regression”. <strong>HW:</strong> HW2 Q9 (interaction and indicator),
+HW2 Q13 (<span class="math inline">\(e^{-jx}\)</span>), HW2 Q14 (same,
+in Python). <strong>Practice:</strong> Q56 (with <span
+class="math inline">\(A^T\)</span> and <span
+class="math inline">\(\mathbf{y}\)</span>), Q57 (interaction and
+indicator), Q58 (<span class="math inline">\(x^{2j}\)</span>), Q97-98
+(in Python). <strong>Lab:</strong> L2 Q3 (Fourier features), L4 Q4 (lag
+features).</td>
+</tr>
+<tr>
+<td><strong>Count gradient computations and weight updates per
+epoch</strong> for full batch, mini-batch, and stochastic gradient
+descent.</td>
+<td>In one epoch, we always compute the gradient of the loss for all
+<span class="math inline">\(N\)</span> samples. The number of weight
+updates is the number of batches: <span class="math inline">\(1\)</span>
+for full batch, <span class="math inline">\(\lceil N/B \rceil\)</span>
+for mini-batch size <span class="math inline">\(B\)</span>, <span
+class="math inline">\(N\)</span> for stochastic gradient descent.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Stochastic
+gradient descent”, “Mini-batch (also”stochastic”) gradient descent”.
+<strong>HW:</strong> HW3 Q3. <strong>Practice:</strong> Q59.</td>
+</tr>
+<tr>
+<td><strong>Compute one step of gradient descent</strong> by hand, given
+data, initial weights, a learning rate, and any update rule.</td>
+<td>For each sample: compute the prediction <span
+class="math inline">\(\hat{y}_i\)</span>, the residual <span
+class="math inline">\(y_i - \hat{y}_i\)</span>, and the per-sample
+gradient. Add them up and divide by <span
+class="math inline">\(n\)</span> (for the samples in this batch), add
+any penalty gradient, multiply by <span
+class="math inline">\(\alpha\)</span>, and subtract from <span
+class="math inline">\(\mathbf{w}^t\)</span>. Keep extra decimal places
+until the end.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Example:
+gradient descent for linear regression”. <strong>HW:</strong> HW3 Q4
+(MSE), HW3 Q6 (Huber). <strong>Practice:</strong> Q60 (MSE), Q61 (MAE),
+Q62 (MSE with L1 penalty), Q63 (Huber), Q64 (pinball).</td>
+</tr>
+<tr>
+<td><strong>Apply the one-SE rule</strong> to choose a model.</td>
+<td>For each model <span class="math inline">\(p\)</span>, compute the
+mean score across the <span class="math inline">\(K\)</span> folds <span
+class="math inline">\(\bar{S}_p\)</span>, the standard deviation <span
+class="math inline">\(\sigma_p\)</span>, and <span
+class="math inline">\(SE_p = \frac{\sigma_p}{\sqrt{K-1}}\)</span>. Find
+the best model <span class="math inline">\(p^*\)</span>. For a
+lower-is-better metric (e.g. MSE), the target is <span
+class="math inline">\(\bar{S}_{p^*} + SE_{p^*}\)</span> and candidates
+have <span class="math inline">\(\bar{S}_p \leq\)</span> target; for a
+higher-is-better metric (e.g. <span class="math inline">\(R^2\)</span>),
+the target is <span class="math inline">\(\bar{S}_{p^*} -
+SE_{p^*}\)</span> and candidates have <span
+class="math inline">\(\bar{S}_p \geq\)</span> target. Then choose the
+<em>simplest</em> candidate: fewest features, smallest lag order, or
+<em>largest</em> regularization strength <span
+class="math inline">\(\alpha\)</span>.</td>
+<td><strong>Notes:</strong> <em>One standard error rule,
+regularization</em>: “One-SE rule”, “One-SE rule: compute standard
+error”, “One-SE rule: Step 1 with lower-is-better metric”, “One-SE rule:
+Step 1 with higher-is-better metric”. <strong>HW:</strong> HW4 Q6-10.
+<strong>Practice:</strong> Q67-71, Q100 (in Python).
+<strong>Lab:</strong> L4 Q5.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="general-facts">General facts</h2>
+</body>
+</html>

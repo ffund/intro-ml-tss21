@@ -7,6 +7,7 @@ SOURCES += 2-beauty-classroom-case-study.md
 SOURCES += 2-linear-extended-derivation.md
 SOURCES += 3-cubic-model.md
 SOURCES += 3-linear-regression-bias-variance.md
+SOURCES += 4-review-ml-decisions.md
 SOURCES += 5-classifier-metrics.md
 SOURCES += 5-fairness.md
 SOURCES += 10-gpu.md
