@@ -100,7 +100,11 @@
         Bernoulli random variable<br>
         Independence of samples<br>
         Conditional probability<br>
-        Joint probability
+        Joint probability<br>
+        Exponential and logarithm functions<br>
+        Derivatives, chain rule<br>
+        Gaussian (normal) distribution<br>
+        Bayes' rule
       </td>
       <td>
         ISL: Sec. 4.3.1–4.3.5; Sec. 4.4.4 (Naive Bayes)<br>
