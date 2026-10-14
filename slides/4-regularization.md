@@ -146,7 +146,7 @@ $$J(\mathbf{w}) = ||\mathbf{A} \mathbf{w} -  \mathbf{y} || ^2 + \alpha || \mathb
 
 Taking derivative:
 
-$$\frac{\partial J(\mathbf{w})}{\partial \mathbf{w}} = 2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{w}) + 2 \alpha \mathbf{w} $$ 
+$$\frac{\partial J(\mathbf{w})}{\partial \mathbf{w}} = -2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{w}) + 2 \alpha \mathbf{w} $$ 
 
 Setting it to zero, we find
 

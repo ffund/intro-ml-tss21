@@ -29,7 +29,50 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/myplanet.css" id="theme">
+  <script>
+  new MutationObserver(function(mutations, observer) {
+    var target = document.querySelector('#title-slide, .title-slide');
+    if (target && !target.hasAttribute('data-background-color')) {
+      target.setAttribute('data-background-color', '#57068c');
+      observer.disconnect();
+    }
+  }).observe(document.documentElement, {childList: true, subtree: true});
+
+  window.addEventListener('load', function() {
+    var maximumFontSize = 40;
+    var minimumFontSize = 20;
+
+    function fitSlide(slide) {
+      if (!slide || slide.classList.contains('stack')) return;
+
+      var canvas = slide.parentElement;
+      slide.style.fontSize = maximumFontSize + 'px';
+
+      for (var size = maximumFontSize; size > minimumFontSize; size--) {
+        if (slide.scrollHeight <= canvas.clientHeight &&
+            slide.scrollWidth <= canvas.clientWidth) break;
+        slide.style.fontSize = (size - 1) + 'px';
+      }
+
+      Reveal.layout();
+    }
+
+    function fitCurrentSlide(event) {
+      var slide = event && event.currentSlide || Reveal.getCurrentSlide();
+      requestAnimationFrame(function() { fitSlide(slide); });
+    }
+
+    Reveal.on('ready', fitCurrentSlide);
+    Reveal.on('slidechanged', fitCurrentSlide);
+
+    if (Reveal.isReady()) fitCurrentSlide();
+    if (document.fonts) document.fonts.ready.then(fitCurrentSlide);
+    if (window.MathJax && MathJax.Hub) MathJax.Hub.Queue(fitCurrentSlide);
+  });
+  </script>
+  <link rel="stylesheet" href="reveal.js-master/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="reveal">
@@ -54,19 +97,22 @@ Vandenberghe)</li>
 </aside>
 </section>
 <section>
-<section id="regularization" class="title-slide slide level2">
-<h2>Regularization</h2>
+<section id="regularization" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Regularization</h2>
 
 </section>
-<section id="penalty-for-model-complexity" class="slide level3">
-<h3>Penalty for model complexity</h3>
+<section id="penalty-for-model-complexity" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Penalty for model complexity</h3>
 <p>With no bounds on complexity of model, we can always get a model with
 zero training error on finite training set - overfitting.</p>
 <p>Basic idea: apply penalty in loss function to discourage more complex
 models</p>
 </section>
-<section id="regularization-vs.-standard-ls" class="slide level3">
-<h3>Regularization vs. standard LS</h3>
+<section id="regularization-vs.-standard-ls" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Regularization vs. standard LS</h3>
 <p>Least squares estimate:</p>
 <p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w
 MSE(w), \quad MSE(w) = \frac{1}{n}\sum_{i=1}^n (y_i - \hat{y_i})^2
@@ -76,8 +122,9 @@ class="math inline">\(\phi(w)\)</span>:</p>
 <p><span class="math display">\[ \hat{w} = \operatorname*{argmin}_w
 J(w), \quad  J(w) = MSE(w) + \phi(w) \]</span></p>
 </section>
-<section id="common-regularizers" class="slide level3">
-<h3>Common regularizers</h3>
+<section id="common-regularizers" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Common regularizers</h3>
 <p>Ridge regression (L2):</p>
 <p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j |
 ^2 \]</span></p>
@@ -85,8 +132,9 @@ J(w), \quad  J(w) = MSE(w) + \phi(w) \]</span></p>
 <p><span class="math display">\[ \phi (w) = \alpha \sum_{j=1}^d | w_j |
 \]</span></p>
 </section>
-<section id="graphical-representation" class="slide level3">
-<h3>Graphical representation</h3>
+<section id="graphical-representation" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Graphical representation</h3>
 <figure>
 <img data-src="../images/regularization-contour.png"
 style="width:100.0%"
@@ -98,8 +146,10 @@ class="math inline">\(\alpha\)</span>, regularized solution moves from
 LS to 0.</figcaption>
 </figure>
 </section>
-<section id="common-features-ridge-and-lasso" class="slide level3">
-<h3>Common features: Ridge and LASSO</h3>
+<section id="common-features-ridge-and-lasso" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Common features: Ridge and
+LASSO</h3>
 <ul>
 <li>Both penalize large <span class="math inline">\(w_j\)</span></li>
 <li>Both have hyperparameter <span class="math inline">\(\alpha\)</span>
@@ -109,8 +159,10 @@ regularization sum (starts at 1!), this depends on mean of <span
 class="math inline">\(y\)</span> and should not be constrained.</li>
 </ul>
 </section>
-<section id="differences-ridge-and-lasso-1" class="slide level3">
-<h3>Differences: Ridge and LASSO (1)</h3>
+<section id="differences-ridge-and-lasso-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Differences: Ridge and LASSO
+(1)</h3>
 <p>Ridge (L2):</p>
 <ul>
 <li>minimizes <span class="math inline">\(|w_j|^2\)</span>,</li>
@@ -120,8 +172,9 @@ class="math inline">\(y\)</span> and should not be constrained.</li>
 <li>Not for feature selection</li>
 </ul>
 </section>
-<section id="differences-lasso-2" class="slide level3">
-<h3>Differences: LASSO (2)</h3>
+<section id="differences-lasso-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Differences: LASSO (2)</h3>
 <p>LASSO (L1)</p>
 <ul>
 <li>minimizes <span class="math inline">\(|w_j|\)</span></li>
@@ -137,8 +190,9 @@ that the contours of the L1 regularization “stick out” when one or both
 parameters is zero.</p>
 </aside>
 </section>
-<section id="standardization-1" class="slide level3">
-<h3>Standardization (1)</h3>
+<section id="standardization-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Standardization (1)</h3>
 <p>Before learning a model with regularization, we typically
 <em>standardize</em> each feature and target to have zero mean, unit
 variance:</p>
@@ -149,8 +203,9 @@ variance:</p>
 \bar{y}}{s_{y}}\)</span></li>
 </ul>
 </section>
-<section id="standardization-2" class="slide level3">
-<h3>Standardization (2)</h3>
+<section id="standardization-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Standardization (2)</h3>
 <p>Why?</p>
 <ul>
 <li>Without scaling, regularization depends on data range</li>
@@ -159,8 +214,9 @@ class="math inline">\(w_0\)</span>, so regularization term is just L1 or
 L2 norm of coefficient vector</li>
 </ul>
 </section>
-<section id="standardization-3" class="slide level3">
-<h3>Standardization (3)</h3>
+<section id="standardization-3" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Standardization (3)</h3>
 <p>Important note:</p>
 <ul>
 <li>Use mean, variance of <em>training data</em> to transform training
@@ -169,9 +225,10 @@ data</li>
 to transform <strong>test data</strong></li>
 </ul>
 </section>
-<section id="l1-and-l2-norm-with-standardization-1"
-class="slide level3">
-<h3>L1 and L2 norm with standardization (1)</h3>
+<section id="l1-and-l2-norm-with-standardization-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">L1 and L2 norm with standardization
+(1)</h3>
 <p>Assuming data standardized to zero mean, unit variance, the Ridge
 cost function is:</p>
 <p><span class="math display">\[
@@ -183,9 +240,10 @@ J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 +
 \end{aligned}
 \]</span></p>
 </section>
-<section id="l1-and-l2-norm-with-standardization-2"
-class="slide level3">
-<h3>L1 and L2 norm with standardization (2)</h3>
+<section id="l1-and-l2-norm-with-standardization-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">L1 and L2 norm with standardization
+(2)</h3>
 <p>LASSO cost function (<span class="math inline">\(|| \mathbf{w}
 ||_1\)</span> is L1 norm):</p>
 <p><span class="math display">\[
@@ -197,8 +255,9 @@ J(\mathbf{w}) &amp;= \sum_{i=1}^n (y_i - \hat{y}_i)^2 +
 \end{aligned}
 \]</span></p>
 </section>
-<section id="ridge-regularization" class="slide level3">
-<h3>Ridge regularization</h3>
+<section id="ridge-regularization" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Ridge regularization</h3>
 <p>Why minimize <span class="math inline">\(|| \mathbf{w} ||
 ^2\)</span>?</p>
 <p>Without regularization:</p>
@@ -209,8 +268,9 @@ correlated features (remember attractiveness ratings in linear
 regression case study…)</li>
 </ul>
 </section>
-<section id="ridge-term-and-derivative" class="slide level3">
-<h3>Ridge term and derivative</h3>
+<section id="ridge-term-and-derivative" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Ridge term and derivative</h3>
 <figure>
 <img data-src="../images/ridge-derivative.png" style="width:40.0%"
 alt="L2 term and its derivative for one parameter." />
@@ -218,21 +278,23 @@ alt="L2 term and its derivative for one parameter." />
 parameter.</figcaption>
 </figure>
 </section>
-<section id="ridge-closed-form-solution" class="slide level3">
-<h3>Ridge closed-form solution</h3>
+<section id="ridge-closed-form-solution" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Ridge closed-form solution</h3>
 <p><span class="math display">\[J(\mathbf{w}) = ||\mathbf{A} \mathbf{w}
 -  \mathbf{y} || ^2 + \alpha || \mathbf{w} || ^2\]</span></p>
 <p>Taking derivative:</p>
 <p><span class="math display">\[\frac{\partial J(\mathbf{w})}{\partial
-\mathbf{w}} = 2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{w}) + 2
+\mathbf{w}} = -2 \mathbf{A}^T(\mathbf{y} - \mathbf{A} \mathbf{w}) + 2
 \alpha \mathbf{w} \]</span></p>
 <p>Setting it to zero, we find</p>
 <p><span class="math display">\[\mathbf{w}_{\text{ridge}} =
 (\mathbf{A}^T\mathbf{A} + \alpha \mathbf{I})^{-1} \mathbf{A}^T
 \mathbf{y}\]</span></p>
 </section>
-<section id="lasso-term-and-derivative" class="slide level3">
-<h3>LASSO term and derivative</h3>
+<section id="lasso-term-and-derivative" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">LASSO term and derivative</h3>
 <figure>
 <img data-src="../images/lasso-derivative.png" style="width:40.0%"
 alt="L1 term and its derivative for one parameter." />
@@ -246,8 +308,9 @@ class="math inline">\(|w_j|\)</span> is not continuous</li>
 solve iteratively</li>
 </ul>
 </section>
-<section id="effect-of-regularization-level" class="slide level3">
-<h3>Effect of regularization level</h3>
+<section id="effect-of-regularization-level" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Effect of regularization level</h3>
 <p>Greater <span class="math inline">\(\alpha\)</span>, less complex
 model.</p>
 <ul>
@@ -257,8 +320,9 @@ coefficients smaller.</li>
 more weights zero.</li>
 </ul>
 </section>
-<section id="selecting-regularization-level" class="slide level3">
-<h3>Selecting regularization level</h3>
+<section id="selecting-regularization-level" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Selecting regularization level</h3>
 <p>How to select <span class="math inline">\(\alpha\)</span>? by CV!</p>
 <ul>
 <li>Outer loop: loop over CV folds</li>
@@ -270,6 +334,7 @@ class="math inline">\(\alpha\)</span></li>
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
+<script src="reveal.js-master/plugin/chalkboard/plugin.js"></script>
 
   <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
@@ -300,7 +365,7 @@ class="math inline">\(\alpha\)</span></li>
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: "c/t",
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -422,6 +487,15 @@ class="math inline">\(\alpha\)</span></li>
         // viewDistance in order to save resources.
         mobileViewDistance: 2,
 
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 700,
+
+        maxScale: 1,
+
         math: {
           mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
@@ -439,8 +513,14 @@ class="math inline">\(\alpha\)</span></li>
           },
         },
 
-        // reveal.js plugins
+              chalkboard: {
+          grid: false,
+          theme: "whiteboard",
+        },
+
+  // reveal.js plugins
         plugins: [
+          RevealChalkboard,
           RevealMath,
           RevealNotes,
           RevealSearch,
