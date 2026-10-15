@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <meta name="author" content="Fraida Fund" />
-  <title>Review: ML as a sequence of decisions</title>
+  <title>Review: Undergraduate Intro ML Midterm Exam</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,71 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
   <script
@@ -29,7 +94,7 @@
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">Review: ML as a sequence of decisions</h1>
+<h1 class="title">Review: Undergraduate Intro ML Midterm Exam</h1>
 <p class="author">Fraida Fund</p>
 </header>
 <h2 id="making-decisions">Making decisions</h2>
@@ -40,16 +105,14 @@ problem, and about how the model will be used. When we make a decision
 badly, it shows up as a specific type of failure:</p>
 <ul>
 <li><strong>Failure to fit</strong>: the model has high error even on
-the <em>training</em> data. It cannot represent the relationship between
-features and target (high bias), or it was not trained well.</li>
+the <em>training</em> data. It does not represent the relationship
+between features and target well.</li>
 <li><strong>Failure to generalize</strong>: the model has low error on
 the training data, but high error on held-out validation/test data. It
-has learned patterns that are specific to the training sample, including
-noise (high variance, overfitting).</li>
+has learned patterns that are specific to the training sample.</li>
 <li><strong>Failure to deploy</strong>: the model does well on the test
 set, but poorly once it is used for real. The evaluation was overly
-optimistic, because the test data did not resemble the deployment
-setting.</li>
+optimistic.</li>
 <li><strong>Failure to generate value</strong>: the model does well on
 our metric, but does not achieve the goal we actually care about.</li>
 </ul>
@@ -104,19 +167,14 @@ ethical concerns”. <strong>HW:</strong> HW1 Q3 (data use concerns).</td>
 </tr>
 <tr>
 <td><strong>Does the data have a signal?</strong> Is there a defensible
-reason the features should predict the target? Could the model use an
-accidental artifact or proxy instead?</td>
+reason the features should predict the target?</td>
 <td><strong>Failure to fit</strong>, if there is no real signal: no
 model will beat prediction by the mean. <strong>Failure to
-generalize</strong>, if a flexible model fits “patterns” in the noise:
-it can look good on training data, and (if we overfit badly) even on a
-small validation set, but these patterns do not hold for new data.
-<strong>Failure to deploy</strong>, if the model learns an artifact of
-how the data was collected (e.g. candid vs. studio photos) that does not
-exist in deployment.</td>
+generalize</strong>, if a flexible model fits “patterns” in the noise
+anyway: it looks good on the training data, but these patterns do not
+hold for new data.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Predictive
-feature concerns”, “Example: distinguish real headshots from AI
-generated headshots”; <em>Error decomposition, bias-variance tradeoff,
+feature concerns”; <em>Error decomposition, bias-variance tradeoff,
 model selection</em>: “Sources of prediction error”.
 <strong>HW:</strong> HW1 Q3 (data use concerns), HW1 Q4 (valid
 features), HW4 Q13-14 (Parkinson’s speech tests). <strong>Lab:</strong>
@@ -130,9 +188,7 @@ target distribution.</td>
 <td><strong>Failure to deploy.</strong> The model learns from, and is
 evaluated on, a population/setting/time period that differs from where
 it will be used, so a good test score does not predict deployment
-performance. Filtering or selecting samples (e.g. only homes with
-complete records, only offers that sellers accept) also changes what the
-data represents.</td>
+performance.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>:
 “Representativeness concerns”, “Example: distinguish real headshots from
 AI generated headshots”. <strong>HW:</strong> HW1 Q3 (data use
@@ -149,13 +205,7 @@ plots, summary statistics, and individual samples. Look for outliers,
 label errors, data entry errors, duplicate records, and inconsistent
 units or formats, and decide (for each one) whether it is a true value
 or an error.</td>
-<td><strong>Failure to fit</strong>, if errors stay in the data: wrong
-labels and corrupted feature values add noise, and a few extreme values
-can dominate a squared error loss. <strong>Failure to deploy</strong>,
-if we “clean” the data without a good reason: removing outliers that are
-real values (or removing a whole kind of sample, e.g. all low-priced
-sales) skews the data, so the model and its evaluation no longer reflect
-the deployment setting.</td>
+<td><strong>Failure to fit</strong>, if errors stay in the data.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Make and check
 assumptions”, “Other data quality concerns”. <strong>HW:</strong> HW3
 Q6-7 (outliers in the data, Huber loss). <strong>Lab:</strong> L1 Q1-2
@@ -206,13 +256,14 @@ splitting), L3 Q1 (fit category encoder on training sales), L4 Q6 (fit
 entirely), then understand <em>why</em> they are missing (MCAR, MAR,
 MNAR), then leave as missing, drop, or impute, so that the data
 represents the true (unknown) values as well as possible.</td>
-<td><strong>Failure to deploy / failure to fit.</strong> Dropping rows
-that are not missing completely at random skews the dataset
-(e.g. dropping all freezing days because temperature is missing below
-32°F), so the model sees too few of some kinds of samples. Imputing a
-poor value (e.g. the mean, when we know the missing values are extreme)
-adds error to the feature. A missing value encoded as a “real” value
-(e.g. 0) silently corrupts the feature.</td>
+<td><strong>Failure to deploy.</strong> Dropping rows that are not
+missing completely at random skews the dataset (e.g. dropping all
+freezing days because temperature is missing below 32°F), so the model,
+and its evaluation, under-represent some situations it will see in
+deployment. <strong>Failure to fit.</strong> Imputing a poor value
+(e.g. the mean, when we know the missing values are extreme), or leaving
+a missing value encoded as a “real” value (e.g. 0), can obscure the true
+relationships in the data.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Handle missing
 data”, “Other data quality concerns”. <strong>HW:</strong> HW1 Q6
 (missing data). <strong>Lab:</strong> L1 Q3-4 (missing weather values
@@ -229,9 +280,8 @@ that is not there (e.g. ordinal encoding of an unordered category forces
 the model to treat <code>spicy</code> as “between” <code>floral</code>
 and <code>woody</code>). <strong>Failure to generalize</strong>, if
 one-hot encoding a feature with many categories creates many sparse
-features. <strong>Failure to deploy</strong>, if test/deployment data
-has categories or words not seen in training and we have not handled
-them, or if target encoding uses test data.</td>
+features, it can lead to overfitting (target encoding is an
+alternative).</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Convert to
 numeric types”. <strong>HW:</strong> HW1 Q7 (one-hot vs. ordinal), HW2
 Q11 (target encoding). <strong>Lab:</strong> L1 Q3-4 (one-hot encode
@@ -260,12 +310,11 @@ class).</td>
 <td><strong>Define what one sample is</strong> (the unit of prediction):
 one person, one trip, one hour, one sale, one borough on one day… It
 should match what the model will be asked to predict in deployment.</td>
-<td><strong>Failure to generate value</strong>, if the sample doesn’t
-match the prediction we need (e.g. the data has one row per bike trip,
-but we need to predict the number of trips per hour, so we must
-aggregate first). <strong>Failure to deploy</strong>, if the same entity
-appears in many samples and we don’t account for it (e.g. many
-recordings from the same patient) when splitting the data.</td>
+<td><strong>Failure to generate value.</strong> If the sample doesn’t
+match the prediction we need, the model answers a different question
+than the one we are asking (e.g. the data has one row per bike trip, but
+we need to predict the number of trips per hour, so we must aggregate
+first).</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Construct
 samples”; <em>Intro to ML</em>: “The basic supervised learning problem”.
 <strong>HW:</strong> HW1 Q9 (feature matrix and target vector), HW4
@@ -283,9 +332,7 @@ what you expected.</td>
 and the target are never observed together for the same samples.
 <strong>Failure to fit</strong>, if the join is wrong (e.g. duplicate
 keys, mismatched dates or locations): the features no longer describe
-the sample they are attached to, so they become noise. <strong>Failure
-to deploy</strong>, if a joined feature describes a time <em>after</em>
-the prediction would be made.</td>
+the sample they are attached to, so they become noise.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Construct
 samples”. <strong>HW:</strong> HW1 Q3 (data use concerns: features and
 target not observed together). <strong>Lab:</strong> L3 Q1 (join
@@ -314,12 +361,11 @@ plausibly predictive and available at inference time; exclude
 identifiers, irrelevant fields, and fields that won’t be available when
 the model is used.</td>
 <td><strong>Failure to fit</strong>, if there are no good features (the
-model is missing information it needs, so it is biased). <strong>Failure
-to generalize</strong>, if there are too many features for the amount of
-data, so the model fits noise (high variance). <strong>Failure to
-deploy</strong>, if we use a <em>leaky</em> feature that is not
-available at inference time, or is a proxy for the target in the data
-but not in deployment.</td>
+model is missing information it needs). <strong>Failure to
+generalize</strong>, if there are too many features, so the model fits
+noise (high variance). <strong>Failure to deploy</strong>, if we use a
+<em>leaky</em> feature that is not available at inference time, or is a
+proxy for the target in the data but not in deployment.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Select
 features”; <em>Error decomposition, bias-variance tradeoff, model
 selection</em>: “Bias of linear model”, “Variance of linear model”.
@@ -355,10 +401,8 @@ outliers), pinball loss (fits a quantile, for asymmetric costs of over-
 vs. under-predicting).</td>
 <td><strong>Failure to generate value</strong>, if the loss doesn’t
 reflect what errors actually cost (e.g. an MSE house price model has a
-good <span class="math inline">\(R^2\)</span> but loses money, because
-over-estimating a price is much more costly than under-estimating it).
-<strong>Failure to fit</strong> the bulk of the data, if a few outliers
-dominate a squared error loss.</td>
+good R2 but loses money, because over-estimating a price is much more
+costly than under-estimating it).</td>
 <td><strong>Notes:</strong> <em>Linear Regression</em>: “Mean squared
 error loss function”, “Least squares loss for multiple/LBF regression”;
 <em>Gradient descent</em>: “Solution using gradient descent” (Huber and
@@ -398,8 +442,7 @@ batch size, number of iterations); standardize features if needed.</td>
 or we stop too early, the weights have not converged; if it is too
 large, the loss oscillates or diverges. Features on very different
 scales make the loss surface a “ravine”, so gradient descent converges
-slowly (and penalties treat the features unequally). Check the loss
-curve!</td>
+slowly. Check the loss curve!</td>
 <td><strong>Notes:</strong> <em>Linear Regression</em>: “Ordinary least
 squares solution for multiple/basis function regression”; <em>Gradient
 descent</em>: “Standard (”batch”) gradient descent”, “Stochastic
@@ -480,11 +523,10 @@ one</strong> (e.g. number of features, polynomial order, number of lags,
 prefer a simpler model when the difference is within the noise.</td>
 <td><strong>Failure to fit</strong>, if we choose a model that is too
 simple. <strong>Failure to generalize</strong>, if we choose by training
-error, or choose the model with the very best validation score when a
-simpler model is just as good. <strong>Failure to deploy</strong>, if we
-choose using the test set (it is no longer an independent estimate), or
-use CV folds that don’t match deployment (e.g. shuffled folds for a time
-series or grouped data).</td>
+error, which always favors the most complex model. <strong>Failure to
+deploy</strong>, if we choose using the test set (it is no longer an
+independent estimate), or use CV folds that don’t match deployment
+(e.g. shuffled folds for a time series or grouped data).</td>
 <td><strong>Notes:</strong> <em>Error decomposition, bias-variance
 tradeoff, model selection</em>: “Bias-variance tradeoff”, “Model
 selection problems”, “Hold-out validation”, “Problems with hold-out
@@ -516,39 +558,37 @@ class="math inline">\(\alpha\)</span> with time series CV), L4 Q7
 <tbody>
 <tr>
 <td><strong>What do we compare against?</strong> A simple baseline,
-e.g. prediction by the mean (<span class="math inline">\(R^2 =
+e.g. prediction by the mean (<span class="math inline">\(\text{R2} =
 0\)</span>), or “same value as last week”.</td>
-<td><strong>Undetected failure to fit.</strong> Without a baseline, we
-can’t tell whether the model learned anything from the features. A
-negative <span class="math inline">\(R^2\)</span> means the model is
-worse than predicting the mean.</td>
+<td><strong>Failure to generate value.</strong> Without a baseline, we
+can’t tell whether the model adds anything over a trivial approach. A
+model that doesn’t beat the baseline adds cost and complexity, but no
+value. A negative R2 means the model is worse than predicting the
+mean.</td>
 <td><strong>Notes:</strong> <em>Linear Regression</em>: “Prediction by
 mean”, “Interpreting R2 as error relative to”mean model”“.
 <strong>HW:</strong> HW1 Q10 (prediction by mean), HW2 Q1 (graphical
-intuition, positive and negative <span
-class="math inline">\(R^2\)</span>), HW4 Q13-14 (Parkinson’s speech
+intuition, positive and negative R2), HW4 Q13-14 (Parkinson’s speech
 tests). <strong>Lab:</strong> L1 Q5 (<code>DummyRegressor</code>
-baseline), L4 Q3 (same-day model with negative test <span
-class="math inline">\(R^2\)</span>), L4 Q8 (same-weekday baseline).</td>
+baseline), L4 Q3 (same-day model with negative test R2), L4 Q8
+(same-weekday baseline).</td>
 </tr>
 <tr>
-<td><strong>Which metric?</strong> MSE/RMSE, MAE, MAPE, <span
-class="math inline">\(R^2\)</span>; choose the one that reflects what
-errors actually cost in the application.</td>
+<td><strong>Which metric?</strong> MSE/RMSE, MAE, MAPE, R2; choose the
+one that reflects what errors actually cost in the application.</td>
 <td><strong>Failure to generate value</strong>, if we optimize and
 report a metric that doesn’t reflect the goal: e.g. a model with better
-<span class="math inline">\(R^2\)</span> can lose more money. Different
-metrics weigh errors differently (squared error emphasizes large errors;
-MAPE emphasizes errors on small values; a few very expensive homes
-affect MAE and MAPE very differently).</td>
+R2 can lose more money. Different metrics weigh errors differently
+(squared error emphasizes large errors; MAPE emphasizes errors on small
+values; a few very expensive homes affect MAE and MAPE very
+differently).</td>
 <td><strong>Notes:</strong> <em>Linear Regression</em>: “Interpreting
 MSE, MAE”, “Interpreting R2 as explained variance”, “Interpreting R2 as
 error relative to”mean model”“. <strong>HW:</strong> HW2 Q2 (residuals,
-variance, and MSE graphically), HW2 Q3 (<span
-class="math inline">\(R^2\)</span> vs. coefficient), HW2 Q10
+variance, and MSE graphically), HW2 Q3 (R2 vs. coefficient), HW2 Q10
 (walkability), HW2 Q11 (MAE vs. MAPE). <strong>Lab:</strong> L2 Q2 (MSE,
-RMSE, <span class="math inline">\(R^2\)</span>), L3 Q3 and Q6 (valuation
-metrics vs. P&amp;L), L3 Q8 (Zillow Offers).</td>
+RMSE, R2), L3 Q3 and Q6 (valuation metrics vs. P&amp;L), L3 Q8 (Zillow
+Offers).</td>
 </tr>
 <tr>
 <td><strong>Compare training and validation error</strong> to diagnose
@@ -600,11 +640,11 @@ selected model on the test set).</td>
 <td><strong>Does the evaluation reflect deployment?</strong> Same kind
 of samples, same information available at prediction time, same
 prediction horizon, and the outcome we actually care about.</td>
-<td><strong>Failure to deploy / failure to generate value.</strong> A
-model that is “best” on training data may not be best on test data, and
-a model that is best on test data may not be best in deployment. A
-forecast evaluated using information that won’t be known yet
-(e.g. tomorrow’s weather) looks better than it will be.</td>
+<td><strong>Failure to deploy.</strong> If the test data differs from
+deployment data, the model that is best on the test set may not be best
+in deployment. A forecast evaluated using information that won’t be
+known yet at prediction time (e.g. tomorrow’s weather) looks better than
+it will be.</td>
 <td><strong>Notes:</strong> <em>Working with Data</em>: “Model training
 vs evaluation vs deployment”, “Representativeness concerns”; <em>Intro
 to ML</em>: “ML training vs reality”. <strong>HW:</strong> HW1 Q8
@@ -769,12 +809,11 @@ the best model <span class="math inline">\(p^*\)</span>. For a
 lower-is-better metric (e.g. MSE), the target is <span
 class="math inline">\(\bar{S}_{p^*} + SE_{p^*}\)</span> and candidates
 have <span class="math inline">\(\bar{S}_p \leq\)</span> target; for a
-higher-is-better metric (e.g. <span class="math inline">\(R^2\)</span>),
-the target is <span class="math inline">\(\bar{S}_{p^*} -
-SE_{p^*}\)</span> and candidates have <span
-class="math inline">\(\bar{S}_p \geq\)</span> target. Then choose the
-<em>simplest</em> candidate: fewest features, smallest lag order, or
-<em>largest</em> regularization strength <span
+higher-is-better metric (e.g. R2), the target is <span
+class="math inline">\(\bar{S}_{p^*} - SE_{p^*}\)</span> and candidates
+have <span class="math inline">\(\bar{S}_p \geq\)</span> target. Then
+choose the <em>simplest</em> candidate: fewest features, smallest lag
+order, or <em>largest</em> regularization strength <span
 class="math inline">\(\alpha\)</span>.</td>
 <td><strong>Notes:</strong> <em>One standard error rule,
 regularization</em>: “One-SE rule”, “One-SE rule: compute standard
@@ -786,5 +825,948 @@ Step 1 with higher-is-better metric”. <strong>HW:</strong> HW4 Q6-10.
 </tbody>
 </table>
 <h2 id="general-facts">General facts</h2>
+<h3 id="controlling-the-bias-variance-tradeoff">Controlling the
+bias-variance tradeoff</h3>
+<p>Most models have one or more “knobs” (hyperparameters, or choices
+about features) that control how complex a function the model can learn.
+Turning a knob toward a <em>more complex</em> model usually decreases
+bias and increases variance; turning it toward a <em>less complex</em>
+model usually increases bias and decreases variance.</p>
+<p>To decide which way to turn a knob, compare training and validation
+error (see the Evaluation table above). If both are high, the model is
+on the “too simple” side, so make it more complex. If training error is
+low but validation error is high, the model is on the “too complex”
+side, so make it less complex. In the classical view, validation error
+traces a U-shape as complexity increases, and we choose a knob setting
+near the bottom of the U (using cross validation, and the one-SE rule to
+prefer the simpler side). (The <em>Error decomposition</em> handout also
+shows an “updated view”, double descent, where test error can decrease
+again for very complex models.)</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th>Knob (turned up)</th>
+<th>Effect on the model</th>
+<th>Training error</th>
+<th>Validation/test error</th>
+<th>Where we saw it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Polynomial degree <span
+class="math inline">\(d\)</span></strong> (of a polynomial basis
+function transformation)</td>
+<td>More complex: bias <span class="math inline">\(\downarrow\)</span>,
+variance <span class="math inline">\(\uparrow\)</span></td>
+<td>Can decrease; cannot increase</td>
+<td>Can decrease or increase</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Bias-variance tradeoff”, “Model
+selection problems”. <strong>Practice:</strong> Q40, Q41.
+<strong>Lab:</strong> L4 Q1 (the “cubic model”).</td>
+</tr>
+<tr>
+<td><strong>Number of Fourier terms <span
+class="math inline">\(K\)</span></strong> (sin/cos pairs at more
+frequencies)</td>
+<td>More complex: bias <span class="math inline">\(\downarrow\)</span>,
+variance <span class="math inline">\(\uparrow\)</span></td>
+<td>Can decrease; cannot increase</td>
+<td>Can decrease or increase</td>
+<td><strong>Practice:</strong> Q40, Q42. <strong>Lab:</strong> L2
+Q3.</td>
+</tr>
+<tr>
+<td><strong>Lag order <span class="math inline">\(L\)</span></strong>
+(number of past values of a time series used as features)</td>
+<td>More complex: bias <span class="math inline">\(\downarrow\)</span>,
+variance <span class="math inline">\(\uparrow\)</span></td>
+<td>Can decrease; cannot increase (on the same training samples: adding
+lags also drops the first few samples, which have no lagged values)</td>
+<td>Can decrease or increase</td>
+<td><strong>HW:</strong> HW4 Q8. <strong>Practice:</strong> Q40, Q71.
+<strong>Lab:</strong> L4 Q5, L4 Q7.</td>
+</tr>
+<tr>
+<td><strong>Number of features <span
+class="math inline">\(k\)</span></strong>, including added non-linear
+transformations (log, exp, sin, cos, …) or interaction terms</td>
+<td>More complex: bias <span class="math inline">\(\downarrow\)</span>,
+variance <span class="math inline">\(\uparrow\)</span></td>
+<td>Can decrease; cannot increase</td>
+<td>Can decrease or increase</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Bias of linear model”, “Variance of
+linear model”. <strong>HW:</strong> HW4 Q1, HW4 Q6-7.
+<strong>Practice:</strong> Q39, Q40, Q43. <strong>Lab:</strong> L2
+Q4-5.</td>
+</tr>
+<tr>
+<td><strong>Regularization strength <span
+class="math inline">\(\alpha\)</span></strong> (L1/LASSO, L2/Ridge, or
+any other penalty, e.g. one that makes neighboring coefficients
+similar)</td>
+<td><strong>Less</strong> complex: bias <span
+class="math inline">\(\uparrow\)</span>, variance <span
+class="math inline">\(\downarrow\)</span></td>
+<td>Can increase; cannot decrease</td>
+<td>Can decrease or increase</td>
+<td><strong>Notes:</strong> <em>One standard error rule,
+regularization</em>: “Penalty for model complexity”, “Effect of
+regularization level”, “Selecting regularization level”.
+<strong>HW:</strong> HW4 Q4-5, HW4 Q9. <strong>Practice:</strong> Q39,
+Q40, Q45-46. <strong>Lab:</strong> L4 Q6-7.</td>
+</tr>
+<tr>
+<td><strong>Number of training samples <span
+class="math inline">\(N\)</span></strong> (not a model knob, but a
+common fix)</td>
+<td>Same complexity: variance <span
+class="math inline">\(\downarrow\)</span> (for a linear model, the
+variance is about <span class="math inline">\(\sigma^2 p / N\)</span>),
+bias unchanged</td>
+<td>—</td>
+<td>Tends to decrease, toward bias<span
+class="math inline">\(^2\)</span> + irreducible error: more data reduces
+the variance, but cannot reduce the bias</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “When learning fails”, “Variance of
+linear model”. <strong>HW:</strong> HW4 Q1. <strong>Practice:</strong>
+Q38.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="facts-by-topic">Facts by topic</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Fact</th>
+<th>Where we saw it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Error decomposition, bias, and variance</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>For squared error, the expected test error of a model (averaged over
+random draws of the training set) is bias<span
+class="math inline">\(^2\)</span> + variance + irreducible error. The
+irreducible error (the noise variance <span
+class="math inline">\(\sigma^2\)</span>) cannot be reduced by any model
+that uses the same features.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Sources of prediction error”, “Error
+decomposition”. <strong>HW:</strong> HW4 Q3. <strong>Practice:</strong>
+Q34.</td>
+</tr>
+<tr>
+<td>Under-modeling causes bias: if the true function is not in the model
+class, the model is biased no matter how much data we have.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Bias of linear model”.
+<strong>HW:</strong> HW4 Q2-3. <strong>Practice:</strong> Q32-34.</td>
+</tr>
+<tr>
+<td>If there is no under-modeling in an OLS regression, the
+<em>expected</em> parameter estimate <span
+class="math inline">\(E[\hat{\mathbf{w}}]\)</span> is equal to the true
+parameters, but (when there is noise, <span
+class="math inline">\(\sigma^2 &gt; 0\)</span>) the estimate from a
+finite training sample is not exactly equal to them.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Bias of linear model”, “Variance of
+linear model”. <strong>Practice:</strong> Q38.</td>
+</tr>
+<tr>
+<td>For a linear model with no under-modeling, the variance of the model
+output, on average over test points, is about <span
+class="math inline">\(\sigma^2 p / N\)</span>: it increases with the
+noise variance <span class="math inline">\(\sigma^2\)</span> and the
+number of parameters <span class="math inline">\(p\)</span>, and
+decreases with the number of training samples <span
+class="math inline">\(N\)</span>.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Variance of linear model”.
+<strong>Practice:</strong> Q36-38.</td>
+</tr>
+<tr>
+<td>A model class that contains the true function does not always have
+lower test error than a simpler one: when the noise variance is high (or
+there is little data), a simpler, biased model can have lower test
+error, because it has lower variance.</td>
+<td><strong>HW:</strong> HW4 Q3. <strong>Practice:</strong> Q34,
+Q36-37.</td>
+</tr>
+<tr>
+<td>Adding a feature (and re-fitting with least squares) cannot increase
+the training MSE, but it can increase the test MSE. Even a feature that
+is completely unrelated to the target changes the parameter estimate,
+and adds variance.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Variance of linear model”.
+<strong>Practice:</strong> Q38, Q41-43.</td>
+</tr>
+<tr>
+<td>Training error never increases as we make a (nested) model more
+complex, so it always favors the most complex model. We use validation
+error (not training error) to choose model complexity. The one-SE rule
+then picks the simplest model whose validation score is within one
+standard error of the best, since differences smaller than that may be
+just noise.</td>
+<td><strong>Notes:</strong> <em>Error decomposition, bias-variance
+tradeoff, model selection</em>: “Model selection problems”, “K-fold
+cross validation”; <em>One standard error rule, regularization</em>:
+“One-SE rule”. <strong>HW:</strong> HW4 Q6-10. <strong>Lab:</strong> L4
+Q5.</td>
+</tr>
+<tr>
+<td><strong>Interpreting a linear regression</strong></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\text{R2} = 1 -
+\text{MSE}/\sigma_y^2\)</span>. <span class="math inline">\(\text{R2} =
+1\)</span> is a perfect fit, <span class="math inline">\(\text{R2} =
+0\)</span> is the same MSE as predicting the mean of the <span
+class="math inline">\(y\)</span> values being evaluated, and <span
+class="math inline">\(\text{R2} &lt; 0\)</span> is <em>worse</em> than
+that. For a least squares model with an intercept, the R2 on its own
+training data is between 0 and 1; R2 can be negative on test data, or
+for a model that was not fit by least squares.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Interpreting R2
+as explained variance”, “Interpreting R2 as error relative to”mean
+model”“. <strong>HW:</strong> HW2 Q1. <strong>Practice:</strong> Q19-20.
+<strong>Lab:</strong> L4 Q3.</td>
+</tr>
+<tr>
+<td>For each sample, <span class="math inline">\(y_i - \bar{y}\)</span>
+(its contribution to the variance) splits into an explained part <span
+class="math inline">\(\hat{y}_i - \bar{y}\)</span> and an unexplained
+part (the residual) <span class="math inline">\(y_i -
+\hat{y}_i\)</span>. For a least squares model with an intercept, on its
+training data, the variance of <span class="math inline">\(y\)</span>
+splits the same way: variance of <span class="math inline">\(y\)</span>
+= explained variance + MSE, so R2 is the fraction of variance
+explained.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Residual term”,
+“Interpreting R2 as explained variance”. <strong>HW:</strong> HW2 Q2.
+<strong>Practice:</strong> Q22.</td>
+</tr>
+<tr>
+<td>R2 describes how well the model fits (the fraction of variance
+explained), not how steep the line is: a regression can have a large
+coefficient and a low R2, or a small coefficient and a high R2.</td>
+<td><strong>HW:</strong> HW2 Q3. <strong>Practice:</strong> Q21.</td>
+</tr>
+<tr>
+<td>In multiple regression (where <span
+class="math inline">\(x_j\)</span> appears only in its own term, with no
+transformations or interactions of <span
+class="math inline">\(x_j\)</span>), <span
+class="math inline">\(w_j\)</span> is the change in <span
+class="math inline">\(\hat{y}\)</span> associated with a one-unit
+increase in <span class="math inline">\(x_j\)</span>, <em>holding the
+other features in the model constant</em>. It depends on the units of
+<span class="math inline">\(x_j\)</span> (so we cannot directly compare
+the magnitudes of coefficients of features in different units), it does
+not say whether the effect is causal, and it can change when other
+features are added to the model.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Understanding
+the coefficients - multiple regression”. <strong>Lab:</strong> L2
+Q5.</td>
+</tr>
+<tr>
+<td>A residual <span class="math inline">\(e_i = y_i -
+\hat{y}_i\)</span> is positive when the model underestimates, and
+negative when it overestimates. A systematic pattern in the residuals
+vs. a feature (whether or not that feature is in the model) shows what
+the model is missing: e.g. a curve suggests a non-linear transformation,
+a repeating cycle suggests Fourier features, a shift between groups
+suggests an indicator feature, and a different slope for each group
+suggests an interaction.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Residual term”.
+<strong>HW:</strong> HW2 Q4-5. <strong>Practice:</strong> Q23-25.
+<strong>Lab:</strong> L2 Q2-5.</td>
+</tr>
+<tr>
+<td>Least squares finds the weights that minimize the training MSE. A
+regularized model minimizes the MSE <em>plus</em> a penalty, so its
+training MSE is at least as large as that of least squares on the same
+features.</td>
+<td><strong>HW:</strong> HW4 Q5. <strong>Practice:</strong> Q44-45.</td>
+</tr>
+<tr>
+<td><strong>Loss functions</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Squared error grows quickly with the size of the residual, so a few
+large residuals (outliers) can dominate the MSE loss and pull the fit
+toward them. MAE grows linearly, so it is less sensitive to outliers.
+Huber loss is quadratic for small residuals (<span
+class="math inline">\(|r| \leq \delta\)</span>) and linear for large
+ones, so it behaves like MSE near the fit and like MAE for
+outliers.</td>
+<td><strong>Notes:</strong> <em>Linear Regression</em>: “Interpreting
+MSE, MAE”. <strong>HW:</strong> HW3 Q5-7. <strong>Practice:</strong>
+Q31, Q61, Q63, Q65.</td>
+</tr>
+<tr>
+<td>The best constant prediction under MSE is the mean; under pinball
+loss with parameter <span class="math inline">\(\tau\)</span> it is the
+<span class="math inline">\(\tau\)</span> quantile. Pinball loss with
+<span class="math inline">\(\tau &gt; 0.5\)</span> penalizes
+underestimates more, so predictions shift up; with <span
+class="math inline">\(\tau &lt; 0.5\)</span> it penalizes overestimates
+more, so predictions shift down. Choose the loss to match the cost of
+each kind of error.</td>
+<td><strong>Practice:</strong> Q31, Q64, Q66. <strong>Lab:</strong> L3
+Q4-6.</td>
+</tr>
+<tr>
+<td><strong>Gradient descent</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>The training loss is not guaranteed to decrease at every iteration:
+if the learning rate is too large, a step can overshoot the minimum, and
+stochastic or mini-batch gradient descent uses a noisy estimate of the
+gradient.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Selecting the
+learning rate”, “Stochastic gradient descent”.
+<strong>Practice:</strong> Q29.</td>
+</tr>
+<tr>
+<td>If the learning rate is too small, the loss decreases very slowly
+and may not converge in the number of iterations we run; if it is too
+large, the loss oscillates or diverges. Check the loss curve!</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Selecting the
+learning rate”. <strong>HW:</strong> HW3 Q2. <strong>Practice:</strong>
+Q26, Q28. <strong>Lab:</strong> L3 Q2.</td>
+</tr>
+<tr>
+<td>Smaller batches mean cheaper updates and more updates per epoch, but
+a noisier path (stochastic gradient descent bounces around in a “noise
+ball” near the minimum, unless the learning rate decays over time). Full
+batch gradient descent follows a smooth path, but each update requires
+the gradient for every training sample.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Stochastic
+gradient descent”, “Mini-batch (also”stochastic”) gradient descent”,
+“Selecting the learning rate”, “Annealing the learning rate”.
+<strong>HW:</strong> HW3 Q1, HW3 Q3. <strong>Practice:</strong> Q27-28,
+Q59.</td>
+</tr>
+<tr>
+<td>For stochastic gradient descent with MSE loss on a one-parameter
+model <span class="math inline">\(\hat{y} = wx\)</span>, the update is
+<span class="math inline">\(w^{t+1} = w^t + \alpha x_i e_i\)</span>
+(where <span class="math inline">\(\alpha\)</span> is the learning rate,
+and the constant factor 2 is absorbed into it): <span
+class="math inline">\(w\)</span> increases if <span
+class="math inline">\(x_i\)</span> and the residual <span
+class="math inline">\(e_i\)</span> have the same sign, and decreases if
+they have opposite signs.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Stochastic
+gradient descent”. <strong>HW:</strong> HW3 Q1.
+<strong>Practice:</strong> Q27.</td>
+</tr>
+<tr>
+<td>When features are on very different scales, the loss surface is a
+“ravine”, and gradient descent oscillates across it and makes slow
+progress along it. Standardizing the features helps.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Gradient descent
+in a ravine”; <em>One standard error rule, regularization</em>:
+“Standardization”. <strong>Lab:</strong> L3 Q5.</td>
+</tr>
+<tr>
+<td>Momentum uses the history of the gradient direction: it takes larger
+steps in a direction where the negative gradients keep pointing, and
+dampens oscillations. AdaGrad and RMSProp accumulate squared gradients
+to give each parameter its own learning rate: smaller steps for
+parameters whose gradients have been large (steep directions), larger
+steps for parameters whose gradients have been small (flat directions).
+Adam combines both ideas.</td>
+<td><strong>Notes:</strong> <em>Gradient descent</em>: “Momentum”,
+“AdaGrad”, “RMSProp”, “Adam”. <strong>Practice:</strong> Q30.</td>
+</tr>
+<tr>
+<td><strong>Regularization</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Ridge (L2 penalty) shrinks the weights toward zero (the overall size
+of the weight vector decreases as <span
+class="math inline">\(\alpha\)</span> increases), but does not make them
+exactly zero, so it is not a feature selection method; it has a
+closed-form solution. LASSO (L1 penalty) tends to set some weights
+exactly to zero (a sparse solution), which is equivalent to removing
+those features; larger <span class="math inline">\(\alpha\)</span> tends
+to set more weights to zero. LASSO has no closed-form solution in
+general, so we solve it iteratively.</td>
+<td><strong>Notes:</strong> <em>One standard error rule,
+regularization</em>: “Common regularizers”, “Graphical representation”,
+“Ridge term and derivative”, “LASSO term and derivative”, “Effect of
+regularization level”. <strong>HW:</strong> HW4 Q4, HW4 Q12.
+<strong>Lab:</strong> L4 Q6-7.</td>
+</tr>
+<tr>
+<td>The intercept <span class="math inline">\(w_0\)</span> is not
+included in the penalty. We standardize the features before fitting a
+regularized model, because the penalty depends on the size of each
+weight, which depends on the units of its feature.</td>
+<td><strong>Notes:</strong> <em>One standard error rule,
+regularization</em>: “Common regularizers”, “Standardization”.
+<strong>HW:</strong> HW4 Q11. <strong>Practice:</strong> Q62.
+<strong>Lab:</strong> L4 Q6.</td>
+</tr>
+<tr>
+<td>The regularization strength <span
+class="math inline">\(\alpha\)</span> is a hyperparameter: we choose it
+with cross validation, not by training error (which always favors <span
+class="math inline">\(\alpha = 0\)</span>).</td>
+<td><strong>Notes:</strong> <em>One standard error rule,
+regularization</em>: “Selecting regularization level”.
+<strong>HW:</strong> HW4 Q9. <strong>Lab:</strong> L4 Q6.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="coding">Coding</h2>
+<p>You should be able to write (and read) short snippets of code for
+each of these tasks. The Data Operations Reference Sheet and the NumPy,
+pandas, and scikit-learn API documentation are available to you; this
+section shows how those operations come together in a machine learning
+workflow.</p>
+<p>In the examples, <code>df</code> is a pandas <code>DataFrame</code>,
+<code>X_tr</code>, <code>y_tr</code> are the training features and
+target, and <code>X_ts</code>, <code>y_ts</code> are the test features
+and target. In the third column, “Practice” refers to the “Extra
+pre-midterm practice” problem set.</p>
+<h3 id="preparing-data">Preparing data</h3>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 58%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>Task</th>
+<th>Code</th>
+<th>Where we practiced it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Load and inspect data</strong></td>
+<td><div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&quot;data.csv&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df.shape</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df.dtypes</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>df.isna().<span class="bu">sum</span>()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code></pre></div></td>
+<td><strong>Lab:</strong> L1 Q3, L3 Q1, L4 Q2.</td>
+</tr>
+<tr>
+<td><strong>Select features and target.</strong> Exclude identifiers and
+the target from <code>X</code>. <code>df["a"]</code> is a 1D
+<code>Series</code>; <code>df[["a"]]</code> is a 2D
+<code>DataFrame</code>.</td>
+<td><div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df[[<span class="st">&quot;temp&quot;</span>, <span class="st">&quot;precip&quot;</span>, <span class="st">&quot;hour&quot;</span>]]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df[<span class="st">&quot;pedestrians&quot;</span>]</span></code></pre></div></td>
+<td><strong>HW:</strong> HW1 Q11, HW2 Q10. <strong>Practice:</strong>
+Q72, Q79-91. <strong>Lab:</strong> L1 Q3.</td>
+</tr>
+<tr>
+<td><strong>Select rows</strong> by condition, by label, or by
+position</td>
+<td><div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df[df[<span class="st">&quot;price&quot;</span>] <span class="op">&gt;=</span> <span class="dv">100000</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">&quot;section&quot;</span>] <span class="op">==</span> <span class="dv">2</span>, exam_cols]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df.iloc[:<span class="dv">10</span>]</span></code></pre></div></td>
+<td><strong>HW:</strong> HW1 Q11, HW1 Q13. <strong>Practice:</strong>
+Q72, Q74. <strong>Lab:</strong> L3 Q1.</td>
+</tr>
+<tr>
+<td><strong>Compute statistics along an axis</strong></td>
+<td><div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># one value per column</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df[exam_cols].mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># one value per row</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>df[exam_cols].<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div></td>
+<td><strong>HW:</strong> HW1 Q12, HW1 Q14. <strong>Practice:</strong>
+Q73, Q75.</td>
+</tr>
+<tr>
+<td><strong>Aggregate</strong> to the unit of prediction (e.g. one row
+per hour)</td>
+<td><div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">&quot;hour_beginning&quot;</span>).size()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">&quot;section&quot;</span>)[<span class="st">&quot;score&quot;</span>].mean()</span></code></pre></div></td>
+<td><strong>HW:</strong> HW1 Q13. <strong>Lab:</strong> L2 Q1.</td>
+</tr>
+<tr>
+<td><strong>Combine data sources</strong> on a key, and check the
+relationship between them</td>
+<td><div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> sales.merge(assess, on<span class="op">=</span><span class="st">&quot;parid&quot;</span>, how<span class="op">=</span><span class="st">&quot;left&quot;</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                 validate<span class="op">=</span><span class="st">&quot;many_to_one&quot;</span>)</span></code></pre></div></td>
+<td><strong>Lab:</strong> L3 Q1, L4 Q2.</td>
+</tr>
+<tr>
+<td><strong>Convert to numeric</strong> (unparseable values become
+<code>NaN</code>)</td>
+<td><div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> df[<span class="st">&quot;area&quot;</span>].<span class="bu">str</span>.replace(<span class="st">&quot;,&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;area&quot;</span>] <span class="op">=</span> pd.to_numeric(s, errors<span class="op">=</span><span class="st">&quot;coerce&quot;</span>)</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q76. <strong>Lab:</strong> L3 Q1.</td>
+</tr>
+<tr>
+<td><strong>Ordinal encode</strong> a category with a natural order</td>
+<td><div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> {<span class="st">&quot;S&quot;</span>: <span class="dv">0</span>, <span class="st">&quot;M&quot;</span>: <span class="dv">1</span>, <span class="st">&quot;L&quot;</span>: <span class="dv">2</span>}</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;size_enc&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;size&quot;</span>].<span class="bu">map</span>(order)</span></code></pre></div></td>
+<td><strong>HW:</strong> HW1 Q7. <strong>Practice:</strong> Q77.</td>
+</tr>
+<tr>
+<td><strong>One-hot encode</strong> a category with no natural order,
+and combine with numeric features</td>
+<td><div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>oh <span class="op">=</span> pd.get_dummies(df[<span class="st">&quot;family&quot;</span>], dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.concat([df[num_cols], oh], axis<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q76-77, Q107. <strong>Lab:</strong> L1
+Q3, L3 Q1.</td>
+</tr>
+<tr>
+<td><strong>Bag of words</strong> for a text feature</td>
+<td><div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>vec <span class="op">=</span> CountVectorizer()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>W_tr <span class="op">=</span> vec.fit_transform(df_tr[<span class="st">&quot;desc&quot;</span>])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>W_ts <span class="op">=</span> vec.transform(df_ts[<span class="st">&quot;desc&quot;</span>])</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q77, Q107.</td>
+</tr>
+<tr>
+<td><strong>Target encode</strong> a category with many values</td>
+<td><div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>enc <span class="op">=</span> TargetEncoder()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Z_tr <span class="op">=</span> enc.fit_transform(X_tr[[<span class="st">&quot;area&quot;</span>]], y_tr)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>Z_ts <span class="op">=</span> enc.transform(X_ts[[<span class="st">&quot;area&quot;</span>]])</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q11. <strong>Practice:</strong> Q92,
+Q110.</td>
+</tr>
+<tr>
+<td><strong>Find missing values</strong>, including rows that should be
+there but aren’t</td>
+<td><div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df.isna().<span class="bu">sum</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># add rows for missing hours (filled with NaN)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>hours <span class="op">=</span> pd.date_range(start, end, freq<span class="op">=</span><span class="st">&quot;h&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.reindex(hours)</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q76. <strong>Lab:</strong> L1 Q3.</td>
+</tr>
+<tr>
+<td><strong>Handle missing values</strong>: drop, fill with a value
+(e.g. the training mean), or forward fill ordered data</td>
+<td><div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">&quot;temp&quot;</span>])</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;temp&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;temp&quot;</span>].fillna(<span class="dv">32</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;temp&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;temp&quot;</span>].fillna(m_tr)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;temp&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;temp&quot;</span>].ffill()</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q76, Q78. <strong>Lab:</strong> L1
+Q3.</td>
+</tr>
+<tr>
+<td><strong>Create transformed features</strong>: non-linear
+transformations, interactions, indicators, Fourier features, and date
+parts</td>
+<td><div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;log_area&quot;</span>] <span class="op">=</span> np.log1p(df[<span class="st">&quot;area&quot;</span>])</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;x1x2&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;x1&quot;</span>] <span class="op">*</span> df[<span class="st">&quot;x2&quot;</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;rush&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;hour&quot;</span>].between(<span class="dv">7</span>, <span class="dv">9</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>hr <span class="op">=</span> df[<span class="st">&quot;hour&quot;</span>]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;hour_sin&quot;</span>] <span class="op">=</span> np.sin(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> hr <span class="op">/</span> <span class="dv">24</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;hour_cos&quot;</span>] <span class="op">=</span> np.cos(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> hr <span class="op">/</span> <span class="dv">24</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;dow&quot;</span>] <span class="op">=</span> df[<span class="st">&quot;date&quot;</span>].dt.dayofweek</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q12. <strong>Practice:</strong> Q91, Q108.
+<strong>Lab:</strong> L2 Q3-5, L3 Q1.</td>
+</tr>
+<tr>
+<td><strong>Create lag features</strong> of a time series, within each
+group</td>
+<td><div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">&quot;lag1&quot;</span>] <span class="op">=</span> df.groupby(<span class="st">&quot;borough&quot;</span>)[<span class="st">&quot;y&quot;</span>].shift(<span class="dv">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">&quot;lag1&quot;</span>])</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q104. <strong>Lab:</strong> L4 Q4.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="splitting-fitting-and-evaluating-a-model">Splitting, fitting,
+and evaluating a model</h3>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 22%" />
+<col style="width: 58%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>Task</th>
+<th>Code</th>
+<th>Where we practiced it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Split</strong> into training and test sets, at random</td>
+<td><div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X_tr, X_ts, y_tr, y_ts <span class="op">=</span> train_test_split(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q10. <strong>Practice:</strong>
+Q79-91.</td>
+</tr>
+<tr>
+<td><strong>Split</strong> time-ordered data, so the test set is in the
+future</td>
+<td><div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>X_tr, X_ts, y_tr, y_ts <span class="op">=</span> train_test_split(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    X, y, test_size<span class="op">=</span><span class="fl">0.2</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># or, split at a cutoff date</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>df_tr <span class="op">=</span> df[df[<span class="st">&quot;date&quot;</span>] <span class="op">&lt;</span> cutoff]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df_ts <span class="op">=</span> df[df[<span class="st">&quot;date&quot;</span>] <span class="op">&gt;=</span> cutoff]</span></code></pre></div></td>
+<td><strong>Practice:</strong> Q76. <strong>Lab:</strong> L1 Q3, L2 Q2,
+L3 Q1.</td>
+</tr>
+<tr>
+<td><strong>Fit a model and make predictions</strong> (the same pattern
+for <code>LinearRegression</code>, <code>Ridge</code>,
+<code>Lasso</code>, and <code>DummyRegressor</code>)</td>
+<td><div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression()  <span class="co"># or Ridge(...)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model.fit(X_tr, y_tr)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>y_ts_hat <span class="op">=</span> model.predict(X_ts)</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q10, HW4 Q12. <strong>Practice:</strong>
+Q79-96. <strong>Lab:</strong> L1 Q5, L2 Q2.</td>
+</tr>
+<tr>
+<td><strong>Inspect the fitted model.</strong> If the design matrix
+already has a ones column, don’t fit a separate intercept.</td>
+<td><div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>model.intercept_</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>model.coef_</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> LinearRegression(fit_intercept<span class="op">=</span><span class="va">False</span>)</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q14. <strong>Practice:</strong> Q98.</td>
+</tr>
+<tr>
+<td><strong>Evaluate</strong> the model. Note the order of arguments:
+true values first.</td>
+<td><div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mse <span class="op">=</span> mean_squared_error(y_ts, y_ts_hat)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> root_mean_squared_error(y_ts, y_ts_hat)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>mae <span class="op">=</span> mean_absolute_error(y_ts, y_ts_hat)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>mape <span class="op">=</span> mean_absolute_percentage_error(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    y_ts, y_ts_hat)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r2_score(y_ts, y_ts_hat)</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q10-11. <strong>Lab:</strong> L2 Q2, L3
+Q2.</td>
+</tr>
+<tr>
+<td><strong>Plot residuals</strong> against a feature (or over
+time)</td>
+<td><div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>res_tr <span class="op">=</span> y_tr <span class="op">-</span> model.predict(X_tr)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_tr[<span class="st">&quot;hour&quot;</span>], res_tr)</span></code></pre></div></td>
+<td><strong>Lab:</strong> L2 Q2-5, L4 Q3-4.</td>
+</tr>
+<tr>
+<td><strong>Build a design matrix</strong> for any basis functions
+(here, <span class="math inline">\(\phi_j(x) =
+e^{-jx}\)</span>)</td>
+<td><div class="sourceCode" id="cb22"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Phi <span class="op">=</span> np.column_stack([np.exp(<span class="op">-</span>j <span class="op">*</span> x)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(d <span class="op">+</span> <span class="dv">1</span>)])</span></code></pre></div></td>
+<td><strong>HW:</strong> HW2 Q14. <strong>Practice:</strong>
+Q97-98.</td>
+</tr>
+<tr>
+<td><strong>Fit a model with gradient descent</strong> (MSE loss;
+<code>A</code> includes a ones column). For a different loss function,
+only the gradient computation changes.</td>
+<td><div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.zeros(A.shape[<span class="dv">1</span>])</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> np.zeros(n_iter)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(n_iter):</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> y <span class="op">-</span> A <span class="op">@</span> w</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    grad <span class="op">=</span> <span class="op">-</span>A.T <span class="op">@</span> res <span class="op">/</span> <span class="bu">len</span>(y)  <span class="co"># factor 2 in lr</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    w <span class="op">=</span> w <span class="op">-</span> lr <span class="op">*</span> grad</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    loss[t] <span class="op">=</span> np.mean((y <span class="op">-</span> A <span class="op">@</span> w)<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>plt.plot(loss)   <span class="co"># check the loss curve!</span></span></code></pre></div></td>
+<td><strong>HW:</strong> HW3 Q7. <strong>Practice:</strong> Q99.
+<strong>Lab:</strong> L3 Q2, L3 Q5.</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="preprocessors-fit-on-the-training-data-transform-both">Preprocessors:
+fit on the training data, transform both</h3>
+<p>Anything that <em>learns</em> from the data (a mean, a standard
+deviation, a set of categories, a vocabulary, a target encoding) must be
+fit on the training data only, and then the <em>same</em> fitted object
+is used to transform the training data and the test (or validation)
+data. Fitting on all of the data before splitting, or fitting a separate
+preprocessor on the test data, is a mistake.</p>
+<p><code>TargetEncoder</code> is unusual: <code>fit_transform</code> on
+the training data is <em>not</em> the same as <code>fit</code> followed
+by <code>transform</code>, because <code>fit_transform</code> uses cross
+fitting to avoid leaking each sample’s own target into its encoding.</p>
+<p>Where we practiced it: <strong>HW:</strong> HW4 Q11.
+<strong>Practice:</strong> Q78, Q93, Q110. <strong>Lab:</strong> L1 Q3,
+L3 Q1, L4 Q6.</p>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 39%" />
+<col style="width: 39%" />
+</colgroup>
+<thead>
+<tr>
+<th>Preprocessor</th>
+<th>Correct</th>
+<th>Wrong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Standardize</strong> (<code>StandardScaler</code>)</td>
+<td><div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> StandardScaler().fit(X_tr)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>X_tr_s <span class="op">=</span> sc.transform(X_tr)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>X_ts_s <span class="op">=</span> sc.transform(X_ts)</span></code></pre></div></td>
+<td><div class="sourceCode" id="cb25"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit before splitting</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> StandardScaler()</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>X_s <span class="op">=</span> sc.fit_transform(X)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># separate scaler for the test set</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>sc_ts <span class="op">=</span> StandardScaler()</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>X_ts_s <span class="op">=</span> sc_ts.fit_transform(X_ts)</span></code></pre></div></td>
+</tr>
+<tr>
+<td><strong>Impute</strong> missing values with the mean</td>
+<td><div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> X_tr.mean()</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>X_tr <span class="op">=</span> X_tr.fillna(m)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>X_ts <span class="op">=</span> X_ts.fillna(m)</span></code></pre></div></td>
+<td><div class="sourceCode" id="cb27"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fill before splitting</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.fillna(X.mean())</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co"># use the test set mean</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>X_ts <span class="op">=</span> X_ts.fillna(X_ts.mean())</span></code></pre></div></td>
+</tr>
+<tr>
+<td><strong>One-hot encode</strong> (<code>get_dummies</code>)</td>
+<td><div class="sourceCode" id="cb28"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>oh_tr <span class="op">=</span> pd.get_dummies(df_tr[<span class="st">&quot;c&quot;</span>],</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                       dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>oh_ts <span class="op">=</span> pd.get_dummies(df_ts[<span class="st">&quot;c&quot;</span>],</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                       dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># match the training columns</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>oh_ts <span class="op">=</span> oh_ts.reindex(</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    columns<span class="op">=</span>oh_tr.columns,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    fill_value<span class="op">=</span><span class="dv">0</span>)</span></code></pre></div></td>
+<td><div class="sourceCode" id="cb29"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># columns may not match training</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>oh_ts <span class="op">=</span> pd.get_dummies(df_ts[<span class="st">&quot;c&quot;</span>],</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                       dtype<span class="op">=</span><span class="bu">int</span>)</span></code></pre></div></td>
+</tr>
+<tr>
+<td><strong>Bag of words</strong> (<code>CountVectorizer</code>)</td>
+<td><div class="sourceCode" id="cb30"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>vec <span class="op">=</span> CountVectorizer()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>W_tr <span class="op">=</span> vec.fit_transform(text_tr)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>W_ts <span class="op">=</span> vec.transform(text_ts)</span></code></pre></div></td>
+<td><div class="sourceCode" id="cb31"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># different vocabulary, so the</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># columns don&#39;t match</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>W_ts <span class="op">=</span> vec.fit_transform(text_ts)</span></code></pre></div></td>
+</tr>
+<tr>
+<td><strong>Target encode</strong> (<code>TargetEncoder</code>)</td>
+<td><div class="sourceCode" id="cb32"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>enc <span class="op">=</span> TargetEncoder()</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>Z_tr <span class="op">=</span> enc.fit_transform(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    X_tr[[<span class="st">&quot;c&quot;</span>]], y_tr)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>Z_ts <span class="op">=</span> enc.transform(X_ts[[<span class="st">&quot;c&quot;</span>]])</span></code></pre></div></td>
+<td><div class="sourceCode" id="cb33"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># uses the test set targets</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>enc.fit(X[[<span class="st">&quot;c&quot;</span>]], y)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># NOT the same as fit_transform!</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>enc.fit(X_tr[[<span class="st">&quot;c&quot;</span>]], y_tr)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>Z_tr <span class="op">=</span> enc.transform(X_tr[[<span class="st">&quot;c&quot;</span>]])</span></code></pre></div></td>
+</tr>
+<tr>
+<td><strong>Preprocessing inside cross validation</strong></td>
+<td><div class="sourceCode" id="cb34"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># inside the loop over folds:</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>Xtr_kf <span class="op">=</span> X_tr.iloc[idx_tr_kf]</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>ytr_kf <span class="op">=</span> y_tr.iloc[idx_tr_kf]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> make_pipeline(</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    StandardScaler(),</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    Ridge(alpha<span class="op">=</span>a))</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>pipe.fit(Xtr_kf, ytr_kf)</span></code></pre></div></td>
+<td><div class="sourceCode" id="cb35"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># before the loop over folds:</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># then the validation folds are</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># not independent</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> StandardScaler()</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>X_tr_s <span class="op">=</span> sc.fit_transform(X_tr)</span></code></pre></div></td>
+</tr>
+</tbody>
+</table>
+<h3 id="cross-validation-and-model-selection">Cross validation and model
+selection</h3>
+<p>To choose between candidate models (e.g. different values of the
+regularization strength <span class="math inline">\(\alpha\)</span>, or
+different numbers of features) with K-fold cross validation:</p>
+<ol type="1">
+<li>Create CV folds of the <em>training</em> data that match the
+structure of the data: <code>KFold(n_splits=5, shuffle=True)</code> for
+independent samples, <code>GroupKFold(n_splits=5)</code> (and pass
+<code>groups=...</code> to <code>split</code>) when there are several
+samples per group, and <code>TimeSeriesSplit(n_splits=5)</code> for
+time-ordered data.</li>
+<li>Loop over folds (outer loop) and candidate models (inner loop). In
+each fold, fit any preprocessing and the model on that fold’s training
+part, and save the validation score in an array with one row per model
+and one column per fold.</li>
+<li>Compute the mean and standard error of each model’s validation score
+across folds, and find the best model (<code>argmin</code> for a
+lower-is-better metric such as MSE, <code>argmax</code> for a
+higher-is-better metric such as R2).</li>
+<li>Apply the one-SE rule: find the candidate models within one SE of
+the best, and pick the simplest. Check which end of your list is
+“simplest”: for <code>alphas</code> in increasing order it is the
+<em>largest</em> index; for number of features or lag order in
+increasing order, it is the <em>smallest</em> index.</li>
+<li>Refit the selected model on the full training set, and evaluate it
+once on the test set.</li>
+</ol>
+<p>Where we practiced it: <strong>HW:</strong> HW4 Q10, HW4 Q13.
+<strong>Practice:</strong> Q100-109. <strong>Lab:</strong> L4 Q5-6.</p>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>alphas <span class="op">=</span> np.logspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">25</span>)      <span class="co"># candidate models, simplest is the LAST one</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>nfold <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: create CV folds</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>kf <span class="op">=</span> KFold(n_splits<span class="op">=</span>nfold, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: loop over folds, and over candidate models</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> np.zeros((<span class="bu">len</span>(alphas), nfold))   <span class="co"># one row per model, one column per fold</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (idx_tr_kf, idx_vl_kf) <span class="kw">in</span> <span class="bu">enumerate</span>(kf.split(X_tr)):</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># this fold&#39;s training and validation data, before any processing</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    Xtr_kf, ytr_kf <span class="op">=</span> X_tr.iloc[idx_tr_kf], y_tr.iloc[idx_tr_kf]</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    Xvl_kf, yvl_kf <span class="op">=</span> X_tr.iloc[idx_vl_kf], y_tr.iloc[idx_vl_kf]</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fit preprocessing on this fold&#39;s training data only</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    sc <span class="op">=</span> StandardScaler().fit(Xtr_kf)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    Xtr_kf_s <span class="op">=</span> sc.transform(Xtr_kf)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    Xvl_kf_s <span class="op">=</span> sc.transform(Xvl_kf)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p, a <span class="kw">in</span> <span class="bu">enumerate</span>(alphas):</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> Ridge(alpha<span class="op">=</span>a).fit(Xtr_kf_s, ytr_kf)</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>        scores[p, i] <span class="op">=</span> mean_squared_error(yvl_kf, m.predict(Xvl_kf_s))</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: mean and standard error across folds, and the best model</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>mean_val <span class="op">=</span> scores.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>se_val <span class="op">=</span> scores.std(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.sqrt(nfold <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>best <span class="op">=</span> np.argmin(mean_val)                <span class="co"># MSE: lower is better</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: one-SE rule</span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> mean_val[best] <span class="op">+</span> se_val[best]    <span class="co"># MSE: best mean PLUS its SE</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>idx_one_se <span class="op">=</span> np.where(mean_val <span class="op">&lt;=</span> target)[<span class="dv">0</span>]</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>p_sel <span class="op">=</span> idx_one_se.<span class="bu">max</span>()                  <span class="co"># simplest = largest alpha</span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: refit on the full training set, evaluate once on the test set</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>sc <span class="op">=</span> StandardScaler().fit(X_tr)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>final <span class="op">=</span> Ridge(alpha<span class="op">=</span>alphas[p_sel]).fit(sc.transform(X_tr), y_tr)</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>mse_ts <span class="op">=</span> mean_squared_error(y_ts, final.predict(sc.transform(X_ts)))</span></code></pre></div>
+<h4 id="the-one-se-rule-four-versions">The one-SE rule: four
+versions</h4>
+<p>There are four versions of the one-SE rule code, depending on whether
+the scoring metric is lower-is-better (e.g. MSE) or higher-is-better
+(e.g. R2), and whether the candidate models are ordered from least
+complex to most complex (e.g. increasing number of features, polynomial
+degree, or lag order) or from most complex to least complex
+(e.g. increasing regularization strength <span
+class="math inline">\(\alpha\)</span>).</p>
+<p>In each version, <code>score_val</code> is an array with one row per
+model and one column per fold (the validation score of model
+<code>p</code> on fold <code>i</code> is <code>score_val[p, i]</code>),
+and <code>model_list = np.arange(n_models)</code> is the list of model
+indices.</p>
+<p>Where we practiced it: <strong>HW:</strong> HW4 Q6-10.
+<strong>Practice:</strong> Q67-71, Q100.</p>
+<p>Lower-is-better metric (e.g. MSE), models ordered from least complex
+to most complex:</p>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold is: SMALLEST mean score PLUS its SE</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>idx_best <span class="op">=</span> np.argmin(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> score_val[idx_best,:].mean() <span class="op">+</span> score_val[idx_best,:].std()<span class="op">/</span>np.sqrt(nfold<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># candidate models have mean score BELOW that threshold</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>idx_one_se <span class="op">=</span> np.where(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&lt;=</span> target)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get LOWEST indexed model (least complex)</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>m_one_se <span class="op">=</span> np.<span class="bu">min</span>(model_list[idx_one_se])</span></code></pre></div>
+<p>Lower-is-better metric (e.g. MSE), models ordered from most complex
+to least complex:</p>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold is: SMALLEST mean score PLUS its SE</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>idx_best <span class="op">=</span> np.argmin(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> score_val[idx_best,:].mean() <span class="op">+</span> score_val[idx_best,:].std()<span class="op">/</span>np.sqrt(nfold<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># candidate models have mean score BELOW that threshold</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>idx_one_se <span class="op">=</span> np.where(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&lt;=</span> target)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get HIGHEST indexed model (least complex)</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>m_one_se <span class="op">=</span> np.<span class="bu">max</span>(model_list[idx_one_se])</span></code></pre></div>
+<p>Higher-is-better metric (e.g. R2), models ordered from least complex
+to most complex:</p>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold is: LARGEST mean score MINUS its SE</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>idx_best <span class="op">=</span> np.argmax(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> score_val[idx_best,:].mean() <span class="op">-</span> score_val[idx_best,:].std()<span class="op">/</span>np.sqrt(nfold<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># candidate models have mean score ABOVE that threshold</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>idx_one_se <span class="op">=</span> np.where(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;=</span> target)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get LOWEST indexed model (least complex)</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>m_one_se <span class="op">=</span> np.<span class="bu">min</span>(model_list[idx_one_se])</span></code></pre></div>
+<p>Higher-is-better metric (e.g. R2), models ordered from most complex
+to least complex:</p>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># threshold is: LARGEST mean score MINUS its SE</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>idx_best <span class="op">=</span> np.argmax(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>target <span class="op">=</span> score_val[idx_best,:].mean() <span class="op">-</span> score_val[idx_best,:].std()<span class="op">/</span>np.sqrt(nfold<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># candidate models have mean score ABOVE that threshold</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>idx_one_se <span class="op">=</span> np.where(score_val.mean(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">&gt;=</span> target)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get HIGHEST indexed model (least complex)</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>m_one_se <span class="op">=</span> np.<span class="bu">max</span>(model_list[idx_one_se])</span></code></pre></div>
+<h4 id="using-gridsearchcv">Using <code>GridSearchCV</code></h4>
+<p>The same search (without the one-SE rule) with
+<code>GridSearchCV</code> and a <code>Pipeline</code>, which fits the
+scaler inside each fold for us. scikit-learn scores are “higher is
+better”, so error metrics are negated:</p>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>pipe <span class="op">=</span> make_pipeline(StandardScaler(), Ridge())</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>search <span class="op">=</span> GridSearchCV(pipe, {<span class="st">&quot;ridge__alpha&quot;</span>: alphas},</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>                      cv<span class="op">=</span>TimeSeriesSplit(n_splits<span class="op">=</span><span class="dv">5</span>),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>                      scoring<span class="op">=</span><span class="st">&quot;neg_root_mean_squared_error&quot;</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>search.fit(X_tr, y_tr)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>search.best_params_</span></code></pre></div>
 </body>
 </html>
