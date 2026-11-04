@@ -6,7 +6,7 @@ author: 'Fraida Fund'
 
 
 
-:::notes
+::: {.notes .handout-only .grad-only}
 
 **Math prerequisites for this lecture**: None
 
@@ -55,7 +55,7 @@ author: 'Fraida Fund'
 
 
 \def \predclass {$P(y=m | x) =$}
-\def \logclass {$\frac{e^{z_m}}{\sum_{\ell=1}^M e^{z_\ell}}$}
+\def \logclass {$\frac{e^{z_m}}{\sum_{\ell=0}^{K-1} e^{z_\ell}}$}
 \def \knnclass {$\frac{1}{K} \sum_{K_x} I(y_i = m)$}
 \def \logloss {$-\ln P(y|X)$ }
 
@@ -244,7 +244,7 @@ Not used often ([this is a good explanation re: why](https://sebastianraschka.co
 
 The GINI index is:
 
-$$ \sum_{k=1}^K \hat{p}_{mk} (1 - \hat{p}_{mk})$$
+$$ \sum_{k=0}^{K-1} \hat{p}_{mk} (1 - \hat{p}_{mk})$$
 
 where $\hat{p}_{mk}$ is the proportion of training samples in $R_m$ belonging to class $k$.
 
@@ -270,7 +270,7 @@ $$H(X) = - \sum_{i=1}^N P(X=i) \log_2 P(X=i) $$
 
 Entropy as a measure of impurity on subset of samples:
 
-$$ - \sum_{k=1}^K \hat{p}_{mk} \log_2 \hat{p}_{mk}$$
+$$ - \sum_{k=0}^{K-1} \hat{p}_{mk} \log_2 \hat{p}_{mk}$$
 
 
 where $\hat{p}_{mk}$ is the proportion of training samples in $R_m$ belonging to class $k$.
@@ -470,8 +470,8 @@ Choose $\alpha$ by CV, 1-SE rule ($\uparrow \alpha, \downarrow |T|$).
 
 $O(d)$ where $d$ is depth of tree
 
-* Worst case: $O(n)$
-* Well-balanced: $O( \log  n)$
+* Worst case: $O(N)$
+* Well-balanced: $O( \log  N)$
 
 ::: notes
 
@@ -489,17 +489,17 @@ $O(d)$ where $d$ is depth of tree
 
 ::: notes
 
-At a node with $n_i$ samples,
+At a node with $N_i$ samples,
 
-* consider up to $n_i - 1$ cutpoints
-* for $p$ features $\rightarrow  O(p n_i)$ impurity computations per node
+* consider up to $N_i - 1$ cutpoints
+* for $p$ features $\rightarrow  O(p N_i)$ impurity computations per node
 
-What is the cost of computing impurity? If we sort at the beginning (cost: $O(p n \log n)$ for sorting), we can do it much faster than the naive way!
+What is the cost of computing impurity? If we sort at the beginning (cost: $O(p N \log N)$ for sorting), we can do it much faster than the naive way!
 
 Naive way: 
 
-* count samples of each class to the left vs right of the cut: $O(n_i)$
-* do this for $n_i - 1$ split points
+* count samples of each class to the left vs right of the cut: $O(N_i)$
+* do this for $N_i - 1$ split points
 
 With sorted features, using linear scan:
 
@@ -510,20 +510,20 @@ With sorted features, using linear scan:
 
 Then, going from node $\rightarrow$ tree: 
 
-**Balanced case**: At each depth level of the tree, we handle all $n$ samples, so the total cost is: 
+**Balanced case**: At each depth level of the tree, we handle all $N$ samples, so the total cost is: 
 
-$O(pn)$ cost per depth level $\times$ $\log n$ number of levels
+$O(pN)$ cost per depth level $\times$ $\log N$ number of levels
 
-$\rightarrow$ total cost of recursive splitting for balanced case: $O(p n \log n)$.
+$\rightarrow$ total cost of recursive splitting for balanced case: $O(p N \log N)$.
 
 
-**Worst case** (tree depth $n$):
+**Worst case** (tree depth $N$):
 
-* cost at level $i$ is $p n_i = p (n - i)$
-* sum across levels $p (1 + 2 + \ldots + (n-2) + (n-1) + n)$
-* using the rule for sum of integers up to $n$: $p\frac{n (n-1)}{2}$
+* cost at level $i$ is $p N_i = p (N - i)$
+* sum across levels $p (1 + 2 + \ldots + (N-2) + (N-1) + N)$
+* using the rule for sum of integers up to $N$: $p\frac{N (N-1)}{2}$
 
-$\rightarrow$ total cost of recursive splitting for worst case: $O(p n^2)$
+$\rightarrow$ total cost of recursive splitting for worst case: $O(p N^2)$
 
 :::
 
@@ -548,5 +548,3 @@ Bad:
 * Need greedy heuristic to train
 * Deep trees have large variance
 * Non-robust: Small change in data can cause large change in estimated tree
-
-
