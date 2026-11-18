@@ -17,7 +17,7 @@ Online asynchronous (no scheduled meetings - just prerecorded video) <span style
 * "Chalkboard lecture" video will be released on Monday night after the in-person lecture (except for the Wednesday lesson on October 14).
 * "Colab lecture" video will be released online on Tuesday.
 * Homework problem sets will be released on Thursdays, and will be due 10 days later (on a Sunday) at midnight.
-* Lab assignments will be released on Fridays for even-numbered topics (2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
+* Lab assignments will be released on Fridays for selected topics (3, 5, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
 * Office hours: See Brightspace calendar for dates and Zoom links
 
 This is *not* a self-paced course - it is designed for students who will keep up with course material on a regular basis, e.g. will usually work through content within a week of its release.

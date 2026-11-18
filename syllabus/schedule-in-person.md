@@ -16,7 +16,7 @@ In person, with some online asynchronous content.
 * "Chalkboard lecture" Monday 11:00 AM - 1:30 PM (NYC time).
 * "Colab lecture" video will be released online on Tuesday.
 * Homework problem sets will be released on Thursdays, and will be due 10 days later (on a Sunday) at midnight.
-* Lab assignments will be released on Fridays for even-numbered topics (2, 4, 6, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
+* Lab assignments will be released on Fridays for selected-numbered topics (3, 5, 8, 10) and will be due 13 days later (on a Thursday) at midnight (except when a midterm or school break intervenes).
 * Office hours: See Brightspace calendar for dates and Zoom links
 
 For the Fall 2026 semester, a tentative schedule (subject to change) is:
