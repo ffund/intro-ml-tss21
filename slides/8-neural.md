@@ -9,7 +9,7 @@ author: 'Fraida Fund'
 * Structure of a neural network
 * Training a neural network
 
-::: notes
+::: {.notes .handout-only .grad-only}
 
 **Math prerequisites for this lecture**: You should know about:
 
@@ -17,7 +17,6 @@ author: 'Fraida Fund'
 
 :::
 
-\newpage
 
 ## From linear to non-linear
 
@@ -25,54 +24,96 @@ author: 'Fraida Fund'
 
 ::: notes
 
-Let's represent the linear regression and logistic regression models using a computational graph.
 
-![Regression and classification models.](../images/7-reg-comp-graph.png){ width=60% }
+Linear regression computes a weighted sum of the features:
 
-We can use also do a linear regression or logistic regression with a basis function transformation applied to the data first. Here, we have one "transformation" node for each basis function, and then the output of those "transformation" nodes become the input to the logistic regression (or linear regression).
+$$\hat{y} = \sum_{j=0}^{d} w_j \tilde{x}_j, \quad \tilde{\mathbf{x}}=[1,\mathbf{x}^T]^T$$
+
+Logistic regression computes the same weighted sum and passes it through a sigmoid to get a probability:
+
+$$z = \sum_{j=0}^{d} w_j \tilde{x}_j, \quad P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1+e^{-z}}$$
+
+We can represent both the linear regression and logistic regression models using a computational graph.
+
+![Regression and classification models.](../images/7-reg-comp-graph.png){ width=58% }
+
+\newpage
+
+
+We can also do a linear regression or logistic regression with a basis function transformation applied to the data first.  
+
+Linear regression with basis functions $\phi_0, \ldots, \phi_p$:
+
+$$\hat{y} = \sum_{j=0}^{p} w_j \phi_j(\mathbf{x})$$
+
+Logistic regression with basis functions:
+
+$$z = \sum_{j=0}^{p} w_j \phi_j(\mathbf{x}), \quad P(y=1|\mathbf{x}) = \sigma(z) = \frac{1}{1+e^{-z}}$$
+
+
+This, too, can be represented using a computational graph. Here, we have one "transformation" node for each basis function, and then the output of those "transformation" nodes become the input to the logistic regression (or linear regression).
 
 ![With a basis function transformation.](../images/7-lbf-graph-trans.png){ width=65% }
 
+
+In those regression and classification models, we use a fixed basis function to transform features. We only learned the weights that map transformed features to a continuous output (regression) or a score $z$ that produces the final class $\hat{y}$ (classification).
+
+
+We can also represent the SVM with a linear or non-linear kernel using a computational graph. For a new sample $\mathbf{x}_t$, the SVM with a kernel $K$ computes
+
+$$z = w_0 + \sum_{i=1}^{N} \alpha_i y_i K(\mathbf{x}_i, \mathbf{x}_t), \quad \hat{y} = \operatorname{sign}(z)$$
+
 \newpage
-
-We can also represent the SVM with a linear or non-linear kernel using a computational graph. 
-
-Here, we have one "transformation node" for each training sample! (The "transformation" is the kernel function, which is computed over the input sample and the training sample). 
-
-Then the weighted sum of those nodes (weighted by $\alpha_i$, which is learned by the SVM, and which is zero for every non-support vector training sample and non-zero for every support vector training sample) is used to compute the class label.
 
 ![SVM computational graph.](../images/7-svm-graph.png){ width=65% }
 
+(The "transformation" is the kernel function, which is computed over the input sample and the training sample).  Here, we have one "transformation node" for each training sample! (although we'll have $\alpha_i = 0$ for non-support vectors.) 
 
-In those regression and classification models, we use a fixed basis function to transform features. We only learned the weights to map the transformed features to a continuous output (regression) or to a class label (classification).
+Here, too, the kernel function is fixed in advance. We only learned the weights that map transformed features to output.
 
-Would it be possible to also learn the first part - the mapping of the features to a transformed feature space?
+A boosted ensemble is different - the weights that map transformed features to output are learned, but so are the transformations themselves. For AdaBoost, the output is a weighted sum of $M$ weak learners $\hat{f}^m$, where both the learners and the coefficients $\alpha_m$ are learned:
+
+$$f_M(\mathbf{x}) = \sum_{m=1}^{M} \alpha_m \hat{f}^{m}(\mathbf{x}), \quad \hat{y}(\mathbf{x}) = \operatorname{sign}[f_M(\mathbf{x})]$$
+
+![Boosted ensemble computational graph.](../images/7-boosted-graph.png){ width=65% }
+
+But it learns sequentially, adding new trees to improve the existing model.
+
+\newpage
+
+What if we construct a computational graph  
+
+* that includes both the transformation of inputs into a new feature space *and* the mapping from that representation to the output, 
+* using simple, *differentiable* nonlinear functions 
+* whose parameters could all be learned jointly through gradient descent?
 
 ![Can we learn this mapping to transformed feature space?](../images/7-lbf-comp-graph.png){ width=65% }
 
+
+
+
 :::
 
-\newpage
 
 ### Example: synthetic data
 
 ![Example via [Sundeep Rangan](https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb)](../images/two-class-nn-synthetic.png){width=30%}
 
-
+\newpage
 
 ### Model of example two-stage network (1)
 
 First step (*hidden layer*): 
 
 * Take $N_H=4$ "logistic regression" nodes. 
-* Use $\mathbf{x}$ as input to each node.
-* At each node $m$, first compute: $z_{H,m} = \mathbf{w}_{H,m}^T \mathbf{x}$
+* Define the augmented input $\tilde{\mathbf{x}}=[1,\mathbf{x}^T]^T\in\mathbb{R}^{N_I+1}$.
+* At each node $m$, first compute: $z_{H,m} = \mathbf{w}_{H,m}^T \tilde{\mathbf{x}}$
 * Then, at each node, apply a sigmoid: $u_{H,m} = g_H(z_{H,m}) = \frac{1}{1+e^{-z_{H,m}}}$
 
 
 ::: notes
 
-Note: assume a 1s column was added to the data matrix, so we don't need a separate intercept term.
+The leading 1 in $\tilde{\mathbf{x}}$ incorporates the intercept into each $\mathbf{w}_{H,m}\in\mathbb{R}^{N_I+1}$.
 
 ![Computation at one hidden node.](../images/7-computational-graph-H1.png){ width=30% }
 
@@ -89,16 +130,17 @@ At this point, we have some representation of the data in $\mathbb{R}^4$.
 
 Second step (*output layer*):
 
-* At output node, first compute: $z_O = \mathbf{w}^T_O [1, \mathbf{u}_H]$
+* Define $\tilde{\mathbf{u}}_H=[1,\mathbf{u}_H^T]^T\in\mathbb{R}^{N_H+1}$.
+* At the output node, first compute the logit: $z_O = \mathbf{w}^T_O\tilde{\mathbf{u}}_H$
 * Then, compute: $u_O = g_O(z_O) =  \frac{1}{1+e^{-z_{O}}}$
-* (Not in the graph): apply a threshold to get $\hat{y}$
+* Apply a threshold to get the final class: $\hat{y}=1$ if $u_O\geq t$, and $\hat{y}=0$ otherwise.
 
 ::: notes
 
 Notes: 
 
 * we use the output of the previous layer as input to this layer
-* as with the first layer, we add a 1s column to the input, to take care of the intercept term.
+* the leading 1 in $\tilde{\mathbf{u}}_H$ incorporates the output-node intercept.
 
 ![Two-stage network.](../images/7-computational-graph-output.png){ width=55% }
 
@@ -109,18 +151,17 @@ What does the output look like (over the feature space) at each node?
 
 ![Example via [Sundeep Rangan](https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb)](../images/two-class-nn-neurons.png){width=60%}
 
+\newpage
 
 ### Example: output of output node
 
 ![Via [Sundeep Rangan](https://github.com/sdrangan/introml/blob/master/unit09_neural/demo1_synthetic.ipynb)](../images/two-class-nn-avgout.png){width=20%}
 
-\newpage
-
 
 ### Matrix form of two stage network
 
-* Hidden layer: $\mathbf{z}_H = \mathbf{W}_H^T \mathbf{x}, \quad \mathbf{u}_H = g_H(\mathbf{z}_H)$
-* Output layer: $z_O = \mathbf{W}_O^T [1, \mathbf{u}_H], \quad u_O = g_O(\mathbf{z}_O)$
+* Hidden layer: $\mathbf{z}_H = \mathbf{W}_H^T\tilde{\mathbf{x}}, \quad \mathbf{W}_H\in\mathbb{R}^{(N_I+1)\times N_H}, \quad \mathbf{u}_H = g_H(\mathbf{z}_H)$
+* Output layer: $\mathbf{z}_O = \mathbf{W}_O^T\tilde{\mathbf{u}}_H, \quad \mathbf{W}_O\in\mathbb{R}^{(N_H+1)\times N_O}, \quad \mathbf{u}_O = g_O(\mathbf{z}_O)$
 
 
 ## Neural networks
@@ -135,14 +176,13 @@ What does the output look like (over the feature space) at each node?
 
 
 
-
-
 ### Terminology
 
 * **Hidden variables**: the variables $\mathbf{z}_H, \mathbf{u}_H$, which are not directly observed.
 * **Hidden units**: the nodes that compute the hidden variables.
 * **Activation function**: the function $g(z)$
 * **Output units**: the node(s) that compute $z_{O}$.
+
 
 
 ### Setting up a neural network - givens
@@ -169,6 +209,8 @@ Similarly, the activation function at the output unit and the loss function are 
 
 :::
 
+\newpage
+
 ### Binary classification...
 
 For binary classification, $y \in [0,1]$: 
@@ -177,7 +219,7 @@ For binary classification, $y \in [0,1]$:
 - $u_O$ is scalar - need one output node
 - Use binary cross entropy loss:
 
-$$L(\mathbf{W}) = \sum_{i=1}^n -y_i z_{Oi} + \text{ln}(1+e^{z_{Oi}})$$
+$$L(\mathbf{W}) = \sum_{i=1}^N -y_i z_{Oi} + \text{ln}(1+e^{z_{Oi}})$$
 
 
 :::notes
@@ -188,22 +230,21 @@ The mapping from transformed feature space to output is just like a logistic reg
 
 :::
 
-\newpage
 ### Multi-class classification...
 
 
-For multi-class classification, $y=1,\ldots, K$:
+For multi-class classification, $y=0,\ldots, K-1$:
 
-- Use softmax activation $g_O$, output will be: $u_{O, k} = P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=1}^K  e^{z_\ell}}$
-- $u_O$ is vector $[u_0, \ldots, u_K]$ - need $K$ output nodes
+- Use softmax activation $g_O$, output will be: $u_{O, k} = P(y=k| x)=\frac{e^{z_{O,k}}}{\sum_{\ell=0}^{K-1}  e^{z_\ell}}$
+- $u_O$ is vector $[u_0, \ldots, u_{K-1}]$ - need $K$ output nodes
 - Use categorical cross entropy loss:
 
-$$L(\mathbf{W}) = \sum_{i=1}^n \left[ \ln \left(\sum_k e^{z_{Oik}}\right) - \sum_k  r_{ik} z_{Oik}\right]$$
+$$L(\mathbf{W}) = \sum_{i=1}^N \left[ \ln \left(\sum_{k=0}^{K-1} e^{z_{Oik}}\right) - \sum_{k=0}^{K-1}  r_{ik} z_{Oik}\right]$$
 
 
 ::: notes
 
-Then you can select predicted label by $\hat{y} = \operatorname*{argmax}_k u_{O,k}$
+Then you can select predicted label by $\hat{y} = \operatorname*{argmax}_{k=0,\ldots,K-1} u_{O,k}$
 
 :::
 ### Regression with one output...
@@ -214,7 +255,7 @@ For regression, $y \in R^{1}$:
 - $u_O$ is scalar - need one output node
 - Use L2 loss:
 
-$$L(\mathbf{W}) = \sum_{i=1}^n (y_i - z_{Oi})^2$$
+$$L(\mathbf{W}) = \sum_{i=1}^N (y_i - z_{Oi})^2$$
 
 ### Regression with multiple outputs...
 
@@ -225,7 +266,7 @@ For regression, $y \in R^{K}$:
 - Use vector L2 loss:
 
 
-$$L(\mathbf{W}) = \sum_{i=1}^n \sum_{k=1}^K (y_{ik} - z_{Oik})^2$$
+$$L(\mathbf{W}) = \sum_{i=1}^N \sum_{k=1}^K (y_{ik} - z_{Oik})^2$$
 
 
 
@@ -246,7 +287,6 @@ We still need to decide:
 * $N_H$ = number of hidden units, you decide!
 * $N_O$ = output dimension, number of outputs
 
-\newpage
 ### Dimension (2)
 
 Parameter               Symbol  Number of parameters
@@ -261,15 +301,6 @@ Total                           $N_H(N_I+1)+N_O(N_H+1)$
 * The network can only achieve linear decision boundary/ output!
 * To get non-linear decision boundary/output, need non-linear activation functions.
 
-::: notes
-
-Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear activation! (See [this post](http://neuralnetworksanddeeplearning.com/chap4.html) for a convincing demonstration.)
-
-(The more hidden units we have, the more complex a function we can represent.)
-
-By scaling, shifting, and adding a bunch of "step" or "step-like" functions, you can approximate a complicated function. What step-like function can you use?
-
-:::
 
 ### Activation functions at hidden layer: binary step
 
@@ -283,14 +314,27 @@ By scaling, shifting, and adding a bunch of "step" or "step-like" functions, you
 
 ::: notes
 
+\newpage
+
 What do they have in common?
 
 * Differentiable (at least from one side)
 * Non-linear (except for the linear one, which is only used as the output function for a regression)
 
+::: notes
+
+Universal approximation theorem: under certain conditions, with enough (finite)  hidden nodes, can approximate *any* continuous real-valued function, to any degree of precision. But only with non-linear activation! (See [this post](http://neuralnetworksanddeeplearning.com/chap4.html) for a convincing demonstration.)
+
+(The more hidden units we have, the more complex a function we can represent.)
+
+By scaling, shifting, and adding a bunch of "step" or "step-like" functions, you can approximate a complicated function. 
+
+
+![Approximating a function using sigmoid "steps".](../images/neural-approx-steps.png){ width=50% }
+
 :::
 
-\newpage
+:::
 
 ## Neural network - summary
 
@@ -330,8 +374,8 @@ We still need to decide:
 ### Training the two-stage network for binary classification
 
 * From final stage: $z_o = F(\mathbf{x}, \mathbf{W})$ where parameters $\mathbf{W} = (\mathbf{W}_H, \mathbf{W}_o)$
-* Given training data $(\mathbf{x}_i, y_i), i = 1, \ldots, n$ 
-* Loss function $L(\mathbf{W}) := -\sum_{i=1}^n \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W})$
+* Given training data $(\mathbf{x}_i, y_i), i = 1, \ldots, N$
+* Loss function $L(\mathbf{W}) := -\sum_{i=1}^N \text{ln} P(y_i | \mathbf{x}_i, \mathbf{W})$
 * Choose parameters to minimize loss: $\hat{\mathbf{W}} = \operatorname*{argmin}_{\mathbf{W}} L(\mathbf{W})$
 
 
@@ -471,7 +515,7 @@ What about when we have multiple inputs, multiple hidden units?
   \node[circle,fill=purple!20] (n3) at (5,1)  {$u_{H,i}$};
   \node[circle,fill=purple!20] (n4) at (7,1) {$z_{O,i}$};
   \node[circle,fill=purple!20] (n5) at (9,1) {$u_{O,i}$};
-  \node[circle,fill=orange!20] (n6) at (12,1) {$L(y_i, u_{O,i})$};
+  \node[circle,fill=orange!20] (n6) at (12,1) {$\ell(y_i, u_{O,i})$};
   \node[circle,fill=blue!20] (n7) at (1,4) {$W_H$};
   \node[circle,fill=blue!20] (n8) at (5,4) {$W_O$};
 
@@ -669,7 +713,7 @@ $$\delta_j = g'(z_j) \sum_k w_{k,j} \delta_k$$
 ### Backpropagation + gradient descent algorithm (3)
 
 
-4. Use $\frac{\partial L_n}{\partial w_{j,i}} = \delta_j u_i$ to evaluate derivatives.
+4. Use $\frac{\partial \ell_n}{\partial w_{j,i}} = \delta_j u_i$ to evaluate derivatives.
 5. Update weights using gradient descent.
 
 <!-- 
@@ -694,6 +738,9 @@ $$L = \sum_i -y_i z_{O,i} + \text{ln} (1 + e^{y_i z_{O,i}}), \quad \frac{\partia
 \newpage
 
 ## Why is backpropagation so important?
+
+### Example: Derivatives on a computational graph
+
 
 Example: $e = (a + b) \times (b+1)$
 
@@ -739,4 +786,3 @@ So, **it's not just the chain rule**:
 * Reverse-mode differentiation: complexity scales roughly with the size of the *output*.
 
 :::
-
