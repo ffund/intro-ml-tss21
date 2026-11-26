@@ -29,30 +29,86 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="reveal.js-master/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="reveal.js-master/dist/theme/myplanet.css" id="theme">
+  <style>
+    /* pandoc's default template sets div.column{overflow-x: auto}, which adds scroll bars */
+    .reveal div.column { overflow: visible !important; }
+    .reveal div.column img { max-width: 100%; }
+  </style>
+  <script>
+  new MutationObserver(function(mutations, observer) {
+    var target = document.querySelector('#title-slide, .title-slide');
+    if (target && !target.hasAttribute('data-background-color')) {
+      target.setAttribute('data-background-color', '#57068c');
+      observer.disconnect();
+    }
+  }).observe(document.documentElement, {childList: true, subtree: true});
+
+  window.addEventListener('load', function() {
+    var maximumFontSize = 40;
+    var minimumFontSize = 20;
+
+    function fitSlide(slide) {
+      if (!slide || slide.classList.contains('stack')) return;
+
+      var canvas = slide.parentElement;
+      slide.style.fontSize = maximumFontSize + 'px';
+
+      for (var size = maximumFontSize; size > minimumFontSize; size--) {
+        if (slide.scrollHeight <= canvas.clientHeight &&
+            slide.scrollWidth <= canvas.clientWidth) break;
+        slide.style.fontSize = (size - 1) + 'px';
+      }
+
+      Reveal.layout();
+    }
+
+    function fitCurrentSlide(event) {
+      var slide = event && event.currentSlide || Reveal.getCurrentSlide();
+      requestAnimationFrame(function() { fitSlide(slide); });
+    }
+
+    Reveal.on('ready', fitCurrentSlide);
+    Reveal.on('slidechanged', fitCurrentSlide);
+
+    if (Reveal.isReady()) fitCurrentSlide();
+    if (document.fonts) document.fonts.ready.then(fitCurrentSlide);
+    if (window.MathJax && MathJax.Hub) MathJax.Hub.Queue(fitCurrentSlide);
+  });
+  </script>
+  <link rel="stylesheet" href="reveal.js-master/plugin/chalkboard/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide">
+<section id="title-slide" class="poll-title-slide">
   <h1 class="title">Deep learning</h1>
   <p class="author">Fraida Fund</p>
+
+<div class="poll-title-content">
+  <img class="poll-title-qr" src="../images/polleverywhere-ffund.png" alt="QR code for PollEv.com/ffund">
+  <div class="poll-title-copy">
+    <div class="poll-title-prompt">Open on your phone/laptop:</div>
+    <div class="poll-title-url"><a href="https://pollev.com/ffund" target="_blank" rel="noopener">PollEv.com/ffund</a></div>
+    <div class="poll-title-instructions">In the &quot;Name&quot; field put your<br>net ID (e.g. ff524) and<br>&quot;Continue&quot;.</div>
+  </div>
+</div>
 </section>
 
-<section id="in-this-lecture" class="title-slide slide level2">
-<h2>In this lecture</h2>
+<section id="in-this-lecture" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">In this lecture</h2>
 <ul>
 <li>Deep neural networks</li>
 <li>Challenges and tricks</li>
 </ul>
-<aside class="notes">
-<p><strong>Math prerequisites for this lesson</strong>: None.</p>
-</aside>
 </section>
 
-<section id="recap" class="title-slide slide level2">
-<h2>Recap</h2>
+<section id="recap" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Recap</h2>
 <p>Last week: neural networks with one hidden layer</p>
 <ul>
 <li>Hidden layer learns feature representation</li>
@@ -88,8 +144,9 @@ Universal approximation theorem: https://cedar.buffalo.edu/~srihari/CSE676/6.4%2
 </section>
 
 <section>
-<section id="deep-neural-networks" class="title-slide slide level2">
-<h2>Deep neural networks</h2>
+<section id="deep-neural-networks" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Deep neural networks</h2>
 <aside class="notes">
 <figure>
 <img data-src="../images/8-deep-network.png" style="width:60.0%"
@@ -108,8 +165,9 @@ apply an activation function, and that’s the unit output</li>
 number of hidden units in a layer its “width.”</p>
 </aside>
 </section>
-<section id="double-descent-animation" class="slide level3">
-<h3>Double descent: animation</h3>
+<section id="double-descent-animation" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Double descent: animation</h3>
 <figure>
 <img data-src="../images/8-polynomial-animation.gif" style="width:40.0%"
 alt="Polynomial model before and after the interpolation threshold. Image source: Boaz Barak, click link to see animation." />
@@ -128,19 +186,20 @@ Barak</a>):</p>
 “under-fitting” and will not get good performance. As <span
 class="math inline">\(d\)</span> increases between <span
 class="math inline">\(d_t\)</span> and <span
-class="math inline">\(n\)</span>, we fit more and more of the noise,
-until for <span class="math inline">\(d=n\)</span> we have a perfect
+class="math inline">\(N\)</span>, we fit more and more of the noise,
+until for <span class="math inline">\(d=N\)</span> we have a perfect
 interpolating polynomial that will have perfect training but very poor
 test performance. When <span class="math inline">\(d\)</span> grows
-beyond <span class="math inline">\(n\)</span>, more than one polynomial
+beyond <span class="math inline">\(N\)</span>, more than one polynomial
 can fit the data, and (under certain conditions) SGD will select the
 minimal norm one, which will make the interpolation smoother and
 smoother and actually result in better performance.</p>
 </blockquote>
 </aside>
 </section>
-<section id="double-descent-curve" class="slide level3">
-<h3>Double descent curve</h3>
+<section id="double-descent-curve" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Double descent curve</h3>
 <figure>
 <img data-src="../images/8-double-descent.png" style="width:100.0%"
 alt="Double descent curve (left) and realization in a real neural network (right)." />
@@ -168,13 +227,14 @@ our challenge is to find the weight combination that memorizes the input
 so friendly…</p>
 </aside>
 </section>
-<section id="loss-landscape" class="slide level3">
-<h3>Loss landscape</h3>
+<section id="loss-landscape" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Loss landscape</h3>
 <figure>
 <img data-src="../images/resnet56_noshort_small.jpg" style="width:30.0%"
-alt="“Loss landscape” of a deep neural network in a “slice” of the high-dimensional feature space." />
+alt="“Loss landscape” of a deep neural network in a “slice” of the high-dimensional parameter space." />
 <figcaption aria-hidden="true">“Loss landscape” of a deep neural network
-in a “slice” of the high-dimensional feature space.</figcaption>
+in a “slice” of the high-dimensional parameter space.</figcaption>
 </figure>
 <aside class="notes">
 <p>Image source: Hao Li, Zheng Xu, Gavin Taylor, Christoph Studer and
@@ -186,8 +246,9 @@ difficult loss surface. (Including what we call “conditioning”
 techniques, and some broader techniques.)</p>
 </aside>
 </section>
-<section id="addressing-the-challenges" class="slide level3">
-<h3>Addressing the challenges</h3>
+<section id="addressing-the-challenges" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Addressing the challenges</h3>
 <aside class="notes">
 <figure>
 <img data-src="../images/deep-learning-markmap.svg" style="width:60.0%"
@@ -198,8 +259,14 @@ Raschka</figcaption>
 </aside>
 </section></section>
 <section>
-<section id="dataset" class="title-slide slide level2">
-<h2>Dataset</h2>
+<section id="dataset" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Dataset</h2>
+
+</section>
+<section id="dataset-solutions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Dataset solutions</h3>
 <ul>
 <li>Get more data</li>
 <li><strong>Data augmentation</strong></li>
@@ -213,30 +280,36 @@ can do!</p>
 <ul>
 <li>Example: JFT-300M, a Google internal dataset for training image
 models, has 300M images</li>
-<li>Example: GTP-3 trained on 45TB of compressed plaintext, about 570GB
+<li>Example: GPT-3 trained on 45TB of compressed plaintext, about 570GB
 after filtering</li>
 </ul>
 <p><em>Reference: Revisiting Unreasonable Effectiveness of Data in Deep
 Learning Era. Chen Sun, Abhinav Shrivastava, Saurabh Singh, Abhinav
 Gupta; Proceedings of the IEEE International Conference on Computer
 Vision (ICCV), 2017, pp. 843-852.</em></p>
+<p>(One caveat, related to double descent: for a <em>fixed</em> model
+and training procedure, adding data can hurt, as we’ll discuss at the
+end of the lesson. But if we also scale up the model or regularize
+appropriately, more data helps.)</p>
 <p>It’s not always possible to get a lot of <em>labeled</em> data for
 training a supervised learning model. But sometimes we can use
 <em>unlabeled</em> data, which is much easier to get. For example:</p>
 <ul>
 <li>In self-supervised learning, the label can be inferred automatically
-from the unlabeled data. e.g. GPT is trained to predict “next
-word”.</li>
+from the unlabeled data. e.g. GPT is pre-trained to predict “next
+token”.</li>
 <li>In semi-supervised/weakly-supervised learning, we generate labels
 (probably imperfectly) for unlabeled data (maybe using a smaller volume
 of labeled data to train a model to label the data!)</li>
 </ul>
-<p>These are mostly out of scope of this course. But we <em>will</em>
-talk about data augmentation and transfer learning…</p>
+<p>We’ll talk a little bit about self-supervised learning next week. But
+we <em>will</em> talk about data augmentation and transfer learning
+today…</p>
 </aside>
 </section>
-<section id="data-augmentation" class="slide level3">
-<h3>Data augmentation</h3>
+<section id="data-augmentation" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Data augmentation</h3>
 <figure>
 <img data-src="../images/cats-augmentation.png" style="width:50.0%"
 alt="Data augmentation on a cat image." />
@@ -255,8 +328,9 @@ etc.</li>
 </ul>
 </aside>
 </section>
-<section id="transfer-learning" class="slide level3">
-<h3>Transfer learning</h3>
+<section id="transfer-learning" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Transfer learning</h3>
 <p>Idea: leverage model trained on <em>related</em> data.</p>
 <aside class="notes">
 <p>State-of-the-art networks involve millions of parameters, huge
@@ -270,8 +344,9 @@ data, is likely still very useful for a slightly different task.</p>
 </aside>
 </section>
 <section id="transfer-learning-from-pre-trained-networks"
-class="slide level3">
-<h3>Transfer learning from pre-trained networks</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Transfer learning from pre-trained
+networks</h3>
 <p>Use pre-trained network for a different task</p>
 <ul>
 <li>Use early layers from pre-trained network, freeze their
@@ -283,14 +358,18 @@ parameters</li>
 into a more useful feature space), then you just have to train for the
 mapping from this feature space to the target variable.</p>
 <p>In practice: when applying deep learning, we almost always use a
-pre-trained base model! It saves time, energy, and cost.</p>
-<p>Example: To pre-train the 7B parameter (smallest) Llama 2, Meta’s
-open source language model, takes 184,320 GPU hours (21 GPU YEARS!) and
-anywhere from $100,000-800,000 (depending on cost of GPU instances).</p>
+pre-trained base model! It saves time, energy, and cost, because
+training a good feature extractor can be very expensive.</p>
+<p>Example: To pre-train the 405B parameter Llama 3.1, Meta’s
+open-weight language model, took about 30.8M H100 GPU hours (about 3,500
+GPU YEARS!). Even the smallest model in that family, with 8B parameters,
+took 1.46M GPU hours (about 170 GPU years).</p>
 </aside>
 </section>
-<section id="transfer-learning-illustration-1" class="slide level3">
-<h3>Transfer learning illustration (1)</h3>
+<section id="transfer-learning-illustration-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Transfer learning illustration
+(1)</h3>
 <figure>
 <img data-src="../images/8-transfer-similar.png" style="width:80.0%"
 alt="When the network is trained on a very similar task, even the abstract high-level features are probably very relevant, so you might tune just the classification head." />
@@ -299,18 +378,56 @@ similar task, even the abstract high-level features are probably very
 relevant, so you might tune just the classification head.</figcaption>
 </figure>
 </section>
-<section id="transfer-learning-illustration-2" class="slide level3">
-<h3>Transfer learning illustration (2)</h3>
+<section id="transfer-learning-illustration-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Transfer learning illustration
+(2)</h3>
 <figure>
 <img data-src="../images/8-transfer-less.png" style="width:80.0%"
 alt="If the original network is not as relevant, may fine-tune more layers." />
 <figcaption aria-hidden="true">If the original network is not as
 relevant, may fine-tune more layers.</figcaption>
 </figure>
+<aside class="notes">
+<p>We can even do partial or full fine-tuning: start from pre-trained
+weights, but update <em>all</em> of the parameters on the new task,
+typically with a small learning rate</p>
+<p>Here, the pre-trained weights are used as a good
+<em>initialization</em> instead of random weights. Because they are
+already a good starting point, we use a small learning rate so that
+training adjusts them, without “overwriting” what was learned during
+pre-training.</p>
+<p>This usually gives the best performance on the new task, if you have
+enough data and compute. If you have very little data, freezing more
+layers is less prone to overfitting.</p>
+<p>With very large models, two other approaches are common (but beyond
+the scope of this course):</p>
+<ul>
+<li><strong>Parameter-efficient fine-tuning (PEFT)</strong>: freeze the
+pre-trained weights, and train a small number of <em>new</em>
+parameters. For example, LoRA (low-rank adaptation) learns a low-rank
+“correction” <span class="math inline">\(\Delta W = BA\)</span> for each
+weight matrix, where <span class="math inline">\(B\)</span> and <span
+class="math inline">\(A\)</span> have many fewer parameters than <span
+class="math inline">\(W\)</span>.</li>
+<li><strong>In-context learning</strong>: don’t train at all! A large
+language model can often do a new task just from instructions and a few
+examples given in its input (“prompt”). The weights are not updated.
+Similarly for tabular data, TabPFN makes predictions on a new (small)
+tabular dataset by taking the entire training set as input (along with
+the test data, that it makes predictions for).</li>
+</ul>
+</aside>
 </section></section>
 <section>
-<section id="architecturesetup" class="title-slide slide level2">
-<h2>Architecture/setup</h2>
+<section id="architecturesetup" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Architecture/setup</h2>
+
+</section>
+<section id="architecturesetup-solutions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Architecture/setup solutions</h3>
 <ul>
 <li><strong>Activation functions</strong> (+ skip connections)</li>
 <li><strong>Weight initialization</strong></li>
@@ -323,20 +440,44 @@ relevant, may fine-tune more layers.</figcaption>
 about some of these items very briefly.</p>
 </aside>
 </section>
-<section id="recall-activation-functions" class="slide level3">
-<h3>Recall: activation functions</h3>
+<section id="activation-functions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Activation functions</h3>
 <figure>
-<img data-src="../images/activation-functions.png" style="width:40.0%"
+<img data-src="../images/deep-activation-functions.png"
+style="width:85.0%"
 alt="Candidate activation functions for a neural network." />
 <figcaption aria-hidden="true">Candidate activation functions for a
 neural network.</figcaption>
 </figure>
+<aside class="notes">
+<ul>
+<li>A step function’s derivative is zero everywhere (and undefined at
+0), so we can’t train with gradient descent.</li>
+<li>A linear activation is fine for the <em>output</em> layer of a
+regression model, but not for hidden layers: a composition of linear
+functions is just another linear function, so a deep network with linear
+activations is no more powerful than linear regression.</li>
+<li>Sigmoid and tanh were the standard choices for a long time, but they
+saturate (we’ll see why that’s a problem next). They are still used in
+output layers, e.g. sigmoid for binary classification.</li>
+<li>ReLU (and variants like leaky ReLU) became the default for deep
+networks.</li>
+<li>GELU, <span class="math inline">\(x \Phi(x)\)</span> where <span
+class="math inline">\(\Phi\)</span> is the standard normal CDF, and
+SiLU, also called Swish, <span class="math inline">\(x
+\sigma(x)\)</span>, are smooth versions of ReLU. They behave like ReLU
+for large <span class="math inline">\(|x|\)</span>, but have a nonzero
+gradient for slightly negative inputs. They are the defaults in
+transformer models, including many LLMs.</li>
+</ul>
+</aside>
 <!--
 ### Zero-centered outputs
 
 Remember that at each hidden unit, we compute
 
-$\frac{\partial L_n}{\partial w_{j,i}} = \delta_j u_i$ 
+$\frac{\partial \ell_n}{\partial w_{j,i}} = \delta_j u_i$
 
 where $\delta_j$ is the backpropagation error from the "upstream" nodes.
 
@@ -352,8 +493,9 @@ What happens if the $u_i$ terms are always positive?
 
 -->
 </section>
-<section id="sigmoid-vanishing-gradient-1" class="slide level3">
-<h3>Sigmoid: vanishing gradient (1)</h3>
+<section id="sigmoid-vanishing-gradient-1" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Sigmoid: vanishing gradient (1)</h3>
 <figure>
 <img data-src="../images/deep-vanishing-network.png" style="width:80.0%"
 alt="Computing gradients by backpropagation. At a hidden unit, \delta_j = g&#39;(z_j) \sum_k w_{k,j} \delta_k." />
@@ -375,8 +517,9 @@ class="math inline">\(\sigma &#39;\)</span> terms.</li>
 </ul>
 </aside>
 </section>
-<section id="sigmoid-vanishing-gradient-2" class="slide level3">
-<h3>Sigmoid: vanishing gradient (2)</h3>
+<section id="sigmoid-vanishing-gradient-2" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Sigmoid: vanishing gradient (2)</h3>
 <figure>
 <img data-src="../images/deep-vanishing-sigmoid.png" style="width:40.0%"
 alt="Sigmoid function and its derivative." />
@@ -403,8 +546,9 @@ quantities less than 1…</p>
 advantages - still has vanishing gradient.)</p>
 </aside>
 </section>
-<section id="relu-dead-relu" class="slide level3">
-<h3>ReLU: Dead ReLU</h3>
+<section id="relu-dead-relu" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">ReLU: Dead ReLU</h3>
 <figure>
 <img data-src="../images/deep-dead-relu.png" style="width:40.0%"
 alt="ReLU function and its derivative." />
@@ -424,8 +568,9 @@ also zero, gradient descent will not update the weights.</p>
 sigmoid/tanh.)</p>
 </aside>
 </section>
-<section id="relu-leaky-relu" class="slide level3">
-<h3>ReLU: Leaky ReLU</h3>
+<section id="relu-leaky-relu" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">ReLU: Leaky ReLU</h3>
 <figure>
 <img data-src="../images/deep-leaky-relu.png" style="width:40.0%"
 alt="Leaky ReLU function and its derivative." />
@@ -450,8 +595,9 @@ x)\]</span></p>
 
 -->
 </section>
-<section id="skip-connections" class="slide level3">
-<h3>Skip connections</h3>
+<section id="skip-connections" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Skip connections</h3>
 <p>Alternative solution for “vanishing gradient”:</p>
 <ul>
 <li>Direct connection between some higher layers and lower layers</li>
@@ -464,15 +610,28 @@ layers</li>
 alt="Diagram of skip connection." />
 <figcaption aria-hidden="true">Diagram of skip connection.</figcaption>
 </figure>
-<p>Suppose we want this sequence of layers to learn <span
-class="math inline">\(z = H(x)\)</span>.</p>
-<p>Instead of learning <span class="math inline">\(H(x)\)</span>
-directly, the network learns the <strong>residual function</strong>:</p>
-<p><span class="math display">\[\mathcal{F}(x) = H(x) - x\]</span></p>
-<p>Then it reconstructs the desired transformation as:</p>
-<p><span class="math display">\[H(x) = \mathcal{F}(x) + x\]</span></p>
-<p>This helps avoid vanishing gradient.</p>
-<p>In the standard neural network, we would have:</p>
+<p>Consider the two layers <span class="math inline">\(h\)</span> and
+<span class="math inline">\(g\)</span> in the diagram. Call <span
+class="math inline">\(H(x)\)</span> the transformation from <span
+class="math inline">\(x\)</span> to <span
+class="math inline">\(z\)</span> that would be learned in training.</p>
+<p>Without the skip connection, <span class="math inline">\(z =
+g(h(x))\)</span>, so the layers must learn all of <span
+class="math inline">\(H(x)\)</span> themselves. With the skip
+connection, the input is added back to the output: <span
+class="math inline">\(z = g(h(x)) + x\)</span>.</p>
+<p>Now the layers only have to learn the <em>change</em> to make to
+<span class="math inline">\(x\)</span>:</p>
+<p><span class="math display">\[\mathcal{F}(x) = g(h(x)) = H(x) -
+x\]</span></p>
+<p>so that the output is <span class="math inline">\(z = \mathcal{F}(x)
++ x = H(x)\)</span>, as labeled in the diagram.</p>
+<p>This difference is called the <strong>residual</strong> (hence
+“residual network”). Since the output of the layers is added to <span
+class="math inline">\(x\)</span>, they end up learning <span
+class="math inline">\(H(x) - x\)</span>.</p>
+<p>This also changes how the gradient flows backward. In the standard
+neural network, we would have:</p>
 <p><span class="math display">\[\frac{dL}{dx} = \frac{dL}{dz} \cdot
 g&#39;(h(x)) \cdot h&#39;(x)\]</span></p>
 <p>where <span class="math inline">\(g&#39;()\)</span> and <span
@@ -485,12 +644,30 @@ with the skip connection, we now have</p>
 = \frac{dL}{dz} \cdot \left( g&#39;(h(x)) \cdot h&#39;(x) + I
 \right)\]</span></p>
 <p>The identity matrix <span class="math inline">\(I\)</span> passes on
-the gradient from higher layers as an additive term, without scaling it
-down.</p>
+the gradient from higher layers as an additive term, without
+scaling.</p>
+<p>Skip connections help with optimization in another way, too. The
+original motivation for residual networks was not vanishing gradient -
+it was the observation that adding more layers to a “plain” deep network
+made its <em>training</em> error worse, even though a deeper network
+should be able to do at least as well (the extra layers could learn the
+identity function!). Skip connections fixed this.</p>
+<p>Later work showed that skip connections also make the loss landscape
+much smoother. The “loss landscape” image we looked at earlier was a
+ResNet-56 <em>with the skip connections removed</em> - with the skip
+connections, the landscape of the same network looks like this:</p>
+<figure>
+<img data-src="../images/resnet56_short_small.jpg" style="width:30.0%"
+alt="Loss landscape of ResNet-56 with skip connections. Image source: Li et al., Visualizing the Loss Landscape of Neural Nets, NIPS 2018." />
+<figcaption aria-hidden="true">Loss landscape of ResNet-56 with skip
+connections. Image source: Li et al., Visualizing the Loss Landscape of
+Neural Nets, NIPS 2018.</figcaption>
+</figure>
 </aside>
 </section>
-<section id="weight-initialization" class="slide level3">
-<h3>Weight initialization</h3>
+<section id="weight-initialization" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Weight initialization</h3>
 <figure>
 <img data-src="../images/deep-network-initialization.png"
 style="width:80.0%"
@@ -517,8 +694,9 @@ values are bad - it makes the outputs “explode” at later layers.</li>
 </ul>
 </aside>
 </section>
-<section id="weight-initialization---normal" class="slide level3">
-<h3>Weight initialization - normal</h3>
+<section id="weight-initialization---normal" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Weight initialization - normal</h3>
 <figure>
 <img data-src="../images/deep-weight-init-normal.png"
 style="width:75.0%"
@@ -539,8 +717,9 @@ to output</li>
 </aside>
 </section>
 <section id="desirable-properties-for-initial-weights---principle"
-class="slide level3">
-<h3>Desirable properties for initial weights - principle</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Desirable properties for initial
+weights - principle</h3>
 <ul>
 <li>The mean of the intial weights should be around 0</li>
 <li>The variance of the activations should stay the same across every
@@ -553,23 +732,40 @@ a derivation</a>.</p>
 </aside>
 </section>
 <section id="desirable-properties-for-initial-weights---practice"
-class="slide level3">
-<h3>Desirable properties for initial weights - practice</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Desirable properties for initial
+weights - practice</h3>
 <ul>
-<li>For tanh: Xavier scales by <span
+<li>For tanh: Xavier (Glorot) scales by <span
 class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span></li>
 <li>For ReLU: He scales by <span
-class="math inline">\(\frac{2}{\sqrt{N_{in}}}\)</span></li>
+class="math inline">\(\sqrt{\frac{2}{N_{in}}}\)</span></li>
 </ul>
 <p><span class="math inline">\(N_{in}\)</span> is the number of inputs
 to the layer (“fan-in”).</p>
+<aside class="notes">
+<p>The values above are the standard deviation of the (zero-mean)
+initial weights.</p>
+<p>ReLU zeroes out about half of its inputs, so He initialization
+doubles the <em>variance</em> (not the standard deviation) to
+compensate.</p>
+<p>You will see two versions of Xavier/Glorot initialization. The <span
+class="math inline">\(\frac{1}{\sqrt{N_{in}}}\)</span> version keeps the
+variance of activations constant in the forward pass. (Technically this
+is “LeCun” initialization.) The original compromises between the forward
+pass and the backward pass, and uses <span
+class="math inline">\(\sqrt{\frac{2}{N_{in} + N_{out}}}\)</span>, where
+<span class="math inline">\(N_{out}\)</span> is the number of outputs
+from the layer (“fan-out”).</p>
+</aside>
 </section>
-<section id="weight-initialization---he" class="slide level3">
-<h3>Weight initialization - He</h3>
+<section id="weight-initialization---he" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Weight initialization - He</h3>
 <figure>
 <img data-src="../images/deep-weight-init-he.png" style="width:80.0%"
-alt="Initial weights and ReLU unit outpus for each layer in a network, He initialization. In this example, the size of the layers is: 100, 150, 200, 250, 300." />
-<figcaption aria-hidden="true">Initial weights and ReLU unit outpus for
+alt="Initial weights and ReLU unit outputs for each layer in a network, He initialization. In this example, the size of the layers is: 100, 150, 200, 250, 300." />
+<figcaption aria-hidden="true">Initial weights and ReLU unit outputs for
 each layer in a network, He initialization. In this example, the size of
 the layers is: 100, 150, 200, 250, 300.</figcaption>
 </figure>
@@ -587,8 +783,9 @@ the layers is: 100, 150, 200, 250, 300.</figcaption>
 
 -->
 </section>
-<section id="convolutional-units" class="slide level3">
-<h3>Convolutional units</h3>
+<section id="convolutional-units" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Convolutional units</h3>
 <!-- 
 
 https://ajcr.net/stride-guide-part-2/
@@ -599,8 +796,9 @@ https://ca.meron.dev/blog/Vectorized-CNN/
 -->
 </section>
 <section id="problems-with-fully-connected-layers-for-images"
-class="slide level3">
-<h3>Problems with “fully connected” layers for images</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Problems with “fully connected”
+layers for images</h3>
 <figure>
 <img data-src="../images/deep-image-data.svg" style="width:60.0%"
 alt="Problems with fully connected layers." />
@@ -618,13 +816,15 @@ image!)</li>
 <li>Each learned weight corresponds to specific pixels in the image. If
 the relevant pixels are at a different position in the image, the
 weights that were learned are not helpful for that other position.
-(i.e. it is not <em>spatial translation invariant</em>.)</li>
+(i.e. it is not <em>translation equivariant</em>: shifting the input
+should shift the response by the same amount.)</li>
 </ol>
 </aside>
 </section>
 <section id="using-convolution-to-address-the-problem"
-class="slide level3">
-<h3>Using convolution to address the problem</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Using convolution to address the
+problem</h3>
 <figure>
 <img data-src="../images/deep-image-conv.svg" style="width:60.0%"
 alt="Addressing the problem." />
@@ -638,13 +838,18 @@ needs as many weights as there are pixels in the patch. The same weights
 are <em>shared</em> as the unit moves across the image, one patch at a
 time.</li>
 <li>It can “match” a specific arrangement of pixels <em>anywhere</em> it
-occurs in the image, not only one specific location.</li>
+occurs in the image, not only one specific location. This property is
+called <em>translation equivariance</em>: if the pattern moves in the
+input, the filter’s response moves the same way in the output. (Pooling,
+which we’ll see shortly, adds a little bit of <em>invariance</em> - the
+output barely changes when the pattern shifts slightly.)</li>
 </ol>
 </aside>
 </section>
-<section id="the-convolution-operation---one-patch"
-class="slide level3">
-<h3>The convolution operation - one “patch”</h3>
+<section id="the-convolution-operation---one-patch" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The convolution operation - one
+“patch”</h3>
 <figure>
 <img data-src="../images/deep-image-conv-op.png" style="width:80.0%"
 alt="Convolution on one patch." />
@@ -662,8 +867,9 @@ input, and computes dot product</li>
 </aside>
 </section>
 <section id="the-convolution-operation---stride-and-padding"
-class="slide level3">
-<h3>The convolution operation - stride and padding</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The convolution operation - stride
+and padding</h3>
 <figure>
 <img data-src="../images/deep-conv-stride-pad.png" style="width:80.0%"
 alt="Stride and padding." />
@@ -671,8 +877,9 @@ alt="Stride and padding." />
 </figure>
 </section>
 <section id="the-convolution-operation---full-depth"
-class="slide level3">
-<h3>The convolution operation - full depth</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The convolution operation - full
+depth</h3>
 <figure>
 <img data-src="../images/deep-image-conv-depth.png" style="width:80.0%"
 alt="Convolution across full depth." />
@@ -681,8 +888,9 @@ depth.</figcaption>
 </figure>
 </section>
 <section id="the-convolution-operation---multiple-filters"
-class="slide level3">
-<h3>The convolution operation - multiple filters</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The convolution operation - multiple
+filters</h3>
 <figure>
 <img data-src="../images/deep-conv-multi-filter.png" style="width:80.0%"
 alt="Convolution with multiple filters." />
@@ -716,8 +924,9 @@ class="math inline">\(K\)</span> biases</li>
 </aside>
 </section>
 <section id="the-convolution-operation---all-together"
-class="slide level3">
-<h3>The convolution operation - all together</h3>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The convolution operation - all
+together</h3>
 <figure>
 <img data-src="../images/convolution-example.png" style="width:90.0%"
 alt="Animated demo at https://cs231n.github.io/assets/conv-demo/index.html" />
@@ -742,8 +951,9 @@ class="math inline">\(x&#39;,y&#39;\)</span></li>
 
 Important for VGG -->
 </section>
-<section id="activation" class="slide level3">
-<h3>Activation</h3>
+<section id="activation" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Activation</h3>
 <ul>
 <li>Convolutional typically followed by non-linear activation function
 e.g. ReLU</li>
@@ -751,8 +961,9 @@ e.g. ReLU</li>
 layer</li>
 </ul>
 </section>
-<section id="pooling-layer" class="slide level3">
-<h3>Pooling layer</h3>
+<section id="pooling-layer" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Pooling layer</h3>
 <figure>
 <img data-src="../images/deep-conv-pool.png" style="width:70.0%"
 alt="Example of pooling layer." />
@@ -783,97 +994,128 @@ class="math inline">\(S\)</span></li>
 1 , D_2 = D_1 \]</span></p>
 </aside>
 </section>
-<section id="the-typical-lenet-like-architecture" class="slide level3">
-<h3>The typical “LeNet”-like architecture</h3>
+<section id="the-typical-lenet-like-architecture" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">The typical “LeNet”-like
+architecture</h3>
 <figure>
 <img data-src="../images/deep-conv-lenet-like.png" style="width:80.0%"
 alt="“LeNet”-like architecture." />
 <figcaption aria-hidden="true">“LeNet”-like architecture.</figcaption>
 </figure>
 </section>
-<section id="actual-lenet-5-1998" class="slide level3">
-<h3>Actual LeNet-5 (1998)</h3>
+<section id="actual-lenet-5-1998" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Actual LeNet-5 (1998)</h3>
 <figure>
 <img data-src="../images/deep-conv-lenet-5.png" style="width:100.0%"
 alt="LeNet-5." />
 <figcaption aria-hidden="true">LeNet-5.</figcaption>
 </figure>
 </section>
-<section id="recurrent-neural-networks" class="slide level3">
-<h3>Recurrent neural networks</h3>
+<section id="recurrent-neural-networks" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Recurrent neural networks</h3>
 <ul>
 <li>Where ConvNet find <em>spatial</em> patterns wherever they occur in
 images,</li>
 <li>RNNs find <em>temporal patterns</em> wherever they occur in a
 sequence</li>
 </ul>
+<aside class="notes">
+<p>For language and other sequence data, RNNs have largely been replaced
+by <em>transformers</em>, which use an <em>attention</em> mechanism:
+each element of the sequence directly computes a weighted combination of
+all the other elements, instead of passing information along one step at
+a time. Transformers are the architecture behind large language models,
+and are also used for images, audio, and more.</p>
+</aside>
 </section></section>
 <section>
-<section id="normalization" class="title-slide slide level2">
-<h2>Normalization</h2>
+<section id="normalization" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Normalization</h2>
+
+</section>
+<section id="normalization-solutions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Normalization solutions</h3>
 <ul>
 <li><strong>Input standardization</strong></li>
 <li><strong>Batch normalization</strong></li>
 </ul>
 </section>
-<section id="data-pre-processing" class="slide level3">
-<h3>Data pre-processing</h3>
-<p>You can make the loss surface much “nicer” by pre-processing:</p>
-<ul>
-<li>Remove mean (zero center)</li>
-<li>Normalize (divide by standard deviation)</li>
-<li>OR decorrelation (whitening/rotation)</li>
-</ul>
-<aside class="notes">
-<p>There are several reasons why this helps. We already discussed the
-“ravine” in the loss function that is created by correlated
-features.</p>
-<!-- What about zero-centering and normalization? Think about a binary classification problem of a data cloud that is far from the origin, vs. one close to the origin. In which case will the loss function react more (be more sensitive) to a small change in weights?
-
-![The classifier on the right is more sensitive to small changes in the weights.](../images/8-pre-processing.png){ width=30% }
-
--->
-<!-- Note: Whitening/decorrelation is not applied to image data. For image data, we sometimes subtract the "mean image" or the per-color mean. -->
-</aside>
-</section>
-<section id="data-preprocessing-1" class="slide level3">
-<h3>Data preprocessing (1)</h3>
+<section id="input-standardization" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Input standardization</h3>
 <figure>
-<img data-src="../images/8-preprocessing-1.jpeg" style="width:50.0%"
-alt="Image source: Stanford CS231n." />
-<figcaption aria-hidden="true">Image source: Stanford
-CS231n.</figcaption>
-</figure>
-</section>
-<section id="data-preprocessing-2" class="slide level3">
-<h3>Data preprocessing (2)</h3>
-<figure>
-<img data-src="../images/8-preprocessing-2.jpeg" style="width:50.0%"
-alt="Image source: Stanford CS231n." />
-<figcaption aria-hidden="true">Image source: Stanford
-CS231n.</figcaption>
+<img data-src="../images/8-preprocessing-1.jpeg" style="width:60.0%"
+alt="Zero-centering, then normalizing, the input data. Image source: Stanford CS231n." />
+<figcaption aria-hidden="true">Zero-centering, then normalizing, the
+input data. Image source: Stanford CS231n.</figcaption>
 </figure>
 <aside class="notes">
+<p>You can make the loss surface much “nicer” by pre-processing the
+input features: remove the mean (zero center), then divide by the
+standard deviation. (We already discussed the “ravine” in the loss
+surface when features have very different scales.)</p>
 <p>Input standardization helps with the first hidden layer, but what
 about the intermediate hidden layers?</p>
 </aside>
 </section>
-<section id="batch-normalization" class="slide level3">
-<h3>Batch normalization</h3>
+<section id="batch-normalization" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Batch normalization</h3>
 <ul>
 <li>Re-center and re-scale between layers</li>
 <li>Training: Mean and standard deviation per training mini-batch</li>
 <li>Test: Using fixed statistics</li>
 </ul>
+<aside class="notes">
+<p>The “fixed statistics” at test time are running averages of the mean
+and standard deviation, computed during training. After normalizing,
+each unit also has a learnable scale and shift, so the network can
+“undo” the normalization if that helps.</p>
+</aside>
+</section>
+<section id="other-normalization-layers" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Other normalization layers</h3>
+<ul>
+<li><strong>Batch norm</strong>: normalize each feature across the
+samples in the mini-batch</li>
+<li><strong>Layer norm</strong>: normalize across the features of each
+sample</li>
+<li><strong>RMS norm</strong>: like layer norm, but only re-scale (don’t
+re-center)</li>
+</ul>
+<!-- 
+::: notes
+
+Batch norm depends on the other samples in the mini-batch, which causes problems when:
+
+* mini-batches are small (statistics are noisy),
+* we process one sample at a time at inference (e.g. generating text one word at a time),
+* sequences in a batch have different lengths.
+
+Layer norm computes the mean and standard deviation over the features of *one* sample, so it behaves the same in training and test, and doesn't depend on batch size. RMS norm skips subtracting the mean and just divides by the root-mean-square of the features - it's cheaper, and works about as well.
+
+In practice: batch norm is still common in convolutional networks for images. Layer norm and RMS norm are standard in transformers and large language models.
+
+(Group norm is another option for image models trained with small batches: it normalizes over groups of channels within each sample.)
+
+:::
+-->
 </section></section>
-<section id="gradient-descent" class="title-slide slide level2">
-<h2>Gradient descent</h2>
+<section id="gradient-descent" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Gradient descent</h2>
 <!-- 
 ### Standard ("batch") gradient descent
 
 For each step $t$ along the error curve:
 
-$$W^{t+1} = W^t - \alpha \nabla L(W^t) = W^t - \frac{\alpha}{N} \sum_{i=1}^N \nabla L_i(W^t, \mathbf{x}_i, y_i)$$
+$$W^{t+1} = W^t - \alpha \nabla L(W^t) = W^t - \frac{\alpha}{N} \sum_{i=1}^N \nabla \ell_i(W^t, \mathbf{x}_i, y_i)$$
 
 
 Repeat until stopping criterion is met.
@@ -895,7 +1137,7 @@ Idea: In each step, select a small subset of training data ("mini-batch"), and e
 For each step $t$ along the error curve: 
 
 * Select random mini-batch $I_t\subset{1,\ldots,N}$
-* Compute gradient approximation: $g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla L(\mathbf{x}_i, y_i, W)$
+* Compute gradient approximation: $g^t = \frac{1}{|I_t|} \sum_{i\in I_t} \nabla \ell(\mathbf{x}_i, y_i, W)$
 * Update parameters: $W^{t+1} = W^t - \alpha^t g^t$
 
 
@@ -1032,16 +1274,23 @@ Scale $\alpha$ by $\frac{m_t}{\sqrt{v_t}}$ at each step.
 </section>
 
 <section>
-<section id="regularization" class="title-slide slide level2">
-<h2>Regularization</h2>
+<section id="regularization" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Regularization</h2>
+
+</section>
+<section id="regularization-solutions" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Regularization solutions</h3>
 <ul>
 <li><strong>L2 or L1 regularization</strong></li>
 <li><strong>Early stopping</strong></li>
 <li><strong>Dropout</strong></li>
 </ul>
 </section>
-<section id="l1-or-l2-regularization" class="slide level3">
-<h3>L1 or L2 regularization</h3>
+<section id="l1-or-l2-regularization" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">L1 or L2 regularization</h3>
 <aside class="notes">
 <p>As with other models, we can add a penalty on the norm of the
 weights.</p>
@@ -1050,16 +1299,17 @@ weights.</p>
 \frac{\partial L}{\partial w_{i,j}^t} \]</span></p>
 <p>With L2 regularization:</p>
 <p><span class="math display">\[w_{i,j}^{t+1} = w_{i,j}^t - \alpha (
-\frac{\partial L}{\partial w_{i,j}^t} + \frac{2 \lambda}{n}  w_{i,j}^t
+\frac{\partial L}{\partial w_{i,j}^t} + \frac{2 \lambda}{N}  w_{i,j}^t
 )\]</span></p>
 <p>Often called “weight decay” in the context of neural nets.</p>
 </aside>
 </section>
-<section id="early-stopping" class="slide level3">
-<h3>Early stopping</h3>
+<section id="early-stopping" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Early stopping</h3>
 <aside class="notes">
 <ul>
-<li>Compute validation loss each performance</li>
+<li>Compute validation loss each epoch</li>
 <li>Stop training when validation loss hasn’t improved in a while</li>
 <li>Risk of stopping <em>too</em> early</li>
 </ul>
@@ -1078,8 +1328,9 @@ Why does it work? Some ideas:
 <!-- See https://windowsontheory.org/2021/02/17/what-do-deep-networks-learn-and-when-do-they-learn-it/ -->
 </aside>
 </section>
-<section id="dropout" class="slide level3">
-<h3>Dropout</h3>
+<section id="dropout" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Dropout</h3>
 <figure>
 <img data-src="../images/8-dropout.jpeg" style="width:35.0%"
 alt="Dropout networks." />
@@ -1090,17 +1341,45 @@ alt="Dropout networks." />
 <li>During each training step: some portion of neurons are randomly
 “dropped”.</li>
 <li>During each test step: don’t “drop” any neurons, but we need to
-scale activations by dropout probability</li>
+scale activations so that their expected value matches what the next
+layer saw during training.</li>
+</ul>
+<p>There are two equivalent ways to do this scaling, if each neuron is
+dropped with probability <span class="math inline">\(p\)</span>:</p>
+<ul>
+<li>Original version: at test time, multiply activations by <span
+class="math inline">\((1-p)\)</span>, the probability of keeping a
+neuron.</li>
+<li>“Inverted dropout”: during training, divide the surviving
+activations by <span class="math inline">\((1-p)\)</span>, then do
+nothing at test time. This is what PyTorch and Keras actually implement,
+so the model needs no change at inference time.</li>
 </ul>
 <p>Why does it work? Some ideas:</p>
 <ul>
-<li>Forces some redundancy, makes neurons learn robust
-representation</li>
-<li>Effectively training an ensemble of networks (with shared
-weights)</li>
+<li>Effectively training an ensemble of networks (with shared weights).
+Each training step updates a different random “sub-network”, and at test
+time we use (approximately) the average of all of them.</li>
+<li>It acts like a penalty on the weights, similar to L2 regularization.
+For linear models, dropout on the inputs is approximately an L2 penalty,
+where each weight’s penalty is scaled according to the variance of its
+feature.</li>
+<li>It adds noise to the gradient, and this randomness itself has a
+regularizing effect (similar to the noise from using small mini-batches
+in stochastic gradient descent).</li>
+</ul>
+<p>In modern practice, dropout is used less than it once was:</p>
+<ul>
+<li>It doesn’t combine well with batch normalization, so many
+convolutional networks don’t use it.</li>
+<li>Large language models are often pre-trained with no dropout at all -
+they see each training sample only about once, so overfitting is not the
+main concern.</li>
+<li>It is still common in smaller models and when fine-tuning on a small
+dataset.</li>
 </ul>
 <p>Note: when you use Dropout layers, you may notice that the
-validation/test loss seems better than the training loss! Why?</p>
+validation/test loss seems better than the training loss!</p>
 </aside>
 <!--
 
@@ -1111,15 +1390,22 @@ Neural networks of all types: https://www.asimovinstitute.org/neural-network-zoo
 <hr />
 <p>Big picture: What are all these techniques for?</p>
 <ul>
-<li>Allow us to train models with more ‘capacity’</li>
 <li>Improve performance even without adding ‘capacity’</li>
+<li>Allow us to train bigger models with more ‘capacity’</li>
 </ul>
 </aside>
 </section></section>
+<section>
+<section id="examples" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Examples</h2>
+
+</section>
 <section
 id="example-deep-neural-nets-33-years-ago-and-33-years-from-now"
-class="title-slide slide level2">
-<h2>Example: Deep Neural Nets: 33 years ago and 33 years from now</h2>
+class="slide level3" data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: Deep Neural Nets: 33 years
+ago and 33 years from now</h3>
 <figure>
 <img data-src="../images/deep-nets-markmap-example.png"
 style="width:50.0%" alt="Techniques we will apply in this example." />
@@ -1144,41 +1430,97 @@ network? It means the network always had the <em>capacity</em> to do
 this well, but wasn’t learning the best weights.</p>
 </aside>
 </section>
-
-<section id="example-progress-on-imagenet"
-class="title-slide slide level2">
-<h2>Example: Progress on ImageNet</h2>
+<section id="example-progress-on-imagenet" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Example: Progress on ImageNet</h3>
 <ul>
 <li>Data: 1.2M images from 1000 categories</li>
-<li>ImageNet Large Scale Visual Recognition Challenge (ILSVRC): running
-since 2010</li>
+<li>ImageNet Large Scale Visual Recognition Challenge (ILSVRC): ran
+2010-2017</li>
 </ul>
 <aside class="notes">
 <figure>
-<img data-src="../images/deep-conv-imagenet.png" style="width:80.0%"
+<img data-src="../images/deep-conv-imagenet.png" style="width:50.0%"
 alt="Progress on ImageNet." />
 <figcaption aria-hidden="true">Progress on ImageNet.</figcaption>
 </figure>
-<p>If you want to learn more, including receptive field, 1x1
-convolution, and ConvNet architectures, I recommend:</p>
-<ul>
-<li><a
-href="https://fullstackdeeplearning.com/spring2021/lecture-2a/">Lecture
-2A</a> and <a
-href="https://fullstackdeeplearning.com/spring2021/lecture-2b/">Lecture
-2B</a> from FSDL 2021</li>
-<li><a
-href="https://d2l.ai/chapter_convolutional-neural-networks/index.html">Chapter
-7</a> and <a
-href="https://d2l.ai/chapter_convolutional-modern/index.html">Chapter
-8</a> of Dive into Deep Learning</li>
-</ul>
+<p>The techniques discussed in this lesson allowed us to train
+progressively <em>deeper and deeper</em> models that dramatically
+improved performance on this task.</p>
+<!-- 
+If you want to learn more, including receptive field, 1x1 convolution, and ConvNet architectures, I recommend:
+
+* [Lecture 2A](https://fullstackdeeplearning.com/spring2021/lecture-2a/) and [Lecture 2B](https://fullstackdeeplearning.com/spring2021/lecture-2b/) from FSDL 2021
+* [Chapter 7](https://d2l.ai/chapter_convolutional-neural-networks/index.html) and [Chapter 8](https://d2l.ai/chapter_convolutional-modern/index.html) of Dive into Deep Learning
+-->
 </aside>
+</section></section>
+<section>
+<section id="revisiting-double-descent" class="title-slide slide level2"
+data-background-color="#ab82c5">
+<h2 data-background-color="#ab82c5">Revisiting double descent</h2>
+
 </section>
+<section id="double-descent-revisited" class="slide level3"
+data-background-color="#f2f2f2">
+<h3 data-background-color="#f2f2f2">Double descent, revisited</h3>
+<figure>
+<img data-src="../images/8-double-descent.png" style="width:100.0%"
+alt="Double descent curve (left) and realization in a real neural network (right)." />
+<figcaption aria-hidden="true">Double descent curve (left) and
+realization in a real neural network (right).</figcaption>
+</figure>
+<aside class="notes">
+<p>Revisiting the double descent curve from the beginning of this
+lesson: the techniques in this lesson are what let us train models far
+to the right of the interpolation threshold, <em>and</em> find weights
+that fit the training data while still generalizing well. (With good
+regularization, the peak at the threshold is also much smaller in
+practice.)</p>
+<p>However, there is an important caveat: this figure shows the effect
+of varying model capacity <em>with a fixed amount of training data</em>.
+In fact, the amount of training data (not just the number of parameters)
+matters a lot! The interpolation threshold is where the model (as we
+train it) can <em>just barely</em> fit the training data exactly. The
+same model can be on either side of the threshold, depending on how much
+data we have.</p>
+<p>There are important implications especially in this era of LLMs:</p>
+<ul>
+<li>For classical ML models, where we have small models relative to the
+amount of data: we are in the left half, the classic U-shaped
+tradeoff</li>
+<li>For many deep learning models, we have very large models relative to
+the amount of data, we train in many passes over the data and the model
+can effectively memorize the training data: we are in the right part,
+the “double descent” part of the curve</li>
+<li>For <strong>large language models</strong>: these are HUGE models,
+but they are trained on even HUGER quantities of data, usually in only
+one pass over the data. They never come close to fitting their training
+data exactly! They are actually far to the left of the interpolation
+threshold, where bias dominates, variance hardly matters, and a bigger
+model simply does better.</li>
+</ul>
+<p>Double descent describes what happens as we grow the model for a
+<em>fixed</em> dataset. For LLMs, data is not the limiting factor -
+there is (nearly) always more text. The limiting factor is
+<em>compute</em>, which grows with model size <span
+class="math inline">\(\times\)</span> amount of data. The question
+becomes: given a compute budget, how should we split it between a bigger
+model and more data, and how good will the result be? <em>Scaling
+laws</em> answer this question for LLMs.</p>
+<p>Looking ahead: high-quality text data is running out, so models are
+starting to train on repeated data (multiple epochs). Repeating data up
+a few times times is still helpful, but after that, the benefit drops
+quickly. As LLMs see their training data more times, they move back
+toward the right side of the curve, where the techniques in this lesson
+matter again.</p>
+</aside>
+</section></section>
     </div>
   </div>
 
   <script src="reveal.js-master/dist/reveal.js"></script>
+<script src="reveal.js-master/plugin/chalkboard/plugin.js"></script>
 
   <!-- reveal.js plugins -->
   <script src="reveal.js-master/plugin/notes/notes.js"></script>
@@ -1209,7 +1551,7 @@ href="https://d2l.ai/chapter_convolutional-modern/index.html">Chapter
         progress: true,
 
         // Display the page number of the current slide
-        slideNumber: false,
+        slideNumber: "c/t",
 
         // 'all', 'print', or 'speaker'
         showSlideNumber: 'all',
@@ -1331,9 +1673,19 @@ href="https://d2l.ai/chapter_convolutional-modern/index.html">Chapter
         // viewDistance in order to save resources.
         mobileViewDistance: 2,
 
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 700,
+
+        maxScale: 1,
+
         math: {
           mathjax: '/usr/share/javascript/mathjax/MathJax.js',
           config: 'TeX-AMS_HTML-full',
+          TeX: { extensions: ['color.js'] },
           tex2jax: {
             inlineMath: [['\\(','\\)']],
             displayMath: [['\\[','\\]']],
@@ -1348,8 +1700,14 @@ href="https://d2l.ai/chapter_convolutional-modern/index.html">Chapter
           },
         },
 
-        // reveal.js plugins
+              chalkboard: {
+          grid: false,
+          theme: "whiteboard",
+        },
+
+  // reveal.js plugins
         plugins: [
+          RevealChalkboard,
           RevealMath,
           RevealNotes,
           RevealSearch,
